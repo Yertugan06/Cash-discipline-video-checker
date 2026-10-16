@@ -28,3 +28,12 @@ Discover **different, defensible solution mechanisms**, not a list of attractive
 
 ## Example
 For a 14-measure, exactly-five-measure city simulator, investigate **(a)** exhaustive feasible-scenario search, **(b)** traceable scoring explanations, and **(c)** robustness to synthetic assumptions. Don't settle for “basic app vs app with charts.” Compute or bound the scenario count before claiming search is practical; test whether all proposed explanations agree with the deterministic score; preserve the official scoring rules.
+
+
+### External idea intake
+
+If external proposals or user ideas exist, first explore independently when feasible to avoid anchoring. Then extract their distinct mechanisms, assumptions, and claimed advantages.
+
+Investigate promising ideas missing from your search, including useful hybrids. Apply identical evidence and constraint standards to all candidates.
+
+Treat external ideas as hypotheses, not conclusions. Preserve valuable alternatives for `/problem-validate`.
