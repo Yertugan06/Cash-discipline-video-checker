@@ -61,7 +61,10 @@ Pretrained detectors only describe each frame. Deterministic temporal rules deci
 | A17 (live on the VM, `main`) | 25 | 5 | 10 | - |
 | night + door | 26 | 4 | 10 | 25.3 |
 | night + personal gaps | 27 | 4 | 9 | - |
-| **night + sessions (current)** | **30** | **4** | **6** | **28.7** |
+| night + sessions | 30 | 4 | 6 | 28.7 |
+| night + leave persistence | 31 | 3 | 6 | 29.7 |
+| night + counter is not a personal item (honest; 4 lucky catches lost) | 28 | 2 | 10 | - |
+| **night + a cash bag counts for cash-on-leave (current)** | **29** | **2** | **9** | - |
 
 Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracking, ...) all scored
 20-23, see `attempts/README.md`.
@@ -78,6 +81,9 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | 10-18 | KEPT, personal items: bridge brief detection gaps within one track | Caught Х-40; more robust to dropped detections |
 | 10-18 | **The money counter must not count as a personal item, even if it costs catches.** Recover those clips through their real violation | OWLv2's "handbag" prompt matches the counter (IoU 0.7-0.98); most personal-item catches were wrong-type luck |
 | 10-18 | KEPT, sessions: client re-identification, client exit only after moving away from the desk, a sustained second client at the desk, the counter still running when the client leaves | Caught Х-18, Х-34 and Х-38 with timecodes within 0.5-2 s |
+| 10-18 | KEPT, leave: an item counts only if seen in at least 2 frames of each short evidence window, and the cashier is gone for the whole confirmation delay | Fixed Х-8 (a 1 s step-away); leave catches now survive dropped detections |
+| 10-18 | KEPT, counter: boxes matching the calibrated laptop/counter or repeated equipment candidates are not personal items | The user's decision; Х-48 fixed; lost lucky X-1, Х-11, Х-13, Х-15 |
+| 10-18 | KEPT, `L-NO-CASH-ON-LEAVE` checks cash bags too, as its Knowledge Pack mechanism already says | Recovered Х-15 by its real violation, at the organizer's exact second |
 | 10-18 | Main docs frozen during experiments | Decided by the user |
 
 ## 5. Findings (facts measured in the cache)
@@ -89,6 +95,9 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
   the clip starts.
 - **The money counter shows up as "handbag"** (IoU 0.70-0.98 on Х-11, Х-13, Х-14, Х-15). Some clips
   have no calibrated counter at all (X-1, Х-4/Х-47).
+- **CLIP states are unreliable for some scenes:** the laptop reads "closed" in all 51 frames of
+  Х-11 (and of clean Х-12). On Х-32 the door reads closed at the organizer's second (score 0.76).
+- **"handbag" also matches the laptop** in clips without a calibrated counter (X-1, Х-4, Х-48).
 - **Robustness:** mirroring changes nothing; zoom ±20% moves the result by 1-2 clips; dropping 20%
   of object detections costs about 1-3 clips (the current version is more robust than A17).
 - **Cache trap:** each clip's cache folder holds 4 versions, and the replay takes the newest by
@@ -101,16 +110,19 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | door: Х-29 false alarm, Х-32/Х-33 missed | merged (Х-29 fixed; Х-32/Х-33 need better door perception) | `orch/door` |
 | personal: Х-14/Х-35/Х-48 false alarms, Х-40 missed | merged (Х-40 fixed) | `orch/personal` |
 | sessions: X-2, Х-18, Х-34, Х-38 missed | merged (3 of 4; X-2 has no cash/ID signal) | `orch/sessions` |
-| leave: Х-8 false alarm + leave-rule robustness under drop + timecodes | running | `orch/leave` |
-| counter: counter is not a personal item; Х-13 by its real rule; signal report for Х-11/Х-15/X-1/Х-4 | running | `orch/counter` |
-| Recover Х-11 (laptop unlocked), Х-15 (bag left), X-1, Х-4 by their real violations | next, after counter's report | - |
+| leave: Х-8 false alarm + leave-rule robustness under drop + timecodes | merged | `orch/leave` |
+| counter: counter is not a personal item; Х-13; signal report | merged (Х-13: no recount/safe signal in the cache) | `orch/counter` |
+| Recover the lucky clips by their real violations | Х-15 done (cash bag); Х-11 needs screen-state perception; X-1, Х-13, Х-4 have no signal in the cache | orchestrator |
+| fp: clean false alarms Х-14 (leave at 62.5 s), Х-35 (worn-coat fragment) | running | `orch/fp` |
+| timecode: timing scorer + explainable anchor fixes, no verdict change | running | `orch/timecode` |
+| Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen); needs the VM GPU | orchestrator | - |
 | Threshold search with cross-validation over twin groups (report the held-out score) | idea | - |
 | Х-17 (seal check), Х-22 (key in lock), Х-44 (authenticity detector) | idea, probably a perception limit | - |
 | Timecode pass: rule anchor vs organizer second | idea | - |
 | Remaining clean false alarms: Х-14, Х-35, Х-48 (personal), Х-8 (docs) | partly in leave/counter | - |
 
-**Still failing on night:** missed X-2, Х-17, Х-22, Х-32, Х-33, Х-44; clean false alarms Х-8, Х-14,
-Х-35, Х-48. The per-clip list is in `~/projects/hackathons/dt26-lab/runs/night3.txt`.
+**Still failing on night:** missed X-1, X-2, Х-11, Х-13, Х-17, Х-22, Х-32, Х-33, Х-44; clean false
+alarms Х-14, Х-35. The per-clip list is in `~/projects/hackathons/dt26-lab/runs/night6.txt`.
 
 ## 7. How to resume (any session or tool)
 

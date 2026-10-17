@@ -21,7 +21,7 @@ survives.
     $PY scripts/replay_f1.py score /tmp/<you>.jsonl --labels data/prepared/videos.jsonl
     $PY -m pytest -q tests/test_f1_rules.py tests/test_f1_detector.py tests/test_desk_objects.py
 
-Baseline (A17 on main): {"videos": 40, "correct": 25, "clean_false_alarm": 5, "missed": 10}. If your branch starts from `night`, its baseline is in your assignment.
+Your branch starts from `night`; its baseline is in your assignment.
 Per-clip baseline: /home/sultanbek/projects/hackathons/dt26-lab/runs/base.txt. Organizer labels and timestamps: data/prepared/videos.jsonl
 (fields original_id, organizer_verdict, organizer_timestamps). The team's own description of
 every violation clip (what happens, at which second, which violation): data/Таблица_нарушений.xlsx
