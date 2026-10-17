@@ -64,7 +64,11 @@ Pretrained detectors only describe each frame. Deterministic temporal rules deci
 | night + sessions | 30 | 4 | 6 | 28.7 |
 | night + leave persistence | 31 | 3 | 6 | 29.7 |
 | night + counter is not a personal item (honest; 4 lucky catches lost) | 28 | 2 | 10 | - |
-| **night + a cash bag counts for cash-on-leave (current)** | **29** | **2** | **9** | - |
+| night + a cash bag counts for cash-on-leave | 29 | 2 | 9 | - |
+| **night + fp: hand on equipment = still at the desk; worn-coat fragments (current)** | **31** | **0** | **9** | **30.7** |
+
+Robustness of the current version: mirror 31/0/9 (identical); zoom 0.8 -> 28/1/11, zoom 1.2 ->
+29/0/11 (the scale agent is working on this).
 
 Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracking, ...) all scored
 20-23, see `attempts/README.md`.
@@ -84,6 +88,9 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | 10-18 | KEPT, leave: an item counts only if seen in at least 2 frames of each short evidence window, and the cashier is gone for the whole confirmation delay | Fixed Х-8 (a 1 s step-away); leave catches now survive dropped detections |
 | 10-18 | KEPT, counter: boxes matching the calibrated laptop/counter or repeated equipment candidates are not personal items | The user's decision; Х-48 fixed; lost lucky X-1, Х-11, Х-13, Х-15 |
 | 10-18 | KEPT, `L-NO-CASH-ON-LEAVE` checks cash bags too, as its Knowledge Pack mechanism already says | Recovered Х-15 by its real violation, at the organizer's exact second |
+| 10-18 | KEPT, fp: a confident hand inside the laptop/counter box means the cashier is still at the workstation; a small coat box above the person's hip line is worn clothing | Cleared the last clean false alarms (Х-14, Х-35); Х-40's coat on the desk stays caught |
+| 10-18 | REJECTED for now: replacing the CLIP door/screen states with new CLIP prompts or Qwen2.5-VL-7B | Spike (`spikes/states_spike.py`, `logs/states.jsonl`): both answer "open" for the door almost always, and Qwen calls lock screens "working" (laptop 10/32) |
+| 10-18 | LEAD, not built: "did the screen change since the cashier last worked at it?" instead of naming the screen state | Probe (`spikes/screen_probe.py`, `logs/screen.jsonl`): a naive before/after-leave window doesn't separate the clips (the lock happens before standing up; a light switched off in Х-11). Needs the last hands-on-laptop moment as the reference; only 2 violation vs 4 clean clips to judge on |
 | 10-18 | Main docs frozen during experiments | Decided by the user |
 
 ## 5. Findings (facts measured in the cache)
@@ -113,16 +120,19 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | leave: Х-8 false alarm + leave-rule robustness under drop + timecodes | merged | `orch/leave` |
 | counter: counter is not a personal item; Х-13; signal report | merged (Х-13: no recount/safe signal in the cache) | `orch/counter` |
 | Recover the lucky clips by their real violations | Х-15 done (cash bag); Х-11 needs screen-state perception; X-1, Х-13, Х-4 have no signal in the cache | orchestrator |
-| fp: clean false alarms Х-14 (leave at 62.5 s), Х-35 (worn-coat fragment) | running | `orch/fp` |
+| fp: clean false alarms Х-14 (leave at 62.5 s), Х-35 (worn-coat fragment) | merged (both fixed) | `orch/fp` |
+| scale: distances relative to a scene scale so --zoom 0.8/1.2 keeps the result | running | `orch/scale` |
 | timecode: timing scorer + explainable anchor fixes, no verdict change | running | `orch/timecode` |
-| Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen); needs the VM GPU | orchestrator | - |
+| Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen) | spike done: new prompts and Qwen 7B don't fix it; "screen changed?" is a lead | orchestrator |
 | Threshold search with cross-validation over twin groups (report the held-out score) | idea | - |
 | Х-17 (seal check), Х-22 (key in lock), Х-44 (authenticity detector) | idea, probably a perception limit | - |
 | Timecode pass: rule anchor vs organizer second | idea | - |
 | Remaining clean false alarms: Х-14, Х-35, Х-48 (personal), Х-8 (docs) | partly in leave/counter | - |
 
-**Still failing on night:** missed X-1, X-2, Х-11, Х-13, Х-17, Х-22, Х-32, Х-33, Х-44; clean false
-alarms Х-14, Х-35. The per-clip list is in `~/projects/hackathons/dt26-lab/runs/night6.txt`.
+**Still failing on night:** missed X-1, X-2, Х-11, Х-13, Х-17, Х-22, Х-32, Х-33, Х-44; no clean
+false alarms. The per-clip list is in `logs/night7.txt`. Every miss is a perception limit: no cash,
+ID, key, seal or authenticity-device signal (X-1, X-2, Х-13, Х-17, Х-22, Х-44), or unreadable
+door/screen states (Х-11, Х-32, Х-33).
 
 ## 7. How to resume (any session or tool)
 
