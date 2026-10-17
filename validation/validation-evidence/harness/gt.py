@@ -6,7 +6,7 @@ Sources (kept separate in the output):
   layout    : data/Cash_Discipline_Cases_Rules.xlsx -> camera-layout tag per clip (provenance: team workbook)
 
 Writes validation-private/gt.json (gitignored). Prints aggregate counts only.
-Usage: python -I gt.py <research_root>   (e.g. reasearch1; organizer data is read from <research_root>/../data)
+Usage: python -I gt.py <research_root>   (e.g. validation; organizer data is read from <research_root>/../data)
 """
 import collections, hashlib, json, os, re, sys
 

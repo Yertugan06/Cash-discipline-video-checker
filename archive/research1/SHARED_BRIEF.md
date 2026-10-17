@@ -6,8 +6,8 @@ Do NOT install torch/transformers/opencv/vLLM locally. Do NOT pip install anythi
 so in your final report (and prefer not to). There is no GPU, no ffmpeg/ffprobe on this machine:
 tests that need ffmpeg must use `pytest.mark.skipif(shutil.which("ffmpeg") is None, reason=...)`.
 
-Read first: `AGENTS.md`, `backend/AGENTS.md` (or `frontend/AGENTS.md`), `reasearch1/implementation-plan.md`
-(your WP section), `reasearch1/architecture.md`, and `backend/contracts.py`.
+Read first: `AGENTS.md`, `backend/AGENTS.md` (or `frontend/AGENTS.md`), `archive/research1/implementation-plan.md`
+(your WP section), `archive/research1/architecture.md`, and `backend/contracts.py`.
 
 ## Hard rules
 1. **File ownership.** Only create/edit files in your WP's file set (listed in your prompt). Four agents
@@ -31,11 +31,11 @@ Read first: `AGENTS.md`, `backend/AGENTS.md` (or `frontend/AGENTS.md`), `reasear
    Never claim a test passed unless it ran.
 
 ## Source material (read-only, gitignored snapshot of the VM workspaces)
-- Base app (already imported into the repo by the orchestrator): `reasearch2/datathon/forte-model-check-20261017-1114/`
-- VLM kit: `reasearch2/datathon/forte_brev_kit/brev_kit/` — `scripts/run_vlm.py`, `scripts/timeline_rules.py`,
+- Base app (already imported into the repo by the orchestrator): `archive/vm-copies/datathon/forte-model-check-20261017-1114/`
+- VLM kit: `archive/vm-copies/datathon/forte_brev_kit/brev_kit/` — `scripts/run_vlm.py`, `scripts/timeline_rules.py`,
   `scripts/common.py`, `schema/questionnaire_v1.json`, `prompts/`, `prompts_v2/`, `FEATURES.md`,
   `codex/codex_verified.json`, `tests/make_fixture_states.py`, `tests/mock_vlm_server.py`, `serve_datathon.sh`.
-- R1 scorer: `reasearch1/validation-evidence/harness/score.py`, `score_utils.py`, `gt.py`, `split.py`.
+- R1 scorer: `validation/validation-evidence/harness/score.py`, `score_utils.py`, `gt.py`, `split.py`.
 
 ## What the orchestrator already did (kickoff)
 - Shell modules copied to `backend/`: `main.py config.py store.py worker.py pipeline.py evidence.py models.py`
@@ -44,7 +44,7 @@ Read first: `AGENTS.md`, `backend/AGENTS.md` (or `frontend/AGENTS.md`), `reasear
   (imports still say `backend.rules`, `backend.codex`, ...; WP1 fixes them). F1 codex: `config/f1_codex.yaml`.
 - Old tests: `tests/test_f1_rules.py`, `tests/test_api_smoke.py` (WP1 owns both).
 - Frontend copied into `frontend/`. Old docs into `docs/` (`LIMITATIONS.md`, `MODELS.md`, `F1_RULES.md`).
-- `reasearch2/` added to `.gitignore`.
+- `archive/vm-copies/` added to `.gitignore`.
 
 ## Agreed interfaces (beyond contracts.py) — implement exactly these names/signatures
 

@@ -24,7 +24,8 @@ from eval.kit_states_adapter import load_kit_states
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_STATES_DIR = (
     REPO_ROOT
-    / "reasearch2"
+    / "archive"
+    / "vm-copies"
     / "datathon"
     / "forte_brev_kit"
     / "brev_kit"
@@ -34,7 +35,8 @@ DEFAULT_STATES_DIR = (
 )
 KIT_TIMELINE_RULES = (
     REPO_ROOT
-    / "reasearch2"
+    / "archive"
+    / "vm-copies"
     / "datathon"
     / "forte_brev_kit"
     / "brev_kit"

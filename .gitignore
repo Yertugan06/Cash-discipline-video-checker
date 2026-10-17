@@ -20,7 +20,7 @@ runtime/
 weights/
 
 # VM workspace copies: contain .env, organizer frames, HTML reports - never commit
-reasearch2/
+archive/vm-copies/
 
 # Self-filmed robustness clips and any video - never committed
 robustness/clips/
@@ -28,4 +28,4 @@ robustness/clips/
 *.MOV
 
 # Per-clip private outputs (labels, predictions, detections) - never add more
-reasearch1/validation-private/
+validation/validation-private/

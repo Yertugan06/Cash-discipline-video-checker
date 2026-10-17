@@ -4,9 +4,9 @@ Start 2026-10-17 19:30 (+05). Deadline 2026-10-18 12:00. Team of 4. Architecture
 
 ## 0. Kickoff (19:30–20:00, everyone, before any parallel work)
 
-1. **Base code.** Import the latest `forte-cash-checker` from its owner, from `datathon:~/forte-cash-checker`, **not** the `reasearch2/` snapshot. It goes into this repo (`backend/`, `frontend/`, `config/`, `scripts/`, `tests/`, Docker files). The repo's `backend/` and `frontend/` are empty today.
+1. **Base code.** Import the latest `forte-cash-checker` from its owner, from `datathon:~/forte-cash-checker`, **not** the `archive/vm-copies/` snapshot. It goes into this repo (`backend/`, `frontend/`, `config/`, `scripts/`, `tests/`, Docker files). The repo's `backend/` and `frontend/` are empty today.
 2. **Freeze `backend/contracts.py`** (architecture §2) and the canonical rule-ID mapping (architecture §3). After this point, changes need a message to all owners.
-3. **Do not commit `reasearch2/`.** It holds a copied `.env` with an API key, `results.json` with base64 frames of organizer video, and HTML reports. The repo is public, and private data already leaked in `8155025`. Add `reasearch2/` to `.gitignore` and make the repo private.
+3. **Do not commit `archive/vm-copies/`.** It holds a copied `.env` with an API key, `results.json` with base64 frames of organizer video, and HTML reports. The repo is public, and private data already leaked in `8155025`. Add `archive/vm-copies/` to `.gitignore` and make the repo private.
 4. Agree the gates and the sleep rotation (§3).
 
 ## 1. Work packages (one owner per file set)

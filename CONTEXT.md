@@ -10,6 +10,12 @@ Working notes for coding agents on this project. Read before starting work.
 - Still applies: no cloud AI tools on dataset videos or frames (task.md §7), and never
   commit secrets (`.env`, API keys).
 
+## Layout
+
+- `STATUS.md` says what is current and what is history, where the labels come from, and
+  which paths moved on 2026-10-17. `archive/` is history: don't build on it without moving
+  the file back out.
+
 ## Results
 
 - Every approach tried, with its result and logs: `attempts/README.md` (the map). Add a row

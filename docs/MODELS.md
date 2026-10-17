@@ -7,32 +7,12 @@ this team did not independently re-verify them today.
 
 Only one detector is loaded on the GPU per deployment, selected by the
 `DETECTOR` environment variable (`backend/config.py`). Switching detectors
-means a restart, never running both at once (`reasearch1/architecture.md` §5).
+means a restart, never running both at once (`archive/research1/architecture.md` §5).
 
-## Primary path: `DETECTOR=vlm`
+## Deployed path: `DETECTOR=f1`
 
-| Purpose | Checkpoint | Serving | Licence |
-| --- | --- | --- | --- |
-| Perception (per-frame state form) | **Qwen3.5-9B**, FP8 quantized | vLLM, loopback `127.0.0.1:8010`, offline mode | Apache-2.0 `[Rep]` |
-
-The model is only a perceiver: for each sampled frame it fills a fixed JSON
-form (`backend/contracts.py:FrameState`) with directly observable fields
-(is the cashier at the desk, is the safe door open, …). It never produces
-free text that reaches the user, never decides a verdict, and never chooses
-or states a legal citation — that is the deterministic rules engine's job
-(`docs/ARCHITECTURE_SUMMARY.md`).
-
-### Fallback L2 (timing/licence contingency): `Qwen3-VL-4B`
-
-Same serving path and same state-form contract as the 9B model, swapped in
-only if the 9B cannot meet the per-job timing budget or a licence check
-fails close to the deadline (`reasearch1/architecture.md` §6, "Trade-off
-levers"). Apache-2.0 `[Rep]`. Never loaded alongside the 9B.
-
-## Fallback L3: `DETECTOR=f1`
-
-A classical computer-vision stack, used only if neither VLM option is
-viable at deploy time:
+Runs on `datathon` and is the default in `backend/config.py`. A classical
+computer-vision stack; no model sees the rules or writes user-facing text:
 
 | Purpose | Checkpoint | Licence | Pinned revision |
 | --- | --- | --- | --- |
@@ -50,18 +30,41 @@ camera domain. Weights use safetensors (RT-DETR, OWLv2, OpenCLIP) or ONNX
 (RTMPose); no unpickling or remote model code is enabled. Exact artifact
 sizes, source revisions and weight SHA-256 hashes are recorded by
 `scripts/download_weights.py` in `weights/manifest.json`. **This stack has
-not beaten the floor baselines on the full 40-video run and is kept only as
-an emergency fallback** (`reasearch1/architecture-decision.md` §3-4).
+not beaten the floor baselines on the full 40-video run** (A01 in
+`attempts/README.md`: 20/40 correct, 13/19 clean videos falsely flagged).
+
+## Alternative path, not deployed: `DETECTOR=vlm`
+
+Kept in code (`backend/vlm/`, `deploy/vllm/`) and tests, but not what runs
+on `datathon`. Design notes: `archive/docs-vlm-era/`.
+
+| Purpose | Checkpoint | Serving | Licence |
+| --- | --- | --- | --- |
+| Perception (per-frame state form) | **Qwen3.5-9B**, FP8 quantized | vLLM, loopback `127.0.0.1:8010`, offline mode | Apache-2.0 `[Rep]` |
+
+The model is only a perceiver: for each sampled frame it fills a fixed JSON
+form (`backend/contracts.py:FrameState`) with directly observable fields
+(is the cashier at the desk, is the safe door open, …). It never produces
+free text that reaches the user, never decides a verdict, and never chooses
+or states a legal citation - that is the deterministic rules engine's job
+(`archive/docs-vlm-era/ARCHITECTURE_SUMMARY.md`).
+
+### Smaller VLM option: `Qwen3-VL-4B`
+
+Same serving path and same state-form contract as the 9B model, swapped in
+only if the 9B cannot meet the per-job timing budget or a licence check
+fails close to the deadline (`archive/research1/architecture.md` §6, "Trade-off
+levers"). Apache-2.0 `[Rep]`. Never loaded alongside the 9B.
 
 ## Infrastructure / tooling
 
 | Library | Role | Licence |
 | --- | --- | --- |
-| vLLM | Serves the VLM | Apache-2.0 |
+| vLLM | Serves the VLM (alternative path only) | Apache-2.0 |
 | FastAPI, Pydantic, uvicorn | Backend | MIT |
 | React, TypeScript, Vite | Frontend | MIT |
 | ffmpeg | Video probing and frame extraction (separate process, system package) | LGPL/GPL depending on build — not redistributed, only invoked as a subprocess |
-| PyTorch, Transformers, OpenCV, ONNX Runtime | F1 fallback runtime | BSD/Apache-2.0 |
+| PyTorch, Transformers, OpenCV, ONNX Runtime | F1 runtime | BSD/Apache-2.0 |
 
 ## Privacy
 

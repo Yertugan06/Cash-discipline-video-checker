@@ -14,7 +14,7 @@ rule IDs actually present there.
 
 Every `type` the API returns for a violation is one of these rules' Russian
 title (`rules.yaml: title_ru`) — never a free-text label invented at
-runtime (G4 checklist item 3, `reasearch1/implementation-plan.md`).
+runtime (G4 checklist item 3, `archive/research1/implementation-plan.md`).
 
 ## Leaving the desk unattended (`L-*`)
 
@@ -63,7 +63,7 @@ the Knowledge Pack, this list is a candidate for a follow-up edit — treat
 ## How a rule maps to a video (the three statements)
 
 For every finding, the service keeps three statements distinct, never
-merging them into one AI-written sentence (`reasearch1/architecture.md` §3):
+merging them into one AI-written sentence (`archive/research1/architecture.md` §3):
 
 1. **Observation** — the rule's description template filled with the
    actually measured facts and timecode, e.g. "с 41 по 49 с кассир вне
@@ -79,4 +79,4 @@ Rule → norm mapping is a deterministic lookup (`rule_id → norm_ids` in
 `knowledge/rules.yaml`), not a retrieval or embedding search at runtime —
 every citation a user can see was chosen ahead of time by a person
 reviewing the public normative source, never generated on the fly by a
-model (`reasearch1/architecture.md` §3, AGENTS.md "no invented results").
+model (`archive/research1/architecture.md` §3, AGENTS.md "no invented results").

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-17, after Addendum B of the pre-registration
 - **Status:** measured, rejected
-- **Where it ran:** `datathon2` (L4); harness `reasearch1/validation-evidence/harness/f2_probe.py`
+- **Where it ran:** `datathon2` (L4); harness `validation/validation-evidence/harness/f2_probe.py`
 - **Models:** DINOv2-base (rev `f9e44c81`), SigLIP2-base-patch16-384 (rev `f775b65a`)
 
 ## Approach
@@ -25,7 +25,7 @@ Pre-registered bar (AUC >= 0.70 and beat the prior): not met.
 
 ## Logs
 
-- `reasearch1/validation-evidence/logs/datathon2/F2_*.txt`, `score_F2_*.txt`
+- `validation/validation-evidence/logs/datathon2/F2_*.txt`, `score_F2_*.txt`
 
 ## Conclusion
 

@@ -11,9 +11,9 @@ Logs go in each attempt's `logs/` folder, per-video detail included (this repo i
 All runs are on the 40 unique open videos (21 with a violation, 19 clean), 2026-10-17.
 "Correct" is the whole-video verdict. "Clean FP" is clean videos wrongly flagged.
 "Timecode" is labelled events matched within the given window (22 events).
-"R1 validation" = `reasearch1/validation-evidence/` (pre-registered harness and scorer, write-up in
-`reasearch1/problem-validation.md`). It also re-scored A01 and A02 with its own scorer and got the
-same numbers (`reasearch1/validation-evidence/logs/arch_rescore_teammates.txt`).
+"R1 validation" = `validation/validation-evidence/` (pre-registered harness and scorer, write-up in
+`archive/research1/problem-validation.md`). It also re-scored A01 and A02 with its own scorer and got the
+same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 
 | ID | Source | Approach | Models | Correct /40 | Recall | Clean FP | Timecode | Worst runtime | Status |
 |---|---|---|---|---|---|---|---|---|---|
@@ -40,7 +40,7 @@ same numbers (`reasearch1/validation-evidence/logs/arch_rescore_teammates.txt`).
   puts false alarms right after misses.
 - Zero-shot VLMs don't tell a real event from its clean twin (A08), at 4B or 8B.
 - The missing piece is targeted perception of small objects (cash, keys, screen, door);
-  see `reasearch1/problem-validation.md` §9.
+  see `archive/research1/problem-validation.md` §9.
 
 ## Next to run
 

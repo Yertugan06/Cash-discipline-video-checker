@@ -1,7 +1,7 @@
 """Adapter: one of the kit's saved per-video state files -> a typed ``StateTimeline``.
 
-The kit (``reasearch2/datathon/forte_brev_kit/brev_kit``, gitignored, private) writes one JSON
-Lines file per video under ``runs/<run>/states/<video>.jsonl``, one row per sampled frame:
+The kit (``archive/vm-copies/datathon/forte_brev_kit/brev_kit``, gitignored, private) writes one
+JSON Lines file per video under ``runs/<run>/states/<video>.jsonl``, one row per sampled frame:
 ``{"video": str, "t": float, "state": dict | None, "ok": bool, "errors": list, "latency_s": float,
 "raw": str}``. This module never prints a row's values, only uses the `t`/`ok`/`state` keys needed
 to build the typed timeline (privacy rule in AGENTS.md / the shared brief).

@@ -54,7 +54,7 @@ The rival methods are the families F1, F2, F3 and F4 from `problem-validation.md
 
 ## Evidence vs. judgment
 
-- **Evidence:** every number above, reproducible from `validation-evidence/` (scorer verified independently; 4B reproduced across machines).
+- **Evidence:** every number above, reproducible from `validation/validation-evidence/` (scorer verified independently; 4B reproduced across machines).
 - **Judgment:**
   - that mechanism-specific perception can succeed where generic perception failed;
   - that the teammate's app is the right vehicle;

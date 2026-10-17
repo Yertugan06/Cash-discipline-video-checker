@@ -1,8 +1,8 @@
 # Pinned vLLM-side runtime for backend/vlm (SEPARATE venv from the app's .venv;
 # never installed into the app's requirements.txt). This is the exact pip
 # freeze of the venv that produced the q35_9b_fp8 run on `datathon`
-# (reasearch2/datathon/forte_brev_kit/brev_kit/installed-requirements.txt,
-# reasearch2/datathon/forte_brev_kit/brev_kit/runs/q35_9b_fp8/run_meta.json),
+# (archive/vm-copies/datathon/forte_brev_kit/brev_kit/installed-requirements.txt,
+# archive/vm-copies/datathon/forte_brev_kit/brev_kit/runs/q35_9b_fp8/run_meta.json),
 # kept as-is so FP8 quantization + structured JSON output behave the same way
 # on datathon2. The +cu132 torch wheels need the same CUDA wheel index that
 # was configured in that venv on `datathon` (check its pip config /

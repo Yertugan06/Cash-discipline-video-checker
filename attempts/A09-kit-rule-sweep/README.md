@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-17
 - **Status:** measured; no gain on lockbox
-- **Where it ran:** laptop, re-scoring A02's saved states; harness `reasearch1/validation-evidence/harness/arch_rule_sweep.py`
+- **Where it ran:** laptop, re-scoring A02's saved states; harness `validation/validation-evidence/harness/arch_rule_sweep.py`
 
 ## Approach
 
@@ -21,7 +21,7 @@ Keep-list chosen on dev: client_left_count, door_open, leave_cash, leave_docs, n
 
 ## Logs
 
-- `reasearch1/validation-evidence/logs/arch_rule_sweep.txt`
+- `validation/validation-evidence/logs/arch_rule_sweep.txt`
 
 ## Conclusion
 

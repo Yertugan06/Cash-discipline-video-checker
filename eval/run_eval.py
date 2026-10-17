@@ -1,7 +1,7 @@
 """Score a directory of API `DoneJob` JSON outputs (one file per video) with the R1 scorer.
 
 Adapts `DoneJob` shapes to the harness's expected prediction format
-(`reasearch1/validation-evidence/harness/score.py`):
+(`validation/validation-evidence/harness/score.py`):
 ``{clip_id: {"verdict": ..., "events": [{"t": ..., "code": ..., "conf": ...}], "runtime_s": ...,
 "error": ...}}``, writes it to ``<root>/validation-private/preds/<name>.json``, then runs the
 harness's own `score.py` as a subprocess so this module never re-implements its aggregation. The
@@ -9,7 +9,7 @@ harness only ever prints aggregate numbers; this module never reads or prints an
 label.
 
 Usage:
-    .venv/bin/python -m eval.run_eval <done_jobs_dir> [--root reasearch1] [--name NAME]
+    .venv/bin/python -m eval.run_eval <done_jobs_dir> [--root validation] [--name NAME]
                                        [--split dev|lockbox|all]
 
 `--split lockbox` is for the one-time, human-gated scoring step only (shared brief: "Never use
@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HARNESS_SCORE = REPO_ROOT / "reasearch1" / "validation-evidence" / "harness" / "score.py"
+HARNESS_SCORE = REPO_ROOT / "validation" / "validation-evidence" / "harness" / "score.py"
 
 
 def clip_id_from_filename(name: str) -> str:
@@ -87,7 +87,7 @@ def run_scorer(pred: dict[str, dict], root: Path, name: str, split: str = "dev")
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("done_jobs_dir", type=Path)
-    ap.add_argument("--root", type=Path, default=REPO_ROOT / "reasearch1")
+    ap.add_argument("--root", type=Path, default=REPO_ROOT / "validation")
     ap.add_argument("--name", default="api_run_eval")
     ap.add_argument("--split", choices=["dev", "lockbox", "all"], default="dev")
     args = ap.parse_args(argv)

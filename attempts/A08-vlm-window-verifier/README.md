@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-17 (Addendum A of the pre-registration)
 - **Status:** measured; no discrimination
-- **Where it ran:** laptop (4B) and `datathon2` L4 (4B reproduction, 8B); harness `reasearch1/validation-evidence/harness/verify_windows.py`
+- **Where it ran:** laptop (4B) and `datathon2` L4 (4B reproduction, 8B); harness `validation/validation-evidence/harness/verify_windows.py`
 - **Models:** Qwen3-VL-4B-Instruct, Qwen3-VL-8B-Instruct (bf16)
 
 ## Approach
@@ -24,8 +24,8 @@ Peak VRAM 10.0 GB (4B), 18.4 GB (8B); 6-9 s per window.
 
 ## Logs
 
-- `reasearch1/validation-evidence/logs/datathon2/verify_q3vl4b_*.txt`, `verify_q3vl8b_*.txt`
-- `reasearch1/validation-evidence/logs/verify_4fps_s448.txt`, `vlm_profile_1.txt`
+- `validation/validation-evidence/logs/datathon2/verify_q3vl4b_*.txt`, `verify_q3vl8b_*.txt`
+- `validation/validation-evidence/logs/verify_4fps_s448.txt`, `vlm_profile_1.txt`
 
 ## Conclusion
 

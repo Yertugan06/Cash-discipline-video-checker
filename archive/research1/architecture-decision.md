@@ -10,8 +10,8 @@ Evidence labels: **[M]** measured by our scripts · **[Rep]** reported in a team
 
 | Effort | Location | What it contains | State |
 |---|---|---|---|
-| **R1: research agent 1** | `reasearch1/problem-validation.md`, `solution-decision.md`, `validation-evidence/` (harness, logs, PREREGISTRATION) | F3 whole-video VLM, F4 cascade, window verification (4B/8B), F2 frozen-feature probes, zone-free COCO rules, proposer recall, anchor probe | Complete, pre-registered, scorer independently verified |
-| **R2: team efforts on Brev** | `reasearch2/datathon/` | (a) `forte-model-check-…` = **F1 app** `forte-cash-checker`: OWLv2 + CLIP crop states + RTMPose + ByteTrack, 16 rules, full FastAPI/React service; **full 40-video 5 fps GPU run**. (b) `forte_brev_kit` = **VLM questionnaire**: Qwen3.5-9B FP8 on vLLM fills a per-frame JSON state form; deterministic timeline rules; codex of 217 norms; **full 40-video run** plus gold-frame state checks. (c) `from-datathon2/agentA-rulebook`: F1 app variant with new signals. (d) `agentB-hybrid`: person anchors → crop VLM questions | (a), (b) complete. (c) **partial**: 18 of 24 dev clips. (d) **detection run only, not scored** |
+| **R1: research agent 1** | `archive/research1/problem-validation.md`, `solution-decision.md`, `validation/validation-evidence/` (harness, logs, PREREGISTRATION) | F3 whole-video VLM, F4 cascade, window verification (4B/8B), F2 frozen-feature probes, zone-free COCO rules, proposer recall, anchor probe | Complete, pre-registered, scorer independently verified |
+| **R2: team efforts on Brev** | `archive/vm-copies/datathon/` | (a) `forte-model-check-…` = **F1 app** `forte-cash-checker`: OWLv2 + CLIP crop states + RTMPose + ByteTrack, 16 rules, full FastAPI/React service; **full 40-video 5 fps GPU run**. (b) `forte_brev_kit` = **VLM questionnaire**: Qwen3.5-9B FP8 on vLLM fills a per-frame JSON state form; deterministic timeline rules; codex of 217 norms; **full 40-video run** plus gold-frame state checks. (c) `from-datathon2/agentA-rulebook`: F1 app variant with new signals. (d) `agentB-hybrid`: person anchors → crop VLM questions | (a), (b) complete. (c) **partial**: 18 of 24 dev clips. (d) **detection run only, not scored** |
 
 Earlier inputs (problem-reframing, exploration, landscape, data-exploration, senior-ideas, task.md) are summarised in R1 and not repeated. `data/prepared/` covers phases 1–2 only. **No Phase-3 taxonomy or Phase-4 legal-knowledge outputs exist yet.** No per-clip content was read into this context; every comparison below is aggregate.
 
@@ -33,7 +33,7 @@ Measured model memory:
 
 ## 3. One scorer, all candidates
 
-All rows use the R1 scorer on 40 unique videos (21 violation / 19 clean) and 22 labelled events. Logs: `validation-evidence/logs/arch_rescore_teammates.txt`, `arch_rule_sweep.txt`; R1 rows from `problem-validation.md`.
+All rows use the R1 scorer on 40 unique videos (21 violation / 19 clean) and 22 labelled events. Logs: `validation/validation-evidence/logs/arch_rescore_teammates.txt`, `arch_rule_sweep.txt`; R1 rows from `problem-validation.md`.
 
 | System | Correct /40 | Recall | Clean false alarms | Top-1 ±3 s | Any event ±3 s | Events/clip | Type: human norm among outputs (n=17) | Worst runtime |
 |---|---|---|---|---|---|---|---|---|

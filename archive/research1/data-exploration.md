@@ -96,12 +96,12 @@ Public datasets: **no public bank-teller or cashier-compliance video dataset was
 
 ### A.6 Reproduction
 
-Scripts are in `validation-evidence/data-audit/`. They use the stdlib only and read only the xlsx XML and the MOV atom headers; no frame is decoded.
+Scripts are in `validation/validation-evidence/data-audit/`. They use the stdlib only and read only the xlsx XML and the MOV atom headers; no frame is decoded.
 
 ```
-python3 -I validation-evidence/data-audit/meta.py data/open > /tmp/meta.txt
-python3 -I validation-evidence/data-audit/stats.py /tmp/meta.txt       # §A.1 composition, durations, label positions
-python3 -I validation-evidence/data-audit/baselines.py /tmp/meta.txt   # §A.2 LOO duration verdict, timecode prior
+python3 -I validation/validation-evidence/data-audit/meta.py data/open > /tmp/meta.txt
+python3 -I validation/validation-evidence/data-audit/stats.py /tmp/meta.txt       # §A.1 composition, durations, label positions
+python3 -I validation/validation-evidence/data-audit/baselines.py /tmp/meta.txt   # §A.2 LOO duration verdict, timecode prior
 ```
 
 ---

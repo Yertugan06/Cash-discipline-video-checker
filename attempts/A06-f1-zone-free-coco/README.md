@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-17
 - **Status:** measured, rejected
-- **Where it ran:** laptop, CPU; harness `reasearch1/validation-evidence/harness/f1_rules.py`
+- **Where it ran:** laptop, CPU; harness `validation/validation-evidence/harness/f1_rules.py`
 - **Models:** RT-DETR v2 r18 (COCO, rev `56509617`)
 
 ## Approach
@@ -22,7 +22,7 @@ scene zones. A quick check of whether generic CV separates the classes, not the 
 
 ## Logs
 
-- `reasearch1/validation-evidence/logs/F1_coco_rules.txt`, `score_F1_F3chunk.txt`
+- `validation/validation-evidence/logs/F1_coco_rules.txt`, `score_F1_F3chunk.txt`
 
 ## Conclusion
 
