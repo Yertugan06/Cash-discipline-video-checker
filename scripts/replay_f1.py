@@ -18,6 +18,11 @@ rules take their items from desk change instead of the detector's labels (attemp
     docker run ... -v ~/data/open/videos:/videos:ro ... python scripts/replay_f1.py run \
       --videos-dir /videos > replay-a18.jsonl
 
+`--mirror`, `--zoom 0.8` and `--drop 0.2` replay the clips as another camera or a weaker
+detector would report them (mirrored, filmed from farther away, 20% of object detections lost).
+A verdict that changes points at a rule tied to one camera set-up (robustness check, no GPU
+or video needed).
+
 `score` runs anywhere and joins those lines with the organizer labels:
 
     python scripts/replay_f1.py score replay.jsonl --labels data/prepared/videos.jsonl
@@ -56,7 +61,59 @@ def desk_objects_for(video: Path, observations, scene, log) -> list | None:
         shutil.rmtree(frames_dir, ignore_errors=True)
 
 
-def run(cache_dir: Path, videos_dir: Path | None) -> None:
+def transform_detection(detection: dict, point) -> dict:
+    x1, y1, x2, y2 = detection["box"]
+    (a, b), (c, d) = point(x1, y1), point(x2, y2)
+    moved = {**detection, "box": [min(a, c), min(b, d), max(a, c), max(b, d)]}
+    for key in ("body", "hands"):
+        if detection.get(key):
+            moved[key] = [[*point(x, y), score] for x, y, score in detection[key]]
+    return moved
+
+
+def perturb_payload(payload: dict, mirror: bool, zoom: float, drop: float, seed: str) -> dict:
+    """The same clip as another camera would report it: mirrored left to right, zoomed about the
+    image centre (zoom < 1 = filmed from farther away), and/or with a share of the non-person
+    detections lost (a weaker detector). Deterministic per clip for a given seed."""
+    import random
+
+    def point(x: float, y: float) -> tuple[float, float]:
+        x = 1 - x if mirror else x
+        return 0.5 + (x - 0.5) * zoom, 0.5 + (y - 0.5) * zoom
+
+    rng = random.Random(seed)
+    scene = dict(payload["scene"])
+    scene["candidates"] = [transform_detection(d, point) for d in scene.get("candidates", [])]
+    scene["objects"] = {
+        k: transform_detection(d, point) for k, d in scene.get("objects", {}).items()
+    }
+    scene["zones"] = {
+        k: [list(point(x, y)) for x, y in v] for k, v in scene.get("zones", {}).items()
+    }
+    if scene.get("cashier_direction") and mirror:
+        dx, dy = scene["cashier_direction"]
+        scene["cashier_direction"] = [-dx, dy]
+    observations = [
+        {
+            **o,
+            "detections": [
+                transform_detection(d, point)
+                for d in o["detections"]
+                if d["label"] == "person" or rng.random() >= drop
+            ],
+        }
+        for o in payload["observations"]
+    ]
+    return {**payload, "scene": scene, "observations": observations}
+
+
+def run(
+    cache_dir: Path,
+    videos_dir: Path | None,
+    mirror: bool = False,
+    zoom: float = 1.0,
+    drop: float = 0.0,
+) -> None:
     import yaml
 
     from backend.config import ROOT
@@ -80,6 +137,8 @@ def run(cache_dir: Path, videos_dir: Path | None) -> None:
         if not files:
             continue
         payload = json.loads(max(files, key=lambda p: p.stat().st_mtime).read_text())
+        if mirror or zoom != 1.0 or drop:
+            payload = perturb_payload(payload, mirror, zoom, drop, video_dir.name)
         scene = Scene.model_validate(payload["scene"])
         if scene.candidates:
             scene = calibrate(scene.candidates, ROOT / "config" / "overrides.yaml", video_dir.name)
@@ -191,6 +250,9 @@ def main() -> None:
     run_parser = sub.add_parser("run")
     run_parser.add_argument("--cache-dir", type=Path, default=Path("/app/runtime/perception_cache"))
     run_parser.add_argument("--videos-dir", type=Path, default=None)
+    run_parser.add_argument("--mirror", action="store_true")
+    run_parser.add_argument("--zoom", type=float, default=1.0)
+    run_parser.add_argument("--drop", type=float, default=0.0)
     score_parser = sub.add_parser("score")
     score_parser.add_argument("results", type=Path)
     score_parser.add_argument("--labels", type=Path, required=True)
@@ -200,7 +262,9 @@ def main() -> None:
     state_parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.mode == "run":
-        run(args.cache_dir, args.videos_dir)
+        if (args.mirror or args.zoom != 1.0 or args.drop) and args.videos_dir:
+            parser.error("perturbations move cached boxes only; they can't go with --videos-dir")
+        run(args.cache_dir, args.videos_dir, args.mirror, args.zoom, args.drop)
     elif args.mode == "score":
         score(args.results, args.labels)
     else:
