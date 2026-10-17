@@ -32,6 +32,9 @@ Working notes for coding agents on this project. Read before starting work.
   results persisted in `~/realtime-state/state.json`). View it with
   `ssh -N -L 8100:127.0.0.1:8100 datathon` -> http://localhost:8100. Open a result to replay
   the video with the detector's boxes and roles drawn over it ("Objects" toggle).
+  `/compare` shows saved runs side by side; `/annotate` is where the team writes what really
+  happens in each clip (blind; saved on the VM in `~/realtime-state/annotations/<clip>.json`,
+  scored against a run's traces per action). Those files are the event-level ground truth.
 - Debugging a verdict: every F1 job writes `/app/runtime/traces/<job_id>.json` in the checker
   (volume `datathon26_work`): calibration candidates, raw state changes, the event log (roles,
   enter/exit, safe/door/screen), every rule finding with `kept`, per-frame boxes. Also served
