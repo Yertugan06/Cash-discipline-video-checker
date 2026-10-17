@@ -5,7 +5,17 @@ from dataclasses import dataclass, field
 from backend.f1.calibration import in_zone
 from backend.f1.codex import Codex, Rule
 from backend.f1.events import EventLog
-from backend.f1.vision_types import Detection, Event, Observation, Scene, center, distance
+from backend.f1.vision_types import (
+    Detection,
+    Event,
+    Observation,
+    Scene,
+    center,
+    contains,
+    distance,
+)
+
+LEFT_BEHIND_SEC = 2.0
 
 
 @dataclass
@@ -71,11 +81,17 @@ class Context:
     def on_desk(self, timestamp: float, labels: set[str]) -> list[Detection]:
         frame = self.nearby(min(timestamp + 0.2, self.duration))
         people = [d for d in frame.detections if d.label == "person"]
+        # The open-vocabulary "tablet"/"document" prompts also fire on the laptop and the
+        # counter themselves; those are workstation fixtures, not items left on the desk.
+        fixtures = [
+            self.scene.objects[n].box for n in ("laptop", "counter") if n in self.scene.objects
+        ]
         return [
             d
             for d in frame.detections
             if d.label in labels
             and in_zone(self.scene, "desk", center(d.box))
+            and not any(contains(box, center(d.box), 0.01) for box in fixtures)
             and not any(
                 distance(center(d.box), hand) < 0.045 for p in people for hand in p.wrists()
             )
@@ -94,7 +110,10 @@ def left_with(ctx: Context, rule_id: str, labels: set[str]) -> list[Finding]:
         return []
     result = []
     for leave in ctx.leaves():
-        objects = ctx.on_desk(leave.timestamp_sec, labels)
+        # Left behind = still on the desk a moment after the cashier walked off; a cashier
+        # standing up usually picks the item up on the way.
+        later = {d.track_id for d in ctx.on_desk(leave.timestamp_sec + LEFT_BEHIND_SEC, labels)}
+        objects = [d for d in ctx.on_desk(leave.timestamp_sec, labels) if d.track_id in later]
         if objects:
             result.append(
                 Finding(

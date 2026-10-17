@@ -31,6 +31,10 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A11](A11-agentB-hybrid/) | agentB (datathon) | Hybrid: F1 detections + VLM probes at anchors | F1 stack + Qwen VLM | - | - | - | - | - | ran on dev, **no score recorded** |
 | [A12](A12-adr002-service-f1/) | ADR-002 service | ADR-002 service, `DETECTOR=f1`, evidence boxes (live on `datathon`) | as A01 | - | - | - | - | - | **not evaluated on 40 yet**; 1-video smoke test |
 | [A13](A13-detection-spike/) | teammate (datathon) | Spike: can open-vocabulary detectors or a VLM see the objects on 20 hand-labelled frames | OWLv2, Grounding DINO, Qwen2.5-VL-7B | n/a | per-frame checks: OWLv2 17/33, GDINO 13/33, VLM 21/33 | - | - | 4.1 s per frame (VLM) | measured; cash seen 4/11 by all |
+| [A14](A14-glass-reflection-fix/) | agent (datathon) | A12 + glass-reflection filter, laptop-desk calibration, near/far cashier split; per-job traces, replay, /compare | as A01 | 23/42 (files) | 9/22 | 6/20 | - | 146.6 s | live; outsider on clean 10 -> 0, misses up |
+| [A15](A15-vlm-roles-spike/) | agent (datathon) | Spike: per-person role + situation from one frame with numbered boxes | Qwen2.5-VL-7B (bf16) | n/a | cashier right in 5/21 two-person frames | - | - | 6.4 s per frame (median) | measured; rejected (swaps cashier and client) |
+| [A16](A16-cashier-side-from-lone-person/) | agent (offline replay) | Cashier side = where a lone person works at the laptop (any camera angle) | as A14 | 21/42 (files) | 15/22 | 14/20 | - | - | measured offline, not deployed; roles right on front-facing cameras, exposes leave-rule FPs |
+| [A17](A17-leave-rule-fixes/) | agent (datathon) | A16 + leave rules: laptop not a tablet, away = out of laptop reach, item still on desk 2 s later | as A14 | 26/42 (files) | 12/22 | 6/20 | - | 144.4 s | live; replay = live on all 42 files |
 
 ## Takeaways so far
 

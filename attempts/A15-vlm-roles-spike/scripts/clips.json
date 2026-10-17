@@ -1,0 +1,72 @@
+[
+ {
+  "n": 2,
+  "clip": "X-2.mov",
+  "job_id": "4e0d4b4996a74b2ba1b86cf4fceb5f1d",
+  "label": "violation",
+  "labelled_event": "Приём наличных без идентификации клиента"
+ },
+ {
+  "n": 3,
+  "clip": "Х-3.mov",
+  "job_id": "ec09eab761bb4f0880880eaf5fc7ae2d",
+  "label": "no_violation",
+  "labelled_event": null
+ },
+ {
+  "n": 13,
+  "clip": "Х-13.mov",
+  "job_id": "d306ac3836534b39831a2aeac8a9e97d",
+  "label": "violation",
+  "labelled_event": "Деньги из вскрытой сумки убраны в сейф без пересчёта и учёта"
+ },
+ {
+  "n": 14,
+  "clip": "Х-14.mov",
+  "job_id": "70b716abcc8e44b7b73a520a1b95c11c",
+  "label": "no_violation",
+  "labelled_event": null
+ },
+ {
+  "n": 17,
+  "clip": "Х-17.mov",
+  "job_id": "02cb4bf5233b468ea0c103171ff5fe9a",
+  "label": "violation",
+  "labelled_event": "Инкассация: сумка принята без проверки целостности/пломбы и документов"
+ },
+ {
+  "n": 19,
+  "clip": "Х-19.mov",
+  "job_id": "b60af29e850040a2891580bd2ee3041c",
+  "label": "no_violation",
+  "labelled_event": null
+ },
+ {
+  "n": 30,
+  "clip": "Х-30.mov",
+  "job_id": "7ca46fb963f343e99d72276ed3ddc659",
+  "label": "violation",
+  "labelled_event": "Посторонний в кассовой кабине (дверь не закрыта)"
+ },
+ {
+  "n": 33,
+  "clip": "Х-33.mov",
+  "job_id": "458d1dbfc4a94c45973a61ffb7c040c2",
+  "label": "violation",
+  "labelled_event": "Дверь не закрыта + посторонний в кассе"
+ },
+ {
+  "n": 39,
+  "clip": "Х-39.mov",
+  "job_id": "5bb4018e096e468d81d06888904ba2f3",
+  "label": "no_violation",
+  "labelled_event": null
+ },
+ {
+  "n": 46,
+  "clip": "Х-46.mov",
+  "job_id": "38ddd5e62ff84a6890903713bd880a92",
+  "label": "violation",
+  "labelled_event": "Еда и напитки на рабочем месте"
+ }
+]

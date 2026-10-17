@@ -18,6 +18,8 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
   later gets every past result in the first snapshot. A restarted gateway reloads it,
   re-queues unfinished folder clips from scratch, and marks unfinished uploads as failed
   (their temp files are gone).
+- To keep a finished run for `/compare`, copy `state.json` to `state.<name>.json` in the same
+  folder before starting the next run.
 - The page loads `/api/state` over plain HTTP on open, then follows `/ws`. While the socket
   is down it re-reads `/api/state` every 3 s.
 
@@ -31,6 +33,11 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
 | POST | `/api/run-folder` | queues every `.mov` in `VIDEO_DIR`, in clip-number order |
 | GET | `/api/state` | same as the snapshot |
 | GET | `/api/config` | `{folder, labels}` |
+| GET | `/api/items/{id}/video` | the item's source video (Range requests, for the replay player) |
+| GET | `/api/items/{id}/trace` | the checker's per-job trace (boxes, roles, events), proxied with the gateway's key |
+| GET | `/compare` | page comparing runs per clip; the `live` column follows `/ws` |
+| GET | `/api/runs` | `{"runs": ["live", ...saved]}`; saved runs are files `state.<name>.json` next to `STATE_FILE` |
+| GET | `/api/runs/{name}` | that run's items without evidence images |
 
 Item `status`: `queued -> submitting -> processing -> done | failed`. A `done` item carries
 the checker's `DoneJob` verbatim in `result`.

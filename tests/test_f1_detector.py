@@ -9,6 +9,7 @@ helper functions here; the full run is marked `xfail`/skipped with a reason.
 
 from __future__ import annotations
 
+import json
 import sys
 import time
 
@@ -161,3 +162,41 @@ def test_extract_frames_produces_one_jpeg_per_step(tmp_path):
 )
 def test_detect_runs_end_to_end():
     raise AssertionError("not runnable here")
+
+
+def test_trace_records_state_changes_roles_and_events(tmp_path):
+    from backend.f1.detector import build_trace, write_trace
+    from backend.f1.events import EventLog
+    from backend.f1.vision_types import Detection, Event, Observation, Scene, State
+
+    person = Detection(
+        label="person", score=0.9, box=(0.1, 0.2, 0.3, 0.9), track_id="person:1", role="cashier"
+    )
+    observations = [
+        Observation(
+            timestamp_sec=t,
+            detections=[person],
+            states={"safe": State(value=value, score=0.8, margin=0.2)},
+        )
+        for t, value in ((0.0, "closed"), (0.5, "closed"), (1.0, "open"))
+    ]
+    log = EventLog([Event(timestamp_sec=1.0, type="SAFE_OPEN", facts={})], {}, [], {})
+    trace = build_trace("ab" * 32, {"cache_hit": True}, 1.5, Scene(objects={}), observations, log)
+    assert [(c["t"], c["value"]) for c in trace["state_changes"]] == [
+        (0.0, "closed"),
+        (1.0, "open"),
+    ]
+    assert trace["frames"][0]["dets"][0][:3] == ["person", "person:1", "cashier"]
+    assert trace["events"][0]["type"] == "SAFE_OPEN" and trace["perception_cache_hit"]
+    path = tmp_path / "traces" / "job.json"
+    write_trace(path, trace)
+    assert json.loads(path.read_text())["video_sha256"] == "ab" * 32
+
+
+def test_trace_write_failure_is_logged_not_raised(tmp_path, caplog):
+    from backend.f1.detector import write_trace
+
+    blocker = tmp_path / "traces"
+    blocker.write_text("a file where the directory should be")
+    write_trace(blocker / "job.json", {})
+    assert "Could not write trace" in caplog.text

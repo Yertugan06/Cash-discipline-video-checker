@@ -1,0 +1,159 @@
+--- /tmp/claude-1000/-home-sultanbek-projects-hackathons-datathon26/64e91d44-7b49-468d-b3f6-bfabf0d02dc7/scratchpad/deployed/backend/f1/calibration.py	2026-10-17 22:35:58.000000000 +0500
++++ backend/f1/calibration.py	2026-10-17 23:13:27.405807182 +0500
+@@ -9,13 +9,17 @@
+ from backend.f1.vision_types import (
+     Box,
+     Detection,
++    Observation,
+     Point,
+     Scene,
+     center,
+     contains,
++    distance,
+     overlap,
+ )
+ 
++LAPTOP_REACH = 0.25  # normalised distance from the laptop centre to someone working at it
++
+ 
+ class Override(BaseModel):
+     model_config = ConfigDict(extra="forbid")
+@@ -108,14 +112,7 @@
+         x1, y1, x2, y2 = detection.box
+         scene.zones.setdefault(name, [(x1, y1), (x2, y1), (x2, y2), (x1, y2)])
+     if "desk" in objects and "laptop" in objects:
+-        # The cashier sits on the near (lower) side of the desk, clients stand on the far side.
+-        # The desk->laptop vector used before runs sideways when the laptop is at a desk end.
+-        # shortcut: assumes the camera looks over the cashier's shoulder (every open clip does);
+-        # a camera facing the cashier needs manual cashier/client zones in overrides.yaml.
+-        origin = center(objects["desk"].box)
+-        scene.cashier_direction = (0.0, 1.0)
+-        scene.zones.setdefault("cashier", half_plane(origin, scene.cashier_direction, 1))
+-        scene.zones.setdefault("client", half_plane(origin, scene.cashier_direction, -1))
++        # The cashier/client split needs to know where the cashier works; see orient_cashier_side.
+         scene.confidence = min(objects["desk"].score * 3, objects["laptop"].score * 3, 1)
+     if "cashier" in override.zones and "client" in override.zones:
+         scene.confidence = 1
+@@ -131,6 +128,37 @@
+     return scene
+ 
+ 
++def orient_cashier_side(scene: Scene, observations: list[Observation]) -> None:
++    """Split the room along the desk's long side, cashier on the side where the person working
++    at the laptop spends the clip. Learned from the video, so it holds for any camera angle
++    (over the shoulder, facing the cashier, from the side). Manual zones win."""
++    if "cashier" in scene.zones or "desk" not in scene.objects or "laptop" not in scene.objects:
++        return
++    laptop = center(scene.objects["laptop"].box)
++    nearest = []
++    for observation in observations:
++        people = [d.position() for d in observation.detections if d.label == "person"]
++        if people:
++            point = min(people, key=lambda p: distance(p, laptop))
++            if distance(point, laptop) <= LAPTOP_REACH:
++                nearest.append(point)
++    # Clients come and go; the cashier is the one at the laptop most of the time.
++    if len(nearest) < max(3, 0.2 * len(observations)):
++        scene.confidence = 0
++        scene.warnings.append(
++            "Не видно, с какой стороны стола работает кассир; задайте ручные зоны."
++        )
++        return
++    anchor = tuple(float(np.median([p[i] for p in nearest])) for i in (0, 1))
++    x1, y1, x2, y2 = scene.objects["desk"].box
++    origin = center(scene.objects["desk"].box)
++    axis = 1 if x2 - x1 >= y2 - y1 else 0  # a desk wide in the image splits top/bottom
++    side = 1.0 if anchor[axis] >= origin[axis] else -1.0
++    scene.cashier_direction = (0.0, side) if axis else (side, 0.0)
++    scene.zones["cashier"] = half_plane(origin, scene.cashier_direction, 1)
++    scene.zones["client"] = half_plane(origin, scene.cashier_direction, -1)
++
++
+ def in_zone(scene: Scene, name: str, point: Point, margin: float = 0) -> bool:
+     import cv2
+ 
+--- /tmp/claude-1000/-home-sultanbek-projects-hackathons-datathon26/64e91d44-7b49-468d-b3f6-bfabf0d02dc7/scratchpad/deployed/backend/f1/events.py	2026-10-17 22:44:19.000000000 +0500
++++ backend/f1/events.py	2026-10-17 23:13:27.406299007 +0500
+@@ -3,7 +3,7 @@
+ from collections import defaultdict
+ from dataclasses import dataclass
+ 
+-from backend.f1.calibration import in_zone
++from backend.f1.calibration import in_zone, orient_cashier_side
+ from backend.f1.vision_types import (
+     Detection,
+     Event,
+@@ -710,6 +710,7 @@
+ def build_events(
+     scene: Scene, observations: list[Observation], config: dict, fps: float, duration: float
+ ) -> EventLog:
++    orient_cashier_side(scene, observations)
+     builder = EventBuilder(scene, config, fps)
+     for observation in observations:
+         builder.push(observation)
+--- /tmp/claude-1000/-home-sultanbek-projects-hackathons-datathon26/64e91d44-7b49-468d-b3f6-bfabf0d02dc7/scratchpad/deployed/tests/test_f1_rules.py	2026-10-17 22:36:04.000000000 +0500
++++ tests/test_f1_rules.py	2026-10-17 23:13:51.586193128 +0500
+@@ -335,8 +335,6 @@
+     cash_desk = Detection(label="desk", score=0.2, box=(0.05, 0.42, 0.75, 0.6))
+     scene = calibrate([laptop, behind_glass, cash_desk], overrides, "0" * 64)
+     assert scene.objects["desk"].box == cash_desk.box
+-    # laptop at the desk's right end: the far side of the desk is still the client side
+-    assert scene.cashier_side((0.4, 0.62)) and not scene.cashier_side((0.45, 0.45))
+     assert scene.candidates == [laptop, behind_glass, cash_desk]
+     lonely = calibrate([laptop, behind_glass], overrides, "0" * 64)
+     assert "desk" not in lonely.objects and lonely.confidence == 0
+@@ -372,3 +370,54 @@
+     assert all(
+         d.role == "glass" for o in observations for d in o.detections if d.track_id == "person:2"
+     )
++
++
++def person_at(x, y, track="person:1"):
++    body = [(0.0, 0.0, 0.0)] * 17
++    body[11] = body[12] = (x, y, 0.9)
++    return Detection(
++        label="person",
++        score=0.9,
++        box=(x - 0.1, y - 0.2, x + 0.1, y + 0.1),
++        track_id=track,
++        body=body,
++    )
++
++
++def oriented(desk, laptop, cashier_point, client_point=None):
++    from backend.f1.calibration import orient_cashier_side
++
++    scene = Scene(
++        objects={
++            "desk": Detection(label="desk", score=1, box=desk),
++            "laptop": Detection(label="laptop", score=1, box=laptop),
++        },
++        confidence=1,
++    )
++    frames = []
++    for i in range(10):
++        people = [person_at(*cashier_point)]
++        if client_point and i < 4:  # a client visits for part of the clip
++            people.append(person_at(*client_point, track="person:2"))
++        frames.append(Observation(timestamp_sec=i / 2, detections=people))
++    orient_cashier_side(scene, frames)
++    return scene
++
++
++def test_cashier_side_is_learned_for_any_camera_angle():
++    desk, laptop = (0.05, 0.42, 0.75, 0.6), (0.5, 0.44, 0.66, 0.53)
++    # camera over the cashier's shoulder: cashier below the desk centre, client behind the desk
++    over_shoulder = oriented(desk, laptop, (0.5, 0.65), client_point=(0.45, 0.45))
++    assert over_shoulder.cashier_side((0.5, 0.65)) and not over_shoulder.cashier_side((0.45, 0.45))
++    # camera facing the cashier, who stands behind the desk: the split flips
++    facing = oriented(desk, laptop, (0.55, 0.4), client_point=(0.45, 0.7))
++    assert facing.cashier_side((0.55, 0.4)) and not facing.cashier_side((0.45, 0.7))
++    # side view: the desk is tall in the image, so the room splits left/right
++    side = oriented((0.4, 0.2, 0.55, 0.8), (0.42, 0.45, 0.5, 0.55), (0.3, 0.5))
++    assert side.cashier_direction == (-1.0, 0.0)
++
++
++def test_cashier_side_stays_unknown_when_nobody_works_at_the_laptop():
++    scene = oriented((0.05, 0.42, 0.75, 0.6), (0.5, 0.44, 0.66, 0.53), (0.05, 0.05))
++    assert "cashier" not in scene.zones and scene.confidence == 0
++    assert scene.warnings

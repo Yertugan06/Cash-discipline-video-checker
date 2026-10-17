@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import time
+from pathlib import Path
 
 import httpx
 import pytest
@@ -35,6 +37,7 @@ class FakeChecker:
         self.polls: dict[str, int] = {}
         self.uploads: list[tuple[str, str | None]] = []
         self.log: list[str] = []
+        self.traces: dict[str, dict] = {}
 
     def __call__(self, request: httpx.Request) -> httpx.Response:
         if request.method == "POST" and request.url.path == "/api/v1/analyze":
@@ -45,6 +48,11 @@ class FakeChecker:
             self.log.append("upload")
             self.polls[job_id] = 0
             return httpx.Response(202, json={"job_id": job_id})
+        if request.url.path.endswith("/trace"):
+            job_id = request.url.path.split("/")[-2]
+            if job_id not in self.traces:
+                return httpx.Response(404, json={"detail": "Trace not found"})
+            return httpx.Response(200, json=self.traces[job_id])
         job_id = request.url.path.rsplit("/", 1)[-1]
         self.polls[job_id] += 1
         if self.polls[job_id] < 3:
@@ -210,3 +218,97 @@ def test_restart_requeues_unfinished_folder_clips_and_fails_lost_uploads(tmp_pat
     assert items["b"]["status"] == "failed"
     assert "restart" in items["b"]["error"]
     assert fake.log == ["upload", "finished"]
+
+
+def test_replay_serves_the_folder_video_and_proxies_the_trace(tmp_path):
+    videos = tmp_path / "videos"
+    videos.mkdir()
+    (videos / "X-1.mov").write_bytes(b"0123456789")
+    fake = FakeChecker()
+    fake.traces["job1"] = {"frames": [{"t": 0.0, "dets": []}]}
+    client = make_client(tmp_path, fake, video_dir=videos)
+    with client, client.websocket_connect("/ws") as ws:
+        ws.receive_json()
+        client.post("/api/run-folder")
+        item = receive_until_finished(ws, 1)["X-1.mov"]
+        video = client.get(f"/api/items/{item['id']}/video", headers={"Range": "bytes=2-5"})
+        trace = client.get(f"/api/items/{item['id']}/trace")
+    assert video.status_code == 206 and video.content == b"2345"
+    assert video.headers["content-type"] == "video/mp4"
+    assert trace.status_code == 200 and trace.json() == fake.traces["job1"]
+
+
+def test_replay_keeps_uploads_and_reports_missing_traces(tmp_path):
+    client = make_client(tmp_path, FakeChecker())
+    with client, client.websocket_connect("/ws") as ws:
+        ws.receive_json()
+        client.post("/api/upload", files=[("files", ("X-2.mov", b"upload", "video/quicktime"))])
+        item = receive_until_finished(ws, 1)["X-2.mov"]
+        video = client.get(f"/api/items/{item['id']}/video")
+        trace = client.get(f"/api/items/{item['id']}/trace")
+        unknown = client.get("/api/items/nope/video")
+    assert video.status_code == 200 and video.content == b"upload"
+    assert trace.status_code == 404
+    assert unknown.status_code == 404
+
+
+def test_folder_run_with_a_state_file_survives_overlapping_saves(tmp_path, monkeypatch):
+    original_replace = Path.replace
+
+    def slow_replace(self, target):  # writing a multi-MB state file leaves this window on the VM
+        time.sleep(0.02)
+        return original_replace(self, target)
+
+    monkeypatch.setattr(Path, "replace", slow_replace)
+
+    videos = tmp_path / "videos"
+    videos.mkdir()
+    for n in range(1, 13):
+        (videos / f"X-{n}.mov").write_bytes(b"x")
+    state = tmp_path / "state.json"
+    client = make_client(tmp_path, FakeChecker(), video_dir=videos, state_file=state)
+    with client:
+        assert client.post("/api/run-folder").json() == {"queued": 12}
+    assert len(json.loads(state.read_text())) == 12
+
+
+def test_compare_lists_saved_runs_and_serves_them_without_evidence(tmp_path):
+    state = tmp_path / "state" / "state.json"
+    state.parent.mkdir()
+    saved = [
+        {
+            "id": "a",
+            "name": "X-1.mov",
+            "source": "folder",
+            "status": "done",
+            "verdict": "violation",
+            "label": "no_violation",
+            "started_at": 10.0,
+            "finished_at": 12.5,
+            "result": {"job_id": "j", **DONE},
+        }
+    ]
+    (state.parent / "state.before-fix.json").write_text(json.dumps(saved))
+    with make_client(tmp_path, FakeChecker(), state_file=state) as client:
+        names = client.get("/api/runs").json()["runs"]
+        run = client.get("/api/runs/before-fix").json()
+        live = client.get("/api/runs/live").json()
+        unknown = client.get("/api/runs/..%2F..%2Fetc").status_code
+        page = client.get("/compare")
+    assert names == ["live", "before-fix"]
+    assert run["items"] == [
+        {
+            "name": "X-1.mov",
+            "label": "no_violation",
+            "status": "done",
+            "verdict": "violation",
+            "error": None,
+            "seconds": 2.5,
+            "violations": [
+                {"rule_id": None, "type": DONE["violations"][0]["type"], "timecode_sec": 20.0}
+            ],
+        }
+    ]
+    assert live == {"name": "live", "items": []}
+    assert unknown == 404
+    assert page.status_code == 200 and "Compare runs" in page.text

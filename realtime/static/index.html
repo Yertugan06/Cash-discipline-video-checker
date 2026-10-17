@@ -26,9 +26,9 @@
   .conn { font-size: 12px; color: var(--muted); }
   .conn b { color: var(--ok); } .conn.off b { color: var(--viol); }
   .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-  button, label.btn { border: 1px solid var(--line); background: var(--card); color: var(--text);
+  button, label.btn, a.btn { border: 1px solid var(--line); background: var(--card); color: var(--text);
     padding: 7px 12px; border-radius: 8px; cursor: pointer; font: inherit; }
-  button:hover, label.btn:hover { border-color: var(--run); }
+  button:hover, label.btn:hover, a.btn:hover { border-color: var(--run); }
   button:disabled { opacity: .5; cursor: default; }
   input[type=file] { display: none; }
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 16px 0; }
@@ -58,6 +58,13 @@
   .frames figure { margin: 0; }
   .frames img { width: 240px; max-width: 100%; border-radius: 6px; border: 1px solid var(--line); display: block; }
   .frames figcaption { font-size: 12px; color: var(--muted); }
+  .replay { margin: 4px 0 16px; }
+  .player { position: relative; display: inline-block; width: 100%; max-width: 380px; }
+  .player video { width: 100%; display: block; border-radius: 6px; background: #000; }
+  .player canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .replay-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+  .evline { font: 12px/1.5 ui-monospace, monospace; color: var(--muted); min-height: 54px; white-space: pre-wrap; }
+  .seek { border: 0; padding: 0; background: none; color: var(--run); cursor: pointer; font: inherit; text-decoration: underline; }
   .pulse { animation: pulse 1.2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .45; } }
   @media (max-width: 700px) {
@@ -76,6 +83,7 @@
     <div class="actions">
       <label class="btn">Upload .mov<input id="files" type="file" accept=".mov" multiple></label>
       <button id="folder" disabled>Run server folder</button>
+      <a class="btn" href="/compare" style="text-decoration:none">Compare runs</a>
     </div>
   </header>
   <section class="stats" id="stats"></section>
@@ -124,15 +132,84 @@ function detail(it) {
   const cov = r.coverage ? `<div class="muted">coverage: ${r.coverage.mode}, ${r.coverage.done}/${r.coverage.planned} frames${r.coverage.deadline_hit ? ", deadline hit" : ""}</div>` : "";
   const viols = r.violations.map((v) => `
     <div class="viol">
-      <h3>${esc(v.type)} <span class="muted">@ ${v.timecode_sec.toFixed(1)} s · ${esc(v.rule_id ?? "")}</span></h3>
+      <h3>${esc(v.type)} <span class="muted">@ <button class="seek" data-seek="${v.timecode_sec}">${v.timecode_sec.toFixed(1)} s</button> · ${esc(v.rule_id ?? "")}</span></h3>
       <div>${esc(v.description)}</div>
       ${v.source ? `<div class="muted">${esc(v.source)}${v.citation_status ? " · " + esc(v.citation_status) : ""}</div>` : ""}
       <div class="frames">${v.evidence_frames.map((f) => `<figure><img loading="lazy" src="data:image/jpeg;base64,${f.image_base64}" alt="frame at ${f.timestamp_sec} s"><figcaption>${f.timestamp_sec.toFixed(1)} s</figcaption></figure>`).join("")}</div>
     </div>`).join("");
-  return `<div class="muted">job ${esc(it.job_id)}</div>${cov}${warn}<div style="margin-top:10px">${viols || "No violations reported."}</div>`;
+  return `<div class="muted">job ${esc(it.job_id)}</div>${cov}${warn}<div class="replay-slot" data-id="${it.id}"></div><div style="margin-top:10px">${viols || "No violations reported."}</div>`;
+}
+
+// ---- replay: the source video with the trace's per-frame boxes drawn over it ----
+const traces = new Map(); // item id -> trace JSON, or null when the checker has none
+const ROLE_COLOR = { cashier: "#1fbf5f", client: "#2b8cff", outsider: "#ff3b3b", collector: "#b05cff", visitor: "#f0a020", glass: "#9aa1ad" };
+let showObjects = true;
+try { showObjects = localStorage.getItem("replay.objects") !== "off"; } catch {}
+
+function mountReplay(id) {
+  const box = document.createElement("div");
+  box.className = "replay";
+  box.dataset.id = id;
+  box.innerHTML = `<div class="player"><video controls playsinline preload="metadata" src="/api/items/${id}/video"></video><canvas></canvas></div>
+    <div class="replay-bar"><label><input type="checkbox" class="objects" ${showObjects ? "checked" : ""}> Objects</label><span class="muted note">loading trace...</span></div>
+    <div class="evline"></div>`;
+  const video = box.querySelector("video");
+  const redraw = () => drawReplay(box);
+  const loop = () => { redraw(); if (!video.paused && !video.ended) requestAnimationFrame(loop); };
+  video.addEventListener("play", loop);
+  ["loadedmetadata", "seeked", "timeupdate"].forEach((e) => video.addEventListener(e, redraw));
+  video.addEventListener("error", () => { box.querySelector(".note").textContent = "video file not available"; });
+  box.querySelector(".objects").addEventListener("change", (e) => {
+    showObjects = e.target.checked;
+    try { localStorage.setItem("replay.objects", showObjects ? "on" : "off"); } catch {}
+    redraw();
+  });
+  if (!traces.has(id)) {
+    fetch(`/api/items/${id}/trace`).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((t) => { traces.set(id, t); redraw(); });
+  }
+  redraw();
+  return box;
+}
+
+function drawReplay(box) {
+  const video = box.querySelector("video");
+  const canvas = box.querySelector("canvas");
+  const trace = traces.get(box.dataset.id);
+  const note = box.querySelector(".note");
+  if (traces.has(box.dataset.id)) note.textContent = trace ? `${trace.frames.length} frames @ ${trace.fps} fps` : "no trace for this job";
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(canvas.clientWidth * dpr);
+  canvas.height = Math.round(canvas.clientHeight * dpr);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!trace) return;
+  const t = video.currentTime;
+  box.querySelector(".evline").textContent = trace.events.filter((e) => e.timestamp_sec <= t).slice(-3)
+    .map((e) => `${e.timestamp_sec.toFixed(1)}s ${e.type} ${e.facts.actor_id ?? e.facts.track_id ?? ""} ${e.facts.role ?? e.facts.state ?? e.facts.location ?? ""}`).join("\n");
+  if (!showObjects || !trace.frames.length) return;
+  const frame = trace.frames[Math.min(trace.frames.length - 1, Math.round(t * trace.fps))];
+  ctx.lineWidth = 2 * dpr;
+  ctx.font = `${11 * dpr}px system-ui, sans-serif`;
+  for (const [label, track, role, x1, y1, x2, y2] of frame.dets) {
+    const person = label === "person";
+    const color = person ? ROLE_COLOR[role] ?? "#f0a020" : "#00c8d7";
+    const [x, y, w, h] = [x1 * canvas.width, y1 * canvas.height, (x2 - x1) * canvas.width, (y2 - y1) * canvas.height];
+    ctx.setLineDash(role === "glass" ? [5 * dpr, 4 * dpr] : []);
+    ctx.strokeStyle = color;
+    ctx.strokeRect(x, y, w, h);
+    const tag = `${person ? role : label} ${track.split(":")[1] ?? ""}`;
+    const tw = ctx.measureText(tag).width + 6 * dpr;
+    ctx.fillStyle = color;
+    ctx.fillRect(x, Math.max(0, y - 14 * dpr), tw, 14 * dpr);
+    ctx.fillStyle = "#000";
+    ctx.fillText(tag, x + 3 * dpr, Math.max(0, y - 14 * dpr) + 11 * dpr);
+  }
 }
 
 function render() {
+  // Keep the open player across re-renders: re-inserting it in the same task keeps it playing.
+  const player = document.querySelector(".replay");
   const list = [...items.values()].sort((a, b) => a.queued_at - b.queued_at);
   $("list").innerHTML = list.map((it) => {
     const state = it.status === "done" ? it.verdict : it.status;
@@ -153,10 +230,15 @@ function render() {
       <div class="detail">${openId === it.id ? detail(it) : ""}</div>
     </div>`;
   }).join("");
+  const slot = document.querySelector(".replay-slot");
+  if (slot) slot.replaceWith(player?.dataset.id === slot.dataset.id ? player : mountReplay(slot.dataset.id));
   stats();
 }
 
 $("list").addEventListener("click", (e) => {
+  const seek = e.target.closest("[data-seek]");
+  const video = document.querySelector(".replay video");
+  if (seek && video) { video.currentTime = Number(seek.dataset.seek); video.scrollIntoView({ block: "nearest" }); }
   if (e.target.closest(".detail")) return;
   const el = e.target.closest(".item");
   if (!el) return;
@@ -213,7 +295,7 @@ $("folder").addEventListener("click", () => post("/api/run-folder"));
 fetch("/api/config").then((r) => r.json()).then((c) => {
   $("folder").disabled = !c.folder;
   $("folder").title = c.folder ?? "VIDEO_DIR not set";
-  $("hint").textContent = `${c.folder ? "Server folder: " + c.folder + ". " : ""}${c.labels ? c.labels + " organizer labels loaded for comparison." : "No labels loaded."} Videos run one at a time; click a row for evidence.`;
+  $("hint").textContent = `${c.folder ? "Server folder: " + c.folder + ". " : ""}${c.labels ? c.labels + " organizer labels loaded for comparison." : "No labels loaded."} Videos run one at a time; click a row for evidence and the replay.`;
 });
 setInterval(() => {
   for (const it of items.values()) {

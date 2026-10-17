@@ -1,0 +1,239 @@
+VIDEO Х-17 violation [7] door [0.18, 0.0, 0.35, 0.51]
+  person:1     n= 29 t=  0.0- 14.0 score=0.79 kp=0.41 h=0.20 w=0.25 cx=0.46 bottom=0.62 in_door=0.00
+  person:11    n= 16 t=  4.0- 11.5 score=0.86 kp=0.62 h=0.23 w=0.18 cx=0.16 bottom=0.44 in_door=0.38
+  person:2     n=  6 t=  0.0-  2.5 score=0.37 kp=0.36 h=0.09 w=0.09 cx=0.06 bottom=0.30 in_door=0.00
+  person:26    n=  2 t= 13.5- 14.0 score=0.47 kp=0.34 h=0.06 w=0.08 cx=0.06 bottom=0.27 in_door=0.00
+VIDEO Х-30 violation [13] door [0.0, 0.0, 0.24, 0.56]
+  person:11    n= 23 t=  6.0- 18.5 score=0.87 kp=0.58 h=0.19 w=0.19 cx=0.42 bottom=0.44 in_door=0.00
+  person:24    n= 12 t= 13.0- 18.5 score=0.88 kp=0.74 h=0.24 w=0.22 cx=0.17 bottom=0.46 in_door=1.00
+  person:2     n=  9 t=  1.0-  5.0 score=0.84 kp=0.64 h=0.19 w=0.14 cx=0.30 bottom=0.40 in_door=0.22
+  person:30    n=  6 t= 15.5- 18.0 score=0.30 kp=0.28 h=0.09 w=0.06 cx=0.08 bottom=0.25 in_door=1.00
+  person:19    n=  3 t= 12.0- 13.0 score=0.44 kp=0.23 h=0.14 w=0.08 cx=0.35 bottom=0.36 in_door=0.00
+  person:33    n=  3 t= 16.5- 17.5 score=0.44 kp=0.20 h=0.11 w=0.08 cx=0.34 bottom=0.31 in_door=0.00
+VIDEO Х-19 no_violation [] door [0.18, 0.0, 0.35, 0.49]
+  person:1     n=115 t=  0.0- 57.0 score=0.84 kp=0.53 h=0.24 w=0.26 cx=0.48 bottom=0.65 in_door=0.00
+  person:8     n= 84 t=  5.0- 49.5 score=0.71 kp=0.49 h=0.10 w=0.13 cx=0.08 bottom=0.31 in_door=0.00
+  person:5     n= 81 t=  2.5- 45.5 score=0.87 kp=0.55 h=0.13 w=0.17 cx=0.41 bottom=0.43 in_door=0.09
+  person:33    n=  7 t= 54.0- 57.0 score=0.90 kp=0.55 h=0.14 w=0.18 cx=0.35 bottom=0.44 in_door=0.14
+  person:34    n=  7 t= 54.0- 57.0 score=0.74 kp=0.49 h=0.11 w=0.12 cx=0.07 bottom=0.31 in_door=0.00
+  person:26    n=  5 t= 47.0- 50.5 score=0.85 kp=0.71 h=0.25 w=0.14 cx=0.31 bottom=0.43 in_door=0.80
+  person:2     n=  4 t=  0.0-  1.5 score=0.78 kp=0.50 h=0.11 w=0.13 cx=0.06 bottom=0.32 in_door=0.00
+  person:31    n=  3 t= 51.5- 52.5 score=0.90 kp=0.72 h=0.26 w=0.17 cx=0.19 bottom=0.44 in_door=0.67
+  person:39    n=  3 t= 56.0- 57.0 score=0.63 kp=0.21 h=0.07 w=0.10 cx=0.17 bottom=0.29 in_door=0.00
+VIDEO Х-48 no_violation [] door [0.16, 0.01, 0.33, 0.53]
+  person:2     n=143 t=  0.0- 71.0 score=0.78 kp=0.49 h=0.22 w=0.24 cx=0.49 bottom=0.68 in_door=0.00
+  person:1     n=118 t=  0.0- 59.5 score=0.90 kp=0.61 h=0.14 w=0.20 cx=0.33 bottom=0.49 in_door=0.92
+  person:9     n=107 t=  4.5- 59.5 score=0.71 kp=0.48 h=0.08 w=0.11 cx=0.06 bottom=0.35 in_door=0.00
+  person:16    n= 92 t=  7.0- 55.5 score=0.46 kp=0.27 h=0.06 w=0.11 cx=0.15 bottom=0.34 in_door=0.01
+  person:4     n= 75 t=  0.0- 41.0 score=0.35 kp=0.20 h=0.03 w=0.05 cx=0.50 bottom=0.46 in_door=0.00
+  person:15    n= 50 t=  7.0- 40.5 score=0.27 kp=0.38 h=0.17 w=0.12 cx=0.15 bottom=0.45 in_door=0.00
+  person:52    n= 21 t= 50.0- 60.0 score=0.30 kp=0.18 h=0.03 w=0.05 cx=0.50 bottom=0.46 in_door=0.00
+  person:68    n= 10 t= 62.5- 67.0 score=0.87 kp=0.64 h=0.24 w=0.18 cx=0.14 bottom=0.49 in_door=0.40
+  person:73    n= 10 t= 64.0- 68.5 score=0.27 kp=0.15 h=0.03 w=0.05 cx=0.50 bottom=0.46 in_door=0.00
+  person:78    n=  7 t= 68.0- 71.0 score=0.85 kp=0.58 h=0.13 w=0.22 cx=0.40 bottom=0.48 in_door=0.14
+  person:79    n=  6 t= 68.5- 71.0 score=0.75 kp=0.47 h=0.08 w=0.12 cx=0.06 bottom=0.35 in_door=0.00
+  person:3     n=  2 t=  0.0-  0.5 score=0.67 kp=0.51 h=0.11 w=0.12 cx=0.06 bottom=0.37 in_door=0.00
+  person:65    n=  2 t= 62.0- 62.5 score=0.66 kp=0.49 h=0.10 w=0.11 cx=0.05 bottom=0.37 in_door=0.00
+VIDEO Х-33 violation [6] door [0.0, 0.0, 0.19, 0.54]
+  person:14    n= 16 t=  5.0- 14.0 score=0.86 kp=0.58 h=0.14 w=0.21 cx=0.42 bottom=0.46 in_door=0.00
+  person:20    n=  6 t= 11.5- 14.0 score=0.90 kp=0.58 h=0.18 w=0.16 cx=0.35 bottom=0.37 in_door=0.00
+  person:22    n=  4 t= 12.5- 14.0 score=0.39 kp=0.15 h=0.11 w=0.11 cx=0.20 bottom=0.29 in_door=0.00
+VIDEO Х-3 no_violation [] door [0.17, 0.01, 0.51, 0.52]
+  person:1     n= 40 t=  0.0- 19.5 score=0.77 kp=0.50 h=0.23 w=0.24 cx=0.49 bottom=0.69 in_door=0.00
+  person:3     n= 32 t=  0.0- 16.0 score=0.29 kp=0.14 h=0.03 w=0.06 cx=0.49 bottom=0.46 in_door=1.00
+  person:14    n= 26 t=  7.0- 19.5 score=0.76 kp=0.49 h=0.08 w=0.11 cx=0.06 bottom=0.35 in_door=0.00
+  person:12    n= 25 t=  6.5- 19.5 score=0.90 kp=0.57 h=0.13 w=0.18 cx=0.37 bottom=0.48 in_door=1.00
+  person:6     n=  5 t=  2.0-  4.5 score=0.87 kp=0.60 h=0.25 w=0.16 cx=0.15 bottom=0.49 in_door=0.20
+  person:2     n=  3 t=  0.0-  1.0 score=0.68 kp=0.50 h=0.12 w=0.11 cx=0.06 bottom=0.38 in_door=0.00
+  person:22    n=  3 t= 12.0- 13.0 score=0.50 kp=0.23 h=0.09 w=0.07 cx=0.17 bottom=0.38 in_door=1.00
+  person:11    n=  2 t=  4.5-  6.0 score=0.66 kp=0.39 h=0.09 w=0.10 cx=0.06 bottom=0.34 in_door=0.00
+VIDEO Х-35 no_violation [] door [0.0, 0.0, 0.28, 0.54]
+  person:1     n=113 t=  0.0- 56.5 score=0.76 kp=0.46 h=0.20 w=0.24 cx=0.48 bottom=0.63 in_door=0.00
+  person:3     n=104 t=  1.5- 53.5 score=0.89 kp=0.52 h=0.13 w=0.16 cx=0.44 bottom=0.44 in_door=0.11
+  person:29    n= 31 t= 23.5- 39.0 score=0.34 kp=0.16 h=0.05 w=0.06 cx=0.29 bottom=0.29 in_door=0.00
+  person:26    n= 15 t= 22.5- 29.5 score=0.61 kp=0.43 h=0.08 w=0.14 cx=0.19 bottom=0.30 in_door=1.00
+  person:17    n=  7 t= 14.5- 17.5 score=0.40 kp=0.34 h=0.08 w=0.06 cx=0.16 bottom=0.29 in_door=1.00
+  person:55    n=  5 t= 36.5- 38.5 score=0.36 kp=0.34 h=0.07 w=0.06 cx=0.16 bottom=0.29 in_door=1.00
+  person:20    n=  4 t= 16.0- 17.5 score=0.28 kp=0.41 h=0.10 w=0.12 cx=0.13 bottom=0.32 in_door=1.00
+  person:73    n=  4 t= 46.5- 48.5 score=0.40 kp=0.35 h=0.08 w=0.12 cx=0.19 bottom=0.29 in_door=1.00
+  person:9     n=  3 t=  6.0-  7.0 score=0.60 kp=0.35 h=0.14 w=0.17 cx=0.16 bottom=0.32 in_door=1.00
+  person:66    n=  2 t= 43.5- 44.0 score=0.50 kp=0.20 h=0.07 w=0.11 cx=0.20 bottom=0.29 in_door=1.00
+  person:85    n=  2 t= 51.5- 52.0 score=0.66 kp=0.33 h=0.13 w=0.13 cx=0.18 bottom=0.31 in_door=1.00
+  person:88    n=  2 t= 54.5- 55.0 score=0.85 kp=0.66 h=0.23 w=0.12 cx=0.43 bottom=0.42 in_door=0.00
+VIDEO Х-43 no_violation [] door [0.0, 0.0, 0.14, 0.56]
+  person:1     n= 47 t=  0.0- 23.0 score=0.88 kp=0.56 h=0.13 w=0.21 cx=0.33 bottom=0.48 in_door=0.00
+VIDEO Х-16 no_violation [] door [0.19, 0.0, 0.35, 0.49]
+  person:1     n= 45 t=  0.0- 22.0 score=0.81 kp=0.42 h=0.20 w=0.22 cx=0.46 bottom=0.62 in_door=0.00
+  person:12    n= 37 t=  4.0- 22.0 score=0.90 kp=0.67 h=0.22 w=0.24 cx=0.21 bottom=0.44 in_door=0.62
+  person:20    n= 10 t= 11.0- 15.5 score=0.82 kp=0.37 h=0.13 w=0.14 cx=0.10 bottom=0.30 in_door=0.00
+  person:26    n=  6 t= 19.0- 22.0 score=0.36 kp=0.31 h=0.05 w=0.07 cx=0.06 bottom=0.26 in_door=0.00
+  person:27    n=  6 t= 19.0- 22.0 score=0.44 kp=0.43 h=0.12 w=0.11 cx=0.05 bottom=0.33 in_door=0.00
+  person:2     n=  5 t=  0.0-  2.0 score=0.40 kp=0.39 h=0.08 w=0.09 cx=0.06 bottom=0.30 in_door=0.00
+  person:24    n=  3 t= 18.5- 19.5 score=0.80 kp=0.33 h=0.12 w=0.17 cx=0.11 bottom=0.30 in_door=0.00
+VIDEO Х-45 no_violation [] door [0.32, 0.0, 0.68, 0.43]
+  person:1     n= 67 t=  0.0- 33.0 score=0.89 kp=0.57 h=0.14 w=0.22 cx=0.38 bottom=0.46 in_door=1.00
+  person:19    n= 16 t= 24.0- 32.5 score=0.27 kp=0.13 h=0.05 w=0.08 cx=0.21 bottom=0.29 in_door=0.00
+VIDEO Х-47 violation [68] door [0.15, 0.01, 0.34, 0.52]
+  person:1     n=145 t=  0.0- 72.0 score=0.77 kp=0.50 h=0.23 w=0.23 cx=0.49 bottom=0.67 in_door=0.00
+  person:10    n= 86 t= 10.0- 52.5 score=0.91 kp=0.60 h=0.14 w=0.19 cx=0.34 bottom=0.49 in_door=0.14
+  person:11    n= 83 t= 10.0- 51.0 score=0.72 kp=0.49 h=0.08 w=0.11 cx=0.06 bottom=0.35 in_door=0.00
+  person:3     n= 82 t=  0.0- 42.0 score=0.33 kp=0.17 h=0.03 w=0.05 cx=0.50 bottom=0.46 in_door=0.00
+  person:25    n= 65 t= 15.0- 49.0 score=0.43 kp=0.19 h=0.05 w=0.07 cx=0.15 bottom=0.33 in_door=0.03
+  person:87    n= 26 t= 59.0- 72.0 score=0.78 kp=0.50 h=0.09 w=0.12 cx=0.06 bottom=0.35 in_door=0.00
+  person:30    n= 23 t= 19.0- 32.5 score=0.26 kp=0.40 h=0.18 w=0.11 cx=0.16 bottom=0.46 in_door=0.65
+  person:91    n= 23 t= 61.0- 72.0 score=0.89 kp=0.55 h=0.13 w=0.18 cx=0.37 bottom=0.48 in_door=0.00
+  person:2     n= 12 t=  0.0-  5.5 score=0.56 kp=0.50 h=0.12 w=0.12 cx=0.06 bottom=0.38 in_door=0.00
+  person:99    n= 11 t= 65.5- 71.5 score=0.28 kp=0.12 h=0.05 w=0.05 cx=0.18 bottom=0.34 in_door=1.00
+  person:80    n=  9 t= 55.5- 59.5 score=0.88 kp=0.62 h=0.24 w=0.17 cx=0.16 bottom=0.49 in_door=0.56
+  person:4     n=  8 t=  5.0-  8.5 score=0.89 kp=0.75 h=0.26 w=0.17 cx=0.22 bottom=0.48 in_door=0.88
+  person:17    n=  7 t= 11.5- 14.5 score=0.52 kp=0.24 h=0.07 w=0.11 cx=0.15 bottom=0.34 in_door=0.29
+  person:92    n=  3 t= 61.0- 63.0 score=0.41 kp=0.11 h=0.05 w=0.07 cx=0.17 bottom=0.34 in_door=1.00
+  person:34    n=  2 t= 22.5- 24.0 score=0.40 kp=0.18 h=0.05 w=0.07 cx=0.15 bottom=0.32 in_door=0.00
+  person:66    n=  2 t= 48.5- 49.0 score=0.31 kp=0.16 h=0.03 w=0.05 cx=0.50 bottom=0.46 in_door=0.00
+VIDEO Х-10 no_violation [] door [0.05, 0.0, 0.38, 0.43]
+  person:1     n= 31 t=  0.0- 15.0 score=0.90 kp=0.59 h=0.14 w=0.21 cx=0.28 bottom=0.46 in_door=1.00
+VIDEO Х-38 violation [33] door [0.0, 0.0, 0.38, 0.54]
+  person:2     n=118 t=  0.0- 58.5 score=0.79 kp=0.48 h=0.21 w=0.22 cx=0.47 bottom=0.63 in_door=0.00
+  person:1     n= 54 t=  0.0- 27.0 score=0.90 kp=0.55 h=0.13 w=0.18 cx=0.42 bottom=0.44 in_door=0.35
+  person:77    n= 36 t= 36.0- 54.5 score=0.90 kp=0.53 h=0.13 w=0.16 cx=0.40 bottom=0.44 in_door=0.19
+  person:27    n= 12 t= 15.0- 20.5 score=0.31 kp=0.29 h=0.07 w=0.06 cx=0.16 bottom=0.29 in_door=1.00
+  person:107   n= 10 t= 44.0- 48.5 score=0.27 kp=0.16 h=0.06 w=0.09 cx=0.27 bottom=0.29 in_door=1.00
+  person:67    n=  7 t= 32.0- 35.0 score=0.91 kp=0.66 h=0.26 w=0.17 cx=0.27 bottom=0.44 in_door=1.00
+  person:84    n=  7 t= 37.5- 40.5 score=0.32 kp=0.35 h=0.07 w=0.07 cx=0.16 bottom=0.29 in_door=1.00
+  person:109   n=  7 t= 44.5- 47.5 score=0.35 kp=0.33 h=0.07 w=0.06 cx=0.16 bottom=0.29 in_door=1.00
+  person:53    n=  3 t= 28.0- 30.5 score=0.60 kp=0.62 h=0.20 w=0.15 cx=0.44 bottom=0.41 in_door=0.00
+  person:4     n=  2 t=  4.0-  6.0 score=0.62 kp=0.28 h=0.13 w=0.16 cx=0.17 bottom=0.33 in_door=1.00
+  person:47    n=  2 t= 24.5- 25.0 score=0.78 kp=0.40 h=0.16 w=0.14 cx=0.15 bottom=0.34 in_door=1.00
+  person:131   n=  2 t= 52.5- 53.5 score=0.70 kp=0.28 h=0.15 w=0.11 cx=0.16 bottom=0.31 in_door=1.00
+VIDEO Х-46 violation [11] door [0.0, 0.0, 0.25, 0.56]
+  person:1     n= 38 t=  0.0- 18.5 score=0.86 kp=0.54 h=0.13 w=0.19 cx=0.32 bottom=0.47 in_door=0.00
+  person:9     n=  5 t= 14.0- 16.0 score=0.35 kp=0.16 h=0.04 w=0.07 cx=0.16 bottom=0.31 in_door=1.00
+  person:10    n=  3 t= 15.0- 16.0 score=0.57 kp=0.40 h=0.10 w=0.08 cx=0.36 bottom=0.46 in_door=0.00
+VIDEO Х-15 violation [15] door [0.16, 0.0, 0.36, 0.46]
+  person:1     n= 34 t=  0.0- 16.5 score=0.88 kp=0.60 h=0.21 w=0.20 cx=0.33 bottom=0.44 in_door=0.88
+  person:19    n=  7 t= 12.5- 17.0 score=0.59 kp=0.28 h=0.12 w=0.08 cx=0.18 bottom=0.29 in_door=1.00
+  person:24    n=  4 t= 17.5- 19.0 score=0.66 kp=0.51 h=0.25 w=0.10 cx=0.30 bottom=0.43 in_door=1.00
+VIDEO Х-8 no_violation [] door [0.2, 0.01, 0.55, 0.49]
+  person:1     n= 76 t=  0.0- 37.5 score=0.90 kp=0.57 h=0.13 w=0.21 cx=0.35 bottom=0.48 in_door=1.00
+VIDEO Х-40 violation [17] door [0.0, 0.0, 0.37, 0.55]
+  person:9     n= 44 t=  3.5- 25.0 score=0.85 kp=0.59 h=0.21 w=0.22 cx=0.37 bottom=0.45 in_door=0.34
+  person:18    n=  5 t= 11.5- 13.5 score=0.54 kp=0.23 h=0.11 w=0.08 cx=0.28 bottom=0.29 in_door=1.00
+  person:3     n=  4 t=  1.5-  3.0 score=0.76 kp=0.52 h=0.16 w=0.09 cx=0.41 bottom=0.35 in_door=0.00
+  person:16    n=  2 t=  9.5- 10.0 score=0.58 kp=0.14 h=0.08 w=0.05 cx=0.29 bottom=0.29 in_door=1.00
+VIDEO Х-31 no_violation [] door [0.0, 0.0, 0.36, 0.56]
+  person:2     n= 41 t=  3.0- 23.5 score=0.86 kp=0.60 h=0.20 w=0.18 cx=0.36 bottom=0.45 in_door=0.41
+  person:35    n= 10 t= 19.0- 23.5 score=0.72 kp=0.32 h=0.12 w=0.08 cx=0.23 bottom=0.32 in_door=1.00
+  person:3     n=  4 t=  4.0-  5.5 score=0.40 kp=0.30 h=0.09 w=0.05 cx=0.25 bottom=0.35 in_door=1.00
+  person:37    n=  3 t= 20.0- 21.0 score=0.29 kp=0.13 h=0.06 w=0.03 cx=0.33 bottom=0.31 in_door=1.00
+VIDEO Х-14 no_violation [] door [0.19, 0.02, 0.35, 0.53]
+  person:1     n=285 t=  0.0-142.0 score=0.87 kp=0.59 h=0.13 w=0.21 cx=0.36 bottom=0.49 in_door=0.46
+  person:2     n= 70 t=  0.0- 34.5 score=0.72 kp=0.40 h=0.16 w=0.09 cx=0.20 bottom=0.39 in_door=0.87
+  person:10    n=  2 t= 38.0- 38.5 score=0.73 kp=0.36 h=0.13 w=0.09 cx=0.20 bottom=0.35 in_door=1.00
+  person:19    n=  2 t= 44.0- 44.5 score=0.75 kp=0.37 h=0.12 w=0.12 cx=0.19 bottom=0.37 in_door=0.50
+VIDEO Х-20 violation [5] door [0.0, 0.0, 0.55, 0.41]
+  person:1     n= 23 t=  0.0- 11.0 score=0.87 kp=0.58 h=0.15 w=0.20 cx=0.32 bottom=0.44 in_door=1.00
+  person:4     n=  3 t=  4.0-  5.0 score=0.55 kp=0.27 h=0.12 w=0.12 cx=0.16 bottom=0.30 in_door=1.00
+VIDEO X-1 violation [22] door [0.17, 0.01, 0.41, 0.52]
+  person:1     n= 52 t=  0.0- 25.5 score=0.83 kp=0.51 h=0.25 w=0.24 cx=0.49 bottom=0.70 in_door=0.00
+  person:8     n= 43 t=  2.5- 25.5 score=0.86 kp=0.56 h=0.13 w=0.18 cx=0.40 bottom=0.47 in_door=0.77
+  person:12    n= 40 t=  4.5- 25.5 score=0.69 kp=0.50 h=0.08 w=0.11 cx=0.06 bottom=0.34 in_door=0.00
+  person:18    n=  7 t=  7.5- 10.5 score=0.43 kp=0.26 h=0.09 w=0.09 cx=0.16 bottom=0.38 in_door=0.00
+  person:2     n=  2 t=  0.0-  0.5 score=0.52 kp=0.51 h=0.13 w=0.12 cx=0.06 bottom=0.39 in_door=0.00
+VIDEO Х-25 no_violation [] door [0.0, 0.0, 0.23, 0.58]
+  person:1     n= 51 t=  0.0- 27.0 score=0.88 kp=0.58 h=0.22 w=0.19 cx=0.37 bottom=0.46 in_door=0.06
+  person:20    n=  4 t= 11.5- 13.0 score=0.64 kp=0.28 h=0.11 w=0.10 cx=0.22 bottom=0.32 in_door=0.75
+  person:37    n=  4 t= 28.0- 29.5 score=0.74 kp=0.54 h=0.24 w=0.08 cx=0.34 bottom=0.45 in_door=0.00
+  person:8     n=  2 t=  5.5-  6.5 score=0.41 kp=0.17 h=0.11 w=0.06 cx=0.34 bottom=0.31 in_door=0.00
+  person:30    n=  2 t= 25.0- 25.5 score=0.70 kp=0.25 h=0.11 w=0.09 cx=0.15 bottom=0.32 in_door=1.00
+VIDEO Х-18 violation [20] door [0.18, 0.0, 0.34, 0.5]
+  person:2     n= 45 t=  0.0- 22.0 score=0.83 kp=0.56 h=0.24 w=0.26 cx=0.45 bottom=0.65 in_door=0.00
+  person:7     n= 30 t=  2.5- 22.0 score=0.86 kp=0.55 h=0.14 w=0.17 cx=0.41 bottom=0.43 in_door=0.03
+  person:24    n= 13 t= 16.0- 22.0 score=0.88 kp=0.69 h=0.27 w=0.20 cx=0.16 bottom=0.44 in_door=0.46
+  person:22    n= 12 t= 11.5- 17.0 score=0.72 kp=0.45 h=0.10 w=0.11 cx=0.07 bottom=0.31 in_door=0.00
+  person:19    n=  5 t=  8.5- 10.5 score=0.70 kp=0.52 h=0.11 w=0.13 cx=0.07 bottom=0.32 in_door=0.00
+  person:1     n=  3 t=  0.0-  1.0 score=0.77 kp=0.49 h=0.11 w=0.13 cx=0.07 bottom=0.32 in_door=0.00
+VIDEO Х-12 no_violation [] door [0.0, 0.03, 0.33, 0.55]
+  person:1     n= 66 t=  0.0- 33.5 score=0.86 kp=0.60 h=0.14 w=0.22 cx=0.40 bottom=0.49 in_door=0.29
+  person:32    n=  6 t= 34.5- 37.0 score=0.83 kp=0.56 h=0.23 w=0.18 cx=0.23 bottom=0.49 in_door=1.00
+  person:40    n=  6 t= 38.0- 40.5 score=0.70 kp=0.44 h=0.19 w=0.10 cx=0.31 bottom=0.43 in_door=0.67
+  person:28    n=  4 t= 29.0- 31.5 score=0.36 kp=0.17 h=0.13 w=0.06 cx=0.30 bottom=0.36 in_door=0.75
+  person:20    n=  3 t= 24.0- 25.0 score=0.75 kp=0.28 h=0.12 w=0.11 cx=0.12 bottom=0.36 in_door=1.00
+  person:27    n=  3 t= 27.0- 28.0 score=0.38 kp=0.20 h=0.15 w=0.07 cx=0.30 bottom=0.39 in_door=1.00
+  person:9     n=  2 t=  6.0-  8.0 score=0.27 kp=0.18 h=0.06 w=0.10 cx=0.20 bottom=0.36 in_door=1.00
+VIDEO Х-44 violation [16] door [0.0, 0.0, 0.25, 0.55]
+  person:1     n= 41 t=  0.0- 20.0 score=0.89 kp=0.55 h=0.13 w=0.21 cx=0.32 bottom=0.48 in_door=0.00
+  person:2     n=  2 t=  0.0-  1.5 score=0.27 kp=0.17 h=0.05 w=0.10 cx=0.17 bottom=0.31 in_door=1.00
+VIDEO X-2 violation [10] door [0.17, 0.01, 0.3, 0.53]
+  person:1     n= 34 t=  0.0- 16.5 score=0.78 kp=0.50 h=0.23 w=0.24 cx=0.50 bottom=0.69 in_door=0.00
+  person:5     n= 24 t=  4.0- 16.5 score=0.89 kp=0.56 h=0.14 w=0.19 cx=0.37 bottom=0.48 in_door=0.08
+  person:9     n= 19 t=  6.5- 16.5 score=0.75 kp=0.48 h=0.08 w=0.11 cx=0.06 bottom=0.35 in_door=0.00
+  person:2     n=  6 t=  0.0-  2.5 score=0.61 kp=0.50 h=0.13 w=0.11 cx=0.06 bottom=0.39 in_door=0.00
+VIDEO Х-13 violation [47] door [0.18, 0.0, 0.36, 0.48]
+  person:1     n=121 t=  0.0- 60.5 score=0.90 kp=0.65 h=0.22 w=0.18 cx=0.39 bottom=0.43 in_door=0.07
+  person:2     n= 70 t=  0.0- 36.0 score=0.70 kp=0.37 h=0.13 w=0.09 cx=0.17 bottom=0.29 in_door=0.29
+  person:16    n= 10 t= 42.0- 48.0 score=0.72 kp=0.38 h=0.13 w=0.11 cx=0.17 bottom=0.30 in_door=0.20
+  person:17    n=  4 t= 47.0- 48.5 score=0.40 kp=0.23 h=0.08 w=0.08 cx=0.18 bottom=0.29 in_door=0.75
+  person:20    n=  4 t= 47.5- 50.0 score=0.45 kp=0.16 h=0.11 w=0.06 cx=0.29 bottom=0.29 in_door=1.00
+  person:45    n=  4 t= 61.5- 63.0 score=0.64 kp=0.57 h=0.25 w=0.11 cx=0.30 bottom=0.43 in_door=1.00
+  person:36    n=  3 t= 55.5- 56.5 score=0.24 kp=0.17 h=0.11 w=0.06 cx=0.29 bottom=0.29 in_door=1.00
+  person:14    n=  2 t= 40.0- 41.0 score=0.53 kp=0.26 h=0.10 w=0.09 cx=0.18 bottom=0.30 in_door=0.00
+VIDEO Х-37 no_violation [] door [0.0, 0.0, 0.29, 0.54]
+  person:1     n= 32 t=  0.0- 15.5 score=0.81 kp=0.47 h=0.21 w=0.26 cx=0.46 bottom=0.64 in_door=0.00
+  person:5     n= 26 t=  2.5- 15.5 score=0.87 kp=0.57 h=0.14 w=0.22 cx=0.47 bottom=0.44 in_door=0.31
+  person:2     n=  5 t=  0.0-  2.5 score=0.29 kp=0.49 h=0.13 w=0.12 cx=0.12 bottom=0.32 in_door=1.00
+VIDEO Х-11 violation [18] door [0.2, 0.02, 0.55, 0.49]
+  person:1     n= 28 t=  0.0- 16.5 score=0.83 kp=0.58 h=0.13 w=0.24 cx=0.42 bottom=0.49 in_door=1.00
+  person:2     n= 10 t=  0.0-  7.5 score=0.25 kp=0.14 h=0.05 w=0.07 cx=0.18 bottom=0.35 in_door=0.00
+  person:21    n=  6 t= 17.5- 20.0 score=0.89 kp=0.56 h=0.23 w=0.18 cx=0.22 bottom=0.49 in_door=0.50
+  person:22    n=  6 t= 21.0- 23.5 score=0.87 kp=0.47 h=0.24 w=0.11 cx=0.32 bottom=0.48 in_door=1.00
+VIDEO Х-23 no_violation [] door [0.18, 0.0, 0.45, 0.49]
+  person:1     n= 23 t=  0.0- 14.0 score=0.86 kp=0.56 h=0.20 w=0.22 cx=0.41 bottom=0.44 in_door=0.87
+  person:2     n=  9 t=  0.0-  4.0 score=0.32 kp=0.17 h=0.06 w=0.08 cx=0.17 bottom=0.29 in_door=0.00
+  person:15    n=  4 t= 15.0- 16.5 score=0.67 kp=0.53 h=0.24 w=0.08 cx=0.30 bottom=0.42 in_door=1.00
+VIDEO Х-29 no_violation [] door [0.0, 0.0, 0.35, 0.58]
+  person:1     n= 25 t=  0.0- 13.0 score=0.82 kp=0.55 h=0.13 w=0.20 cx=0.47 bottom=0.46 in_door=0.28
+  person:2     n=  9 t=  0.0-  4.5 score=0.27 kp=0.18 h=0.09 w=0.08 cx=0.23 bottom=0.36 in_door=1.00
+  person:14    n=  4 t= 13.5- 15.0 score=0.74 kp=0.61 h=0.25 w=0.09 cx=0.35 bottom=0.45 in_door=0.75
+  person:5     n=  3 t=  7.5-  9.0 score=0.34 kp=0.15 h=0.11 w=0.05 cx=0.33 bottom=0.31 in_door=1.00
+VIDEO Х-32 violation [5] door [0.0, 0.0, 0.35, 0.55]
+  person:2     n= 37 t=  2.0- 21.0 score=0.83 kp=0.61 h=0.20 w=0.19 cx=0.38 bottom=0.45 in_door=0.35
+  person:20    n=  3 t= 13.0- 15.0 score=0.25 kp=0.23 h=0.08 w=0.06 cx=0.34 bottom=0.15 in_door=1.00
+VIDEO Х-24 violation [8] door [0.0, 0.0, 0.34, 0.57]
+  person:1     n= 20 t=  0.0- 10.0 score=0.88 kp=0.60 h=0.15 w=0.20 cx=0.40 bottom=0.46 in_door=0.25
+  person:16    n=  2 t= 12.0- 12.5 score=0.65 kp=0.42 h=0.22 w=0.08 cx=0.35 bottom=0.44 in_door=0.50
+VIDEO Х-22 violation [14] door [0.19, 0.0, 0.55, 0.42]
+  person:1     n= 34 t=  0.0- 19.0 score=0.86 kp=0.57 h=0.21 w=0.22 cx=0.32 bottom=0.44 in_door=0.91
+  person:2     n= 14 t=  0.0-  6.5 score=0.39 kp=0.15 h=0.06 w=0.08 cx=0.17 bottom=0.29 in_door=0.00
+  person:7     n=  2 t= 14.0- 14.5 score=0.80 kp=0.33 h=0.11 w=0.09 cx=0.15 bottom=0.29 in_door=0.00
+VIDEO Х-28 violation [7] door [0.0, 0.0, 0.25, 0.56]
+  person:1     n= 22 t=  0.0- 13.5 score=0.84 kp=0.59 h=0.13 w=0.24 cx=0.47 bottom=0.46 in_door=0.05
+  person:6     n=  2 t=  8.0-  8.5 score=0.41 kp=0.12 h=0.08 w=0.06 cx=0.33 bottom=0.29 in_door=0.00
+VIDEO Х-27 no_violation [] door [0.0, 0.0, 0.23, 0.57]
+  person:1     n= 48 t=  0.0- 24.5 score=0.89 kp=0.58 h=0.22 w=0.20 cx=0.36 bottom=0.46 in_door=0.04
+  person:12    n=  2 t= 19.0- 19.5 score=0.79 kp=0.31 h=0.11 w=0.09 cx=0.19 bottom=0.32 in_door=1.00
+VIDEO Х-39 no_violation [] door [0.0, 0.0, 0.28, 0.54]
+  person:1     n=157 t=  0.0- 78.0 score=0.78 kp=0.47 h=0.19 w=0.23 cx=0.47 bottom=0.62 in_door=0.00
+  person:4     n= 75 t=  1.5- 39.5 score=0.85 kp=0.54 h=0.13 w=0.17 cx=0.46 bottom=0.44 in_door=0.11
+  person:69    n= 45 t= 50.0- 72.0 score=0.90 kp=0.55 h=0.14 w=0.15 cx=0.43 bottom=0.44 in_door=0.00
+  person:74    n= 31 t= 51.0- 67.0 score=0.41 kp=0.22 h=0.07 w=0.11 cx=0.22 bottom=0.30 in_door=1.00
+  person:64    n=  9 t= 45.0- 49.0 score=0.90 kp=0.72 h=0.26 w=0.16 cx=0.29 bottom=0.44 in_door=0.22
+  person:73    n=  6 t= 51.0- 53.5 score=0.31 kp=0.39 h=0.19 w=0.12 cx=0.25 bottom=0.42 in_door=1.00
+  person:37    n=  5 t= 24.0- 26.0 score=0.28 kp=0.29 h=0.07 w=0.06 cx=0.16 bottom=0.29 in_door=1.00
+  person:51    n=  2 t= 32.0- 32.5 score=0.53 kp=0.25 h=0.07 w=0.14 cx=0.17 bottom=0.30 in_door=1.00
+  person:52    n=  2 t= 32.0- 32.5 score=0.28 kp=0.11 h=0.06 w=0.06 cx=0.29 bottom=0.29 in_door=0.00
+  person:54    n=  2 t= 35.0- 35.5 score=0.70 kp=0.27 h=0.10 w=0.12 cx=0.20 bottom=0.29 in_door=1.00
+  person:72    n=  2 t= 51.0- 51.5 score=0.51 kp=0.36 h=0.08 w=0.09 cx=0.11 bottom=0.30 in_door=1.00
+  person:96    n=  2 t= 73.0- 76.0 score=0.87 kp=0.58 h=0.23 w=0.23 cx=0.34 bottom=0.44 in_door=0.00
+VIDEO Х-26 violation [9] door [0.0, 0.0, 0.24, 0.57]
+  person:1     n= 30 t=  0.0- 14.5 score=0.87 kp=0.57 h=0.13 w=0.21 cx=0.41 bottom=0.47 in_door=0.10
+  person:14    n=  4 t= 15.5- 17.0 score=0.71 kp=0.54 h=0.24 w=0.09 cx=0.35 bottom=0.45 in_door=0.00
+VIDEO Х-21 no_violation [] door [0.0, 0.0, 0.54, 0.47]
+  person:1     n= 39 t=  0.0- 19.0 score=0.86 kp=0.58 h=0.15 w=0.20 cx=0.31 bottom=0.45 in_door=1.00
+  person:6     n=  2 t=  7.5-  8.0 score=0.70 kp=0.25 h=0.10 w=0.11 cx=0.17 bottom=0.29 in_door=1.00
+VIDEO Х-34 violation [13] door [0.0, 0.0, 0.37, 0.55]
+  person:1     n= 35 t=  0.0- 17.0 score=0.81 kp=0.47 h=0.21 w=0.24 cx=0.48 bottom=0.64 in_door=0.00
+  person:3     n= 25 t=  1.5- 14.5 score=0.91 kp=0.58 h=0.23 w=0.18 cx=0.31 bottom=0.44 in_door=0.72
+  person:5     n=  3 t=  5.5-  7.0 score=0.56 kp=0.34 h=0.14 w=0.18 cx=0.16 bottom=0.32 in_door=1.00
+  person:15    n=  3 t= 11.5- 12.5 score=0.67 kp=0.32 h=0.14 w=0.14 cx=0.18 bottom=0.33 in_door=1.00
+  person:12    n=  2 t=  9.0-  9.5 score=0.38 kp=0.15 h=0.05 w=0.07 cx=0.28 bottom=0.29 in_door=1.00
+  person:17    n=  2 t= 15.5- 16.0 score=0.88 kp=0.67 h=0.23 w=0.15 cx=0.46 bottom=0.43 in_door=0.00

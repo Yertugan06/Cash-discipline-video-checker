@@ -7,13 +7,15 @@ actually starts (the lifespan), never at import time.
 
 import asyncio
 import json
+import logging
+import re
 import secrets
 from contextlib import asynccontextmanager
 from typing import Annotated
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 
@@ -58,6 +60,10 @@ def create_app(settings: Settings | None = None, *, pipeline: Pipeline | None = 
     """Build the FastAPI app. `pipeline` lets tests inject fake collaborators
     without needing WP2's/WP3's real modules to exist."""
     config = settings or Settings.from_env()
+    # uvicorn only configures its own loggers; without this the per-stage job log is dropped.
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+    )
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -140,6 +146,15 @@ def create_app(settings: Settings | None = None, *, pipeline: Pipeline | None = 
         if row["status"] == "failed":
             return FailedJob(job_id=job_id, status="failed", error=row["error"])
         return ProcessingJob(job_id=job_id, status="processing")
+
+    @router.get("/jobs/{job_id}/trace")
+    def get_trace(job_id: str) -> FileResponse:
+        if not re.fullmatch(r"[0-9a-f]{32}", job_id):
+            raise HTTPException(status_code=404, detail="Trace not found")
+        path = config.traces_dir / f"{job_id}.json"
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Trace not found")
+        return FileResponse(path, media_type="application/json")
 
     app.include_router(health_router)
     app.include_router(router)

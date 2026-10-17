@@ -15,6 +15,7 @@ pulls in torch.
 
 from __future__ import annotations
 
+import json
 import logging
 import shutil
 import subprocess
@@ -34,11 +35,11 @@ from backend.contracts import (
     VideoInfo,
 )
 
+logger = logging.getLogger(__name__)
+
 FPS = 2.0
 STEP_S = 1.0 / FPS
 _MAX_SUPPORT_SAMPLES = 8
-
-logger = logging.getLogger(__name__)
 
 
 class F1DetectorError(RuntimeError):
@@ -108,6 +109,11 @@ class F1Detector:
                 for f in legacy_findings
                 if f.rule_id in self._rules_by_id
             ]
+            trace = build_trace(checksum, config, info.duration_sec, scene, observations, log)
+            trace["findings"] = [
+                {**vars(f), "kept": f.rule_id in self._rules_by_id} for f in legacy_findings
+            ]
+            write_trace(settings.traces_dir / f"{video.stem}.json", trace)
             planned = len(frames)
             coverage = Coverage(
                 step_s=STEP_S,
@@ -197,6 +203,61 @@ class F1Detector:
             rank_score=max(0.0, min(1.0, float(legacy.confidence))),
             boxes=_evidence_boxes(legacy.facts),
         )
+
+
+def build_trace(
+    checksum: str, config: dict, duration: float, scene: Any, observations: list, log: Any
+) -> dict[str, Any]:
+    """Everything between perception and findings, for debugging a verdict and for the
+    replay overlay: calibration, raw state changes, the event log and per-frame boxes
+    (person boxes carry the role the event builder gave them, "glass" when ignored)."""
+    changes, last = [], {}
+    for observation in observations:
+        for key, state in observation.states.items():
+            if last.get(key) != state.value:
+                last[key] = state.value
+                changes.append(
+                    {
+                        "t": observation.timestamp_sec,
+                        "key": key,
+                        "value": state.value,
+                        "score": round(state.score, 3),
+                        "margin": round(state.margin, 3),
+                    }
+                )
+    return {
+        "video_sha256": checksum,
+        "perception_cache_hit": bool(config.get("cache_hit")),
+        "fps": FPS,
+        "duration_sec": duration,
+        "scene": scene.model_dump(),
+        "state_changes": changes,
+        "events": [event.model_dump() for event in log.events],
+        "coverage": log.coverage,
+        "sessions": log.sessions,
+        "warnings": log.warnings,
+        "frames": [
+            {
+                "t": observation.timestamp_sec,
+                "dets": [
+                    [d.label, d.track_id, d.role, *(round(v, 4) for v in d.box), round(d.score, 3)]
+                    for d in observation.detections
+                ],
+            }
+            for observation in observations
+        ],
+    }
+
+
+def write_trace(path: Path, trace: dict[str, Any]) -> None:
+    """Diagnostics only: a failed write is logged, never fails the job."""
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        partial = path.with_suffix(".partial")
+        partial.write_text(json.dumps(trace, ensure_ascii=False, default=str), encoding="utf-8")
+        partial.replace(path)
+    except OSError:
+        logger.exception("Could not write trace %s", path)
 
 
 def _scalar_facts(facts: dict[str, Any]) -> dict[str, str | int | float | bool]:

@@ -31,7 +31,7 @@ from uuid import uuid4
 
 import httpx
 from fastapi import FastAPI, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -91,6 +91,24 @@ def load_labels(path: Path | None) -> dict[str, str]:
     return labels
 
 
+def compact(item: dict) -> dict:
+    """An item without its evidence images, for comparing runs side by side."""
+    result = item.get("result") or {}
+    started, finished = item.get("started_at"), item.get("finished_at")
+    return {
+        "name": item["name"],
+        "label": item.get("label"),
+        "status": item["status"],
+        "verdict": item.get("verdict"),
+        "error": item.get("error"),
+        "seconds": round(finished - started, 1) if started and finished else None,
+        "violations": [
+            {"rule_id": v.get("rule_id"), "type": v["type"], "timecode_sec": v["timecode_sec"]}
+            for v in result.get("violations", [])
+        ],
+    }
+
+
 class Item(BaseModel):
     id: str
     name: str
@@ -117,6 +135,8 @@ class Hub:
     state_file: Path | None = None
     items: dict[str, Item] = field(default_factory=dict)
     sockets: set[WebSocket] = field(default_factory=set)
+    # Publishes overlap (folder enqueue vs. the runner); one writer at a time, newest rows last.
+    _save_lock: asyncio.Lock = field(default_factory=asyncio.Lock)
 
     def load(self) -> list[Item]:
         if self.state_file is None or not self.state_file.exists():
@@ -134,7 +154,9 @@ class Hub:
     async def publish(self, item: Item) -> None:
         self.items[item.id] = item
         if self.state_file is not None:
-            await asyncio.to_thread(self._save, [i.model_dump() for i in self.items.values()])
+            async with self._save_lock:
+                rows = [i.model_dump() for i in self.items.values()]
+                await asyncio.to_thread(self._save, rows)
         message = {"type": "item", "item": item.model_dump()}
         for socket in list(self.sockets):
             try:
@@ -257,6 +279,34 @@ def create_app(
     def index() -> FileResponse:
         return FileResponse(STATIC / "index.html")
 
+    @app.get("/compare")
+    def compare_page() -> FileResponse:
+        return FileResponse(STATIC / "compare.html")
+
+    def saved_runs() -> dict[str, Path]:
+        """Earlier runs are state files kept next to the live one: `state.<run name>.json`."""
+        if config.state_file is None or not config.state_file.parent.is_dir():
+            return {}
+        files = sorted(
+            config.state_file.parent.glob("state.*.json"), key=lambda p: p.stat().st_mtime
+        )
+        return {p.name[len("state.") : -len(".json")]: p for p in files}
+
+    @app.get("/api/runs")
+    def runs() -> dict:
+        return {"runs": ["live", *saved_runs()]}
+
+    @app.get("/api/runs/{name}")
+    def run(name: str) -> dict:
+        if name == "live":
+            rows = [i.model_dump() for i in hub.items.values()]
+        else:
+            path = saved_runs().get(name)  # only listed files, so no path traversal
+            if path is None:
+                raise HTTPException(status_code=404, detail="Unknown run")
+            rows = json.loads(path.read_text(encoding="utf-8"))
+        return {"name": name, "items": [compact(row) for row in rows]}
+
     @app.get("/api/config")
     def gateway_config() -> dict:
         return {
@@ -281,7 +331,9 @@ def create_app(
             with path.open("xb") as output:
                 while chunk := await upload_file.read(1024 * 1024):
                     output.write(chunk)
-            await app.state.runner.enqueue(item, path, delete_after=True)
+            # Kept for the replay player. shortcut: temp files grow until the gateway restarts,
+            # add a cap if this runs for more than a demo session.
+            await app.state.runner.enqueue(item, path, delete_after=False)
             ids.append(item.id)
         return {"queued": ids}
 
@@ -296,6 +348,34 @@ def create_app(
         for path in paths:
             await app.state.runner.enqueue(new_item(path.name, "folder"), path, delete_after=False)
         return {"queued": len(paths)}
+
+    def known_item(item_id: str) -> Item:
+        item = hub.items.get(item_id)
+        if item is None:
+            raise HTTPException(status_code=404, detail="Unknown item")
+        return item
+
+    @app.get("/api/items/{item_id}/video")
+    def item_video(item_id: str) -> FileResponse:
+        item = known_item(item_id)
+        if item.source == "folder" and config.video_dir is not None:
+            path = config.video_dir / Path(item.name).name
+        else:
+            path = upload_dir / f"{item.id}.mov"
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Video file is no longer available")
+        # The clips are H.264 in a QuickTime container; browsers play it as mp4.
+        return FileResponse(path, media_type="video/mp4")
+
+    @app.get("/api/items/{item_id}/trace")
+    async def item_trace(item_id: str) -> Response:
+        item = known_item(item_id)
+        if item.job_id is None:
+            raise HTTPException(status_code=404, detail="Item has no checker job")
+        response = await app.state.runner.client.get(f"/api/v1/jobs/{item.job_id}/trace")
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+        return Response(response.content, media_type="application/json")
 
     @app.websocket("/ws")
     async def ws(socket: WebSocket) -> None:

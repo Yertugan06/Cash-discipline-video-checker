@@ -3,7 +3,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
-from backend.f1.calibration import in_zone
+from backend.f1.calibration import LAPTOP_REACH, behind_glass, in_zone, orient_cashier_side
 from backend.f1.vision_types import (
     Detection,
     Event,
@@ -526,6 +526,10 @@ class EventBuilder:
         self.last_observation = observation
         timestamp = observation.timestamp_sec
         people = [d for d in observation.detections if d.label == "person"]
+        for person in people:
+            if behind_glass(self.scene, person.box, self.config["glass_margin"]):
+                person.role = "glass"
+        people = [person for person in people if person.role != "glass"]
         self.hand_frames += bool(any(person.wrists() for person in people))
         self.current_bags = [d for d in observation.detections if d.label == "bag"]
         self.update_people(observation, people)
@@ -536,11 +540,10 @@ class EventBuilder:
         cashier_known = bool(self.cashier)
         cashier_away = bool(history and history.exited)
         if cashier and "laptop" in self.scene.objects:
-            door_near = in_zone(self.scene, "door", center(cashier.box), 0.05)
-            outside = not in_zone(self.scene, "cashier", center(cashier.box))
-            cashier_away = (door_near or outside) and distance(
-                center(cashier.box), center(self.scene.objects["laptop"].box)
-            ) > 0.2
+            # Away = out of reach of the laptop. The old door/zone test fired on a seated
+            # cashier whenever the camera faces them (the glass door is right behind them).
+            laptop = center(self.scene.objects["laptop"].box)
+            cashier_away = distance(cashier.position(), laptop) > LAPTOP_REACH
         self.condition(
             "workstation_away",
             "WORKSTATION_AWAY",
@@ -701,6 +704,7 @@ class EventBuilder:
 def build_events(
     scene: Scene, observations: list[Observation], config: dict, fps: float, duration: float
 ) -> EventLog:
+    orient_cashier_side(scene, observations, config["glass_margin"])
     builder = EventBuilder(scene, config, fps)
     for observation in observations:
         builder.push(observation)

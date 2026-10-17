@@ -323,3 +323,167 @@ def test_session_tags_initial_cash_and_does_not_end_on_unconfirmed_track_loss():
     assert tagged and tagged[0].facts["session_id"] == "session-1"
     assert any(e.type == "TRACK_LOST" and e.facts["actor_id"] == "person:2" for e in log.events)
     assert not any(e.type == "SESSION_END" for e in log.events)
+
+
+def test_calibration_takes_the_desk_the_laptop_stands_on(tmp_path):
+    from backend.f1.calibration import calibrate
+
+    overrides = tmp_path / "overrides.yaml"
+    overrides.write_text("videos: {}\n")
+    laptop = Detection(label="laptop", score=0.4, box=(0.5, 0.44, 0.66, 0.53))
+    behind_glass = Detection(label="desk", score=0.9, box=(0.3, 0.08, 0.49, 0.11))
+    cash_desk = Detection(label="desk", score=0.2, box=(0.05, 0.42, 0.75, 0.6))
+    scene = calibrate([laptop, behind_glass, cash_desk], overrides, "0" * 64)
+    assert scene.objects["desk"].box == cash_desk.box
+    assert scene.candidates == [laptop, behind_glass, cash_desk]
+    lonely = calibrate([laptop, behind_glass], overrides, "0" * 64)
+    assert "desk" not in lonely.objects and lonely.confidence == 0
+
+
+@requires_cv2
+def test_person_above_the_desk_is_a_glass_reflection_not_an_outsider():
+    from backend.f1.vision_types import State
+
+    ctx = context()  # desk (0.2, 0.3, 0.8, 0.8)
+    ctx.scene.zones.update(
+        {
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    cashier = Detection(label="person", score=0.9, box=(0.02, 0.2, 0.18, 0.8), track_id="person:1")
+    reflection = Detection(
+        label="person", score=0.8, box=(0.0, 0.1, 0.1, 0.22), track_id="person:2"
+    )
+    observations = [
+        Observation(
+            timestamp_sec=i / 5,
+            detections=[cashier.model_copy(deep=True), reflection.model_copy(deep=True)],
+            states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+        )
+        for i in range(15)
+    ]
+    log = build_events(
+        ctx.scene, observations, load_perception_config(ROOT / "config/perception.yaml"), 5, 3
+    )
+    assert not any(e.facts.get("actor_id") == "person:2" for e in log.events)
+    assert all(
+        d.role == "glass" for o in observations for d in o.detections if d.track_id == "person:2"
+    )
+
+
+def person_at(x, y, track="person:1"):
+    body = [(0.0, 0.0, 0.0)] * 17
+    body[11] = body[12] = (x, y, 0.9)
+    return Detection(
+        label="person",
+        score=0.9,
+        box=(x - 0.1, y - 0.2, x + 0.1, y + 0.1),
+        track_id=track,
+        body=body,
+    )
+
+
+def oriented(desk, laptop, cashier_point, client_point=None, client_frames=4):
+    from backend.f1.calibration import orient_cashier_side
+
+    scene = Scene(
+        objects={
+            "desk": Detection(label="desk", score=1, box=desk),
+            "laptop": Detection(label="laptop", score=1, box=laptop),
+        },
+        confidence=1,
+    )
+    frames = []
+    for i in range(10):
+        people = [person_at(*cashier_point)]
+        if client_point and i < client_frames:  # a client visits for part of the clip
+            people.append(person_at(*client_point, track="person:2"))
+        frames.append(Observation(timestamp_sec=i / 2, detections=people))
+    orient_cashier_side(scene, frames, glass_margin=0.03)
+    return scene
+
+
+def test_cashier_side_is_learned_for_any_camera_angle():
+    desk, laptop = (0.05, 0.42, 0.75, 0.6), (0.5, 0.44, 0.66, 0.53)
+    # camera over the cashier's shoulder: cashier below the desk centre, client behind the desk
+    over_shoulder = oriented(desk, laptop, (0.5, 0.65), client_point=(0.45, 0.45))
+    assert over_shoulder.cashier_side((0.5, 0.65)) and not over_shoulder.cashier_side((0.45, 0.45))
+    # camera facing the cashier, who stands behind the desk: the split flips
+    facing = oriented(desk, laptop, (0.55, 0.4), client_point=(0.45, 0.7))
+    assert facing.cashier_side((0.55, 0.4)) and not facing.cashier_side((0.45, 0.7))
+    # side view: the desk is tall in the image, so the room splits left/right
+    side = oriented((0.4, 0.2, 0.55, 0.8), (0.42, 0.45, 0.5, 0.55), (0.3, 0.5))
+    assert side.cashier_direction == (-1.0, 0.0)
+
+
+def test_a_client_nearer_the_laptop_does_not_flip_the_cashier_side():
+    # laptop at the desk's end: during service the client is closer to it than the cashier,
+    # but only the cashier is ever alone at the workstation
+    desk, laptop = (0.1, 0.45, 0.76, 0.57), (0.13, 0.42, 0.29, 0.52)
+    scene = oriented(desk, laptop, (0.4, 0.62), client_point=(0.3, 0.44), client_frames=7)
+    assert scene.cashier_side((0.4, 0.62)) and not scene.cashier_side((0.3, 0.44))
+
+
+def test_cashier_side_stays_unknown_when_nobody_works_at_the_laptop():
+    scene = oriented((0.05, 0.42, 0.75, 0.6), (0.5, 0.44, 0.66, 0.53), (0.05, 0.05))
+    assert "cashier" not in scene.zones and scene.confidence == 0
+    assert scene.warnings
+
+
+@requires_cv2
+def test_the_laptop_seen_as_a_tablet_is_not_left_on_the_desk():
+    from backend.f1.rules import l_no_docs_on_leave
+
+    ctx = context(deepcopy(LEAVE))
+    on_laptop = Detection(label="tablet", score=0.5, box=(0.22, 0.41, 0.38, 0.49), track_id="t:9")
+    ctx.observations = [Observation(timestamp_sec=5, detections=[on_laptop])]
+    assert not l_no_docs_on_leave(ctx)
+
+
+@requires_cv2
+@pytest.mark.parametrize(("picked_up", "expected"), [(True, 0), (False, 1)])
+def test_an_item_counts_as_left_only_if_still_there_after_the_cashier_walks_off(
+    picked_up, expected
+):
+    from backend.f1.rules import l_no_docs_on_leave
+
+    ctx = context(deepcopy(LEAVE))
+    document = Detection(label="document", score=0.5, box=(0.55, 0.45, 0.65, 0.55), track_id="d:1")
+    later = [] if picked_up else [document]
+    ctx.observations = [
+        Observation(timestamp_sec=5, detections=[document]),
+        Observation(timestamp_sec=7, detections=later),
+    ]
+    assert len(l_no_docs_on_leave(ctx)) == expected
+
+
+@requires_cv2
+def test_a_seated_cashier_in_front_of_the_glass_door_is_not_away():
+    from backend.f1.vision_types import State
+
+    # camera facing the cashier: the door is right behind them in the image
+    door = Detection(label="door", score=1, box=(0.0, 0.0, 0.4, 0.55))
+    ctx = context()
+    ctx.scene.objects["door"] = door
+    ctx.scene.zones.update(
+        {
+            "door": [(0.0, 0.0), (0.4, 0.0), (0.4, 0.55), (0.0, 0.55)],
+            "cashier": [(0, 0), (1, 0), (1, 0.45), (0, 0.45)],
+            "client": [(0, 0.45), (1, 0.45), (1, 1), (0, 1)],
+        }
+    )
+    seated, walked_off = person_at(0.12, 0.4), person_at(0.75, 0.25)
+    observations = [
+        Observation(
+            timestamp_sec=i / 2,
+            detections=[(seated if i < 10 else walked_off).model_copy(deep=True)],
+            states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+        )
+        for i in range(16)
+    ]
+    log = build_events(
+        ctx.scene, observations, load_perception_config(ROOT / "config/perception.yaml"), 2, 8
+    )
+    away = [e.timestamp_sec for e in log.events if e.type == "WORKSTATION_AWAY_START"]
+    assert away == [5.0]
