@@ -67,6 +67,17 @@ Pretrained detectors only describe each frame. Deterministic temporal rules deci
 | night + a cash bag counts for cash-on-leave | 29 | 2 | 9 | - |
 | **night + fp: hand on equipment = still at the desk; worn-coat fragments (current)** | **31** | **0** | **9** | **30.7** |
 
+**Teammate's `local-vlm-prototype` measured on the VM (same 40 clips, same scorer):**
+
+| Version | Correct /40 | Clean false alarms /19 | Missed /21 |
+|---|---|---|---|
+| local-vlm v3 (Qwen3-VL 4B questionnaire + crop checks + D-FINE; default) | 32 | 1 (Х-14) | 7 |
+| local-vlm v4 (+ 8B action windows), first 17 clips only | 9/17 | 7 | 1 |
+| **night + VLM door + VLM screen (paper combination)** | **34** | **0** | **6** |
+| night + VLM door + screen + collector (paper combination) | 35 | 1 | 4 |
+
+"Paper combination" = the union of two separate runs' findings, not an implemented system yet.
+
 Timecodes of the current version (`replay_f1.py timing`): 12 caught violations, mean |offset| to
 the organizer second 1.46 s (was 1.83 s), within ±1/2/3/5 s: 7/9/10/12.
 
@@ -97,6 +108,8 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | 10-18 | LEAD, not built: "did the screen change since the cashier last worked at it?" instead of naming the screen state | Probe (`spikes/screen_probe.py`, `logs/screen.jsonl`): a naive before/after-leave window doesn't separate the clips (the lock happens before standing up; a light switched off in Х-11). Needs the last hands-on-laptop moment as the reference; only 2 violation vs 4 clean clips to judge on |
 | 10-18 | KEPT, timecode: `replay_f1.py timing` scorer; ranking prefers a finding with a confirmed exit among equals; `K-SEAL-CHECK` anchors at the collector's exit | Better top-1 timecodes, no verdict change |
 | 10-18 | KEPT, scale: scene distances are multiples of the calibrated desk length (`× desk_long_side / 0.70`) instead of fixed image fractions | Another camera distance (zoom 0.7-1.3) no longer changes any finding |
+| 10-18 | Teammate's v4 is not used as is: the experimental 8B rule `no_detector` fires on 12 of 17 clips (7 clean); the code unloads and reloads the 8B on every video (a 6 GB laptop setting), 80-224 s per clip on the L4 | Measured; v3 (no 8B) is the fair comparison |
+| 10-18 | The two systems are complementary: the VLM reads the door (Х-30/32/33) and the screen (Х-11/28) with 5/5 precision, which CLIP can't; night catches Х-20, Х-34, Х-38 and has no clean false alarms | Per-clip comparison; the VLM's `collector_quick` is weaker (1 false alarm, 1 wrong type of 3) |
 | 10-18 | Main docs frozen during experiments | Decided by the user |
 
 ## 5. Findings (facts measured in the cache)
@@ -128,7 +141,8 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | Recover the lucky clips by their real violations | Х-15 done (cash bag); Х-11 needs screen-state perception; X-1, Х-13, Х-4 have no signal in the cache | orchestrator |
 | fp: clean false alarms Х-14 (leave at 62.5 s), Х-35 (worn-coat fragment) | merged (both fixed) | `orch/fp` |
 | scale: distances relative to a scene scale so --zoom 0.8/1.2 keeps the result | merged (every zoom 0.7-1.3 = 31/0/9) | `orch/scale` |
-| Teammate's `local-vlm-prototype` (Qwen3-VL 4B questionnaire + D-FINE + 8B action windows; self-reported 32/40, 3/19 clean FP): run it on the VM on the same 40 clips and compare per clip; then a combination | running | orchestrator |
+| Teammate's `local-vlm-prototype`: run on the VM on the same 40 clips, compare per clip | done: v3 32/1/7 (confirmed); v4's experimental `no_detector` fires on 12/17 clips; per-clip in `logs/vlm-v3.jsonl` | orchestrator |
+| Combination: VLM only for the states F1 can't read (door, laptop screen) | paper result 34/0/6; needs a real implementation and a runtime check | next |
 | timecode: timing scorer + explainable anchor fixes, no verdict change | merged (no verdict change; ranking prefers a confirmed exit) | `orch/timecode` |
 | End-to-end check: run `night` through the real API in a second container (port 8001, same perception cache), the 40 clips: runtime, evidence frames, serializer | done (before the scale fix): 42/42 done, 31/0/9 like the replay, evidence on every violation, runtime median 31 s / max 178 s with the perception cache (`logs/night-api.jsonl`) | orchestrator |
 | Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen) | spike done: new prompts and Qwen 7B don't fix it; "screen changed?" is a lead | orchestrator |
