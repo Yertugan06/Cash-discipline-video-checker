@@ -34,6 +34,17 @@ from fastapi import FastAPI, HTTPException, UploadFile, WebSocket, WebSocketDisc
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
+from realtime.annotations import (
+    Annotation,
+    AnnotationStore,
+    Stored,
+    VersionConflict,
+    score_clip,
+    summarize,
+    trace_events,
+    vocabulary,
+)
+
 logger = logging.getLogger(__name__)
 
 STATIC = Path(__file__).resolve().parent / "static"
@@ -376,6 +387,111 @@ def create_app(
         if response.status_code != 200:
             raise HTTPException(status_code=response.status_code, detail=response.text)
         return Response(response.content, media_type="application/json")
+
+    # ---- annotation: hand-written timelines per clip, scored against a run's traces ----
+
+    def annotation_store() -> AnnotationStore:
+        if config.state_file is None:
+            raise HTTPException(status_code=409, detail="STATE_FILE is not set; nowhere to save")
+        return AnnotationStore(config.state_file.parent / "annotations")
+
+    def folder_clips() -> dict[str, Path]:
+        """Clip key -> video file, for every .mov in VIDEO_DIR (the only clips one can annotate)."""
+        if config.video_dir is None or not config.video_dir.is_dir():
+            return {}
+        clips: dict[str, Path] = {}
+        for path in sorted(config.video_dir.iterdir()):
+            key = clip_key(path.name)
+            if path.suffix.lower() == ".mov" and key:
+                clips.setdefault(key, path)
+        return dict(sorted(clips.items(), key=lambda kv: int(kv[0][2:])))
+
+    def known_clip(key: str) -> Path:
+        path = folder_clips().get(key)  # only listed keys, so no path traversal
+        if path is None:
+            raise HTTPException(status_code=404, detail="Unknown clip")
+        return path
+
+    @app.get("/annotate")
+    def annotate_page() -> FileResponse:
+        return FileResponse(STATIC / "annotate.html")
+
+    @app.get("/api/annotation-vocabulary")
+    def annotation_vocabulary() -> dict:
+        return vocabulary()
+
+    @app.get("/api/clips")
+    def clips() -> dict:
+        saved = {a.clip: a for a in annotation_store().all()} if config.state_file else {}
+        return {
+            "clips": [
+                {
+                    "key": key,
+                    "name": path.name,
+                    "label": labels.get(key),
+                    "rows": len(saved[key].rows) if key in saved else 0,
+                    "status": saved[key].status if key in saved else None,
+                    "annotator": saved[key].annotator if key in saved else "",
+                }
+                for key, path in folder_clips().items()
+            ]
+        }
+
+    @app.get("/api/clips/{key}/video")
+    def clip_video(key: str) -> FileResponse:
+        return FileResponse(known_clip(key), media_type="video/mp4")
+
+    @app.get("/api/annotations/{key}")
+    def get_annotation(key: str) -> Stored:
+        known_clip(key)
+        return annotation_store().load(key)
+
+    @app.put("/api/annotations/{key}")
+    def put_annotation(key: str, base_version: float, annotation: Annotation) -> Stored:
+        known_clip(key)
+        try:
+            return annotation_store().save(key, annotation, base_version)
+        except VersionConflict as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    def run_jobs(run: str) -> dict[str, str]:
+        """Clip key -> checker job id for the run's finished items (latest wins)."""
+        if run == "live":
+            rows = [i.model_dump() for i in hub.items.values()]
+        else:
+            path = saved_runs().get(run)
+            if path is None:
+                raise HTTPException(status_code=404, detail="Unknown run")
+            rows = json.loads(path.read_text(encoding="utf-8"))
+        return {
+            key: row["job_id"]
+            for row in sorted(rows, key=lambda r: r.get("finished_at") or 0)
+            if row.get("status") == "done" and row.get("job_id") and (key := clip_key(row["name"]))
+        }
+
+    @app.get("/api/annotations-score")
+    async def annotations_score(run: str = "live", clip: str | None = None) -> dict:
+        jobs = run_jobs(run)
+        wanted = [
+            a
+            for a in annotation_store().all()
+            if (a.clip == clip if clip else a.status == "done") and a.clip in jobs
+        ]
+        scored, missing = [], []
+        for annotation in wanted:
+            response = await app.state.runner.client.get(
+                f"/api/v1/jobs/{jobs[annotation.clip]}/trace"
+            )
+            if response.status_code == 200:
+                scored.append(score_clip(annotation, trace_events(response.content)))
+            else:
+                missing.append({"clip": annotation.clip, "status": response.status_code})
+        return {
+            "run": run,
+            "summary": summarize(scored),
+            "clips": scored,
+            "missing_traces": missing,
+        }
 
     @app.websocket("/ws")
     async def ws(socket: WebSocket) -> None:
