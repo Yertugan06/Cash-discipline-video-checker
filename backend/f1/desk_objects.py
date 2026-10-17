@@ -21,6 +21,8 @@ WORK_WIDTH = 320  # desk crop width in pixels for the change maps
 DIFF_THRESHOLD = 35  # per-channel absolute difference (0-255) that counts as changed
 MIN_AREA = 0.002  # blob area as a fraction of the desk crop
 MAX_AREA = 0.25
+MIN_SIDE = 6  # pixels in the crop; thinner blobs are edges of people or reflections (A19)
+MAX_ELONGATION = 6.0
 MAX_CHANGED = 0.4  # more of the visible desk changed than this: lighting or camera, not objects
 MAX_OCCLUDED = 0.1  # a background candidate has at most this much of the desk under a person
 LINK_IOU = 0.3
@@ -161,6 +163,8 @@ def desk_blobs(crop: np.ndarray, background: np.ndarray, invalid: np.ndarray) ->
         (int(x), int(y), int(x + w), int(y + h))
         for x, y, w, h, area in stats[1:count]
         if MIN_AREA <= area / total <= MAX_AREA
+        and min(w, h) >= MIN_SIDE
+        and max(w, h) <= MAX_ELONGATION * min(w, h)
     ]
 
 
@@ -199,8 +203,19 @@ def link_objects(
     ]
 
 
-def origin_of(obj: DeskObject, observations: list[Observation], scene: Scene) -> str:
-    """Where the hand that put the object down came from in the seconds before it appeared."""
+def safe_open(log: EventLog, timestamp: float) -> bool:
+    changes = [
+        e
+        for e in log.events
+        if e.type in {"SAFE_OPEN", "SAFE_CLOSED"} and e.timestamp_sec <= timestamp
+    ]
+    return bool(changes) and changes[-1].type == "SAFE_OPEN"
+
+
+def origin_of(obj: DeskObject, observations: list[Observation], scene: Scene, log: EventLog) -> str:
+    """Where the hand that put the object down came from in the seconds before it appeared.
+    The hand must have been inside the open safe or on the money counter itself (A19: with a
+    margin and no safe state, hands passing by the safe made half the objects "from the safe")."""
     if not observations or obj.seen[0] <= observations[0].timestamp_sec + 0.5:
         return "unknown"  # already on the desk when the clip starts
     start = obj.seen[0] - ORIGIN_LOOKBACK_SEC
@@ -221,15 +236,17 @@ def origin_of(obj: DeskObject, observations: list[Observation], scene: Scene) ->
     if placer is None:
         return "unknown"
     path = [
-        person
+        (observation.timestamp_sec, person)
         for observation in window
         for person in observation.detections
         if person.label == "person" and person.track_id == placer
     ]
-    hands = [hand for person in path for hand in person.wrists()]
-    for name in ("safe", "counter"):
-        if any(in_zone(scene, name, hand, 0.02) for hand in hands):
-            return name
+    hands = [(t, hand) for t, person in path for hand in person.wrists()]
+    if any(in_zone(scene, "safe", hand) and safe_open(log, t) for t, hand in hands):
+        return "safe"
+    if any(in_zone(scene, "counter", hand) for _, hand in hands):
+        return "counter"
+    path = [person for _, person in path]
     if "client" in scene.zones and any(in_zone(scene, "client", p.position()) for p in path):
         return "client"
     return "cashier"
@@ -314,7 +331,7 @@ def build_desk_objects(
     for index, (seen, rects) in enumerate(link_objects(timestamps, blobs, invalid), start=1):
         median = tuple(int(v) for v in np.median(np.array(rects), axis=0))
         obj = DeskObject(index=index, box=from_crop(median, desk, size), seen=seen)
-        obj.origin = origin_of(obj, observations, scene)
+        obj.origin = origin_of(obj, observations, scene, log)
         obj.counted = was_counted(obj, log)
         obj.detector_kind = detector_kind(obj, observations)
         obj.kind, obj.clues = identity(obj)

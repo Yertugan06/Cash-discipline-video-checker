@@ -58,6 +58,9 @@ def empty_log():
     return EventLog([], {}, [], {})
 
 
+SAFE_OPENED = EventLog([Event(type="SAFE_OPEN", timestamp_sec=1.0)], {}, [], {})
+
+
 def test_an_item_put_on_the_desk_is_found_with_when_it_lay_there():
     images, observations = frames(12, item_in=range(4, 12))
     objects = build_desk_objects(images, observations, scene(), empty_log())
@@ -81,6 +84,13 @@ def test_an_item_there_from_the_start_is_found_against_the_emptiest_moment():
     assert objects[0].origin == "unknown"
 
 
+def test_a_thin_strip_along_the_desk_edge_is_not_an_item():
+    images, observations = frames(12, item_in=())
+    for image in images[4:]:
+        paint(image, (0.3, 0.3, 0.7, 0.31), 40)
+    assert build_desk_objects(images, observations, scene(), empty_log()) == []
+
+
 def test_no_desk_means_no_desk_objects():
     images, observations = frames(4, item_in=())
     no_desk = Scene(objects={}, confidence=0)
@@ -95,7 +105,20 @@ def hand_at(timestamp, hand, box=(0.6, 0.2, 0.8, 0.7)):
 def test_the_origin_is_the_safe_when_the_placing_hand_came_from_it():
     obj = DeskObject(index=1, box=ITEM, seen=[5.0, 5.5, 6.0])
     observations = [hand_at(0, (0.1, 0.1)), hand_at(3.0, (0.9, 0.2)), hand_at(4.5, (0.5, 0.55))]
-    assert origin_of(obj, observations, scene(safe=rect(SAFE))) == "safe"
+    assert origin_of(obj, observations, scene(safe=rect(SAFE)), SAFE_OPENED) == "safe"
+
+
+def test_a_hand_in_a_closed_safe_is_no_origin():
+    obj = DeskObject(index=1, box=ITEM, seen=[5.0, 5.5, 6.0])
+    observations = [hand_at(0, (0.1, 0.1)), hand_at(3.0, (0.9, 0.2)), hand_at(4.5, (0.5, 0.55))]
+    closed = EventLog([Event(type="SAFE_CLOSED", timestamp_sec=0)], {}, [], {})
+    assert origin_of(obj, observations, scene(safe=rect(SAFE)), closed) == "cashier"
+
+
+def test_a_hand_passing_beside_the_safe_is_no_origin():
+    obj = DeskObject(index=1, box=ITEM, seen=[5.0, 5.5, 6.0])
+    observations = [hand_at(0, (0.1, 0.1)), hand_at(3.0, (0.84, 0.2)), hand_at(4.5, (0.5, 0.55))]
+    assert origin_of(obj, observations, scene(safe=rect(SAFE)), SAFE_OPENED) == "cashier"
 
 
 def test_the_origin_is_the_client_side_when_the_placer_stands_there():
@@ -105,13 +128,13 @@ def test_the_origin_is_the_client_side_when_the_placer_stands_there():
         hand_at(0, (0.1, 0.1)),
         hand_at(4.5, (0.5, 0.55), box=(0.4, 0.0, 0.6, 0.4)),
     ]
-    assert origin_of(obj, observations, scene(client=client)) == "client"
+    assert origin_of(obj, observations, scene(client=client), empty_log()) == "client"
 
 
 def test_no_hand_near_the_item_leaves_the_origin_unknown():
     obj = DeskObject(index=1, box=ITEM, seen=[5.0, 5.5, 6.0])
     observations = [hand_at(0, (0.1, 0.1)), hand_at(4.5, (0.05, 0.05))]
-    assert origin_of(obj, observations, scene(safe=rect(SAFE))) == "unknown"
+    assert origin_of(obj, observations, scene(safe=rect(SAFE)), SAFE_OPENED) == "unknown"
 
 
 @pytest.mark.parametrize(

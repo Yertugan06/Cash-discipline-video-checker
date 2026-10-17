@@ -36,6 +36,7 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A16](A16-cashier-side-from-lone-person/) | agent (offline replay) | Cashier side = where a lone person works at the laptop (any camera angle) | as A14 | 21/42 (files) | 15/22 | 14/20 | - | - | measured offline, not deployed; roles right on front-facing cameras, exposes leave-rule FPs |
 | [A17](A17-leave-rule-fixes/) | agent (datathon) | A16 + leave rules: laptop not a tablet, away = out of laptop reach, item still on desk 2 s later | as A14 | 26/42 (files) | 12/22 | 6/20 | - | 144.4 s | live; replay = live on all 42 files |
 | [A18](A18-desk-object-history/) | agent (offline replay) | Desk objects by history: items found by desk change (emptiest moment of the clip as background), named only when 2 clues agree (origin zone, counter ran, detector label) | as A14 + OpenCV | 22/40 (replay; A17 25) | - | 6/19 (A17 5) | - | 74 s for 40 clips (CPU) | rejected: failed the agreed bar; "any item left" cuts misses 10 -> 7 but clean FP 5 -> 9 |
+| [A19](A19-desk-objects-strict-origin/) | agent (offline replay) | A18 + strict origin (hand inside the open safe / on the counter) + blob shape filter; pre-registered, one run | as A18 | 22/40 (replay) | - | 5/19 | - | ~75 s for 40 clips (CPU) | rejected: 13 missed; naming items from history doesn't beat the detector without new labels |
 
 ## Takeaways so far
 
@@ -49,7 +50,7 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 
 - Desk change finds left items without naming them (A18), but naming them from their history
   failed: the origin and counter clues both just mean "cash session", and the detector rarely
-  overlaps a desk-change object.
+  overlaps a desk-change object. Tightening the clues (A19) only trades catches for clean clips.
 
 ## Next to run
 
