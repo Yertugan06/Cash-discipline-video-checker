@@ -163,6 +163,18 @@ def left_with(ctx: Context, rule_id: str, labels: set[str]) -> list[Finding]:
                 facts["clues"] = sorted({clue for o in objects for clue in o.clues})
             confidence = 1.0
         if objects:
+            away_end = next(
+                (
+                    event.timestamp_sec + duration
+                    for event, duration in ctx.intervals("WORKSTATION_AWAY")
+                    if event is leave
+                ),
+                start,
+            )
+            # An exit during this absence corroborates leaving, unlike a walk to the safe.
+            facts["confirmed_exit"] = leave.type == "EXIT" or ctx.has_event(
+                "EXIT", start, away_end, actor_id=facts["actor_id"], role="cashier"
+            )
             result.append(Finding(rule_id, start, facts, confidence))
     return result
 
@@ -390,7 +402,20 @@ def k_seal_check(ctx: Context) -> list[Finding]:
             exit_event.timestamp_sec,
             track_id=transfer.facts.get("track_id"),
         ):
-            output.append(Finding("K-SEAL-CHECK", transfer.timestamp_sec, transfer.facts))
+            # Inspection can still happen after handover; the omission is established on exit.
+            facts = {**transfer.facts, "handover_sec": transfer.timestamp_sec}
+            facts.pop("box", None)
+            bag = next(
+                (
+                    d
+                    for d in ctx.nearby(exit_event.timestamp_sec).detections
+                    if d.track_id == transfer.facts.get("track_id")
+                ),
+                None,
+            )
+            if bag is not None:
+                facts["box"] = list(bag.box)
+            output.append(Finding("K-SEAL-CHECK", exit_event.timestamp_sec, facts))
     return output
 
 

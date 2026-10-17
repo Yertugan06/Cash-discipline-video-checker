@@ -64,3 +64,12 @@ def test_unknown_rule_id_falls_back_to_the_end():
 
 def test_empty_findings_returns_empty():
     assert rank([], [_rule("A")], cap=3) == []
+
+
+def test_confirmed_exit_is_only_a_tie_break_after_score_and_rule_order():
+    rules = [_rule("A"), _rule("B")]
+    confirmed = _finding("B", rank_score=1.0)
+    confirmed.facts["confirmed_exit"] = True
+    earlier_rule = _finding("A", rank_score=1.0)
+    stronger = _finding("B", rank_score=2.0)
+    assert rank([confirmed, earlier_rule, stronger], rules) == [stronger, earlier_rule, confirmed]
