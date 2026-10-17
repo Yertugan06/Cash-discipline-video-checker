@@ -130,7 +130,7 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | scale: distances relative to a scene scale so --zoom 0.8/1.2 keeps the result | merged (every zoom 0.7-1.3 = 31/0/9) | `orch/scale` |
 | Teammate's `local-vlm-prototype` (Qwen3-VL 4B questionnaire + D-FINE + 8B action windows; self-reported 32/40, 3/19 clean FP): run it on the VM on the same 40 clips and compare per clip; then a combination | running | orchestrator |
 | timecode: timing scorer + explainable anchor fixes, no verdict change | merged (no verdict change; ranking prefers a confirmed exit) | `orch/timecode` |
-| End-to-end check: run `night` through the real API in a second container (port 8001, same perception cache), the 40 clips: runtime, evidence frames, serializer | next | orchestrator |
+| End-to-end check: run `night` through the real API in a second container (port 8001, same perception cache), the 40 clips: runtime, evidence frames, serializer | done (before the scale fix): 42/42 done, 31/0/9 like the replay, evidence on every violation, runtime median 31 s / max 178 s with the perception cache (`logs/night-api.jsonl`) | orchestrator |
 | Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen) | spike done: new prompts and Qwen 7B don't fix it; "screen changed?" is a lead | orchestrator |
 | Threshold search with cross-validation over twin groups (report the held-out score) | idea | - |
 | Х-17 (seal check), Х-22 (key in lock), Х-44 (authenticity detector) | idea, probably a perception limit | - |
