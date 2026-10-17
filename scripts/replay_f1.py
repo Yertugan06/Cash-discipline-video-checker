@@ -11,6 +11,13 @@ To try uncommitted code on the same cache, mount the tree instead (read-only):
       -w /work -e PYTHONPATH=/work -e API_KEY=x forte-cash-checker:cuda \
       python scripts/replay_f1.py run > replay.jsonl
 
+With `--videos-dir` (the clips the cache was made from, mounted into the container) the leave
+rules take their items from desk change instead of the detector's labels (attempt A18,
+`backend/f1/desk_objects.py`); each line then also lists the clip's desk objects:
+
+    docker run ... -v ~/data/open/videos:/videos:ro ... python scripts/replay_f1.py run \
+      --videos-dir /videos > replay-a18.jsonl
+
 `score` runs anywhere and joins those lines with the organizer labels:
 
     python scripts/replay_f1.py score replay.jsonl --labels data/prepared/videos.jsonl
@@ -29,11 +36,31 @@ import sys
 from pathlib import Path
 
 
-def run(cache_dir: Path) -> None:
+def desk_objects_for(video: Path, observations, scene, log) -> list | None:
+    import shutil
+    import tempfile
+    import time
+
+    import cv2
+
+    from backend.f1.desk_objects import build_desk_objects
+    from backend.f1.detector import F1Detector
+
+    frames_dir = Path(tempfile.mkdtemp(prefix="a18-frames-"))
+    try:
+        # The same 2 fps decode the detector ran, so frame i is observation i.
+        frames = F1Detector._extract_frames(video, frames_dir, time.monotonic() + 600)
+        images = (cv2.imread(str(frame)) for frame in frames)
+        return build_desk_objects(images, observations, scene, log)
+    finally:
+        shutil.rmtree(frames_dir, ignore_errors=True)
+
+
+def run(cache_dir: Path, videos_dir: Path | None) -> None:
     import yaml
 
     from backend.config import ROOT
-    from backend.f1.calibration import calibrate
+    from backend.f1.calibration import calibrate, video_checksum
     from backend.f1.codex import load_codex
     from backend.f1.detector import FPS
     from backend.f1.events import build_events
@@ -45,6 +72,9 @@ def run(cache_dir: Path) -> None:
     codex = load_codex(ROOT / "config" / "f1_codex.yaml")
     rules = yaml.safe_load((ROOT / "knowledge" / "rules.yaml").read_text(encoding="utf-8"))
     enabled = {rule["rule_id"] for rule in rules if rule.get("enabled")}
+    videos = {}
+    if videos_dir:
+        videos = {video_checksum(p): p for p in sorted(videos_dir.iterdir()) if p.is_file()}
     for video_dir in sorted(p for p in cache_dir.iterdir() if p.is_dir()):
         files = list(video_dir.glob("*.json"))
         if not files:
@@ -56,21 +86,37 @@ def run(cache_dir: Path) -> None:
         observations = [Observation.model_validate(o) for o in payload["observations"]]
         duration = observations[-1].timestamp_sec + 1 / FPS
         log = build_events(scene, observations, config, FPS, duration)
-        findings = evaluate_rules(Context(codex, log, observations, scene, duration))
-        print(
-            json.dumps(
+        desk_objects = None
+        if videos_dir:
+            if video_dir.name not in videos:
+                print(f"no video for cache entry {video_dir.name[:12]}", file=sys.stderr)
+                continue
+            desk_objects = desk_objects_for(videos[video_dir.name], observations, scene, log)
+        findings = evaluate_rules(Context(codex, log, observations, scene, duration, desk_objects))
+        record = {
+            "sha256": video_dir.name,
+            "desk": scene.objects["desk"].box if "desk" in scene.objects else None,
+            "findings": [
+                {"rule_id": f.rule_id, "t": round(f.timestamp_sec, 1)}
+                for f in findings
+                if f.rule_id in enabled
+            ],
+        }
+        if desk_objects is not None:
+            record["desk_objects"] = [
                 {
-                    "sha256": video_dir.name,
-                    "desk": scene.objects["desk"].box if "desk" in scene.objects else None,
-                    "findings": [
-                        {"rule_id": f.rule_id, "t": round(f.timestamp_sec, 1)}
-                        for f in findings
-                        if f.rule_id in enabled
-                    ],
+                    "id": o.track_id,
+                    "t": [o.seen[0], o.seen[-1]],
+                    "frames": len(o.seen),
+                    "box": [round(v, 3) for v in o.box],
+                    "origin": o.origin,
+                    "counted": o.counted,
+                    "detector": o.detector_kind,
+                    "kind": o.kind,
                 }
-            ),
-            flush=True,
-        )
+                for o in desk_objects
+            ]
+        print(json.dumps(record), flush=True)
 
 
 def score(results: Path, labels: Path) -> None:
@@ -144,6 +190,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="mode", required=True)
     run_parser = sub.add_parser("run")
     run_parser.add_argument("--cache-dir", type=Path, default=Path("/app/runtime/perception_cache"))
+    run_parser.add_argument("--videos-dir", type=Path, default=None)
     score_parser = sub.add_parser("score")
     score_parser.add_argument("results", type=Path)
     score_parser.add_argument("--labels", type=Path, required=True)
@@ -153,7 +200,7 @@ def main() -> None:
     state_parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.mode == "run":
-        run(args.cache_dir)
+        run(args.cache_dir, args.videos_dir)
     elif args.mode == "score":
         score(args.results, args.labels)
     else:

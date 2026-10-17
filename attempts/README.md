@@ -35,6 +35,7 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A15](A15-vlm-roles-spike/) | agent (datathon) | Spike: per-person role + situation from one frame with numbered boxes | Qwen2.5-VL-7B (bf16) | n/a | cashier right in 5/21 two-person frames | - | - | 6.4 s per frame (median) | measured; rejected (swaps cashier and client) |
 | [A16](A16-cashier-side-from-lone-person/) | agent (offline replay) | Cashier side = where a lone person works at the laptop (any camera angle) | as A14 | 21/42 (files) | 15/22 | 14/20 | - | - | measured offline, not deployed; roles right on front-facing cameras, exposes leave-rule FPs |
 | [A17](A17-leave-rule-fixes/) | agent (datathon) | A16 + leave rules: laptop not a tablet, away = out of laptop reach, item still on desk 2 s later | as A14 | 26/42 (files) | 12/22 | 6/20 | - | 144.4 s | live; replay = live on all 42 files |
+| [A18](A18-desk-object-history/) | agent (offline replay) | Desk objects by history: items found by desk change (emptiest moment of the clip as background), named only when 2 clues agree (origin zone, counter ran, detector label) | as A14 + OpenCV | 22/40 (replay; A17 25) | - | 6/19 (A17 5) | - | 74 s for 40 clips (CPU) | rejected: failed the agreed bar; "any item left" cuts misses 10 -> 7 but clean FP 5 -> 9 |
 
 ## Takeaways so far
 
@@ -45,6 +46,10 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 - Zero-shot VLMs don't tell a real event from its clean twin (A08), at 4B or 8B.
 - The missing piece is targeted perception of small objects (cash, keys, screen, door);
   see `archive/research1/problem-validation.md` §9.
+
+- Desk change finds left items without naming them (A18), but naming them from their history
+  failed: the origin and counter clues both just mean "cash session", and the detector rarely
+  overlaps a desk-change object.
 
 ## Next to run
 

@@ -1,6 +1,7 @@
 """One deterministic function per supported codex ID; legal prose lives only in YAML."""
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from backend.f1.calibration import in_zone
 from backend.f1.codex import Codex, Rule
@@ -14,6 +15,9 @@ from backend.f1.vision_types import (
     contains,
     distance,
 )
+
+if TYPE_CHECKING:  # desk_objects needs cv2 at import time
+    from backend.f1.desk_objects import DeskObject
 
 LEFT_BEHIND_SEC = 2.0
 
@@ -33,6 +37,9 @@ class Context:
     observations: list[Observation]
     scene: Scene
     duration: float
+    # A18: items found by desk change and named by their history (backend/f1/desk_objects.py);
+    # None keeps the detector's labels as the source of items for the leave rules.
+    desk_objects: "list[DeskObject] | None" = None
 
     def rule(self, identity: str) -> Rule:
         return next(rule for rule in self.codex.rules if rule.id == identity)
@@ -112,20 +119,27 @@ def left_with(ctx: Context, rule_id: str, labels: set[str]) -> list[Finding]:
     for leave in ctx.leaves():
         # Left behind = still on the desk a moment after the cashier walked off; a cashier
         # standing up usually picks the item up on the way.
-        later = {d.track_id for d in ctx.on_desk(leave.timestamp_sec + LEFT_BEHIND_SEC, labels)}
-        objects = [d for d in ctx.on_desk(leave.timestamp_sec, labels) if d.track_id in later]
+        start, later = leave.timestamp_sec, leave.timestamp_sec + LEFT_BEHIND_SEC
+        facts: dict = {"actor_id": leave.facts.get("actor_id", "")}
+        if ctx.desk_objects is None:
+            kept = {d.track_id for d in ctx.on_desk(later, labels)}
+            objects = [d for d in ctx.on_desk(start, labels) if d.track_id in kept]
+            facts["track_ids"] = [d.track_id for d in objects]
+            confidence = min((d.score for d in objects), default=0)
+        else:
+            objects = [
+                o
+                for o in ctx.desk_objects
+                if o.kind in labels and o.present(start) and o.present(later)
+            ]
+            facts["track_ids"] = [o.track_id for o in objects]
+            if objects:
+                facts["box"] = list(objects[0].box)
+                facts["object"] = objects[0].kind
+                facts["clues"] = sorted({clue for o in objects for clue in o.clues})
+            confidence = 1.0
         if objects:
-            result.append(
-                Finding(
-                    rule_id,
-                    leave.timestamp_sec,
-                    {
-                        "actor_id": leave.facts.get("actor_id", ""),
-                        "track_ids": [d.track_id for d in objects],
-                    },
-                    min(d.score for d in objects),
-                )
-            )
+            result.append(Finding(rule_id, start, facts, confidence))
     return result
 
 
