@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Трасса обработки</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#1d2329;--muted:#5d6874;--line:#e2e6ea;--accent:#0b6e4f;--danger:#b42318;--danger-bg:#fdecea;--ok-bg:#e6f4ee;--chip:#eef1f4}
+@media (prefers-color-scheme:dark){:root{--bg:#121416;--card:#1b1e21;--text:#e6e8ea;--muted:#9aa4ae;--line:#2c3136;--accent:#3fb98a;--danger:#f97066;--danger-bg:#3a1d1b;--ok-bg:#16302a;--chip:#262a2f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.muted{color:var(--muted)}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--chip);font-size:12px;margin:2px 4px 2px 0}
+.bad{background:var(--danger-bg);color:var(--danger)}.ok{background:var(--ok-bg);color:var(--accent)}
+.steps .s{display:grid;grid-template-columns:230px 1fr 70px;gap:8px;align-items:center;padding:3px 0;border-bottom:1px solid var(--line)}
+.bar{height:10px;background:var(--chip);border-radius:6px;position:relative}.bar i{position:absolute;top:0;bottom:0;background:var(--accent);border-radius:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+figure{margin:0}figure img{width:100%;border-radius:8px;border:1px solid var(--line);cursor:zoom-in}figcaption{font-size:12px;color:var(--muted)}
+.wide img{max-width:100%;border:1px solid var(--line);border-radius:8px;cursor:zoom-in}
+.scroll{overflow-x:auto}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9}.lb img{max-width:95vw;max-height:95vh}
+details summary{cursor:pointer}pre{white-space:pre-wrap;word-break:break-word;font-size:12px;max-height:420px;overflow:auto;background:var(--chip);padding:8px;border-radius:8px}
+.chg{outline:2px solid #e74c3c}
+</style>
+</head>
+<body>
+<main id="app"><p class="muted">Загрузка трассы…</p></main>
+<div class="lb" id="lb" onclick="this.style.display='none'"><img id="lbimg" alt=""></div>
+<script>
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KIND = {desk:'стол (деньги, сумка)', safe:'сейф (дверца, ключ)', laptop:'экран ноутбука', door:'дверь', id:'удостоверение'};
+const FIELDS = [['cashier_at_desk','за столом'],['cashier_in_room','в комнате'],['clients_at_desk','клиентов'],['people_cashier_side','у кассира'],
+  ['desk_cash','деньги'],['desk_bag','сумка'],['safe_door','сейф'],['laptop_screen','экран'],['room_door','дверь']];
+let stamp = 0;
+function img(src, cap, cls=''){ return src ? `<figure class="${cls}"><img src="${esc(src)}?v=${stamp}" alt="${esc(cap)}" onclick="zoom(this)"><figcaption>${cap}</figcaption></figure>` : ''; }
+function zoom(el){ document.getElementById('lbimg').src = el.src; document.getElementById('lb').style.display = 'flex'; }
+function chips(st){ if(!st) return '<span class="pill bad">нет ответа</span>';
+  return FIELDS.map(([k,n]) => { const v = st[k]; if (v === false || v === 0 || v === 'closed' || v === 'not_visible' || v === 'nobody') return '';
+    return `<span class="pill">${n}${v === true ? '' : ': ' + esc(v)}</span>`; }).join(''); }
+function render(T){
+  const done = T.status !== 'processing', R = T.result, total = T.total_s || T.elapsed_s || 0;
+  let h = `<h1>Трасса: ${esc(T.video)}</h1><div class="muted">начало ${esc(T.started)} · ${done ? `готово за ${T.total_s} с` : `идёт: ${esc(T.stage)}…`}</div>`;
+  if (T.error) h += `<div class="card bad">Ошибка: ${esc(T.error)}</div>`;
+  if (R) h += `<div class="card ${R.violations.length ? 'bad' : 'ok'}"><b>${R.violations.length ? 'Обнаружены признаки возможных нарушений: ' + R.violations.length : 'Нарушение не обнаружено'}</b></div>`;
+  h += `<div class="card steps"><h2>Шаги и время</h2>` + T.steps.map(s => {
+    const l = total ? 100 * s.start_s / total : 0, w = total ? 100 * (s.dur_s ?? (total - s.start_s)) / total : 0;
+    const info = Object.entries(s).filter(([k]) => !['name','start_s','dur_s'].includes(k) && !k.startsWith('_')).map(([k,v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(' · ');
+    return `<div class="s"><div>${esc(s.name)}<div class="muted" style="font-size:12px">${esc(info)}</div></div><div class="bar"><i style="left:${l}%;width:${Math.max(.5,w)}%"></i></div><div>${s.dur_s != null ? s.dur_s + ' с' : '…'}</div></div>`; }).join('') + `</div>`;
+  if (T.images.boxes || T.images.timeline) h += `<div class="card"><h2>Где что находится и матрица состояний</h2><div class="row">
+    <div class="wide" style="flex:0 0 260px">${img(T.images.boxes, 'рамки: стол — зелёный, сейф — оранжевый, ноутбук — синий, дверь — фиолетовый')}</div>
+    <div class="wide scroll" style="flex:1 1 400px">${img(T.images.timeline, 'строки — поля анкеты, столбцы — время (с); синий — да / больше людей; красный — открыто / разблокировано; точка — значение исправлено увеличенной проверкой; красная линия — нарушение')}</div></div></div>`;
+  if (R && R.violations.length) h += `<div class="card"><h2>Нарушения</h2>` + R.violations.map(v => `<div style="margin-bottom:12px"><b>${v.timecode_sec} с — ${esc(v.type)}</b>
+      <div class="muted">${esc(v.norm?.document)}, ${esc(v.norm?.punkt)} ${v.norm?.url ? `· <a href="${esc(v.norm.url)}" target="_blank" rel="noopener">пункт на adilet</a>` : ''}</div>
+      <div class="grid" style="margin-top:6px">${(v.evidence || []).map(e => img(e, 'доказательство')).join('')}</div></div>`).join('') + `</div>`;
+  if (T.rules?.length || T.dropped?.length || T.confirm?.length) {
+    h += `<div class="card"><h2>Кандидаты и подтверждения</h2>`;
+    h += (T.rules || []).map(r => `<span class="pill ${r.needs_verify ? '' : 'bad'}">${esc(r.rule)} @ ${r.timecode_sec} с${r.needs_verify ? ' (не выдано: нужна проверка)' : ''}</span>`).join('');
+    h += (T.dropped || []).map(d => `<span class="pill ok">отсеяно: ${esc(d)}</span>`).join('');
+    h += (T.confirm || []).map(c => `<div style="margin-top:10px"><b>${esc(c.rule)} @ ${c.t} с — ${c.ok ? 'подтверждено' : 'отсеяно'}</b><div class="grid">${c.imgs.map(s => img(s, '')).join('')}</div></div>`).join('');
+    h += `</div>`;
+  }
+  if (T.actions?.length) h += `<div class="card"><h2>Действия кассира по окнам из 4 кадров (${T.actions.length})</h2>` + T.actions.map(w =>
+    `<div style="margin-bottom:10px"><b>${w.t0}–${w.t0 + 3} с · ${w.why === 'leave' ? 'клиент уходит' : 'сессия с клиентом'}</b> · ${w.latency_s} с
+     <div class="muted">${esc(Object.entries(w.answer || {}).map(([a, b]) => a + '=' + b).join(', '))}</div>
+     <div class="wide">${img(w.img, '')}</div></div>`).join('') + `</div>`;
+  const byKind = {}; (T.zoom || []).forEach(z => (byKind[z.kind] = byKind[z.kind] || []).push(z));
+  if (Object.keys(byKind).length) h += `<div class="card"><h2>Проверки крупным планом (${T.zoom.length})</h2>` + Object.entries(byKind).map(([k, zs]) =>
+    `<h3 style="font-size:14px;margin:10px 0 6px">${esc(KIND[k] || k)} · ${zs.length}</h3><div class="grid">${zs.sort((a,b)=>a.t-b.t).map(z =>
+      img(z.img, `${z.t} с: ${esc(typeof z.answer === 'object' ? Object.entries(z.answer || {}).map(([a,b]) => a + '=' + b).join(', ') : z.answer)}${z.changed?.length ? ' · <b>исправило: ' + esc(z.changed.join(', ')) + '</b>' : ''}`, z.changed?.length ? 'chg' : '')).join('')}</div>`).join('') + `</div>`;
+  const sent = (T.frames || []).filter(f => f.sent), reused = (T.frames || []).filter(f => !f.sent);
+  if (T.frames?.length) h += `<div class="card"><h2>Анкета по кадрам: отправлено ${sent.length}, повторно использовано ${reused.length}</h2><div class="grid">` +
+    sent.map(f => `<figure>${f.img ? `<img src="${esc(f.img)}?v=${stamp}" onclick="zoom(this)" alt="">` : ''}<figcaption>${f.t} с · ${f.latency_s ?? '—'} с ответ<br>${chips(f.state)}</figcaption></figure>`).join('') + `</div>
+    ${reused.length ? `<div class="muted" style="margin-top:8px">Без запроса (кадр почти не изменился): ${reused.map(f => f.t + '←' + f.reused_from).join(', ')}</div>` : ''}</div>`;
+  h += `<div class="card"><details><summary>Сырые данные трассы (JSON)</summary><pre>${esc(JSON.stringify({...T, frames: undefined}, null, 1))}</pre></details></div>`;
+  document.getElementById('app').innerHTML = h;
+}
+function load(){
+  const s = document.createElement('script'); s.src = 'trace.js?v=' + Date.now();
+  s.onload = () => { stamp = Date.now(); render(window.TRACE); s.remove(); if (window.TRACE.status === 'processing') setTimeout(load, 2000); };
+  s.onerror = () => { s.remove(); setTimeout(load, 2000); };
+  document.body.appendChild(s);
+}
+load();
+</script>
+</body>
+</html>

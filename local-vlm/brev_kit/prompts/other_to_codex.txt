@@ -1,0 +1,5 @@
+You see frames from an overhead camera in a bank cash room at times {times} s.
+An inspector noted: "{observation}"
+Below are candidate rules (ID: what a breach looks like). Choose the ONE rule whose breach is clearly visible in these frames, or NONE.
+{candidates}
+Answer ONLY with JSON: {{"rule_id": "<one ID from the list or NONE>", "evidence": "<one short sentence in Russian>"}}

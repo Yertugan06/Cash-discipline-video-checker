@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Проверка кассы</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#1d2329;--muted:#5d6874;--line:#e2e6ea;--accent:#0b6e4f;--accent-bg:#e6f4ee;
+  --danger:#b42318;--danger-bg:#fdecea;--warn:#8a5a00;--warn-bg:#fff4dc;--link:#0b5cad}
+@media (prefers-color-scheme: dark){:root{--bg:#121417;--card:#1b1f24;--text:#e7eaee;--muted:#9aa4af;--line:#2c333b;
+  --accent:#4cc38a;--accent-bg:#13291f;--danger:#ff8a80;--danger-bg:#3a1714;--warn:#f0c060;--warn-bg:#33270e;--link:#7ab8ff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .15s}
+.drop.over{border-color:var(--accent)}
+.drop b{display:block;font-size:16px;margin-bottom:4px}
+.muted{color:var(--muted)}
+button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.verdict{border-radius:12px;padding:16px 18px;font-size:18px;font-weight:600;margin-bottom:16px}
+.verdict.ok{background:var(--accent-bg);color:var(--accent)} .verdict.bad{background:var(--danger-bg);color:var(--danger)}
+.viol h3{margin:0 0 6px;font-size:17px}
+.tc{display:inline-block;background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:1px 8px;font-weight:600;margin-right:8px;font-variant-numeric:tabular-nums}
+.norm{border-left:3px solid var(--line);padding:8px 12px;margin:10px 0;background:var(--bg);border-radius:0}
+.norm q{display:block;color:var(--muted);margin-top:4px;font-size:14px}
+.badge{display:inline-block;font-size:12px;border-radius:999px;padding:1px 8px;margin-left:6px;border:1px solid var(--line);color:var(--muted)}
+.frames{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.frames figure{margin:0}
+.frames img{height:180px;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;display:block}
+.frames figcaption{font-size:12px;color:var(--muted);text-align:center}
+a{color:var(--link)}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px;background:var(--bg);padding:10px;border-radius:8px;max-height:320px;overflow:auto}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:9}
+.lightbox img{max-width:95vw;max-height:92vh;border-radius:8px}
+.err{color:var(--danger)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Проверка кассовой дисциплины по видео</h1>
+  <p class="sub">Загрузите запись с камеры кассы. Модель работает локально; результат — подсказка для проверяющего, а не юридическое заключение.</p>
+
+  <div class="card">
+    <label class="drop" id="drop">
+      <b>Перетащите видео сюда или нажмите, чтобы выбрать</b>
+      <span class="muted">.mov, .mp4 — до ~30 МБ</span>
+      <input type="file" id="file" accept="video/*,.mov" hidden>
+    </label>
+    <div class="row"><button id="go" disabled>Проверить</button><span id="fname" class="muted"></span></div>
+    <div id="status" style="display:none">
+      <div class="row"><span id="stage">Загрузка…</span><span class="muted" id="elapsed"></span></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div id="trace" style="margin-top:8px;font-size:13px"></div>
+    </div>
+  </div>
+
+  <div id="result"></div>
+</main>
+<div class="lightbox" id="lb"><img id="lbimg" alt=""></div>
+<script>
+const $ = s => document.querySelector(s);
+let file = null, timer = null;
+const fmt = s => { s = Math.max(0, s); const m = Math.floor(s / 60), r = (s - m * 60).toFixed(1).padStart(4, '0'); return `${m}:${r}`; };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function pick(f){ file = f; $('#fname').textContent = f ? `${f.name} · ${(f.size/1048576).toFixed(1)} МБ` : ''; $('#go').disabled = !f; }
+$('#file').onchange = e => pick(e.target.files[0]);
+const drop = $('#drop');
+['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => pick(e.dataTransfer.files[0]));
+$('#lb').onclick = () => $('#lb').style.display = 'none';
+
+$('#go').onclick = async () => {
+  if (!file) return;
+  $('#go').disabled = true; $('#result').innerHTML = ''; $('#status').style.display = 'block';
+  $('#stage').textContent = 'Загрузка файла…'; $('#bar').style.width = '2%';
+  const fd = new FormData(); fd.append('file', file);
+  try {
+    const r = await fetch('/ui/analyze', {method: 'POST', body: fd});
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const {job_id} = await r.json();
+    history.replaceState(null, '', `?job=${job_id}`);          // ссылку на результат можно открыть повторно
+    poll(job_id);
+  } catch (e) { $('#stage').innerHTML = `<span class="err">Ошибка: ${esc(e.message)}</span>`; $('#go').disabled = !file; }
+};
+
+async function poll(id){
+  clearTimeout(timer);
+  const r = await fetch(`/ui/jobs/${id}`);
+  if (!r.ok) { $('#status').style.display = 'block'; $('#stage').innerHTML = '<span class="err">Задача не найдена (сервер перезапускался?)</span>'; return; }
+  const j = await r.json();
+  $('#stage').textContent = j.stage || j.status; $('#elapsed').textContent = j.elapsed_s ? `${j.elapsed_s} с` : '';
+  if (j.trace_url) $('#trace').innerHTML = `<a href="${j.trace_url}" target="_blank" rel="noopener">Трасса обработки: шаги, ответы модели, кадры с рамками →</a>`;
+  $('#bar').style.width = `${Math.round((j.progress || 0) * 100)}%`;
+  if (j.status === 'done') { render(j); $('#go').disabled = !file; return; }
+  if (j.status === 'failed') { $('#stage').innerHTML = `<span class="err">Ошибка обработки: ${esc(j.error)}</span>`; $('#go').disabled = !file; return; }
+  timer = setTimeout(() => poll(id), 1500);
+}
+
+function render(j){
+  const bad = j.verdict === 'violation';
+  let h = `<div class="verdict ${bad ? 'bad' : 'ok'}">${bad ? `Обнаружены признаки возможных нарушений: ${j.violations.length}` : 'Нарушение не обнаружено'}</div>`;
+  for (const v of j.violations) {
+    const n = v.norm || {};
+    h += `<div class="card viol"><h3><span class="tc">${fmt(v.timecode_sec)}</span>${esc(v.type)}</h3>
+      <div>${esc(v.description)}</div>
+      <div class="norm"><b>${esc(n.document)}, ${esc(n.punkt)}</b>
+        <span class="badge">${n.strength === 'direct' ? 'прямая норма' : 'косвенная норма'}</span>
+        ${n.url ? ` · <a href="${esc(n.url)}" target="_blank" rel="noopener">открыть пункт на adilet.zan.kz</a>` : ''}
+        ${n.quote ? `<q>${esc(n.quote)}</q>` : ''}</div>
+      <div class="frames">${v.evidence_frames.map(f => `<figure><img src="data:image/jpeg;base64,${f.image_base64}" alt="кадр ${fmt(f.timestamp_sec)}"><figcaption>${fmt(f.timestamp_sec)}</figcaption></figure>`).join('')}</div></div>`;
+  }
+  const d = j.debug || {};
+  const slim = {...j, violations: j.violations.map(v => ({...v, evidence_frames: v.evidence_frames.map(f => ({timestamp_sec: f.timestamp_sec, image_base64: f.image_base64.slice(0, 20) + '…'}))}))};
+  delete slim.debug; delete slim.stage; delete slim.progress; delete slim.filename; delete slim.elapsed_s;
+  if (j.trace_url && j.status === 'done') {
+    const base = j.trace_url.replace('index.html', '');
+    h += `<div class="card"><b>Как система пришла к ответу</b><div class="frames" style="align-items:flex-start">
+      <figure><img src="${base}boxes.jpg" alt="найденные объекты" style="width:180px;height:auto"><figcaption>найденные объекты</figcaption></figure>
+      <figure style="flex:1;overflow-x:auto"><img src="${base}timeline.png" alt="матрица состояний" style="width:auto;max-width:none;height:auto"><figcaption>матрица состояний по времени (красная линия — нарушение)</figcaption></figure>
+      </div><a href="${j.trace_url}" target="_blank" rel="noopener">Полная трасса →</a></div>`;
+  }
+  h += `<div class="card"><div class="muted">Модель: ${esc(d.model)} · длительность видео ${d.duration_s} с · кадров проанализировано ${d.vlm_calls} из ${d.frames_planned} (шаг ${d.step_s} с)${d.desk_checks ? ` · проверок стола крупным планом ${d.desk_checks}` : ''} · обработка ${d.processing_s} с</div>
+    <details style="margin-top:8px"><summary>JSON ответа API</summary><pre>${esc(JSON.stringify(slim, null, 1))}</pre></details></div>`;
+  $('#result').innerHTML = h;
+  document.querySelectorAll('.frames img').forEach(img => img.onclick = () => { $('#lbimg').src = img.src; $('#lb').style.display = 'flex'; });
+}
+const jobParam = new URLSearchParams(location.search).get('job');
+if (jobParam) { $('#status').style.display = 'block'; poll(jobParam); }
+</script>
+</body>
+</html>

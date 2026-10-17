@@ -1,0 +1,11 @@
+# Локальные данные и результаты — не коммитить (видео, кадры организаторов, разметка по роликам)
+brev_kit/data/
+brev_kit/runs/
+brev_kit/work/
+prototype/work/
+prototype/traces/
+prototype/uploads/
+prototype/api_key.txt
+.venv*/
+*.xlsx
+!research/Кодекс_норм.xlsx

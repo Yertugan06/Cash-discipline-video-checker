@@ -1,0 +1,92 @@
+"""Прогон анкеты состояний через ЛОКАЛЬНУЮ VLM (vLLM/SGLang с OpenAI-совместимым API на localhost).
+
+Золотые кадры (быстрый тест полей):
+  python scripts/run_vlm.py --gold-frames work/gold_frames/gold_frames.json --model Qwen/Qwen3.5-9B --out runs/q35_9b
+Все видео (для правил и итоговой оценки):
+  python scripts/run_vlm.py --frames work/frames --model Qwen/Qwen3.5-9B --out runs/q35_9b --step 1.0
+"""
+import argparse, glob, json, os, sys, time
+from concurrent.futures import ThreadPoolExecutor
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import chat, load_prompt, load_schema, validate_state
+
+
+def ask(item, a, schema, system, q_tpl):
+    q = q_tpl.replace('{t}', f"{item['t']:.1f}")
+    st, raw, lat, err = chat(a.base_url, a.model, system, q, [item['path']], schema, a.structured, a.max_side,
+                             a.temperature, a.max_tokens, a.api_key)
+    if st is None and a.structured != 'none':          # одна повторная попытка
+        st, raw, lat2, err = chat(a.base_url, a.model, system, q + '\nReturn strictly valid JSON.', [item['path']], schema,
+                                  a.structured, a.max_side, a.temperature, a.max_tokens, a.api_key); lat += lat2
+    errs = validate_state(st, schema) if isinstance(st, dict) else [err or 'no answer']
+    return {'video': item['video'], 't': item['t'], 'state': st, 'ok': not errs, 'errors': errs,
+            'latency_s': round(lat, 3), 'raw': raw if errs else ''}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--frames', help='папка из extract_frames.py (подпапки с frames.json)')
+    ap.add_argument('--gold-frames', help='gold_frames.json из extract_frames.py --gold')
+    ap.add_argument('--videos', default='', help='через запятую: только эти видео (X-26,X-27)')
+    ap.add_argument('--step', type=float, default=1.0, help='шаг по времени между кадрами для VLM, c (кадры нарезаны с fps=2)')
+    ap.add_argument('--base-url', default='http://localhost:8000/v1')
+    ap.add_argument('--api-key', default='EMPTY')
+    ap.add_argument('--model', required=True)
+    ap.add_argument('--out', required=True)
+    ap.add_argument('--workers', type=int, default=8)
+    ap.add_argument('--max-side', type=int, default=768, help='длинная сторона картинки, px')
+    ap.add_argument('--structured', choices=['json_schema', 'guided_json', 'ollama', 'none'], default='json_schema',
+                    help='ollama = нативный API Ollama (--base-url http://127.0.0.1:11434)')
+    ap.add_argument('--temperature', type=float, default=0.0)
+    ap.add_argument('--max-tokens', type=int, default=500)
+    ap.add_argument('--schema'); ap.add_argument('--prompts')
+    a = ap.parse_args()
+    schema = load_schema(a.schema); system = load_prompt('system.txt', a.prompts); q_tpl = load_prompt('questionnaire.txt', a.prompts)
+    os.makedirs(os.path.join(a.out, 'states'), exist_ok=True)
+    only = set(filter(None, a.videos.split(',')))
+
+    jobs = {}
+    if a.gold_frames:
+        for it in json.load(open(a.gold_frames, encoding='utf-8'))['frames']:
+            jobs.setdefault(it['video'], []).append(it)
+    else:
+        for fj in sorted(glob.glob(os.path.join(a.frames, '*', 'frames.json'))):
+            m = json.load(open(fj, encoding='utf-8')); last = -1e9
+            for fr in m['frames']:
+                if fr['t'] - last >= a.step - 1e-6:
+                    jobs.setdefault(m['video'], []).append({'video': m['video'], 't': fr['t'], 'path': fr['path']}); last = fr['t']
+    if only: jobs = {k: v for k, v in jobs.items() if k in only}
+
+    meta = {'model': a.model, 'max_side': a.max_side, 'step': a.step, 'structured': a.structured, 'workers': a.workers,
+            'prompts': a.prompts or 'default', 'videos': {}}
+    def save(vid, res, wall):
+        with open(os.path.join(a.out, 'states', f'{vid}.jsonl'), 'w', encoding='utf-8') as f:
+            for r in sorted(res, key=lambda r: r['t']):
+                f.write(json.dumps(r, ensure_ascii=False) + '\n')
+        ok = sum(r['ok'] for r in res); lat = sum(r['latency_s'] for r in res) / max(1, len(res))
+        meta['videos'][vid] = {'frames': len(res), 'ok': ok, 'wall_s': round(wall, 2), 'mean_latency_s': round(lat, 3)}
+        print(f'{vid}: {ok}/{len(res)} ok (schema), {wall:.1f}s wall, {lat:.1f}s per frame')
+
+    t_all = time.time()
+    with ThreadPoolExecutor(a.workers) as ex:
+        if a.gold_frames:            # золотые кадры: по 1–2 на видео → один общий пул, иначе параллельности нет
+            flat = [it for items in jobs.values() for it in items]
+            res_all = list(ex.map(lambda it: ask(it, a, schema, system, q_tpl), flat))
+            for vid in jobs:
+                res = [r for r in res_all if r['video'] == vid]
+                save(vid, res, sum(r['latency_s'] for r in res))
+        else:                        # целые видео: по одному, как будет у жюри → честное время на видео
+            for vid, items in jobs.items():
+                t0 = time.time()
+                res = list(ex.map(lambda it: ask(it, a, schema, system, q_tpl), items))
+                save(vid, res, time.time() - t0)
+    meta['total_wall_s'] = round(time.time() - t_all, 1)
+    lats = [v['mean_latency_s'] for v in meta['videos'].values()]
+    if lats and sum(lats) / len(lats) > 5:
+        print(f'!!! mean {sum(lats) / len(lats):.1f} s per frame - very slow. Check GPU (ollama ps -> 100% GPU) and that thinking mode is off (use *-instruct tags).')
+    json.dump(meta, open(os.path.join(a.out, 'run_meta.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    print('done', meta['total_wall_s'], 's')
+
+
+if __name__ == '__main__':
+    main()

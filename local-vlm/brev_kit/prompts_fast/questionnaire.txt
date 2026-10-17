@@ -1,0 +1,32 @@
+The image is one frame (time {t} s) from an overhead camera in a small bank cash room.
+Typical scene: a cashier's desk with a laptop, a desk phone, a banknote counting machine and a small banknote detector;
+a grey metal safe/cabinet (sometimes on a white pedestal); a glass door to the room; a client may sit or stand on the other side of the desk;
+a cash collector (инкассатор) may bring or take a green collection bag. The camera angle and furniture layout can differ between videos.
+First look at the whole image, then check each item carefully. Fill every field:
+
+- cashier_at_desk: the cashier (bank employee working with cash) is at the cashier's workplace — sitting or standing at the desk on the cashier side.
+- cashier_in_room: the cashier is anywhere inside the room (e.g. at the safe), even if not at the desk. false if the cashier walked out or is behind the glass door outside.
+- people_cashier_side: count EVERY person who is not on the client side of the desk: the cashier PLUS anyone standing behind or next to the cashier,
+  near the safe, or just inside the door (a visitor who walked into the cashier zone counts). Clients at the client side of the desk are NOT counted.
+- clients_at_desk: count EVERY person on the client side of the desk — seated OR standing, including someone who just walked up and hands
+  something to the cashier. A person seated across the desk facing the cashier is a client even if partly hidden. 0 if nobody is there.
+- person_at_door: someone is entering or leaving through the room door right now.
+- collector_present: a cash collector is in the room (usually carries/handles a green collection bag, wears a dark jacket).
+- desk_cash: scan the WHOLE desk surface. true if ANY banknotes lie on the desk — even one small pack or a few notes
+  (tenge banknotes are small blue, green, beige or pink paper rectangles). Notes inside the counting machine or held in a hand do not count.
+- desk_bag: a collection bag (often green fabric) lies on the desk.
+- desk_documents: papers, folders, a tablet or a notebook with documents lie on the desk.
+- desk_personal_items: personal items on the desk or chair: coat/jacket, handbag, backpack, wallet.
+- desk_food_drink: food, a cup, a bottle or a snack is on the desk or in someone's hand at the desk.
+- phone_in_cashier_hand: the cashier holds a mobile phone.
+- counting_machine_in_use: banknotes are being fed into / taken out of the counting machine, or are in its tray.
+- safe_door: is the door of the metal safe/cabinet open or closed.
+- laptop_screen:
+  unlocked = an application is visible on the screen: a spreadsheet/table (white with rows and columns), a document, a browser, or a bright white working window;
+  lock_screen = a full-screen PHOTO or landscape picture (mountains, sky, sea, dark blue picture), possibly with a clock, and NO application windows —
+  this is the Windows lock screen, even though it looks like a wallpaper;
+  off_or_closed = black/dark screen or the lid is closed.
+- room_door: the glass door is open if its leaf is swung away from the frame (you see the leaf at an angle, or a gap/dark opening next to the frame),
+  or if someone is passing through it; closed if the leaf is flush with the frame.
+- cash_in_hands_of: who holds banknotes right now.
+Output the JSON compactly on ONE line: no spaces, no line breaks.
