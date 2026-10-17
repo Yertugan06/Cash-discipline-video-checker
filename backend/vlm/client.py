@@ -18,6 +18,7 @@ Failure handling (architecture.md §2 "Discovery", §7):
 from __future__ import annotations
 
 import base64
+import logging
 import time
 from typing import Any
 
@@ -27,6 +28,8 @@ from pydantic import ValidationError
 from backend.contracts import FrameObservation, FrameState
 from backend.vlm.config import VlmSettings
 from backend.vlm.errors import VlmUnavailableError
+
+logger = logging.getLogger(__name__)
 
 _RETRY_HINT = "Return strictly valid JSON matching the schema."
 
@@ -150,7 +153,8 @@ def _post_once(
             timeout=settings.request_timeout_s,
         )
     except httpx.TransportError as exc:
-        raise VlmUnavailableError(f"vLLM unreachable: {exc}") from exc
+        logger.warning("vLLM request failed: %s", exc)
+        raise VlmUnavailableError("Model server unavailable") from exc
     if resp.status_code != 200:
         return None, f"HTTP {resp.status_code}: {resp.text[:300]!r}"
     data = resp.json()

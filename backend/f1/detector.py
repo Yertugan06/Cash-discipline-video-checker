@@ -15,6 +15,7 @@ pulls in torch.
 
 from __future__ import annotations
 
+import logging
 import shutil
 import subprocess
 import tempfile
@@ -28,6 +29,8 @@ from backend.contracts import Coverage, DetectionResult, Finding, RuleEntry, Sam
 FPS = 2.0
 STEP_S = 1.0 / FPS
 _MAX_SUPPORT_SAMPLES = 8
+
+logger = logging.getLogger(__name__)
 
 
 class F1DetectorError(RuntimeError):
@@ -83,8 +86,12 @@ class F1Detector:
                 scene, observations, config = perceive_video(
                     frames, checksum, settings, deadline, FPS
                 )
-            except (ValueError, TimeoutError, OSError, RuntimeError) as exc:
-                raise F1DetectorError(str(exc)) from exc
+            except TimeoutError as exc:
+                raise F1DetectorError("Processing exceeded the configured time limit") from exc
+            except (ValueError, OSError, RuntimeError) as exc:
+                # Library/OS messages can hold paths and internals: log them, show a fixed message.
+                logger.warning("F1 perception failed: %s", exc)
+                raise F1DetectorError("F1 perception failed on this video") from exc
             log = build_events(scene, observations, config, FPS, info.duration_sec)
             context = Context(self._codex, log, observations, scene, info.duration_sec)
             legacy_findings = evaluate_rules(context)
@@ -147,7 +154,8 @@ class F1Detector:
         except subprocess.TimeoutExpired as exc:
             raise F1DetectorError("Processing exceeded the configured time limit") from exc
         if process.returncode:
-            raise F1DetectorError(f"ffmpeg rejected the video: {process.stderr[-800:].strip()}")
+            logger.warning("ffmpeg frame decoding failed: %s", process.stderr[-800:].strip())
+            raise F1DetectorError("The video could not be decoded")
         return sorted(out_dir.glob("*.jpg"))
 
     def _to_finding(self, legacy: Any, duration_sec: float) -> Finding:

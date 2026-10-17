@@ -8,12 +8,15 @@ single frame. No other module should call ffmpeg directly for this purpose.
 from __future__ import annotations
 
 import json
+import logging
 import subprocess
 from pathlib import Path
 
 from backend.contracts import VideoInfo
 
 MAX_DURATION_SEC = 180.0
+
+logger = logging.getLogger(__name__)
 
 
 class MediaError(ValueError):
@@ -58,9 +61,9 @@ def probe(video: Path) -> VideoInfo:
         ]
     )
     if process.returncode:
-        raise MediaError(
-            f"ffprobe rejected the video: {process.stderr.decode(errors='replace')[-800:].strip()}"
-        )
+        # ffmpeg stderr holds server paths and build details: log it, show a fixed message.
+        logger.warning("ffprobe failed: %s", process.stderr.decode(errors="replace")[-800:].strip())
+        raise MediaError("The video could not be read (unsupported or corrupt file)")
     try:
         payload = json.loads(process.stdout)
         stream = payload["streams"][0]
@@ -121,8 +124,10 @@ def extract_jpeg(video: Path, t: float, max_side: int | None = None, quality: in
     command += ["-q:v", str(quality_scale), "-f", "mjpeg", "pipe:1"]
     process = _run(command, timeout=30.0)
     if process.returncode or not process.stdout:
-        raise MediaError(
-            f"ffmpeg could not extract a frame at {t:g}s: "
-            f"{process.stderr.decode(errors='replace')[-800:].strip()}"
+        logger.warning(
+            "ffmpeg frame extraction at %gs failed: %s",
+            t,
+            process.stderr.decode(errors="replace")[-800:].strip(),
         )
+        raise MediaError(f"Could not extract a frame at {t:g}s")
     return process.stdout
