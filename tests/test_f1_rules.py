@@ -764,6 +764,39 @@ def test_cashier_working_with_a_distant_laptop_has_to_move_to_leave():
     assert leaves == [3]
 
 
+@requires_cv2
+@pytest.mark.parametrize("fixture", ["laptop", "counter"])
+@pytest.mark.parametrize("contact", ["inside", "outside", "uncertain", "missing"])
+def test_a_cashier_reaching_work_equipment_is_not_away(fixture, contact):
+    from backend.f1.vision_types import State, center
+
+    scene = Scene(
+        objects={
+            "desk": Detection(label="desk", score=1, box=(0.05, 0.4, 0.95, 0.65)),
+            "laptop": Detection(label="laptop", score=1, box=(0.65, 0.4, 0.8, 0.5)),
+            "counter": Detection(label="counter", score=1, box=(0.15, 0.4, 0.3, 0.5)),
+        },
+        confidence=1,
+    )
+    working, reaching, away = person_at(0.55, 0.52), person_at(0.4, 0.52), person_at(0.1, 0.85)
+    x, y = center(scene.objects[fixture].box)
+    if contact == "outside":
+        y = scene.objects[fixture].box[1] - 0.01
+    if contact != "missing":
+        reaching.hands = [(x, y, 0.2 if contact == "uncertain" else 0.9)]
+    frames = [
+        Observation(
+            timestamp_sec=i / 2,
+            detections=[(working if i < 6 else reaching if i < 10 else away).model_copy(deep=True)],
+            states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+        )
+        for i in range(16)
+    ]
+    log = build_events(scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 8)
+    leaves = [e.timestamp_sec for e in log.events if e.type == "WORKSTATION_AWAY_START"]
+    assert leaves == [5 if contact == "inside" else 3]
+
+
 @pytest.mark.parametrize(
     ("counter_events", "expected"),
     [

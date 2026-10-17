@@ -665,7 +665,15 @@ class EventBuilder:
             anchor = self.scene.cashier_position
             if anchor is None or distance(anchor, laptop) <= LAPTOP_REACH:
                 anchor = laptop
-            cashier_away = distance(cashier.position(), anchor) > LAPTOP_REACH
+            # Reaching the laptop or counter is still working at the desk, even when
+            # the hips move outside laptop reach. Require an actual hand inside its box.
+            working = any(
+                contains(fixture.box, hand)
+                for name, fixture in self.scene.objects.items()
+                if name in {"laptop", "counter"}
+                for hand in cashier.wrists()
+            )
+            cashier_away = distance(cashier.position(), anchor) > LAPTOP_REACH and not working
         self.condition(
             "workstation_away",
             "WORKSTATION_AWAY",
