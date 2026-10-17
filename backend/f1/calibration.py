@@ -19,6 +19,7 @@ from backend.f1.vision_types import (
 )
 
 LAPTOP_REACH = 0.25  # normalised distance from the laptop centre to someone working at it
+LAPTOP_HAND_MARGIN = 0.08
 MIN_ALONE_FRAMES = 3  # 1.5 s at the F1 sampling rate
 
 
@@ -145,14 +146,25 @@ def orient_cashier_side(scene: Scene, observations: list[Observation], glass_mar
         return
     laptop = center(scene.objects["laptop"].box)
     alone = []
+    reaching = []
     for observation in observations:
         people = [
-            d.position()
+            d
             for d in observation.detections
             if d.label == "person" and not behind_glass(scene, d.box, glass_margin)
         ]
-        if len(people) == 1 and distance(people[0], laptop) <= LAPTOP_REACH:
-            alone.append(people[0])
+        if len(people) == 1:
+            person = people[0]
+            if distance(person.position(), laptop) <= LAPTOP_REACH:
+                alone.append(person.position())
+            elif any(
+                contains(scene.objects["laptop"].box, hand, LAPTOP_HAND_MARGIN)
+                for hand in person.wrists()
+            ):
+                reaching.append(person.position())
+    # Keep an established workstation anchor; use hands when hips alone cannot locate it.
+    if len(alone) < MIN_ALONE_FRAMES:
+        alone.extend(reaching)
     if len(alone) < MIN_ALONE_FRAMES:
         scene.confidence = 0
         scene.warnings.append(
@@ -161,6 +173,7 @@ def orient_cashier_side(scene: Scene, observations: list[Observation], glass_mar
         )
         return
     anchor = tuple(float(np.median([p[i] for p in alone])) for i in (0, 1))
+    scene.cashier_position = anchor
     x1, y1, x2, y2 = scene.objects["desk"].box
     origin = center(scene.objects["desk"].box)
     axis = 1 if x2 - x1 >= y2 - y1 else 0  # a desk wide in the image splits top/bottom

@@ -495,6 +495,55 @@ def person_at(x, y, track="person:1"):
     )
 
 
+@requires_cv2
+@pytest.mark.parametrize(
+    ("second_samples", "waiting", "collector", "expected"),
+    [(8, False, False, 1), (1, False, False, 0), (8, True, False, 0), (8, False, True, 0)],
+    ids=["served-together", "brief-overlap", "waiting-at-door", "collector"],
+)
+def test_second_client_requires_sustained_service_at_the_desk(
+    second_samples, waiting, collector, expected
+):
+    from backend.f1.vision_types import State
+
+    ctx = context()
+    ctx.scene.zones.update(
+        {
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    cashier = person_at(0.15, 0.6)
+    client = person_at(0.65, 0.6, "person:2")
+    client.hands = [(0.65, 0.5, 0.9)]
+    second = person_at(0.85, 0.6, "person:3")
+    second.hands = [(0.9, 0.2, 0.9)] if waiting else [(0.76, 0.5, 0.9), (0.85, 0.65, 0.9)]
+    bag = Detection(label="bag", score=0.9, box=(0.82, 0.62, 0.88, 0.68), track_id="bag:1")
+    frames = []
+    for i in range(16):
+        detections = [cashier.model_copy(deep=True), client.model_copy(deep=True)]
+        if 4 <= i < 4 + second_samples:
+            detections.append(second.model_copy(deep=True))
+            if collector:
+                detections.append(bag.model_copy(deep=True))
+        frames.append(
+            Observation(
+                timestamp_sec=i / 2,
+                detections=detections,
+                states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+            )
+        )
+    ctx.observations = frames
+    ctx.log = build_events(
+        ctx.scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 8
+    )
+    findings = RULES["A-SECOND-PERSON"](ctx)
+    assert len(findings) == expected
+    if findings:
+        assert findings[0].timestamp_sec == 3
+        assert findings[0].facts["client_ids"] == ["person:2", "person:3"]
+
+
 def oriented(desk, laptop, cashier_point, client_point=None, client_frames=4):
     from backend.f1.calibration import orient_cashier_side
 
@@ -526,6 +575,249 @@ def test_cashier_side_is_learned_for_any_camera_angle():
     # side view: the desk is tall in the image, so the room splits left/right
     side = oriented((0.4, 0.2, 0.55, 0.8), (0.42, 0.45, 0.5, 0.55), (0.3, 0.5))
     assert side.cashier_direction == (-1.0, 0.0)
+
+
+@pytest.mark.parametrize(
+    ("desk", "laptop", "position", "hand"),
+    [
+        ((0.1, 0.4, 0.8, 0.6), (0.1, 0.4, 0.25, 0.5), (0.55, 0.7), (0.2, 0.45)),
+        ((0.4, 0.1, 0.6, 0.8), (0.4, 0.1, 0.5, 0.25), (0.7, 0.55), (0.45, 0.2)),
+    ],
+)
+def test_cashier_can_reach_a_laptop_at_the_other_end_of_the_desk(desk, laptop, position, hand):
+    from backend.f1.calibration import orient_cashier_side
+
+    scene = Scene(
+        objects={
+            "desk": Detection(label="desk", score=1, box=desk),
+            "laptop": Detection(label="laptop", score=1, box=laptop),
+        },
+        confidence=1,
+    )
+    person = person_at(*position)
+    person.hands = [(*hand, 0.9)]
+    frames = [
+        Observation(timestamp_sec=i / 2, detections=[person.model_copy(deep=True)])
+        for i in range(4)
+    ]
+    orient_cashier_side(scene, frames, 0.03)
+    assert scene.confidence == 1
+    assert scene.cashier_side(position)
+
+
+def test_laptop_reach_evidence_keeps_an_established_working_position():
+    from backend.f1.calibration import orient_cashier_side
+
+    scene = Scene(
+        objects={
+            "desk": Detection(label="desk", score=1, box=(0.1, 0.4, 0.8, 0.6)),
+            "laptop": Detection(label="laptop", score=1, box=(0.45, 0.4, 0.6, 0.5)),
+        },
+        confidence=1,
+    )
+    near = person_at(0.5, 0.65)
+    reaching = person_at(0.2, 0.7)
+    reaching.hands = [(0.5, 0.45, 0.9)]
+    frames = [
+        Observation(
+            timestamp_sec=i / 2,
+            detections=[(near if i < 3 else reaching).model_copy(deep=True)],
+        )
+        for i in range(10)
+    ]
+    orient_cashier_side(scene, frames, 0.03)
+    assert scene.cashier_position == (0.5, 0.65)
+
+
+@requires_cv2
+def test_cashier_working_with_a_distant_laptop_has_to_move_to_leave():
+    from backend.f1.vision_types import State
+
+    scene = Scene(
+        objects={
+            "desk": Detection(label="desk", score=1, box=(0.1, 0.4, 0.8, 0.6)),
+            "laptop": Detection(label="laptop", score=1, box=(0.1, 0.4, 0.25, 0.5)),
+        },
+        confidence=1,
+    )
+    seated = person_at(0.55, 0.7)
+    seated.hands = [(0.2, 0.45, 0.9)]
+    away = person_at(0.9, 0.95)
+    frames = [
+        Observation(
+            timestamp_sec=i / 2,
+            detections=[(seated if i < 6 else away).model_copy(deep=True)],
+            states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+        )
+        for i in range(10)
+    ]
+    log = build_events(scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 5)
+    assert log.coverage["roles"]
+    leaves = [e.timestamp_sec for e in log.events if e.type == "WORKSTATION_AWAY_START"]
+    assert leaves == [3]
+
+
+@pytest.mark.parametrize(
+    ("counter_events", "expected"),
+    [
+        ([event("COUNT_START", 3, session_id="s1")], 1),
+        ([event("COUNT_START", 3, session_id="other")], 0),
+        ([event("COUNT_START", 3, session_id="s1"), event("COUNT_END", 4, session_id="s1")], 0),
+        (
+            [
+                event("COUNT_START", 3, session_id="s1"),
+                event("COUNT_INTERRUPTED", 4, session_id="s1"),
+            ],
+            0,
+        ),
+        ([event("COUNT_END", 2, session_id="s1"), event("COUNT_START", 3, session_id="s1")], 1),
+    ],
+    ids=["running", "other-client", "finished", "unknown", "second-count-running"],
+)
+def test_running_counter_at_client_exit_is_evidence_even_without_a_cash_box(
+    counter_events, expected
+):
+    sessions = deepcopy(SESSION)
+    sessions["s1"]["cash_ids"] = []
+    ctx = context(
+        [*counter_events, event("SESSION_END", 5, session_id="s1", confirmed_exit=True)],
+        sessions,
+    )
+    assert len(RULES["C-COUNT-BEFORE-EXIT"](ctx)) == expected
+
+
+@requires_cv2
+def test_sitting_client_track_change_preserves_session_and_cash_provenance():
+    from backend.f1.vision_types import State
+
+    ctx = context()
+    ctx.scene.objects["door"] = Detection(label="door", score=1, box=(0.6, 0.1, 0.95, 0.6))
+    ctx.scene.objects["counter"] = Detection(label="counter", score=1, box=(0.2, 0.7, 0.3, 0.8))
+    ctx.scene.zones.update(
+        {
+            "door": [(0.6, 0.1), (0.95, 0.1), (0.95, 0.6), (0.6, 0.6)],
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    cashier = person_at(0.15, 0.6)
+    cashier.hands = [(0.3, 0.45, 0.9)]
+    frames = []
+    for i in range(16):
+        t = i / 2
+        detections = [cashier.model_copy(deep=True)]
+        if 1 <= t <= 3.5:
+            client = (
+                person_at(0.75, 0.25, "person:2") if t < 2.5 else person_at(0.7, 0.5, "person:2")
+            )
+            client.hands = [(0.65, 0.52, 0.9)]
+            detections.append(client)
+        elif t >= 5:
+            client = person_at(0.7, 0.55, "person:3")
+            client.hands = [(0.64, 0.5, 0.9)]
+            detections.append(client)
+        if 2.5 <= t <= 3.5 or t >= 7:
+            x, y = (0.65, 0.52) if t < 7 else (0.3, 0.45)
+            detections.append(
+                Detection(
+                    label="cash",
+                    score=0.9,
+                    box=(x - 0.02, y - 0.01, x + 0.02, y + 0.01),
+                    track_id="cash:1",
+                )
+            )
+        frames.append(
+            Observation(
+                timestamp_sec=t,
+                detections=detections,
+                states={
+                    "person:1": State(value="seated", score=0.9, margin=0.8),
+                    "counter": State(value="running" if t >= 2 else "idle", score=0.9, margin=0.8),
+                },
+            )
+        )
+    ctx.observations = frames
+    ctx.log = build_events(
+        ctx.scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 8
+    )
+    assert len(ctx.log.sessions) == 1
+    session = ctx.log.sessions["session-1"]
+    assert session["client_id"] == "person:3"
+    assert session["client_ids"] == ["person:2", "person:3"]
+    assert session["cash_ids"] == ["cash-1"]
+    assert not any(e.type == "SESSION_END" for e in ctx.log.events)
+    assert RULES["C-COUNT-BEFORE-EXIT"](ctx) == []
+    assert [f.timestamp_sec for f in RULES["C-ID-BEFORE-CASH"](ctx)] == [7]
+    assert RULES["A-SECOND-PERSON"](ctx) == []
+
+
+@requires_cv2
+def test_returning_client_track_starts_after_its_confirmed_exit():
+    from backend.f1.vision_types import State
+
+    ctx = context()
+    ctx.scene.zones.update(
+        {
+            "door": [(0.6, 0), (0.9, 0), (0.9, 0.3), (0.6, 0.3)],
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    frames = []
+    for i in range(18):
+        t = i / 2
+        detections = [person_at(0.15, 0.6)]
+        if 1 <= t <= 3 or t >= 6:
+            y = 0.55 if t < 3 else 0.2
+            detections.append(person_at(0.75, y, "person:2"))
+        frames.append(
+            Observation(
+                timestamp_sec=t,
+                detections=detections,
+                states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+            )
+        )
+    log = build_events(
+        ctx.scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 9
+    )
+    assert [(s["start"], s["end"]) for s in log.sessions.values()] == [(1, 3.5), (6, None)]
+
+
+@requires_cv2
+def test_a_lost_client_cannot_own_a_later_distinct_client_session():
+    from backend.f1.vision_types import State
+
+    ctx = context()
+    ctx.scene.zones.update(
+        {
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    frames = []
+    for i in range(16):
+        t = i / 2
+        detections = [person_at(0.15, 0.6)]
+        if 1 <= t <= 2.5:
+            detections.append(person_at(0.7, 0.55, "person:2"))
+        elif t >= 5:
+            detections.append(person_at(0.7, 0.55, "person:3"))
+        frames.append(
+            Observation(
+                timestamp_sec=t,
+                detections=detections,
+                states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+            )
+        )
+    log = build_events(
+        ctx.scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 8
+    )
+    assert [(s["client_id"], s["start"], s["end"]) for s in log.sessions.values()] == [
+        ("person:2", 1, 3),
+        ("person:3", 5, None),
+    ]
+    assert len([e for e in log.events if e.type == "SESSION_LOST"]) == 1
+    assert not any(e.type == "SESSION_END" for e in log.events)
 
 
 def test_a_client_nearer_the_laptop_does_not_flip_the_cashier_side():

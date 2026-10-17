@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from backend.f1.calibration import in_zone
 from backend.f1.codex import Codex, Rule
-from backend.f1.events import EventLog
+from backend.f1.events import EventLog, session_client_ids
 from backend.f1.vision_types import (
     Detection,
     Event,
@@ -254,11 +254,15 @@ def a_second_person(ctx: Context) -> list[Finding]:
         session = ctx.log.sessions.get(str(event.facts.get("session_id")))
         if (
             session
-            and event.facts.get("from_id") != session["client_id"]
+            and event.facts.get("from_id") not in session_client_ids(session)
             and event.facts.get("from_role") in {"client", "collector", "visitor", "outsider"}
             and (event.facts.get("to_role") == "cashier" or event.facts.get("to_id") == "desk")
         ):
             output.append(Finding("A-SECOND-PERSON", event.timestamp_sec, event.facts))
+    output.extend(
+        Finding("A-SECOND-PERSON", event.timestamp_sec, event.facts)
+        for event in ctx.events("SECOND_CLIENT_AT_DESK")
+    )
     return output
 
 
@@ -268,8 +272,16 @@ def c_count_before_exit(ctx: Context) -> list[Finding]:
     output = []
     for event in ctx.events("SESSION_END"):
         session = ctx.log.sessions.get(str(event.facts["session_id"]))
-        if not session or not event.facts.get("confirmed_exit") or not session["cash_ids"]:
+        if not session or not event.facts.get("confirmed_exit"):
             continue
+        counter_events = [
+            count
+            for count in ctx.log.events
+            if count.type in {"COUNT_START", "COUNT_END", "COUNT_INTERRUPTED"}
+            and session["start"] <= count.timestamp_sec <= event.timestamp_sec
+            and count.facts.get("session_id") == event.facts["session_id"]
+        ]
+        running = bool(counter_events and counter_events[-1].type == "COUNT_START")
         counted = set(session["counted_cash_ids"])
         count_observed = ctx.has_event(
             "COUNT_END",
@@ -277,8 +289,13 @@ def c_count_before_exit(ctx: Context) -> list[Finding]:
             event.timestamp_sec,
             session_id=event.facts["session_id"],
         )
-        if set(session["cash_ids"]) - counted and not count_observed:
-            output.append(Finding("C-COUNT-BEFORE-EXIT", event.timestamp_sec, event.facts))
+        if running or (set(session["cash_ids"]) - counted and not count_observed):
+            facts = dict(event.facts)
+            if running:
+                facts.update(
+                    count_started=counter_events[-1].timestamp_sec, static_objects=["counter"]
+                )
+            output.append(Finding("C-COUNT-BEFORE-EXIT", event.timestamp_sec, facts))
     return output
 
 
@@ -292,7 +309,7 @@ def c_id_before_cash(ctx: Context) -> list[Finding]:
         session = ctx.log.sessions.get(str(identity))
         if not session or identity in seen or event.facts.get("object") not in {"cash", "bundle"}:
             continue
-        if event.facts.get("from_id") != session["client_id"]:
+        if event.facts.get("from_id") not in session_client_ids(session):
             continue
         seen.add(identity)
         if session["observed_entry"] and not ctx.has_event(

@@ -114,6 +114,7 @@ class Scene(BaseModel):
     objects: dict[str, Detection]
     zones: dict[str, list[Point]] = Field(default_factory=dict)
     cashier_direction: Point | None = None
+    cashier_position: Point | None = None
     confidence: float = Field(default=0, ge=0, le=1)
     warnings: list[str] = Field(default_factory=list)
     candidates: list[Detection] = Field(default_factory=list)  # raw calibration detections

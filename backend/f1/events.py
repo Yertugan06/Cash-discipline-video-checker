@@ -3,7 +3,13 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
-from backend.f1.calibration import LAPTOP_REACH, behind_glass, in_zone, orient_cashier_side
+from backend.f1.calibration import (
+    LAPTOP_HAND_MARGIN,
+    LAPTOP_REACH,
+    behind_glass,
+    in_zone,
+    orient_cashier_side,
+)
 from backend.f1.vision_types import (
     Detection,
     Event,
@@ -12,6 +18,7 @@ from backend.f1.vision_types import (
     center,
     contains,
     distance,
+    overlap,
     worn_or_carried,
 )
 
@@ -27,6 +34,7 @@ class PersonHistory:
     exited: bool = False
     observed_entry: bool = False
     moved: float = 0
+    closest_desk: float = float("inf")
 
 
 @dataclass
@@ -48,6 +56,10 @@ class EventLog:
     coverage: dict[str, bool]
     warnings: list[str]
     sessions: dict[str, dict]
+
+
+def session_client_ids(session: dict) -> list[str]:
+    return session.get("client_ids", [session["client_id"]])
 
 
 class StableState:
@@ -180,12 +192,58 @@ class EventBuilder:
         person = self.people.get(identity)
         return person.role if person else "unknown"
 
+    def desk_distance(self, point: tuple[float, float]) -> float:
+        desk = self.scene.objects.get("desk")
+        if not desk:
+            return float("inf")
+        nearest = tuple(min(max(point[i], desk.box[i]), desk.box[i + 2]) for i in (0, 1))
+        return distance(point, nearest)
+
+    def update_session_client(self, person: Detection, history: PersonHistory) -> None:
+        session = self.sessions.get(self.active_session)
+        if not session or person.track_id == session["client_id"]:
+            return
+        previous = self.people[session["client_id"]]
+        if not previous.exited or history.first <= previous.last:
+            return
+        if (
+            history.first - previous.last <= self.config["exit_gap_sec"] + 1 / self.fps
+            and overlap(previous.detection.box, person.box) > 0
+        ):
+            session["client_ids"].append(person.track_id)
+            session["client_id"] = person.track_id
+            self.emit(
+                "SESSION_CLIENT_REASSOCIATED",
+                history.first,
+                session_id=self.active_session,
+                actor_id=person.track_id,
+                previous_actor_id=previous.detection.track_id,
+            )
+        else:
+            # A lost track is insufficient for an exit finding, but cannot keep serving
+            # future clients under the missing person's identity indefinitely.
+            session["end"] = previous.last + 1 / self.fps
+            self.emit(
+                "SESSION_LOST",
+                session["end"],
+                session_id=self.active_session,
+                actor_id=session["client_id"],
+                confirmed_exit=False,
+            )
+            self.active_session = ""
+
     def update_people(self, observation: Observation, people: list[Detection]) -> None:
         timestamp = observation.timestamp_sec
         laptop = self.scene.objects.get("laptop")
         for person in people:
             point = person.position()
-            if person.track_id not in self.people:
+            previous = self.people.get(person.track_id)
+            active = self.sessions.get(self.active_session)
+            if previous is None or (
+                previous.exited
+                and previous.role == "client"
+                and (not active or person.track_id not in session_client_ids(active))
+            ):
                 on_door = in_zone(self.scene, "door", point, 0.05)
                 boundary = min(point[0], point[1], 1 - point[0], 1 - point[1]) < 0.12
                 self.people[person.track_id] = PersonHistory(
@@ -199,6 +257,7 @@ class EventBuilder:
             history.last = timestamp
             history.detection = person
             history.moved = max(history.moved, distance(history.origin, point))
+            history.closest_desk = min(history.closest_desk, self.desk_distance(point))
             history.exited = False
         if self.scene.confidence >= 0.3:
             current = self.people.get(self.cashier)
@@ -208,7 +267,10 @@ class EventBuilder:
                 state = observation.states.get(person.track_id)
                 seated = state is not None and state.value == "seated"
                 at_laptop = bool(
-                    laptop and any(contains(laptop.box, hand, 0.08) for hand in person.wrists())
+                    laptop
+                    and any(
+                        contains(laptop.box, hand, LAPTOP_HAND_MARGIN) for hand in person.wrists()
+                    )
                 )
                 if (
                     in_zone(self.scene, "cashier", person.position())
@@ -272,10 +334,13 @@ class EventBuilder:
                     box=list(person.box),
                 )
                 history.announced = True
+            if history.role == "client" and history.announced:
+                self.update_session_client(person, history)
             if history.role == "client" and history.announced and not self.active_session:
                 identity = f"session-{len(self.sessions) + 1}"
                 self.sessions[identity] = {
                     "client_id": person.track_id,
+                    "client_ids": [person.track_id],
                     "start": history.first,
                     "end": None,
                     "observed_entry": history.observed_entry,
@@ -316,6 +381,10 @@ class EventBuilder:
             door = in_zone(self.scene, "door", last_point, 0.05)
             border = min(last_point[0], last_point[1], 1 - last_point[0], 1 - last_point[1]) < 0.18
             confirmed = door or (border and history.moved > 0.04)
+            if history.role == "client" and "desk" in self.scene.objects:
+                # The door overlaps seated/approaching clients in the image. Disappearance
+                # there is an exit only after visible movement away from the service desk.
+                confirmed &= self.desk_distance(last_point) > history.closest_desk + 0.04
             history.exited = True
             kind = "EXIT" if confirmed else "TRACK_LOST"
             anchor = history.last + 1 / self.fps
@@ -446,7 +515,7 @@ class EventBuilder:
                             session = self.sessions.get(self.active_session)
                             if (
                                 session
-                                and sender == session["client_id"]
+                                and sender in session_client_ids(session)
                                 and record.id not in session["cash_ids"]
                             ):
                                 session["cash_ids"].append(record.id)
@@ -521,6 +590,40 @@ class EventBuilder:
                 else:
                     self.bag_contacts.pop(item.track_id, None)
 
+    def update_client_service(self, timestamp: float, people: list[Detection]) -> None:
+        clients = [
+            person
+            for person in people
+            if person.role == "client"
+            and self.people[person.track_id].announced
+            and any(
+                in_zone(self.scene, "desk", hand, self.config["hand_distance"])
+                for hand in person.wrists()
+            )
+        ]
+        session = self.sessions.get(self.active_session)
+        multiple = bool(
+            session
+            and len(clients) >= 2
+            and any(p.track_id == session["client_id"] for p in clients)
+            and not any(p.role == "collector" for p in people)
+        )
+        changed = self.state_filters["clients_at_desk"].push(
+            "multiple" if multiple else "single", timestamp
+        )
+        if changed and changed[0] == "multiple":
+            second = next(p for p in clients if p.track_id != session["client_id"])
+            self.emit(
+                "SECOND_CLIENT_AT_DESK",
+                changed[1],
+                session_id=self.active_session,
+                actor_id=second.track_id,
+                client_ids=[p.track_id for p in clients],
+                box=list(second.box),
+                role="client",
+                window_end=timestamp,
+            )
+
     def push(self, observation: Observation) -> None:
         self.frame_count += 1
         self.last_observation = observation
@@ -535,15 +638,19 @@ class EventBuilder:
         self.update_people(observation, people)
         self.update_objects(observation, people)
         self.update_states(observation)
+        self.update_client_service(timestamp, people)
         cashier = next((p for p in people if p.track_id == self.cashier), None)
         history = self.people.get(self.cashier)
         cashier_known = bool(self.cashier)
         cashier_away = bool(history and history.exited)
         if cashier and "laptop" in self.scene.objects:
-            # Away = out of reach of the laptop. The old door/zone test fired on a seated
-            # cashier whenever the camera faces them (the glass door is right behind them).
+            # A laptop at the end of the desk can be far from a seated cashier's hips.
+            # Use the working position learned during calibration in that layout.
             laptop = center(self.scene.objects["laptop"].box)
-            cashier_away = distance(cashier.position(), laptop) > LAPTOP_REACH
+            anchor = self.scene.cashier_position
+            if anchor is None or distance(anchor, laptop) <= LAPTOP_REACH:
+                anchor = laptop
+            cashier_away = distance(cashier.position(), anchor) > LAPTOP_REACH
         self.condition(
             "workstation_away",
             "WORKSTATION_AWAY",
