@@ -70,8 +70,9 @@ Pretrained detectors only describe each frame. Deterministic temporal rules deci
 Timecodes of the current version (`replay_f1.py timing`): 12 caught violations, mean |offset| to
 the organizer second 1.46 s (was 1.83 s), within ±1/2/3/5 s: 7/9/10/12.
 
-Robustness of the current version: mirror 31/0/9 (identical); zoom 0.8 -> 28/1/11, zoom 1.2 ->
-29/0/11 (the scale agent is working on this).
+Robustness of the current version (after the scale fix): zoom 0.7 / 0.8 / 1.2 / 1.3 and mirror all
+give exactly 31/0/9; dropping 20% of object detections gives 30-31 / 0 / 9-10 (3 seeds); 30% gives
+30/0/10; zoom 0.8 + drop 0.2 + mirror at once gives 30/0/10.
 
 Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracking, ...) all scored
 20-23, see `attempts/README.md`.
@@ -95,6 +96,7 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | 10-18 | REJECTED for now: replacing the CLIP door/screen states with new CLIP prompts or Qwen2.5-VL-7B | Spike (`spikes/states_spike.py`, `logs/states.jsonl`): both answer "open" for the door almost always, and Qwen calls lock screens "working" (laptop 10/32) |
 | 10-18 | LEAD, not built: "did the screen change since the cashier last worked at it?" instead of naming the screen state | Probe (`spikes/screen_probe.py`, `logs/screen.jsonl`): a naive before/after-leave window doesn't separate the clips (the lock happens before standing up; a light switched off in Х-11). Needs the last hands-on-laptop moment as the reference; only 2 violation vs 4 clean clips to judge on |
 | 10-18 | KEPT, timecode: `replay_f1.py timing` scorer; ranking prefers a finding with a confirmed exit among equals; `K-SEAL-CHECK` anchors at the collector's exit | Better top-1 timecodes, no verdict change |
+| 10-18 | KEPT, scale: scene distances are multiples of the calibrated desk length (`× desk_long_side / 0.70`) instead of fixed image fractions | Another camera distance (zoom 0.7-1.3) no longer changes any finding |
 | 10-18 | Main docs frozen during experiments | Decided by the user |
 
 ## 5. Findings (facts measured in the cache)
@@ -125,7 +127,8 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | counter: counter is not a personal item; Х-13; signal report | merged (Х-13: no recount/safe signal in the cache) | `orch/counter` |
 | Recover the lucky clips by their real violations | Х-15 done (cash bag); Х-11 needs screen-state perception; X-1, Х-13, Х-4 have no signal in the cache | orchestrator |
 | fp: clean false alarms Х-14 (leave at 62.5 s), Х-35 (worn-coat fragment) | merged (both fixed) | `orch/fp` |
-| scale: distances relative to a scene scale so --zoom 0.8/1.2 keeps the result | running | `orch/scale` |
+| scale: distances relative to a scene scale so --zoom 0.8/1.2 keeps the result | merged (every zoom 0.7-1.3 = 31/0/9) | `orch/scale` |
+| Teammate's `local-vlm-prototype` (Qwen3-VL 4B questionnaire + D-FINE + 8B action windows; self-reported 32/40, 3/19 clean FP): run it on the VM on the same 40 clips and compare per clip; then a combination | running | orchestrator |
 | timecode: timing scorer + explainable anchor fixes, no verdict change | merged (no verdict change; ranking prefers a confirmed exit) | `orch/timecode` |
 | End-to-end check: run `night` through the real API in a second container (port 8001, same perception cache), the 40 clips: runtime, evidence frames, serializer | next | orchestrator |
 | Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen) | spike done: new prompts and Qwen 7B don't fix it; "screen changed?" is a lead | orchestrator |
