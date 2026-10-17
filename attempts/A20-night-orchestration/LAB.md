@@ -67,6 +67,9 @@ Pretrained detectors only describe each frame. Deterministic temporal rules deci
 | night + a cash bag counts for cash-on-leave | 29 | 2 | 9 | - |
 | **night + fp: hand on equipment = still at the desk; worn-coat fragments (current)** | **31** | **0** | **9** | **30.7** |
 
+Timecodes of the current version (`replay_f1.py timing`): 12 caught violations, mean |offset| to
+the organizer second 1.46 s (was 1.83 s), within ±1/2/3/5 s: 7/9/10/12.
+
 Robustness of the current version: mirror 31/0/9 (identical); zoom 0.8 -> 28/1/11, zoom 1.2 ->
 29/0/11 (the scale agent is working on this).
 
@@ -91,6 +94,7 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | 10-18 | KEPT, fp: a confident hand inside the laptop/counter box means the cashier is still at the workstation; a small coat box above the person's hip line is worn clothing | Cleared the last clean false alarms (Х-14, Х-35); Х-40's coat on the desk stays caught |
 | 10-18 | REJECTED for now: replacing the CLIP door/screen states with new CLIP prompts or Qwen2.5-VL-7B | Spike (`spikes/states_spike.py`, `logs/states.jsonl`): both answer "open" for the door almost always, and Qwen calls lock screens "working" (laptop 10/32) |
 | 10-18 | LEAD, not built: "did the screen change since the cashier last worked at it?" instead of naming the screen state | Probe (`spikes/screen_probe.py`, `logs/screen.jsonl`): a naive before/after-leave window doesn't separate the clips (the lock happens before standing up; a light switched off in Х-11). Needs the last hands-on-laptop moment as the reference; only 2 violation vs 4 clean clips to judge on |
+| 10-18 | KEPT, timecode: `replay_f1.py timing` scorer; ranking prefers a finding with a confirmed exit among equals; `K-SEAL-CHECK` anchors at the collector's exit | Better top-1 timecodes, no verdict change |
 | 10-18 | Main docs frozen during experiments | Decided by the user |
 
 ## 5. Findings (facts measured in the cache)
@@ -122,7 +126,8 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | Recover the lucky clips by their real violations | Х-15 done (cash bag); Х-11 needs screen-state perception; X-1, Х-13, Х-4 have no signal in the cache | orchestrator |
 | fp: clean false alarms Х-14 (leave at 62.5 s), Х-35 (worn-coat fragment) | merged (both fixed) | `orch/fp` |
 | scale: distances relative to a scene scale so --zoom 0.8/1.2 keeps the result | running | `orch/scale` |
-| timecode: timing scorer + explainable anchor fixes, no verdict change | running | `orch/timecode` |
+| timecode: timing scorer + explainable anchor fixes, no verdict change | merged (no verdict change; ranking prefers a confirmed exit) | `orch/timecode` |
+| End-to-end check: run `night` through the real API in a second container (port 8001, same perception cache), the 40 clips: runtime, evidence frames, serializer | next | orchestrator |
 | Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen) | spike done: new prompts and Qwen 7B don't fix it; "screen changed?" is a lead | orchestrator |
 | Threshold search with cross-validation over twin groups (report the held-out score) | idea | - |
 | Х-17 (seal check), Х-22 (key in lock), Х-44 (authenticity detector) | idea, probably a perception limit | - |
