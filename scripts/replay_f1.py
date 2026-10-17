@@ -113,6 +113,7 @@ def run(
     mirror: bool = False,
     zoom: float = 1.0,
     drop: float = 0.0,
+    seed: int = 0,
 ) -> None:
     import yaml
 
@@ -138,7 +139,7 @@ def run(
             continue
         payload = json.loads(max(files, key=lambda p: p.stat().st_mtime).read_text())
         if mirror or zoom != 1.0 or drop:
-            payload = perturb_payload(payload, mirror, zoom, drop, video_dir.name)
+            payload = perturb_payload(payload, mirror, zoom, drop, f"{video_dir.name}:{seed}")
         scene = Scene.model_validate(payload["scene"])
         if scene.candidates:
             scene = calibrate(scene.candidates, ROOT / "config" / "overrides.yaml", video_dir.name)
@@ -253,6 +254,7 @@ def main() -> None:
     run_parser.add_argument("--mirror", action="store_true")
     run_parser.add_argument("--zoom", type=float, default=1.0)
     run_parser.add_argument("--drop", type=float, default=0.0)
+    run_parser.add_argument("--seed", type=int, default=0)
     score_parser = sub.add_parser("score")
     score_parser.add_argument("results", type=Path)
     score_parser.add_argument("--labels", type=Path, required=True)
@@ -264,7 +266,7 @@ def main() -> None:
     if args.mode == "run":
         if (args.mirror or args.zoom != 1.0 or args.drop) and args.videos_dir:
             parser.error("perturbations move cached boxes only; they can't go with --videos-dir")
-        run(args.cache_dir, args.videos_dir, args.mirror, args.zoom, args.drop)
+        run(args.cache_dir, args.videos_dir, args.mirror, args.zoom, args.drop, args.seed)
     elif args.mode == "score":
         score(args.results, args.labels)
     else:
