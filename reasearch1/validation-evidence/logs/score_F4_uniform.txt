@@ -1,0 +1,11 @@
+== F4_uniform10_K5 | split=all | n=40 | missing=0 | errors=0
+video  TP=10 FN=11 FP=9 TN=10 | recall 10/21 (0.28, 0.68) | clean-FP 9/19 (0.27, 0.68) | acc 20/40
+   layout 'Back-office desk'    : TP=4 FN=4 FP=3 TN=6
+   layout 'Client-facing desk'  : TP=3 FN=4 FP=4 TN=3
+   layout 'Desk near the door'  : TP=3 FN=3 FP=2 TN=1
+loc[N.0] any-event: ±1s 2/22 ±2s 4/22 ±3s 5/22 ±5s 8/22 | top-1: ±1s 1/22 ±2s 1/22 ±3s 1/22 ±5s 2/22
+loc[N+0.5] any-event: ±1s 2/22 ±2s 3/22 ±3s 4/22 ±5s 6/22 | top-1: ±1s 1/22 ±2s 1/22 ±3s 1/22 ±5s 1/22
+   |nearest error| median 4.3s, events with any prediction 11/22
+events/violation clip mean 1.19 | events/clean clip mean 1.05
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 4/17, and within ±3s 2/17
+runtime s: median 36.2 max 41.4 total 1427

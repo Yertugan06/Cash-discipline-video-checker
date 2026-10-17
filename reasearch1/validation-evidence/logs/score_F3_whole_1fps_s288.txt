@@ -1,0 +1,22 @@
+== F3_whole_1fps_s288 | split=all | n=40 | missing=0 | errors=0
+video  TP=8 FN=13 FP=4 TN=15 | recall 8/21 (0.21, 0.59) | clean-FP 4/19 (0.09, 0.43) | acc 23/40
+   layout 'Back-office desk'    : TP=3 FN=5 FP=0 TN=9
+   layout 'Client-facing desk'  : TP=4 FN=3 FP=3 TN=4
+   layout 'Desk near the door'  : TP=1 FN=5 FP=1 TN=2
+loc[N.0] any-event: ±1s 0/22 ±2s 0/22 ±3s 1/22 ±5s 2/22 | top-1: ±1s 0/22 ±2s 0/22 ±3s 0/22 ±5s 1/22
+loc[N+0.5] any-event: ±1s 0/22 ±2s 0/22 ±3s 0/22 ±5s 1/22 | top-1: ±1s 0/22 ±2s 0/22 ±3s 0/22 ±5s 0/22
+   |nearest error| median 9.0s, events with any prediction 9/22
+events/violation clip mean 0.48 | events/clean clip mean 0.42
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 6/17, and within ±3s 1/17
+runtime s: median 1.8 max 149.5 total 348
+== F3_whole_1fps_s288_hm | split=all | n=40 | missing=0 | errors=0
+video  TP=8 FN=13 FP=4 TN=15 | recall 8/21 (0.21, 0.59) | clean-FP 4/19 (0.09, 0.43) | acc 23/40
+   layout 'Back-office desk'    : TP=3 FN=5 FP=0 TN=9
+   layout 'Client-facing desk'  : TP=4 FN=3 FP=3 TN=4
+   layout 'Desk near the door'  : TP=1 FN=5 FP=1 TN=2
+loc[N.0] any-event: ±1s 0/22 ±2s 0/22 ±3s 1/22 ±5s 2/22 | top-1: ±1s 0/22 ±2s 0/22 ±3s 0/22 ±5s 1/22
+loc[N+0.5] any-event: ±1s 0/22 ±2s 0/22 ±3s 0/22 ±5s 1/22 | top-1: ±1s 0/22 ±2s 0/22 ±3s 0/22 ±5s 0/22
+   |nearest error| median 9.0s, events with any prediction 9/22
+events/violation clip mean 0.48 | events/clean clip mean 0.42
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 6/17, and within ±3s 1/17
+runtime s: median 1.8 max 149.5 total 348

@@ -106,7 +106,16 @@ The unit of analysis can be set at three levels. Only the middle one has a **def
 | Level | Example (illustrative, not taken from data) | Does the *definition* carry over to a new angle/scene? | Citable? |
 |---|---|---|---|
 | **Staged instance** | "Actor X leans over the left counter at second 11 in the blue-shirt clip" | No. This is memorization | No |
-| **Violation mechanism**: a relation among roles, objects, zones and time that a rule forbids or requires | "Valuables left accessible while the responsible role is absent"; "a required control step absent before handover" | Yes, if its predicates don't depend on image geometry | Yes, via the clause that defines it |
+| **Violation mechanism**: a relation among roles, objects, zones and time that a rule forbids or requires | "Valuables left accessible while the responsible role is absent"; "a rПервый — не преувеличивать способность C′ обобщаться.
+В таблице §5.1 говорится, что C′ может быть хорош при изменении ракурса, если механизмы проходят тест на независимость от сцены.
+Но способность описать нарушение независимо от ракурса не означает, что система сможет обнаружить его на другом ракурсе.
+Это разные вопросы: переносимость определения и переносимость визуального распознавания.
+Второй — осторожнее с отделением detection от citation.
+Правильно, что отсутствие найденного нормативного пункта не должно автоматически уничтожать уверенное визуальное наблюдение.
+Однако обнаруженное необычное действие ещё не является обнаруженным нарушением. Здесь нужно различать уверенность в самом действии и уверенность в его неправомерности.
+Иначе возникает риск нарушения требования ТЗ не делать неподтверждённых выводов.
+Третий — избегать ложной уверенности относительно скрытой таксономии жюри.
+В документе есть гипотеза, что автоматический scorer сравнивает type со скрытым справочником. Это возможно, но из факта автоматической оценки JSON такой вывод не следует однозначно.equired control step absent before handover" | Yes, if its predicates don't depend on image geometry | Yes, via the clause that defines it |
 | **Abstract rule** | "Ensure safekeeping of valuables" | Yes, but too vague to observe | Yes |
 
 **Two separate transfer questions. Don't merge them:**

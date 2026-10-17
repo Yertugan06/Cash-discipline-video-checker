@@ -1,0 +1,9 @@
+load 127.0s | vram after load 8.27 GB | free/total [2.52, 11.99]
+1:288:0: frames 144 hw [512, 288] in_tokens 11047 new 1 gen 13.2s peak 11.32 GB
+1:288:0: frames 144 hw [512, 288] in_tokens 11047 new 64 gen 24.0s peak 11.32 GB
+1:288:60: frames 60 hw [512, 288] in_tokens 4599 new 1 gen 1.7s peak 9.55 GB
+1:288:60: frames 60 hw [512, 288] in_tokens 4599 new 64 gen 5.5s peak 9.55 GB
+2:288:30: frames 60 hw [512, 288] in_tokens 4594 new 1 gen 1.7s peak 9.55 GB
+2:288:30: frames 60 hw [512, 288] in_tokens 4594 new 64 gen 5.5s peak 9.55 GB
+4:448:8: frames 32 hw [832, 448] in_tokens 5966 new 1 gen 2.3s peak 9.94 GB
+4:448:8: frames 32 hw [832, 448] in_tokens 5966 new 64 gen 6.8s peak 9.94 GB
