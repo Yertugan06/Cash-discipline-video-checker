@@ -156,9 +156,13 @@ function renderEditor() {
   video.addEventListener("timeupdate", () => { $("time").textContent = `${video.currentTime.toFixed(1)} s`; });
   $("editor").querySelectorAll("[data-step]").forEach((b) => b.addEventListener("click", () => step(Number(b.dataset.step))));
   ["layout", "people", "summary", "status"].forEach((id) => $(id).addEventListener("change", () => {
+    const statusChanged = doc.status !== $("status").value;
     doc.layout = $("layout").value; doc.people_max = Number($("people").value) || 0;
     doc.summary = $("summary").value; doc.status = $("status").value;
-    changed(); renderSystem();
+    changed();
+    // Rebuild the comparison box only when it must: a textarea's change fires on blur, and a
+    // rebuild then would swallow the click that caused the blur.
+    if (statusChanged) renderSystem();
   }));
   $("add").addEventListener("click", () => {
     doc.rows.push({
