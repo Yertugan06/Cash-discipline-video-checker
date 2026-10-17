@@ -85,12 +85,24 @@ def worn_or_carried(item: Detection, people: list[Detection], hand_distance: flo
     for person in people:
         p1, q1, p2, q2 = person.box
         intersection = max(0, min(x2, p2) - max(x1, p1)) * max(0, min(y2, q2) - max(y1, q1))
-        if (
-            item.label == "coat"
-            and intersection / area > 0.7
-            and area > 0.35 * (p2 - p1) * (q2 - q1)
-        ):
-            return True
+        if item.label == "coat" and intersection / area > 0.7:
+            if area > 0.35 * (p2 - p1) * (q2 - q1):
+                return True
+            torso = person.body[5:7] + person.body[11:13]
+            if len(torso) == 4 and all(
+                score >= 0.3 and 0 <= x <= 1 and 0 <= y <= 1 for x, y, score in torso
+            ):
+                shoulders = tuple((torso[0][i] + torso[1][i]) / 2 for i in (0, 1))
+                hips = tuple((torso[2][i] + torso[3][i]) / 2 for i in (0, 1))
+                direction = tuple(hips[i] - shoulders[i] for i in (0, 1))
+                # A worn coat can be detected as only a shoulder/collar fragment. A
+                # desk coat overlapping the person below the hips is still eligible.
+                if any(direction) and all(
+                    (x - hips[0]) * direction[0] + (y - hips[1]) * direction[1] < 0
+                    for x in (x1, x2)
+                    for y in (y1, y2)
+                ):
+                    return True
         if item.label == "handbag" and any(
             distance(hand, center(item.box)) < hand_distance for hand in person.wrists()
         ):

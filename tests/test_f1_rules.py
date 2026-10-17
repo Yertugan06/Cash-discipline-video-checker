@@ -311,6 +311,75 @@ def test_client_leaning_and_worn_coat_are_not_zone_or_desk_violations():
     assert not any(e.type == "PERSONAL_ON_DESK_START" for e in log.events)
 
 
+@pytest.mark.parametrize("view", ["original", "mirror", "zoom", "rotate"])
+def test_a_small_coat_fragment_above_the_hips_is_worn(view):
+    from backend.f1.vision_types import worn_or_carried
+    from scripts.replay_f1 import transform_detection
+
+    body = [(0.0, 0.0, 0.0)] * 17
+    body[5], body[6] = (0.4, 0.5, 0.9), (0.6, 0.5, 0.9)
+    body[11], body[12] = (0.42, 0.8, 0.9), (0.58, 0.8, 0.9)
+    person = Detection(label="person", score=0.9, box=(0.3, 0.1, 0.7, 0.95), body=body)
+    fragment = Detection(label="coat", score=0.9, box=(0.32, 0.48, 0.68, 0.52))
+    desk_coat = fragment.model_copy(update={"box": (0.32, 0.77, 0.68, 0.83)})
+
+    def point(x, y):
+        if view == "mirror":
+            return 1 - x, y
+        if view == "zoom":
+            return 0.5 + (x - 0.5) * 0.8, 0.5 + (y - 0.5) * 0.8
+        if view == "rotate":
+            return 1 - y, x
+        return x, y
+
+    person, fragment, desk_coat = [
+        Detection.model_validate(transform_detection(d.model_dump(), point))
+        for d in (person, fragment, desk_coat)
+    ]
+    assert worn_or_carried(fragment, [person], 0.07)
+    assert not worn_or_carried(desk_coat, [person], 0.07)
+
+
+@pytest.mark.parametrize("pose", ["missing", "uncertain", "outside", "degenerate"])
+def test_a_small_coat_needs_reliable_body_geometry_to_be_excluded(pose):
+    from backend.f1.vision_types import worn_or_carried
+
+    body = [(0.0, 0.0, 0.0)] * 17
+    body[5], body[6] = (0.4, 0.5, 0.9), (0.6, 0.5, 0.9)
+    body[11], body[12] = (0.42, 0.8, 0.9), (0.58, 0.8, 0.9)
+    if pose == "missing":
+        body = []
+    elif pose == "uncertain":
+        body[11] = (0.42, 0.8, 0.2)
+    elif pose == "outside":
+        body[11] = (-0.1, 0.8, 0.9)
+    else:
+        body[11], body[12] = body[5], body[6]
+    person = Detection(label="person", score=0.9, box=(0.3, 0.1, 0.7, 0.95), body=body)
+    fragment = Detection(label="coat", score=0.9, box=(0.32, 0.48, 0.68, 0.52))
+    assert not worn_or_carried(fragment, [person], 0.07)
+
+
+@requires_cv2
+def test_a_coat_fragment_worn_at_shoulder_height_does_not_start_a_desk_interval():
+    ctx = context()
+    body = [(0.0, 0.0, 0.0)] * 17
+    body[5], body[6] = (0.4, 0.5, 0.9), (0.6, 0.5, 0.9)
+    body[11], body[12] = (0.42, 0.8, 0.9), (0.58, 0.8, 0.9)
+    person = Detection(
+        label="person", score=0.9, box=(0.3, 0.1, 0.7, 0.95), body=body, track_id="person:1"
+    )
+    coat = Detection(label="coat", score=0.9, box=(0.32, 0.48, 0.68, 0.52), track_id="coat:1")
+    frames = [
+        Observation(timestamp_sec=i / 2, detections=[person.model_copy(deep=True), coat])
+        for i in range(12)
+    ]
+    ctx.log = build_events(
+        ctx.scene, frames, load_perception_config(ROOT / "config/perception.yaml"), 2, 6
+    )
+    assert RULES["W-NO-PERSONAL-ITEMS"](ctx) == []
+
+
 @requires_cv2
 @pytest.mark.parametrize("label", ["laptop", "counter"])
 def test_a_workstation_fixture_is_not_a_personal_item(label):
