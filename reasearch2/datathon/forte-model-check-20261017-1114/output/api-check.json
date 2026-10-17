@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "job_id": "4d5ea44afe3a4e458aa743e1b79b2642",
+  "clip": "X-2",
+  "end_to_end_sec": 71.365,
+  "perception_cached": false,
+  "verdict": "violation",
+  "predictions": [
+    {
+      "rule_id": "A-SECOND-PERSON",
+      "timecode_sec": 10.0,
+      "evidence_frames": 3
+    },
+    {
+      "rule_id": "A-OUTSIDER-ZONE",
+      "timecode_sec": 12.8,
+      "evidence_frames": 3
+    }
+  ]
+}

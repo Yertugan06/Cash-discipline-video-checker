@@ -1,10 +1,10 @@
 """Grouped dev/lockbox split. Unit = group (duplicates + violation/clean pairs), so a staged scenario
 and its matched counterpart never straddle the split. Stratified by camera layout. Seed fixed.
-Writes data/validation-private/split.json; prints counts only."""
+Writes validation-private/split.json; prints counts only."""
 import collections, json, os, random, sys
 
 ROOT = sys.argv[1]
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 groups = collections.defaultdict(list)
 for k, c in gt.items():

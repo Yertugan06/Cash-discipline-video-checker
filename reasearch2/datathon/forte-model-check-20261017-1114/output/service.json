@@ -1,0 +1,8 @@
+{
+  "status": "ready",
+  "app": "http://localhost:8018",
+  "device": "cuda",
+  "ui": 200,
+  "missing_and_wrong_key": 401,
+  "valid_key_missing_job": 404
+}

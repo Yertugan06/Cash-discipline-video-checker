@@ -1,6 +1,6 @@
 """Common scorer. Reads a private prediction file and prints AGGREGATES only.
 
-Prediction file (data/validation-private/preds/<name>.json):
+Prediction file (validation-private/preds/<name>.json):
   {clip_id: {"verdict": "violation"|"no_violation", "events": [{"t": sec, "code": str|None, "conf": float|None}],
              "runtime_s": float, "error": str|None}}
 Events are ordered by the system's own priority; events[0] is the "top-1" event.
@@ -14,7 +14,7 @@ from score_utils import code_match  # noqa: E402
 
 ROOT, NAME = sys.argv[1], sys.argv[2]
 SPLIT = sys.argv[sys.argv.index('--split') + 1] if '--split' in sys.argv else 'all'
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 split = json.load(open(os.path.join(P, 'split.json')))
 pred = json.load(open(os.path.join(P, 'preds', NAME + '.json')))

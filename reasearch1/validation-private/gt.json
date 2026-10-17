@@ -1,6 +1,6 @@
 {
  "X-1": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/X-1.mov",
+  "path": "reasearch1/../data/open/videos/X-1.mov",
   "dups": [
    "X-1"
   ],
@@ -13,10 +13,10 @@
     "times": [
      22.0
     ],
-    "type": "НЕ ОПРЕДЕЛЁН. Кандидаты: пересчёт скрыт от камеры/клиента; выдача без пересчёта на виду",
-    "norm1": "п. 20 ч. 1",
-    "confidence": "низкая",
-    "must_check": "ОБЯЗАТЕЛЬНО",
+    "type": "После машинного пересчёта кассир пересчитала деньги вручную, без машины, и вернула их клиенту",
+    "norm1": "п. 59",
+    "confidence": "низкая–средняя",
+    "must_check": "Нет",
     "review": "x-1 полагаю тут прикол в том что она не камеру считала, но конкретно нормативку не увидел"
    }
   ],
@@ -25,7 +25,7 @@
   "group": "X-3"
  },
  "X-2": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/X-2.mov",
+  "path": "reasearch1/../data/open/videos/X-2.mov",
   "dups": [
    "X-2"
   ],
@@ -40,8 +40,8 @@
     ],
     "type": "Приём наличных без идентификации клиента",
     "norm1": "п. 19 пп. 1)",
-    "confidence": "средняя",
-    "must_check": "Желательно",
+    "confidence": "средняя–высокая",
+    "must_check": "Нет",
     "review": "проверенно верно"
    }
   ],
@@ -50,7 +50,7 @@
   "group": "X-3"
  },
  "X-3": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-3.mov",
+  "path": "reasearch1/../data/open/videos/Х-3.mov",
   "dups": [
    "X-3"
   ],
@@ -62,7 +62,7 @@
   "group": "X-3"
  },
  "X-4": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-4.mov",
+  "path": "reasearch1/../data/open/videos/Х-4.mov",
   "dups": [
    "X-4",
    "X-47"
@@ -99,7 +99,7 @@
   "group": "X-5"
  },
  "X-5": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-5.mov",
+  "path": "reasearch1/../data/open/videos/Х-5.mov",
   "dups": [
    "X-5",
    "X-48"
@@ -112,7 +112,7 @@
   "group": "X-5"
  },
  "X-8": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-8.mov",
+  "path": "reasearch1/../data/open/videos/Х-8.mov",
   "dups": [
    "X-8"
   ],
@@ -124,7 +124,7 @@
   "group": "X-8"
  },
  "X-10": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-10.mov",
+  "path": "reasearch1/../data/open/videos/Х-10.mov",
   "dups": [
    "X-10"
   ],
@@ -136,7 +136,7 @@
   "group": "X-10"
  },
  "X-11": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-11.mov",
+  "path": "reasearch1/../data/open/videos/Х-11.mov",
   "dups": [
    "X-11"
   ],
@@ -151,8 +151,8 @@
     ],
     "type": "Рабочее место (ПК/ноутбук) оставлено незаблокированным",
     "norm1": "п. 71 пп. 9)",
-    "confidence": "средняя",
-    "must_check": "ОБЯЗАТЕЛЬНО",
+    "confidence": "средняя–высокая",
+    "must_check": "Нет",
     "review": "Мб + закрытием кабинета чета связано, там сотрудник просто ушел не закрыв дверь"
    }
   ],
@@ -161,7 +161,7 @@
   "group": "X-12"
  },
  "X-12": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-12.mov",
+  "path": "reasearch1/../data/open/videos/Х-12.mov",
   "dups": [
    "X-12"
   ],
@@ -173,7 +173,7 @@
   "group": "X-12"
  },
  "X-13": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-13.mov",
+  "path": "reasearch1/../data/open/videos/Х-13.mov",
   "dups": [
    "X-13"
   ],
@@ -186,10 +186,10 @@
     "times": [
      47.0
     ],
-    "type": "Подозрение на присвоение (деньги к карману/одежде)",
-    "norm1": "п. 20 ч. 2",
-    "confidence": "низкая–средняя",
-    "must_check": "ОБЯЗАТЕЛЬНО",
+    "type": "Деньги из вскрытой сумки убраны в сейф без пересчёта и учёта",
+    "norm1": "п. 74",
+    "confidence": "высокая (видео) / норма косвенная",
+    "must_check": "Нет",
     "review": "Деньги кассир не крадет, Тут деньги не пересчитываются перед тем как класть в сейф"
    }
   ],
@@ -198,7 +198,7 @@
   "group": "X-14"
  },
  "X-14": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-14.mov",
+  "path": "reasearch1/../data/open/videos/Х-14.mov",
   "dups": [
    "X-14"
   ],
@@ -210,7 +210,7 @@
   "group": "X-14"
  },
  "X-15": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-15.mov",
+  "path": "reasearch1/../data/open/videos/Х-15.mov",
   "dups": [
    "X-15"
   ],
@@ -235,7 +235,7 @@
   "group": "X-16"
  },
  "X-16": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-16.mov",
+  "path": "reasearch1/../data/open/videos/Х-16.mov",
   "dups": [
    "X-16"
   ],
@@ -247,7 +247,7 @@
   "group": "X-16"
  },
  "X-17": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-17.mov",
+  "path": "reasearch1/../data/open/videos/Х-17.mov",
   "dups": [
    "X-17"
   ],
@@ -263,7 +263,7 @@
     "type": "Инкассация: сумка принята без проверки целостности/пломбы и документов",
     "norm1": "п. 24 пп. 3)–4)",
     "confidence": "средняя–высокая",
-    "must_check": "Желательно",
+    "must_check": "Нет",
     "review": "✔ согласен"
    }
   ],
@@ -272,7 +272,7 @@
   "group": "X-16"
  },
  "X-18": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-18.mov",
+  "path": "reasearch1/../data/open/videos/Х-18.mov",
   "dups": [
    "X-18"
   ],
@@ -297,7 +297,7 @@
   "group": "X-18"
  },
  "X-19": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-19.mov",
+  "path": "reasearch1/../data/open/videos/Х-19.mov",
   "dups": [
    "X-19"
   ],
@@ -309,7 +309,7 @@
   "group": "X-19"
  },
  "X-20": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-20.mov",
+  "path": "reasearch1/../data/open/videos/Х-20.mov",
   "dups": [
    "X-20"
   ],
@@ -334,7 +334,7 @@
   "group": "X-21"
  },
  "X-21": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-21.mov",
+  "path": "reasearch1/../data/open/videos/Х-21.mov",
   "dups": [
    "X-21"
   ],
@@ -346,7 +346,7 @@
   "group": "X-21"
  },
  "X-22": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-22.mov",
+  "path": "reasearch1/../data/open/videos/Х-22.mov",
   "dups": [
    "X-22"
   ],
@@ -362,7 +362,7 @@
     "type": "Ключ оставлен в замке сейфа",
     "norm1": "п. 80",
     "confidence": "средняя–высокая",
-    "must_check": "Желательно",
+    "must_check": "Нет",
     "review": "✔ согласен"
    }
   ],
@@ -371,7 +371,7 @@
   "group": "X-23"
  },
  "X-23": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-23.mov",
+  "path": "reasearch1/../data/open/videos/Х-23.mov",
   "dups": [
    "X-23"
   ],
@@ -383,7 +383,7 @@
   "group": "X-23"
  },
  "X-24": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-24.mov",
+  "path": "reasearch1/../data/open/videos/Х-24.mov",
   "dups": [
    "X-24"
   ],
@@ -396,10 +396,10 @@
     "times": [
      8.0
     ],
-    "type": "Печати и документы оставлены на столе без присмотра",
+    "type": "Документы/планшет оставлены на столе без присмотра при уходе",
     "norm1": "п. 80",
     "confidence": "средняя",
-    "must_check": "Желательно",
+    "must_check": "Нет",
     "review": "✔ согласен"
    }
   ],
@@ -408,7 +408,7 @@
   "group": "X-25"
  },
  "X-25": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-25.mov",
+  "path": "reasearch1/../data/open/videos/Х-25.mov",
   "dups": [
    "X-25"
   ],
@@ -420,7 +420,7 @@
   "group": "X-25"
  },
  "X-26": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-26.mov",
+  "path": "reasearch1/../data/open/videos/Х-26.mov",
   "dups": [
    "X-26"
   ],
@@ -445,7 +445,7 @@
   "group": "X-27"
  },
  "X-27": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-27.mov",
+  "path": "reasearch1/../data/open/videos/Х-27.mov",
   "dups": [
    "X-27"
   ],
@@ -457,7 +457,7 @@
   "group": "X-27"
  },
  "X-28": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-28.mov",
+  "path": "reasearch1/../data/open/videos/Х-28.mov",
   "dups": [
    "X-28"
   ],
@@ -482,7 +482,7 @@
   "group": "X-29"
  },
  "X-29": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-29.mov",
+  "path": "reasearch1/../data/open/videos/Х-29.mov",
   "dups": [
    "X-29"
   ],
@@ -494,7 +494,7 @@
   "group": "X-29"
  },
  "X-30": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-30.mov",
+  "path": "reasearch1/../data/open/videos/Х-30.mov",
   "dups": [
    "X-30"
   ],
@@ -519,7 +519,7 @@
   "group": "X-31"
  },
  "X-31": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-31.mov",
+  "path": "reasearch1/../data/open/videos/Х-31.mov",
   "dups": [
    "X-31"
   ],
@@ -531,7 +531,7 @@
   "group": "X-31"
  },
  "X-32": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-32.mov",
+  "path": "reasearch1/../data/open/videos/Х-32.mov",
   "dups": [
    "X-32"
   ],
@@ -547,7 +547,7 @@
     "type": "Дверь кассы оставлена открытой",
     "norm1": "п. 16 пп. 1)",
     "confidence": "средняя–высокая",
-    "must_check": "Желательно",
+    "must_check": "Нет",
     "review": "✔ согласен"
    }
   ],
@@ -556,7 +556,7 @@
   "group": "X-31"
  },
  "X-33": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-33.mov",
+  "path": "reasearch1/../data/open/videos/Х-33.mov",
   "dups": [
    "X-33"
   ],
@@ -581,7 +581,7 @@
   "group": "X-33"
  },
  "X-34": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-34.mov",
+  "path": "reasearch1/../data/open/videos/Х-34.mov",
   "dups": [
    "X-34"
   ],
@@ -606,7 +606,7 @@
   "group": "X-37"
  },
  "X-35": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-35.mov",
+  "path": "reasearch1/../data/open/videos/Х-35.mov",
   "dups": [
    "X-35"
   ],
@@ -618,7 +618,7 @@
   "group": "X-35"
  },
  "X-37": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-37.mov",
+  "path": "reasearch1/../data/open/videos/Х-37.mov",
   "dups": [
    "X-37"
   ],
@@ -630,7 +630,7 @@
   "group": "X-37"
  },
  "X-38": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-38.mov",
+  "path": "reasearch1/../data/open/videos/Х-38.mov",
   "dups": [
    "X-38"
   ],
@@ -655,7 +655,7 @@
   "group": "X-39"
  },
  "X-39": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-39.mov",
+  "path": "reasearch1/../data/open/videos/Х-39.mov",
   "dups": [
    "X-39"
   ],
@@ -667,7 +667,7 @@
   "group": "X-39"
  },
  "X-40": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-40.mov",
+  "path": "reasearch1/../data/open/videos/Х-40.mov",
   "dups": [
    "X-40"
   ],
@@ -692,7 +692,7 @@
   "group": "X-40"
  },
  "X-43": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-43.mov",
+  "path": "reasearch1/../data/open/videos/Х-43.mov",
   "dups": [
    "X-43"
   ],
@@ -704,7 +704,7 @@
   "group": "X-45"
  },
  "X-44": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-44.mov",
+  "path": "reasearch1/../data/open/videos/Х-44.mov",
   "dups": [
    "X-44"
   ],
@@ -717,10 +717,10 @@
     "times": [
      16.0
     ],
-    "type": "Пересчёт без проверки подлинности (гипотеза)",
+    "type": "Пересчёт без проверки подлинности на детекторе",
     "norm1": "п. 19 пп. 2)",
-    "confidence": "низкая–средняя",
-    "must_check": "ОБЯЗАТЕЛЬНО",
+    "confidence": "средняя (подтверждено вами)",
+    "must_check": "Нет",
     "review": "✔ согласен"
    }
   ],
@@ -729,7 +729,7 @@
   "group": "X-45"
  },
  "X-45": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-45.mov",
+  "path": "reasearch1/../data/open/videos/Х-45.mov",
   "dups": [
    "X-45"
   ],
@@ -741,7 +741,7 @@
   "group": "X-45"
  },
  "X-46": {
-  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-46.mov",
+  "path": "reasearch1/../data/open/videos/Х-46.mov",
   "dups": [
    "X-46"
   ],

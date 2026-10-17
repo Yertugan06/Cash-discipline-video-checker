@@ -1,0 +1,8 @@
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+Loading weights:   0%|          | 0/408 [00:00<?, ?it/s]Loading weights:  68%|██████▊   | 278/408 [00:00<00:00, 2770.82it/s]Loading weights: 100%|██████████| 408/408 [00:00<00:00, 2743.53it/s]
+== F2 siglip2 RAW (no centring) | LOGO over 22 groups
+window AUC: label vs matched twin 0.64 (n=22/19) | label vs all clean windows 0.70
+video AUC (max window score) 0.54 | shortcut ref: duration AUC 0.68
+top-1 localization (argmax window, all violation clips): ±1s 3/22 ±2s 6/22 ±3s 10/22 ±5s 15/22
+wrote F2_siglip2_raw

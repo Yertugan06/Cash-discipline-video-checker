@@ -1,6 +1,6 @@
 """F1: COCO detector (RT-DETR v2 r18, Apache-2.0) + zone-free temporal rules. Pre-registered; no fitted constants.
 
-Step 1 (detect): 2 fps by PTS, full frame, cached to data/validation-private/f1_dets/<clip>.npz
+Step 1 (detect): 2 fps by PTS, full frame, cached to validation-private/f1_dets/<clip>.npz
 Step 2 (rules), event time = rule onset; verdict = any rule fires:
   R-bag   231-12-1 : handbag/backpack (score>=0.5) in >=50% of frames of some 5 s window
   R-phone 231-12-2 : cell phone (score>=0.5) in >=3 frames within 3 s
@@ -16,7 +16,7 @@ import numpy as np
 ROOT = sys.argv[1]
 MODE = sys.argv[2] if len(sys.argv) > 2 else 'both'
 DEV = sys.argv[3] if len(sys.argv) > 3 else 'cuda'
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 D = os.path.join(P, 'f1_dets'); os.makedirs(D, exist_ok=True)
 gt = json.load(open(os.path.join(P, 'gt.json')))
 FPS = 2.0

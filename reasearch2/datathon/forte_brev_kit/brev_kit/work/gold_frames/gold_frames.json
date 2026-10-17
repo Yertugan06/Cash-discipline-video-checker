@@ -1,0 +1,164 @@
+{
+ "frames": [
+  {
+   "video": "X-1",
+   "t": 21.0,
+   "path": "work/gold_frames/X-1_0021.00.jpg"
+  },
+  {
+   "video": "X-11",
+   "t": 20.0,
+   "path": "work/gold_frames/X-11_0020.00.jpg"
+  },
+  {
+   "video": "X-12",
+   "t": 38.0,
+   "path": "work/gold_frames/X-12_0038.00.jpg"
+  },
+  {
+   "video": "X-15",
+   "t": 18.0,
+   "path": "work/gold_frames/X-15_0018.00.jpg"
+  },
+  {
+   "video": "X-17",
+   "t": 7.0,
+   "path": "work/gold_frames/X-17_0007.00.jpg"
+  },
+  {
+   "video": "X-18",
+   "t": 21.0,
+   "path": "work/gold_frames/X-18_0021.00.jpg"
+  },
+  {
+   "video": "X-2",
+   "t": 10.0,
+   "path": "work/gold_frames/X-2_0010.00.jpg"
+  },
+  {
+   "video": "X-20",
+   "t": 8.0,
+   "path": "work/gold_frames/X-20_0008.00.jpg"
+  },
+  {
+   "video": "X-21",
+   "t": 12.0,
+   "path": "work/gold_frames/X-21_0012.00.jpg"
+  },
+  {
+   "video": "X-22",
+   "t": 17.0,
+   "path": "work/gold_frames/X-22_0017.00.jpg"
+  },
+  {
+   "video": "X-23",
+   "t": 16.0,
+   "path": "work/gold_frames/X-23_0016.00.jpg"
+  },
+  {
+   "video": "X-24",
+   "t": 10.0,
+   "path": "work/gold_frames/X-24_0010.00.jpg"
+  },
+  {
+   "video": "X-26",
+   "t": 11.0,
+   "path": "work/gold_frames/X-26_0011.00.jpg"
+  },
+  {
+   "video": "X-27",
+   "t": 23.0,
+   "path": "work/gold_frames/X-27_0023.00.jpg"
+  },
+  {
+   "video": "X-28",
+   "t": 3.0,
+   "path": "work/gold_frames/X-28_0003.00.jpg"
+  },
+  {
+   "video": "X-28",
+   "t": 13.0,
+   "path": "work/gold_frames/X-28_0013.00.jpg"
+  },
+  {
+   "video": "X-29",
+   "t": 12.0,
+   "path": "work/gold_frames/X-29_0012.00.jpg"
+  },
+  {
+   "video": "X-30",
+   "t": 14.0,
+   "path": "work/gold_frames/X-30_0014.00.jpg"
+  },
+  {
+   "video": "X-31",
+   "t": 14.0,
+   "path": "work/gold_frames/X-31_0014.00.jpg"
+  },
+  {
+   "video": "X-32",
+   "t": 10.0,
+   "path": "work/gold_frames/X-32_0010.00.jpg"
+  },
+  {
+   "video": "X-33",
+   "t": 12.0,
+   "path": "work/gold_frames/X-33_0012.00.jpg"
+  },
+  {
+   "video": "X-34",
+   "t": 15.0,
+   "path": "work/gold_frames/X-34_0015.00.jpg"
+  },
+  {
+   "video": "X-35",
+   "t": 30.0,
+   "path": "work/gold_frames/X-35_0030.00.jpg"
+  },
+  {
+   "video": "X-35",
+   "t": 42.5,
+   "path": "work/gold_frames/X-35_0042.50.jpg"
+  },
+  {
+   "video": "X-37",
+   "t": 12.0,
+   "path": "work/gold_frames/X-37_0012.00.jpg"
+  },
+  {
+   "video": "X-38",
+   "t": 33.0,
+   "path": "work/gold_frames/X-38_0033.00.jpg"
+  },
+  {
+   "video": "X-39",
+   "t": 33.0,
+   "path": "work/gold_frames/X-39_0033.00.jpg"
+  },
+  {
+   "video": "X-40",
+   "t": 20.0,
+   "path": "work/gold_frames/X-40_0020.00.jpg"
+  },
+  {
+   "video": "X-43",
+   "t": 10.0,
+   "path": "work/gold_frames/X-43_0010.00.jpg"
+  },
+  {
+   "video": "X-44",
+   "t": 16.0,
+   "path": "work/gold_frames/X-44_0016.00.jpg"
+  },
+  {
+   "video": "X-45",
+   "t": 16.0,
+   "path": "work/gold_frames/X-45_0016.00.jpg"
+  },
+  {
+   "video": "X-46",
+   "t": 14.0,
+   "path": "work/gold_frames/X-46_0014.00.jpg"
+  }
+ ]
+}

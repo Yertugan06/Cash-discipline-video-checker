@@ -1,0 +1,109 @@
+2026-10-17 11:26:25,826 INFO Loading pinned RT-DETR, OWLv2, CLIP and RTMPose checkpoints
+2026-10-17 11:26:30,915 ERROR Model check failed
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/getpass.py", line 173, in getuser
+    return pwd.getpwuid(os.getuid())[0]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'getpwuid(): uid not found: 1000'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/scripts/check_models.py", line 53, in main
+    models = LocalModels(args.weights, args.device, 4, config)
+  File "/app/backend/perception.py", line 95, in __init__
+    from transformers import (
+    ...<6 lines>...
+    )
+  File "<frozen importlib._bootstrap>", line 1429, in _handle_fromlist
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2317, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2347, in _get_module
+    raise e
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2345, in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/site-packages/transformers/models/clip/modeling_clip.py", line 25, in <module>
+    from ...modeling_layers import GradientCheckpointingLayer
+  File "/usr/local/lib/python3.13/site-packages/transformers/modeling_layers.py", line 27, in <module>
+    from .models.auto import AutoModel
+  File "<frozen importlib._bootstrap>", line 1429, in _handle_fromlist
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2317, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2347, in _get_module
+    raise e
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2345, in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/site-packages/transformers/models/auto/modeling_auto.py", line 23, in <module>
+    from .auto_factory import (
+    ...<4 lines>...
+    )
+  File "/usr/local/lib/python3.13/site-packages/transformers/models/auto/auto_factory.py", line 43, in <module>
+    from ...generation import GenerationMixin
+  File "<frozen importlib._bootstrap>", line 1429, in _handle_fromlist
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2317, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2347, in _get_module
+    raise e
+  File "/usr/local/lib/python3.13/site-packages/transformers/utils/import_utils.py", line 2345, in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/site-packages/transformers/generation/utils.py", line 43, in <module>
+    from ..masking_utils import create_masks_for_generate
+  File "/usr/local/lib/python3.13/site-packages/transformers/masking_utils.py", line 40, in <module>
+    from torch._dynamo._trace_wrapped_higher_order_op import TransformGetItemToIndex
+  File "/usr/local/lib/python3.13/site-packages/torch/_dynamo/__init__.py", line 13, in <module>
+    from . import (
+    ...<6 lines>...
+    )
+  File "/usr/local/lib/python3.13/site-packages/torch/_dynamo/aot_compile.py", line 16, in <module>
+    from torch._dynamo.package import SystemInfo
+  File "/usr/local/lib/python3.13/site-packages/torch/_dynamo/package.py", line 1157, in <module>
+    DynamoCache = DiskDynamoCache(os.path.join(cache_dir(), "dynamo"))
+                                               ~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/site-packages/torch/_dynamo/package.py", line 1154, in cache_dir
+    return cache_dir()
+  File "/usr/local/lib/python3.13/site-packages/torch/_inductor/runtime/cache_dir_utils.py", line 17, in cache_dir
+    os.environ["TORCHINDUCTOR_CACHE_DIR"] = cache_dir = default_cache_dir()
+                                                        ~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/site-packages/torch/_inductor/runtime/cache_dir_utils.py", line 23, in default_cache_dir
+    sanitized_username = re.sub(r'[\\/:*?"<>|]', "_", getpass.getuser())
+                                                      ~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/getpass.py", line 175, in getuser
+    raise OSError('No username set in the environment') from e
+OSError: No username set in the environment
+2026-10-17 11:26:30,923 INFO Result saved to /app/runtime/model-check/result.json
+2026-10-17 11:27:17,085 INFO Loading pinned RT-DETR, OWLv2, CLIP and RTMPose checkpoints
+2026-10-17 11:27:29,721 INFO Models loaded in 12.63 s; Torch=cuda; RTMPose=cpu
+2026-10-17 11:27:29,728 INFO person: warm-up
+2026-10-17 11:27:32,065 INFO person: pass 1/3 completed in 0.0492 s
+2026-10-17 11:27:32,104 INFO person: pass 2/3 completed in 0.0386 s
+2026-10-17 11:27:32,141 INFO person: pass 3/3 completed in 0.0372 s
+2026-10-17 11:27:32,142 INFO scene: warm-up
+2026-10-17 11:27:32,776 INFO scene: pass 1/3 completed in 0.1976 s
+2026-10-17 11:27:32,956 INFO scene: pass 2/3 completed in 0.1792 s
+2026-10-17 11:27:33,144 INFO scene: pass 3/3 completed in 0.1879 s
+2026-10-17 11:27:33,144 INFO objects: warm-up
+2026-10-17 11:27:33,507 INFO objects: pass 1/3 completed in 0.1804 s
+2026-10-17 11:27:33,688 INFO objects: pass 2/3 completed in 0.1807 s
+2026-10-17 11:27:33,869 INFO objects: pass 3/3 completed in 0.1806 s
+2026-10-17 11:27:33,870 INFO state: warm-up
+2026-10-17 11:27:34,200 INFO state: pass 1/3 completed in 0.1037 s
+2026-10-17 11:27:34,304 INFO state: pass 2/3 completed in 0.1031 s
+2026-10-17 11:27:34,406 INFO state: pass 3/3 completed in 0.1022 s
+2026-10-17 11:27:34,406 INFO pose: warm-up
+2026-10-17 11:27:34,610 INFO pose: pass 1/3 completed in 0.0377 s
+2026-10-17 11:27:34,645 INFO pose: pass 2/3 completed in 0.0344 s
+2026-10-17 11:27:34,680 INFO pose: pass 3/3 completed in 0.0341 s
+2026-10-17 11:27:34,681 INFO All production model adapters passed execution checks
+2026-10-17 11:27:34,685 INFO Result saved to /app/runtime/model-check/result.json

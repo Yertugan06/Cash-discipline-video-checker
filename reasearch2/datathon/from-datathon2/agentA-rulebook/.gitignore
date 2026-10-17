@@ -1,0 +1,19 @@
+run-claude.sh
+.env
+.env.*
+!.env.example
+# Hackathon dataset: hackathon use only (task.md FAQ 6), never commit
+data/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+node_modules/
+frontend/dist/
+runtime/
+reports/
+.playwright-cli/
+weights/

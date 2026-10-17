@@ -1,0 +1,13 @@
+12:21:27 videos verified
+12:24:42 start A1_8b
+12:36:13 end rc=0
+12:36:13 start A1c_4b_L4
+12:43:41 end rc=0
+12:43:41 start A2_4b_items_dev
+12:54:22 end rc=0
+12:54:22 start A2_8b_items_dev
+13:09:31 end rc=0
+D2_QUEUE_DONE
+13:09:47 start B1 dinov2
+13:12:20 start B1 siglip2
+13:16:08 D2_QUEUE_B_DONE

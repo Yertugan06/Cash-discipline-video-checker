@@ -1,0 +1,61 @@
+X-1: checks=1 changed=1 boxes={'safe': [670, 418, 880, 590], 'laptop': [505, 428, 650, 510], 'door': [190, 40, 460, 480]}
+X-11: checks=1 changed=1 boxes={'safe': [475, 356, 640, 498], 'laptop': [488, 410, 625, 494], 'door': [0, 45, 500, 560]}
+X-12: checks=1 changed=1 boxes={'safe': [480, 355, 640, 480], 'laptop': None, 'door': [0, 0, 510, 570]}
+X-15: checks=1 changed=3 boxes={'safe': [458, 310, 622, 446], 'laptop': [462, 366, 590, 446], 'door': [19, 0, 488, 500]}
+X-17: checks=1 changed=1 boxes={'safe': [700, 350, 930, 550], 'laptop': [530, 370, 650, 470], 'door': [0, 0, 500, 500]}
+X-18: checks=1 changed=1 boxes={'safe': [698, 380, 920, 550], 'laptop': [530, 380, 650, 478], 'door': [0, 0, 498, 518]}
+X-2: checks=1 changed=1 boxes={'safe': [660, 422, 880, 588], 'laptop': [508, 430, 640, 514], 'door': [180, 38, 458, 470]}
+X-20: checks=1 changed=1 boxes={'safe': [400, 291, 570, 420], 'laptop': [500, 358, 650, 440], 'door': [0, 0, 500, 500]}
+X-21: checks=1 changed=2 boxes={'safe': [400, 292, 560, 417], 'laptop': [498, 358, 650, 442], 'door': [0, 0, 490, 502]}
+X-22: checks=1 changed=2 boxes={'safe': [400, 294, 567, 418], 'laptop': [487, 366, 620, 445], 'door': [0, 0, 492, 500]}
+X-23: checks=1 changed=1 boxes={'safe': [400, 290, 568, 424], 'laptop': [488, 355, 648, 444], 'door': [0, 0, 500, 500]}
+X-24: checks=1 changed=2 boxes={'safe': [438, 316, 580, 436], 'laptop': [530, 384, 675, 468], 'door': [0, 0, 530, 521]}
+X-26: checks=1 changed=1 boxes={'safe': [438, 317, 588, 444], 'laptop': [532, 378, 678, 478], 'door': [268, 2, 532, 458]}
+X-27: checks=1 changed=2 boxes={'safe': [432, 330, 570, 440], 'laptop': [530, 385, 678, 478], 'door': [260, 0, 534, 460]}
+X-28: checks=2 changed=2 boxes={'safe': [438, 311, 588, 422], 'laptop': [580, 386, 690, 460], 'door': [0, 0, 538, 531]}
+X-29: checks=1 changed=1 boxes={'safe': [440, 314, 588, 458], 'laptop': [530, 382, 686, 464], 'door': [0, 1, 534, 526]}
+X-30: checks=1 changed=1 boxes={'safe': [432, 320, 607, 440], 'laptop': [85, 453, 258, 548], 'door': [0, 0, 534, 540]}
+X-31: checks=1 changed=1 boxes={'safe': [458, 320, 610, 464], 'laptop': [90, 440, 260, 526], 'door': [0, 1, 300, 542]}
+X-32: checks=1 changed=1 boxes={'safe': [460, 322, 615, 458], 'laptop': [98, 458, 258, 522], 'door': [0, 1, 550, 540]}
+X-33: checks=1 changed=2 boxes={'safe': [475, 298, 620, 444], 'laptop': [136, 402, 236, 488], 'door': [26, 0, 336, 500]}
+X-34: checks=1 changed=2 boxes={'safe': [710, 406, 940, 577], 'laptop': [120, 416, 268, 506], 'door': [10, 0, 628, 500]}
+X-35: checks=2 changed=3 boxes={'safe': [667, 402, 950, 576], 'laptop': [120, 424, 283, 522], 'door': [350, 0, 625, 430]}
+X-37: checks=1 changed=1 boxes={'safe': [667, 402, 950, 575], 'laptop': [117, 420, 285, 523], 'door': [19, 0, 340, 484]}
+X-38: checks=1 changed=2 boxes={'safe': [667, 400, 950, 682], 'laptop': [125, 416, 275, 508], 'door': [19, 0, 340, 445]}
+X-39: checks=1 changed=1 boxes={'safe': [674, 406, 940, 683], 'laptop': [118, 420, 288, 525], 'door': [18, 0, 368, 505]}
+X-40: checks=1 changed=1 boxes={'safe': [467, 300, 610, 440], 'laptop': [147, 400, 240, 488], 'door': [12, 0, 330, 500]}
+X-43: checks=1 changed=1 boxes={'safe': [430, 322, 570, 442], 'laptop': [60, 416, 200, 508], 'door': [0, 1, 318, 512]}
+X-44: checks=1 changed=1 boxes={'safe': [436, 314, 584, 440], 'laptop': [88, 404, 200, 504], 'door': [0, 1, 312, 510]}
+X-45: checks=1 changed=1 boxes={'safe': [465, 296, 628, 445], 'laptop': [140, 400, 260, 489], 'door': [1, 0, 340, 500]}
+X-46: checks=1 changed=2 boxes={'safe': [424, 315, 570, 445], 'laptop': [58, 420, 198, 525], 'door': [0, 0, 312, 515]}
+# Анкета на золотых кадрах
+Всего проверок: 56, верно: 51 (91%); не найдено кадров: 0
+
+| Поле | Верно | Всего | Точность |
+|---|---|---|---|
+| key_in_safe_lock | 1 | 2 | 50% |
+| room_door | 1 | 2 | 50% |
+| cashier_action | 2 | 3 | 67% |
+| clients_at_desk | 3 | 4 | 75% |
+| laptop_screen | 6 | 7 | 86% |
+| cashier_at_desk | 14 | 14 | 100% |
+| safe_door | 6 | 6 | 100% |
+| desk_cash | 3 | 3 | 100% |
+| desk_bag | 2 | 2 | 100% |
+| desk_personal_items | 2 | 2 | 100% |
+| desk_food_drink | 2 | 2 | 100% |
+| people_cashier_side | 3 | 3 | 100% |
+| counting_machine_in_use | 1 | 1 | 100% |
+| collector_present | 1 | 1 | 100% |
+| id_document_visible | 1 | 1 | 100% |
+| detector_in_use | 2 | 2 | 100% |
+| desk_documents | 1 | 1 | 100% |
+
+## Ошибки
+| Видео | t | Поле | Ожидалось | Модель | Комментарий |
+|---|---|---|---|---|---|
+| X-22 | 17.0 | key_in_safe_lock | yes | no | ключ со связкой в замке (нарушение) |
+| X-22 | 17.0 | laptop_screen | lock_screen | off_or_closed |  |
+| X-46 | 14.0 | cashier_action | eating_drinking | counting_by_hand |  |
+| X-32 | 10.0 | room_door | open | closed | дверь не закрыта (нарушение) |
+| X-18 | 21.0 | clients_at_desk | 2 | 1 | второй человек подаёт карточку |

@@ -1,0 +1,17 @@
+windows per set: {'pos': 22, 'pair_neg': 19, 'off_neg': 11, 'rand_neg': 19}
+Traceback (most recent call last):
+  File "/home/ubuntu/dt26-validation/validation-evidence/harness/verify_windows.py", line 49, in <module>
+    model, proc, load_s = vlm.load()
+                          ^^^^^^^^^^
+  File "/home/ubuntu/dt26-validation/validation-evidence/harness/vlm.py", line 28, in load
+    model = cls.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/dt26-validation/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4353, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/dt26-validation/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4435, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+  File "/home/ubuntu/dt26-validation/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5118, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 15.45 GiB. GPU 0 has a total capacity of 22.04 GiB of which 5.51 GiB is free. Process 69095 has 1.99 GiB memory in use. Process 71516 has 1.99 GiB memory in use. Process 102120 has 12.35 GiB memory in use. Including non-PyTorch memory, this process has 186.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

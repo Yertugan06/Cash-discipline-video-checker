@@ -18,7 +18,7 @@ import json, os, statistics as st, sys
 import numpy as np
 
 ROOT = sys.argv[1]
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 M = {k: np.load(os.path.join(P, 'motion', k + '.npz')) for k in gt}
 os.makedirs(os.path.join(P, 'preds'), exist_ok=True)

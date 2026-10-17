@@ -1,0 +1,51 @@
+version: 1
+calibration_sec: 2.0
+object_interval_sec: 0.4
+state_interval_sec: 0.6
+hysteresis_sec: 0.6
+exit_gap_sec: 1.2
+hand_distance: 0.07
+object_score: 0.12
+person_score: 0.20
+state_score: 0.55
+state_margin: 0.08
+owl_image_size: 640
+person_image_size: 512
+scene_prompts:
+  desk: ["a cash desk table", "an office desk"]
+  safe: ["a grey metal safe cabinet", "a metal safe"]
+  door: ["a glass door", "a door"]
+  laptop: ["a laptop computer"]
+  counter: ["a banknote counting machine", "a money counting machine"]
+object_prompts:
+  cash: ["banknotes", "a stack of banknotes"]
+  bundle: ["a bundle of banknotes"]
+  bag: ["a green fabric cash collection bag", "a green cloth bag"]
+  id_card: ["an identity card"]
+  document: ["a paper document"]
+  tablet: ["a tablet computer"]
+  cup: ["a cup", "a drinking bottle"]
+  food: ["food", "a sandwich"]
+  coat: ["a coat lying on a desk"]
+  handbag: ["a handbag"]
+  phone: ["a mobile phone"]
+state_prompts:
+  safe:
+    open: ["a photo of a metal safe with its door wide open", "an open safe showing its contents"]
+    closed: ["a photo of a metal safe with its door shut", "a closed metal cabinet"]
+  door:
+    open: ["a photo of an open glass door", "a doorway with its door open"]
+    closed: ["a photo of a shut glass door", "a closed door"]
+  laptop:
+    working: ["a laptop screen showing a working application", "a laptop screen with windows and documents"]
+    locked: ["a laptop screen showing a login password screen", "a laptop showing a lock screen"]
+    closed: ["a closed laptop with its lid shut", "a laptop with a dark blank screen"]
+  counter:
+    running: ["banknotes being counted in a money counting machine", "a banknote counter running with cash in its feeder"]
+    idle: ["an idle money counting machine with an empty feeder", "a banknote counting machine standing unused"]
+  bag:
+    open: ["an open cloth cash bag with visible contents", "an open green bag"]
+    closed: ["a sealed cloth cash collection bag", "a closed green bag"]
+  person:
+    seated: ["a person sitting at a desk", "a seated cashier"]
+    standing: ["a person standing up", "a person walking"]

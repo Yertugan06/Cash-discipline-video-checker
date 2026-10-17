@@ -1,0 +1,52 @@
+{
+  "verdict": "no_violation",
+  "violations": [],
+  "analysis_stage": "complete",
+  "warnings": [
+    "Рабочая и клиентская зоны не откалиброваны уверенно; задайте ручные зоны.",
+    "Не локализованы объекты сцены: desk, laptop, safe, door, counter",
+    "Роль кассира не назначена уверенно; правила, требующие этой роли, отключены.",
+    "Наличные не распознаны уверенно; проверки движения наличных ограничены.",
+    "Не хватает уверенных точек рук; передачи предметов могли быть пропущены."
+  ],
+  "runtime_sec": 127.48354923800025,
+  "video": {
+    "duration_sec": 145.0,
+    "width": 464,
+    "height": 848,
+    "sample_fps": 5.0,
+    "sampled_frames": 725
+  },
+  "events": [
+    {
+      "timestamp_sec": 0.0,
+      "type": "DECODE_STARTED",
+      "facts": {}
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "CALIBRATED",
+      "facts": {
+        "confidence": 0,
+        "objects": []
+      }
+    },
+    {
+      "timestamp_sec": 145.0,
+      "type": "DECODE_COMPLETED",
+      "facts": {}
+    }
+  ],
+  "debug_available": true,
+  "coverage": {
+    "roles": false,
+    "desk": false,
+    "safe": false,
+    "door": false,
+    "laptop": false,
+    "counter": false,
+    "hands": false,
+    "cash": false
+  },
+  "perception_cached": false
+}

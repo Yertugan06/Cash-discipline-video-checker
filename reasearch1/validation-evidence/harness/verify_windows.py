@@ -19,8 +19,8 @@ SIDE = int(sys.argv[3]) if len(sys.argv) > 3 else 448
 TAG = sys.argv[4] if len(sys.argv) > 4 else f'{int(FPS)}fps_s{SIDE}'
 PROMPT = sys.argv[5] if len(sys.argv) > 5 else 'v1'
 WHICH = sys.argv[6] if len(sys.argv) > 6 else 'all'
-split = json.load(open(os.path.join(ROOT, 'data', 'validation-private', 'split.json')))
-P = os.path.join(ROOT, 'data', 'validation-private')
+split = json.load(open(os.path.join(ROOT, 'validation-private', 'split.json')))
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 import av  # noqa: E402
 

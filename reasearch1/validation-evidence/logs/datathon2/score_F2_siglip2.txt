@@ -1,0 +1,11 @@
+== F2_siglip2 | split=all | n=40 | missing=0 | errors=0
+video  TP=12 FN=9 FP=10 TN=9 | recall 12/21 (0.37, 0.76) | clean-FP 10/19 (0.32, 0.73) | acc 21/40
+   layout 'Back-office desk'    : TP=6 FN=2 FP=5 TN=4
+   layout 'Client-facing desk'  : TP=5 FN=2 FP=3 TN=4
+   layout 'Desk near the door'  : TP=1 FN=5 FP=2 TN=1
+loc[N.0] any-event: ±1s 0/22 ±2s 3/22 ±3s 6/22 ±5s 9/22 | top-1: ±1s 0/22 ±2s 3/22 ±3s 6/22 ±5s 9/22
+loc[N+0.5] any-event: ±1s 1/22 ±2s 3/22 ±3s 6/22 ±5s 8/22 | top-1: ±1s 1/22 ±2s 3/22 ±3s 6/22 ±5s 8/22
+   |nearest error| median 4.0s, events with any prediction 13/22
+events/violation clip mean 0.57 | events/clean clip mean 0.53
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 0/17, and within ±3s 0/17
+runtime s: median 2.6 max 17.3 total 155

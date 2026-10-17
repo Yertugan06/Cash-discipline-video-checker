@@ -3,7 +3,7 @@
 Per sampled frame (~SAMPLE_FPS, timestamps from container PTS because clips are VFR):
   short : mean |frame_t - frame_{t-1}| on a blurred 116x212 grayscale frame (activity)
   state : mean |frame_t - median(frames in [t-8s, t-4s])|   (persistent scene change: object left/removed, door, person gone)
-Cached to data/validation-private/motion/<clip>.npz. Prints timing aggregates only.
+Cached to validation-private/motion/<clip>.npz. Prints timing aggregates only.
 Usage: python -I motion.py <repo_root>
 """
 import json, os, sys, time
@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 
 ROOT = sys.argv[1]
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 OUT = os.path.join(P, 'motion'); os.makedirs(OUT, exist_ok=True)
 SAMPLE_FPS = 5.0
 gt = json.load(open(os.path.join(P, 'gt.json')))

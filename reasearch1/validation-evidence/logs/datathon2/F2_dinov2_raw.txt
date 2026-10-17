@@ -1,0 +1,6 @@
+Loading weights:   0%|          | 0/223 [00:00<?, ?it/s]Loading weights: 100%|██████████| 223/223 [00:00<00:00, 2890.53it/s]
+== F2 dinov2 RAW (no centring) | LOGO over 22 groups
+window AUC: label vs matched twin 0.67 (n=22/19) | label vs all clean windows 0.70
+video AUC (max window score) 0.49 | shortcut ref: duration AUC 0.68
+top-1 localization (argmax window, all violation clips): ±1s 5/22 ±2s 6/22 ±3s 7/22 ±5s 13/22
+wrote F2_dinov2_raw

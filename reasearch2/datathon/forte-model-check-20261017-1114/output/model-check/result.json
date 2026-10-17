@@ -1,0 +1,235 @@
+{
+  "status": "passed",
+  "input": "synthetic RGB image, 464x848; no bank footage",
+  "purpose": "execution and timing check; does not measure detection accuracy",
+  "requested_device": "cuda",
+  "python": "3.13.16",
+  "repeats": 3,
+  "stages": {
+    "person": {
+      "mean_sec": 0.0417,
+      "min_sec": 0.0372,
+      "max_sec": 0.0492,
+      "output": 0
+    },
+    "scene": {
+      "mean_sec": 0.1882,
+      "min_sec": 0.1792,
+      "max_sec": 0.1976,
+      "output": 0
+    },
+    "objects": {
+      "mean_sec": 0.1806,
+      "min_sec": 0.1804,
+      "max_sec": 0.1807,
+      "output": 0
+    },
+    "state": {
+      "mean_sec": 0.103,
+      "min_sec": 0.1022,
+      "max_sec": 0.1037,
+      "output": {
+        "safe": {
+          "value": "closed",
+          "score": 0.8459424376487732,
+          "margin": 0.6918848752975464
+        },
+        "door": {
+          "value": "unknown",
+          "score": 0.5234203934669495,
+          "margin": 0.04684072732925415
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.9168639183044434,
+          "margin": 0.8746464252471924
+        },
+        "counter": {
+          "value": "idle",
+          "score": 0.8175744414329529,
+          "margin": 0.6351489424705505
+        },
+        "bag": {
+          "value": "open",
+          "score": 0.815232515335083,
+          "margin": 0.630465030670166
+        },
+        "person": {
+          "value": "standing",
+          "score": 0.8056321740150452,
+          "margin": 0.6112643480300903
+        }
+      }
+    },
+    "pose": {
+      "mean_sec": 0.0354,
+      "min_sec": 0.0341,
+      "max_sec": 0.0377,
+      "output": {
+        "body_points": 17,
+        "hand_points": 42
+      }
+    }
+  },
+  "device": "cuda",
+  "pose_device": "cpu",
+  "torch": "2.10.0+cu128",
+  "cuda_runtime": "12.8",
+  "gpu": "NVIDIA L4",
+  "load_sec": 12.635,
+  "checkpoints": [
+    {
+      "name": "person",
+      "repo": "PekingU/rtdetr_r18vd",
+      "revision": "ac77a11ff0170a41b771c03264987f8ce2b0d753",
+      "license": "apache-2.0",
+      "source_url": "https://huggingface.co/PekingU/rtdetr_r18vd/tree/ac77a11ff0170a41b771c03264987f8ce2b0d753",
+      "files": [
+        {
+          "path": "README.md",
+          "size": 9102,
+          "sha256": null
+        },
+        {
+          "path": "config.json",
+          "size": 5267,
+          "sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "size": 80904152,
+          "sha256": "fe87a5a30f5daf298d10794c7682a63b6107986f97d6a770ba948d89e4340093"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "size": 841,
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "name": "objects",
+      "repo": "google/owlv2-base-patch16-ensemble",
+      "revision": "cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "license": "apache-2.0",
+      "source_url": "https://huggingface.co/google/owlv2-base-patch16-ensemble/tree/cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "files": [
+        {
+          "path": "README.md",
+          "size": 4838,
+          "sha256": null
+        },
+        {
+          "path": "added_tokens.json",
+          "size": 67,
+          "sha256": null
+        },
+        {
+          "path": "config.json",
+          "size": 414,
+          "sha256": null
+        },
+        {
+          "path": "merges.txt",
+          "size": 524619,
+          "sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "size": 619918824,
+          "sha256": "e1e130b9e404cf91a75ad45644c1da9d7fa5284085eecc864266a6923efb99e7"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "size": 425,
+          "sha256": null
+        },
+        {
+          "path": "special_tokens_map.json",
+          "size": 121,
+          "sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "size": 1100,
+          "sha256": null
+        },
+        {
+          "path": "vocab.json",
+          "size": 1059962,
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "name": "states",
+      "repo": "laion/CLIP-ViT-B-32-laion2B-s34B-b79K",
+      "revision": "1a25a446712ba5ee05982a381eed697ef9b435cf",
+      "license": "mit",
+      "source_url": "https://huggingface.co/laion/CLIP-ViT-B-32-laion2B-s34B-b79K/tree/1a25a446712ba5ee05982a381eed697ef9b435cf",
+      "files": [
+        {
+          "path": "README.md",
+          "size": 7464,
+          "sha256": null
+        },
+        {
+          "path": "config.json",
+          "size": 4355,
+          "sha256": null
+        },
+        {
+          "path": "merges.txt",
+          "size": 524618,
+          "sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "size": 605157884,
+          "sha256": "74813fbcdc750f235c9784c367ca1394d2a5c25eb0aac92761752ac239db7cff"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "size": 316,
+          "sha256": null
+        },
+        {
+          "path": "special_tokens_map.json",
+          "size": 389,
+          "sha256": null
+        },
+        {
+          "path": "tokenizer.json",
+          "size": 2224041,
+          "sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "size": 904,
+          "sha256": null
+        },
+        {
+          "path": "vocab.json",
+          "size": 862328,
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "name": "pose",
+      "repo": "bukuroo/RTMPose-ONNX",
+      "revision": "a6e9fb8a9190efd0383b059033f45645180cc7df",
+      "license": "apache-2.0",
+      "source_url": "https://huggingface.co/bukuroo/RTMPose-ONNX/tree/a6e9fb8a9190efd0383b059033f45645180cc7df",
+      "files": [
+        {
+          "path": "rtmpose-m-wholebody.onnx",
+          "size": 71853616,
+          "sha256": "465259a2e6c0f434ec5a5097640d6a439106c423e942ddbab7c6eaa02cc00c8a"
+        }
+      ]
+    }
+  ],
+  "peak_torch_memory_mib": 1654.7,
+  "runtime_sec": 18.0952
+}

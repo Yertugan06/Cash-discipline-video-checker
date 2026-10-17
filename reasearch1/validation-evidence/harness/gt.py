@@ -5,15 +5,15 @@ Sources (kept separate in the output):
   human     : data/Таблица_нарушений.xlsx          -> human event seconds, norm codes, confidence, review status
   layout    : data/Cash_Discipline_Cases_Rules.xlsx -> camera-layout tag per clip (provenance: team workbook)
 
-Writes data/validation-private/gt.json (gitignored). Prints aggregate counts only.
-Usage: python -I gt.py <repo_root>
+Writes validation-private/gt.json (gitignored). Prints aggregate counts only.
+Usage: python -I gt.py <research_root>   (e.g. reasearch1; organizer data is read from <research_root>/../data)
 """
 import collections, hashlib, json, os, re, sys
 
 import openpyxl
 
 ROOT = sys.argv[1]
-OUT = os.path.join(ROOT, 'data', 'validation-private')
+OUT = os.path.join(ROOT, 'validation-private')
 UNRELIABLE = {'X-1', 'X-11', 'X-13', 'X-44'}   # flagged by the team as uncertain (user, 2026-10-17)
 REVIEWED_OK = {'X-24', 'X-32'}                 # manually re-reviewed and agreed (user, 2026-10-17)
 
@@ -40,11 +40,11 @@ def sheet_rows(path, name, skip):
 
 
 # ---- organizer labels + files ---------------------------------------------------------
-vdir = os.path.join(ROOT, 'data', 'open', 'videos')
+vdir = os.path.join(ROOT, os.pardir, 'data', 'open', 'videos')
 files = {norm_id(f): os.path.join(vdir, f) for f in os.listdir(vdir) if f.endswith('.mov')}
 md5 = {k: hashlib.md5(open(p, 'rb').read()).hexdigest() for k, p in files.items()}
 org = {}
-wb =openpyxl.load_workbook(os.path.join(ROOT, 'data', 'open', 'open_labels.xlsx'), read_only=True, data_only=True)
+wb =openpyxl.load_workbook(os.path.join(ROOT, os.pardir, 'data', 'open', 'open_labels.xlsx'), read_only=True, data_only=True)
 for r in list(wb.worksheets[0].iter_rows(values_only=True))[1:]:
     if not r or not r[0]:
         continue
@@ -60,7 +60,7 @@ for k in sorted(files, key=lambda s: int(s[2:])):
 canon = {k: ks[0] for ks in by_md5.values() for k in ks}
 
 # ---- human annotations ----------------------------------------------------------------
-hp = os.path.join(ROOT, 'data', 'Таблица_нарушений.xlsx')
+hp = os.path.join(ROOT, os.pardir, 'data', 'Таблица_нарушений.xlsx')
 human = collections.defaultdict(list)
 pairs = []
 for r in sheet_rows(hp, 'Нарушения', 3):
@@ -83,7 +83,7 @@ for r in sheet_rows(hp, 'Без нарушений', 1):
 
 # ---- camera layout --------------------------------------------------------------------
 layout = {}
-for r in sheet_rows(os.path.join(ROOT, 'data', 'Cash_Discipline_Cases_Rules.xlsx'), 'Clips', 1):
+for r in sheet_rows(os.path.join(ROOT, os.pardir, 'data', 'Cash_Discipline_Cases_Rules.xlsx'), 'Clips', 1):
     if r[0]:
         layout[norm_id(r[0])] = r[8]
 

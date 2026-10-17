@@ -1,0 +1,8 @@
+X-8 calls=14 errors=0 probe_wall=20.3s det=11.5s
+X-10 calls=8 errors=0 probe_wall=13.8s det=4.7s
+X-15 calls=28 errors=0 probe_wall=29.8s det=6.0s
+X-16 calls=17 errors=0 probe_wall=19.0s det=6.7s
+X-17 calls=9 errors=0 probe_wall=12.2s det=5.1s
+X-18 calls=24 errors=0 probe_wall=23.2s det=7.4s
+X-20 calls=14 errors=0 probe_wall=14.8s det=3.7s
+X-21 calls=20 errors=0 probe_wall=22.8s det=5.7s

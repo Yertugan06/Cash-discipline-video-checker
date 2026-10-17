@@ -1,0 +1,326 @@
+from copy import deepcopy
+
+import pytest
+
+from backend.codex import load_codex
+from backend.config import ROOT
+from backend.events import EventLog, MoneyFlow, StableState, build_events
+from backend.models import Event
+from backend.perception import load_perception_config
+from backend.rules import RULES, Context, Finding, evaluate_rules
+from backend.vision_types import Detection, Observation, Scene
+
+
+def event(event_type, timestamp=5, **facts):
+    return Event(type=event_type, timestamp_sec=timestamp, facts=facts)
+
+
+def context(events=(), sessions=None):
+    desk = Detection(label="desk", score=1, box=(0.2, 0.3, 0.8, 0.8))
+    laptop = Detection(label="laptop", score=1, box=(0.2, 0.4, 0.4, 0.5))
+    scene = Scene(
+        objects={"desk": desk, "laptop": laptop},
+        confidence=1,
+        zones={"desk": [(0.2, 0.3), (0.8, 0.3), (0.8, 0.8), (0.2, 0.8)]},
+    )
+    cash = Detection(label="cash", score=0.9, box=(0.55, 0.45, 0.65, 0.55), track_id="cash:1")
+    bag = cash.model_copy(update={"label": "bag", "track_id": "bag:1"})
+    document = cash.model_copy(update={"label": "document", "track_id": "document:1"})
+    coverage = {
+        key: True for key in ["roles", "desk", "safe", "door", "laptop", "counter", "hands", "cash"]
+    }
+    log = EventLog(sorted(events, key=lambda e: e.timestamp_sec), coverage, [], sessions or {})
+    return Context(
+        load_codex(ROOT / "codex.yaml"),
+        log,
+        [Observation(timestamp_sec=5, detections=[cash, bag, document])],
+        scene,
+        20,
+    )
+
+
+LEAVE = [event("EXIT", actor_id="person:1", role="cashier")]
+SESSION = {
+    "s1": {
+        "client_id": "person:2",
+        "start": 0,
+        "end": 5,
+        "observed_entry": True,
+        "cash_ids": ["cash-1"],
+        "counted_cash_ids": [],
+    }
+}
+COLLECT = [
+    event("ENTER", 1, actor_id="person:3", role="collector", observed_entry=True),
+    event(
+        "HANDOVER",
+        5,
+        from_id="person:3",
+        from_role="collector",
+        to_id="desk",
+        object="bag",
+        track_id="bag:1",
+    ),
+    event("EXIT", 9, actor_id="person:3", role="collector"),
+]
+
+
+def interval(kind, duration):
+    return [
+        event(kind + "_START", 2, condition_id="i1", actor_id="person:3"),
+        event(kind + "_END", 2 + duration, condition_id="i1"),
+    ]
+
+
+CASES = [
+    ("L-NO-CASH-ON-LEAVE", LEAVE, {}),
+    ("L-NO-BAG-ON-LEAVE", LEAVE, {}),
+    ("L-NO-DOCS-ON-LEAVE", LEAVE, {}),
+    ("L-PC-LOCKED", [event("SCREEN", 1, state="working"), *LEAVE], {}),
+    ("S-SAFE-CLOSED", interval("SAFE_UNATTENDED", 3.1), {}),
+    (
+        "S-CLEAN-DESK-HANDOVER",
+        [
+            event(
+                "CASH_STATE",
+                1,
+                cash_id="cash-1",
+                session_id="old",
+                location="desk",
+                track_id="cash:1",
+            ),
+            event("SESSION_START", 5, session_id="new", actor_id="person:2"),
+        ],
+        {},
+    ),
+    (
+        "A-DOOR-LOCK",
+        [
+            event("ENTER", 1, actor_id="person:1", observed_entry=True),
+            event("DOOR_OPEN", 1, state="open"),
+        ],
+        {},
+    ),
+    ("A-OUTSIDER-ZONE", interval("PERSON_IN_CASHIER_ZONE", 2.1), {}),
+    (
+        "A-SECOND-PERSON",
+        [
+            event(
+                "HANDOVER",
+                from_id="person:3",
+                from_role="client",
+                to_id="desk",
+                object="document",
+                session_id="s1",
+            )
+        ],
+        SESSION,
+    ),
+    ("C-COUNT-BEFORE-EXIT", [event("SESSION_END", session_id="s1", confirmed_exit=True)], SESSION),
+    (
+        "C-ID-BEFORE-CASH",
+        [event("HANDOVER", from_id="person:2", from_role="client", object="cash", session_id="s1")],
+        SESSION,
+    ),
+    ("K-COLLECTOR-DOC", COLLECT, {}),
+    ("K-SEAL-CHECK", COLLECT, {}),
+    (
+        "K-RECOUNT-BEFORE-SAFE",
+        [
+            event(
+                "CASH_STATE",
+                2,
+                cash_id="cash-1",
+                location="bag:bag:1",
+                bag_open_seen=True,
+                kind="bundle",
+                counted=False,
+            ),
+            event(
+                "CASH_STATE",
+                5,
+                cash_id="cash-1",
+                location="safe",
+                bag_open_seen=True,
+                kind="bundle",
+                counted=False,
+            ),
+        ],
+        {},
+    ),
+    ("W-NO-PERSONAL-ITEMS", interval("PERSONAL_ON_DESK", 3.1), {}),
+    ("W-NO-FOOD", interval("FOOD_NEAR_HEAD", 1), {}),
+]
+
+
+@pytest.mark.parametrize("identity,events,sessions", CASES, ids=[case[0] for case in CASES])
+def test_each_priority_one_rule_has_a_positive_and_clean_control(identity, events, sessions):
+    ctx = context(deepcopy(events), deepcopy(sessions))
+    assert len(RULES[identity](ctx)) == 1
+    assert RULES[identity](context()) == []
+    findings = evaluate_rules(ctx)
+    assert any(f.rule_id == identity for f in findings)
+
+
+def test_thresholds_and_required_counterevidence():
+    assert RULES["S-SAFE-CLOSED"](context(interval("SAFE_UNATTENDED", 3))) == []
+    assert RULES["A-OUTSIDER-ZONE"](context(interval("PERSON_IN_CASHIER_ZONE", 2))) == []
+    assert RULES["W-NO-PERSONAL-ITEMS"](context(interval("PERSONAL_ON_DESK", 3))) == []
+    door = context(CASES[6][1] + [event("HAND_ON_DOOR", 3, actor_id="person:1")])
+    assert RULES["A-DOOR-LOCK"](door) == []
+    missing_document = context(
+        CASES[10][1] + [event("ID_SHOWN", 1, session_id="s1")], deepcopy(SESSION)
+    )
+    assert RULES["C-ID-BEFORE-CASH"](missing_document) == []
+    bootstrap = deepcopy(SESSION)
+    bootstrap["s1"]["observed_entry"] = False
+    assert RULES["C-ID-BEFORE-CASH"](context(CASES[10][1], bootstrap)) == []
+    unfinished = context(
+        CASES[9][1] + [event("COUNT_START", 2, session_id="s1")], deepcopy(SESSION)
+    )
+    assert len(RULES["C-COUNT-BEFORE-EXIT"](unfinished)) == 1
+    counted = context(CASES[9][1] + [event("COUNT_END", 2, session_id="s1")], deepcopy(SESSION))
+    assert RULES["C-COUNT-BEFORE-EXIT"](counted) == []
+    inspected = context(COLLECT + [event("BAG_INSPECTED", 6, track_id="bag:1")])
+    assert RULES["K-SEAL-CHECK"](inspected) == []
+
+
+def test_hysteresis_and_money_provenance_survive_a_track_change():
+    state = StableState(0.6, 1.2)
+    assert state.push("open", 0) is None
+    assert state.push("closed", 0.2) is None
+    assert state.push("open", 0.4) is None
+    assert state.push("open", 1.1) == ("open", 0.4)
+    money = MoneyFlow()
+    first = Detection(label="cash", score=0.9, box=(0.1, 0.1, 0.2, 0.2), track_id="cash:1")
+    record, _ = money.record(first, 0, "session-one")
+    second = first.model_copy(update={"track_id": "cash:2", "box": (0.12, 0.1, 0.22, 0.2)})
+    record2, reassociated = money.record(second, 0.2, "session-two")
+    assert reassociated and record2.id == record.id
+    assert record2.session_id == "session-one"
+
+
+def test_event_builder_emits_cash_states_without_role_or_identity_invention():
+    ctx = context()
+    config = load_perception_config(ROOT / "config/perception.yaml")
+    observations = [
+        Observation(
+            timestamp_sec=t,
+            detections=[
+                Detection(label="cash", score=0.9, box=(0.5, 0.4, 0.6, 0.5), track_id="cash:1")
+            ],
+        )
+        for t in (0, 0.2, 0.4)
+    ]
+    log = build_events(ctx.scene, observations, config, 5, 1)
+    cash = [e for e in log.events if e.type == "CASH_STATE"]
+    assert len(cash) == 1 and cash[0].facts["kind"] == "cash"
+    assert cash[0].facts["location"] == "desk"
+    assert not log.coverage["roles"]
+
+
+def test_evidence_contains_real_jpegs_and_only_codex_citations(tmp_path):
+    from PIL import Image
+
+    from backend.evidence import build_violations
+
+    ctx = context()
+    frames = []
+    for i in range(3):
+        p = tmp_path / f"{i}.jpg"
+        Image.new("RGB", (64, 96), "green").save(p)
+        frames.append(p)
+    observations = [
+        Observation(timestamp_sec=i, detections=ctx.observations[0].detections) for i in range(3)
+    ]
+    finding = Finding("L-NO-CASH-ON-LEAVE", 1, {"track_ids": ["cash:1"]})
+    result = build_violations([finding], ctx.codex, frames, observations, ctx.scene, 1, tmp_path)[0]
+    assert [f.timestamp_sec for f in result.evidence_frames] == [0, 1, 2]
+    assert result.source == ctx.rule(finding.rule_id).source
+    assert result.source_url == ctx.rule(finding.rule_id).source_url
+    assert all(f.image_base64.startswith("/9j/") for f in result.evidence_frames)
+
+
+def test_client_leaning_and_worn_coat_are_not_zone_or_desk_violations():
+    from backend.vision_types import State, worn_or_carried
+
+    ctx = context()
+    ctx.scene.zones.update(
+        {
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    body_cashier = [(0.0, 0.0, 0.0) for _ in range(17)]
+    body_cashier[11] = body_cashier[12] = (0.15, 0.7, 0.9)
+    body_client = deepcopy(body_cashier)
+    body_client[11] = body_client[12] = (0.75, 0.7, 0.9)
+    cashier = Detection(
+        label="person",
+        score=0.9,
+        box=(0.05, 0.1, 0.35, 0.95),
+        track_id="person:1",
+        body=body_cashier,
+    )
+    client = Detection(
+        label="person", score=0.9, box=(0.25, 0.1, 0.7, 0.95), track_id="person:2", body=body_client
+    )
+    worn = Detection(label="coat", score=0.9, box=(0.3, 0.2, 0.65, 0.85), track_id="coat:1")
+    assert worn_or_carried(worn, [client], 0.07)
+    assert not worn_or_carried(
+        worn.model_copy(update={"box": (0.55, 0.4, 0.75, 0.6)}), [client], 0.07
+    )
+    observations = [
+        Observation(
+            timestamp_sec=i / 5,
+            detections=[
+                cashier.model_copy(deep=True),
+                client.model_copy(deep=True),
+                worn.model_copy(deep=True),
+            ],
+            states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+        )
+        for i in range(26)
+    ]
+    log = build_events(
+        ctx.scene, observations, load_perception_config(ROOT / "config/perception.yaml"), 5, 5.2
+    )
+    assert not any(
+        e.type == "PERSON_IN_CASHIER_ZONE_START" and e.facts["actor_id"] == "person:2"
+        for e in log.events
+    )
+    assert not any(e.type == "PERSONAL_ON_DESK_START" for e in log.events)
+
+
+def test_session_tags_initial_cash_and_does_not_end_on_unconfirmed_track_loss():
+    from backend.vision_types import State
+
+    ctx = context()
+    ctx.scene.zones.update(
+        {
+            "cashier": [(0, 0), (0.5, 0), (0.5, 1), (0, 1)],
+            "client": [(0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+        }
+    )
+    cashier = Detection(label="person", score=0.9, box=(0.02, 0.2, 0.18, 0.8), track_id="person:1")
+    client = Detection(label="person", score=0.9, box=(0.6, 0.2, 0.9, 0.8), track_id="person:2")
+    cash = Detection(label="cash", score=0.9, box=(0.5, 0.4, 0.6, 0.5), track_id="cash:1")
+    observations = []
+    for i in range(17):
+        objects = [cashier.model_copy(deep=True), cash.model_copy(deep=True)]
+        if i <= 3:
+            objects.append(client.model_copy(deep=True))
+        observations.append(
+            Observation(
+                timestamp_sec=i / 5,
+                detections=objects,
+                states={"person:1": State(value="seated", score=0.9, margin=0.8)},
+            )
+        )
+    log = build_events(
+        ctx.scene, observations, load_perception_config(ROOT / "config/perception.yaml"), 5, 3.4
+    )
+    tagged = [e for e in log.events if e.type == "CASH_STATE" and e.facts["session_id"]]
+    assert tagged and tagged[0].facts["session_id"] == "session-1"
+    assert any(e.type == "TRACK_LOST" and e.facts["actor_id"] == "person:2" for e in log.events)
+    assert not any(e.type == "SESSION_END" for e in log.events)

@@ -138,7 +138,7 @@ def to_sec(v):
 
 if __name__ == '__main__' and sys.argv[1] == 'smoke':
     root, clip, fps, side = sys.argv[2], sys.argv[3], float(sys.argv[4]), int(sys.argv[5])
-    gt = json.load(open(os.path.join(root, 'data', 'validation-private', 'gt.json')))
+    gt = json.load(open(os.path.join(root, 'validation-private', 'gt.json')))
     model, proc, load_s = load()
     print(f'load {load_s:.1f}s | vram after load {torch.cuda.memory_allocated() / 2**30:.2f} GB')
     r = run_jobs(model, proc, [{'clip': clip, 'path': gt[clip]['path'], 'fps': fps, 'short_side': side}],

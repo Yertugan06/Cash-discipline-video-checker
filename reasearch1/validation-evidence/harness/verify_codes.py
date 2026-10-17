@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from score_utils import code_match  # noqa: E402
 
 root, tag = sys.argv[1], sys.argv[2]
-P = os.path.join(root, 'data', 'validation-private')
+P = os.path.join(root, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 norm_of_group = {c['group']: c['human'][0]['norm1'] for c in gt.values() if c['violation'] and c['human_reliable']}
 n = {'pos': [0, 0], 'pair_neg': [0, 0]}

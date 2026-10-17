@@ -8,7 +8,7 @@ import torch  # noqa: E402
 import vlm  # noqa: E402
 
 root, clip = sys.argv[1], sys.argv[2]
-gt = json.load(open(os.path.join(root, 'data', 'validation-private', 'gt.json')))
+gt = json.load(open(os.path.join(root, 'validation-private', 'gt.json')))
 model, proc, load_s = vlm.load()
 print(f'load {load_s:.1f}s | vram after load {torch.cuda.memory_allocated() / 2**30:.2f} GB | '
       f'free/total {[round(x / 2**30, 2) for x in torch.cuda.mem_get_info()]}', flush=True)

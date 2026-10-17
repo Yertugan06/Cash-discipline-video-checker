@@ -1,0 +1,30 @@
+# 2026-10-17T19:03:52+05:00 re-score of teammate runs with the research1 scorer (preds kept outside the repo, in a job-tmp score root)
+q35_9b_fp8 40 
+f1_app 40 
+== q35_9b_fp8 | split=all | n=40 | missing=0 | errors=0
+video  TP=19 FN=2 FP=16 TN=3 | recall 19/21 (0.71, 0.97) | clean-FP 16/19 (0.62, 0.94) | acc 22/40
+   layout 'Back-office desk'    : TP=7 FN=1 FP=7 TN=2
+   layout 'Client-facing desk'  : TP=7 FN=0 FP=7 TN=0
+   layout 'Desk near the door'  : TP=5 FN=1 FP=2 TN=1
+loc[N.0] any-event: ±1s 8/22 ±2s 12/22 ±3s 13/22 ±5s 16/22 | top-1: ±1s 2/22 ±2s 3/22 ±3s 3/22 ±5s 6/22
+loc[N+0.5] any-event: ±1s 7/22 ±2s 8/22 ±3s 12/22 ±5s 15/22 | top-1: ±1s 2/22 ±2s 2/22 ±3s 3/22 ±5s 5/22
+   |nearest error| median 2.0s, events with any prediction 20/22
+events/violation clip mean 2.95 | events/clean clip mean 3.32
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 8/17, and within ±3s 5/17
+runtime s: median 53.0 max 344.2 total 3342
+== f1_app_gpu5fps | split=all | n=40 | missing=0 | errors=0
+video  TP=14 FN=7 FP=13 TN=6 | recall 14/21 (0.45, 0.83) | clean-FP 13/19 (0.46, 0.85) | acc 20/40
+   layout 'Back-office desk'    : TP=3 FN=5 FP=4 TN=5
+   layout 'Client-facing desk'  : TP=7 FN=0 FP=7 TN=0
+   layout 'Desk near the door'  : TP=4 FN=2 FP=2 TN=1
+loc[N.0] any-event: ±1s 8/22 ±2s 10/22 ±3s 10/22 ±5s 11/22 | top-1: ±1s 4/22 ±2s 4/22 ±3s 6/22 ±5s 8/22
+loc[N+0.5] any-event: ±1s 8/22 ±2s 10/22 ±3s 10/22 ±5s 11/22 | top-1: ±1s 3/22 ±2s 4/22 ±3s 6/22 ±5s 8/22
+   |nearest error| median 1.0s, events with any prediction 15/22
+events/violation clip mean 2.38 | events/clean clip mean 4.05
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 0/17, and within ±3s 0/17
+runtime s: median 51.4 max 294.6 total 3354
+q35_9b_fp8: mechanism (n=17) any 10, any within ±3s 6, top-1 code 6
+f1_app_gpu5fps: mechanism (n=17) any 1, any within ±3s 1, top-1 code 1
+constant top-1 most frequent codes (in-sample): 7/17
+constant top-2 most frequent codes (in-sample): 11/17
+constant top-3 most frequent codes (in-sample): 13/17

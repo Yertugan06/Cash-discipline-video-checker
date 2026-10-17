@@ -1,0 +1,54 @@
+{
+ "video": "X-4",
+ "verdict": "violation",
+ "violations": [
+  {
+   "rule": "dirty_desk",
+   "type": "Деньги предыдущего клиента не убраны при обслуживании следующего",
+   "timecode_sec": 56.0,
+   "codex_ids": [
+    "231-20-2"
+   ],
+   "evidence_t": [
+    55.0,
+    56.0,
+    57.0
+   ],
+   "verify_question": "Does a new client arrive while banknotes from the previous operation still lie on the desk?",
+   "description": "Деньги предыдущего клиента не убраны при обслуживании следующего (по кадрам около 56.0 с).",
+   "norm": {
+    "id": "231-20-2",
+    "act": "231",
+    "punkt": "п. 20 ч. 2",
+    "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "merge_cash",
+   "type": "Наличные разных клиентов смешаны на рабочем месте",
+   "timecode_sec": 66.0,
+   "codex_ids": [
+    "231-20-2",
+    "231-21"
+   ],
+   "evidence_t": [
+    65.0,
+    66.0,
+    67.0
+   ],
+   "verify_question": "Does the cashier put the new client's banknotes together with banknotes that were already on the desk?",
+   "description": "Наличные разных клиентов смешаны на рабочем месте (по кадрам около 66.0 с).",
+   "norm": {
+    "id": "231-20-2",
+    "act": "231",
+    "punkt": "п. 20 ч. 2",
+    "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+    "strength": "direct"
+   }
+  }
+ ],
+ "observations": []
+}

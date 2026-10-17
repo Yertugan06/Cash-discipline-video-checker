@@ -1,6 +1,6 @@
 """F4: proposer windows -> VLM verifier (VERIFY_V1) -> verdict.
 
-Proposal contract (written by any proposer): data/validation-private/proposals/<name>.json
+Proposal contract (written by any proposer): validation-private/proposals/<name>.json
   {"_meta": {"runtime_s": {clip: s}}, clip: [{"t": centre_sec, "score": float}, ...]}  ranked best-first
 Pre-registered: top-K=5 windows of 8 s, 4 fps, short side 448; verdict = any 'yes';
 event time = model time_sec (+window start) if inside the window else window centre; order = proposer rank.
@@ -13,7 +13,7 @@ import prompts, vlm  # noqa: E402
 
 ROOT, NAME = sys.argv[1], sys.argv[2]
 K = int(sys.argv[3]) if len(sys.argv) > 3 else 5
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 props = json.load(open(os.path.join(P, 'proposals', NAME + '.json')))
 prop_rt = props.get('_meta', {}).get('runtime_s', {})

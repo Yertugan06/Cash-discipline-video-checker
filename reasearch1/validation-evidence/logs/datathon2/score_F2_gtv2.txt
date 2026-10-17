@@ -1,0 +1,20 @@
+== F2_dinov2 | split=all | n=40 | missing=0 | errors=0
+video  TP=17 FN=4 FP=15 TN=4 | recall 17/21 (0.6, 0.92) | clean-FP 15/19 (0.57, 0.91) | acc 21/40
+loc[N.0] any-event: ±1s 3/22 ±2s 7/22 ±3s 8/22 ±5s 10/22 | top-1: ±1s 3/22 ±2s 7/22 ±3s 8/22 ±5s 10/22
+loc[N+0.5] any-event: ±1s 3/22 ±2s 5/22 ±3s 9/22 ±5s 10/22 | top-1: ±1s 3/22 ±2s 5/22 ±3s 9/22 ±5s 10/22
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 0/17, and within ±3s 0/17
+== F2_dinov2_raw | split=all | n=40 | missing=0 | errors=0
+video  TP=16 FN=5 FP=17 TN=2 | recall 16/21 (0.55, 0.89) | clean-FP 17/19 (0.69, 0.97) | acc 18/40
+loc[N.0] any-event: ±1s 5/22 ±2s 6/22 ±3s 7/22 ±5s 12/22 | top-1: ±1s 5/22 ±2s 6/22 ±3s 7/22 ±5s 12/22
+loc[N+0.5] any-event: ±1s 5/22 ±2s 6/22 ±3s 10/22 ±5s 12/22 | top-1: ±1s 5/22 ±2s 6/22 ±3s 10/22 ±5s 12/22
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 0/17, and within ±3s 0/17
+== F2_siglip2 | split=all | n=40 | missing=0 | errors=0
+video  TP=12 FN=9 FP=10 TN=9 | recall 12/21 (0.37, 0.76) | clean-FP 10/19 (0.32, 0.73) | acc 21/40
+loc[N.0] any-event: ±1s 0/22 ±2s 3/22 ±3s 6/22 ±5s 9/22 | top-1: ±1s 0/22 ±2s 3/22 ±3s 6/22 ±5s 9/22
+loc[N+0.5] any-event: ±1s 1/22 ±2s 3/22 ±3s 6/22 ±5s 8/22 | top-1: ±1s 1/22 ±2s 3/22 ±3s 6/22 ±5s 8/22
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 0/17, and within ±3s 0/17
+== F2_siglip2_raw | split=all | n=40 | missing=0 | errors=0
+video  TP=5 FN=16 FP=3 TN=16 | recall 5/21 (0.11, 0.45) | clean-FP 3/19 (0.06, 0.38) | acc 21/40
+loc[N.0] any-event: ±1s 1/22 ±2s 2/22 ±3s 3/22 ±5s 3/22 | top-1: ±1s 1/22 ±2s 2/22 ±3s 3/22 ±5s 3/22
+loc[N+0.5] any-event: ±1s 1/22 ±2s 2/22 ±3s 3/22 ±5s 3/22 | top-1: ±1s 1/22 ±2s 2/22 ±3s 3/22 ±5s 3/22
+mechanism (reliable subset n=17): human norm-1 code among predicted codes 0/17, and within ±3s 0/17

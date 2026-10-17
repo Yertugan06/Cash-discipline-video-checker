@@ -1,0 +1,20 @@
+baseline (kit defaults) all : recall 19/21 cleanFP 16/19 acc 22/40 | ±3s any 13/22 first 3/22 | ev/clip 3.1
+dev per-rule fires (violation clips of 12, clean clips of 12): {'client_left_count': (2, 1), 'door_open': (6, 5), 'food': (1, 1), 'leave_cash': (1, 0), 'leave_docs': (1, 0), 'leave_laptop': (1, 2), 'no_id': (3, 2), 'outsider': (3, 3), 'personal_items': (1, 1), 'phone': (1, 2), 'safe_open': (1, 4)}
+keep-list chosen on dev (fires more on violation than clean): ['client_left_count', 'door_open', 'leave_cash', 'leave_docs', 'no_id']
+best params on dev: {'smooth_k': 2, 'min_samples': 2, 'min_away_s': 3.0, 'safe_open_s': 4.0, 'door_open_s': 4.0}
+defaults+keep    dev    : recall 8/12 cleanFP 5/12 acc 15/24 | ±3s any 4/12 first 2/12 | ev/clip 1.2
+defaults+keep    LOCKBOX: recall 6/9 cleanFP 5/7 acc 8/16 | ±3s any 2/10 first 1/10 | ev/clip 1.2
+tuned+keep       dev    : recall 8/12 cleanFP 4/12 acc 16/24 | ±3s any 3/12 first 2/12 | ev/clip 1.2
+tuned+keep       LOCKBOX: recall 6/9 cleanFP 5/7 acc 8/16 | ±3s any 3/10 first 1/10 | ev/clip 1.4
+tuned, all rules dev    : recall 10/12 cleanFP 9/12 acc 13/24 | ±3s any 5/12 first 2/12 | ev/clip 2.3
+tuned, all rules LOCKBOX: recall 9/9 cleanFP 6/7 acc 10/16 | ±3s any 8/10 first 1/10 | ev/clip 3.2
+--- sampling-step sensitivity on saved 1 s states (kit default rules, all 40) ---
+step 2s offset 0: recall 19/21 cleanFP 16/19 acc 22/40 | ±3s any 14/22 first 5/22 | ev/clip 2.6
+step 2s offset 1: recall 19/21 cleanFP 15/19 acc 23/40 | ±3s any 13/22 first 5/22 | ev/clip 2.4
+step 3s offset 0: recall 18/21 cleanFP 18/19 acc 19/40 | ±3s any 10/22 first 4/22 | ev/clip 2.1
+step 3s offset 1: recall 19/21 cleanFP 16/19 acc 22/40 | ±3s any 14/22 first 7/22 | ev/clip 2.3
+step 3s offset 2: recall 18/21 cleanFP 15/19 acc 22/40 | ±3s any 11/22 first 5/22 | ev/clip 2.4
+step 4s offset 0: recall 19/21 cleanFP 14/19 acc 24/40 | ±3s any 12/22 first 5/22 | ev/clip 1.9
+step 4s offset 1: recall 16/21 cleanFP 15/19 acc 20/40 | ±3s any 6/22 first 4/22 | ev/clip 1.9
+step 4s offset 2: recall 19/21 cleanFP 15/19 acc 23/40 | ±3s any 10/22 first 4/22 | ev/clip 2.1
+step 4s offset 3: recall 17/21 cleanFP 15/19 acc 21/40 | ±3s any 11/22 first 5/22 | ev/clip 2.1

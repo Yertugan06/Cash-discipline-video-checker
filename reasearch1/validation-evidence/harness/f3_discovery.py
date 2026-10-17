@@ -17,7 +17,7 @@ import prompts, vlm  # noqa: E402
 ROOT, CFG = sys.argv[1], sys.argv[2]
 WHICH = sys.argv[3] if len(sys.argv) > 3 else 'all'
 LIMIT = int(sys.argv[4]) if len(sys.argv) > 4 else None
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 split = json.load(open(os.path.join(P, 'split.json')))
 CFGS = {'whole_1fps_s288': (None, 1.0, 288), 'whole_2fps_s288': (None, 2.0, 288),

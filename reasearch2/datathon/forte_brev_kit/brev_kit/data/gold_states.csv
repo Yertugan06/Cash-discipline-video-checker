@@ -1,0 +1,57 @@
+video;t;field;value;note
+X-28;3.0;cashier_at_desk;true;работает с таблицей
+X-28;3.0;laptop_screen;unlocked;таблица на экране
+X-28;13.0;cashier_at_desk;false;ушла
+X-28;13.0;laptop_screen;unlocked;экран не заблокирован (нарушение)
+X-29;12.0;cashier_at_desk;false;ушла
+X-29;12.0;laptop_screen;lock_screen;экран блокировки (норма)
+X-22;17.0;cashier_at_desk;false;ушла
+X-22;17.0;key_in_safe_lock;yes;ключ со связкой в замке (нарушение)
+X-22;17.0;safe_door;closed;
+X-22;17.0;laptop_screen;lock_screen;
+X-23;16.0;cashier_at_desk;false;ушла
+X-23;16.0;key_in_safe_lock;no;ключ забран (норма)
+X-23;16.0;safe_door;closed;
+X-23;16.0;laptop_screen;lock_screen;
+X-20;8.0;cashier_at_desk;true;сидит за столом
+X-20;8.0;safe_door;open;дверца сейфа открыта (нарушение)
+X-21;12.0;cashier_at_desk;true;
+X-21;12.0;safe_door;closed;сейф закрыт (норма)
+X-26;11.0;cashier_at_desk;false;уходит к двери
+X-26;11.0;desk_cash;true;пачка на столе (нарушение)
+X-27;23.0;cashier_at_desk;false;уходит
+X-27;23.0;desk_cash;false;стол чист (норма)
+X-15;18.0;cashier_at_desk;false;вышла
+X-15;18.0;desk_bag;true;зелёная сумка на столе (нарушение)
+X-40;20.0;desk_personal_items;true;пальто и сумка на столе
+X-46;14.0;desk_food_drink;true;пьёт из стакана
+X-46;14.0;cashier_action;eating_drinking;
+X-43;10.0;desk_food_drink;false;
+X-43;10.0;desk_personal_items;false;
+X-30;14.0;people_cashier_side;2;посторонний мужчина + кассир
+X-31;14.0;people_cashier_side;1;
+X-31;14.0;room_door;closed;дверь закрыта (норма)
+X-32;10.0;room_door;open;дверь не закрыта (нарушение)
+X-33;12.0;people_cashier_side;2;мужчина в белой рубашке за спиной кассира
+X-18;21.0;clients_at_desk;2;второй человек подаёт карточку
+X-37;12.0;clients_at_desk;1;клиент сидит во время пересчёта
+X-34;15.0;clients_at_desk;0;клиент ушёл к двери
+X-34;15.0;counting_machine_in_use;true;деньги в счётной машине
+X-38;33.0;desk_cash;true;пачка прошлого клиента на столе
+X-17;7.0;collector_present;true;инкассатор с сумкой
+X-17;7.0;desk_bag;true;зелёная сумка на столе
+X-2;10.0;id_document_visible;false;удостоверение не показано
+X-45;16.0;detector_in_use;true;купюры на детекторе
+X-44;16.0;detector_in_use;false;
+X-44;16.0;cashier_action;counting_by_hand;
+X-12;38.0;cashier_at_desk;false;уходит, свет выключен
+X-12;38.0;laptop_screen;off_or_closed;ноутбук закрыт (норма)
+X-11;20.0;cashier_at_desk;false;уходит, свет выключен
+X-11;20.0;laptop_screen;unlocked;экран светится (нарушение)
+X-1;21.0;cashier_action;counting_by_hand;пересчитывает пачку руками
+X-35;30.0;clients_at_desk;1;
+X-35;30.0;cashier_at_desk;true;
+X-35;42.5;safe_door;open;кассир у открытого сейфа (норма, пока она у сейфа)
+X-39;33.0;safe_door;open;
+X-24;10.0;cashier_at_desk;false;уходит к двери
+X-24;10.0;desk_documents;true;тёмный планшет/папка на столе

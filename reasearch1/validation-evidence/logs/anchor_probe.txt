@@ -1,0 +1,4 @@
+events 22 | anchors/min violation median 18.7 (range 4.7-34.3) | clean median 15.4 (range 7.3-27.0)
++-1s: anchor hits 18/22 | density-matched random expected 13.7/22
++-2s: anchor hits 19/22 | density-matched random expected 17.6/22
++-3s: anchor hits 21/22 | density-matched random expected 19.6/22

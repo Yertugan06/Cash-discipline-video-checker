@@ -1,0 +1,2 @@
+video  TP=11 FN=1 FP=9 TN=3 | recall 11/12 (0.65, 0.99) | clean-FP 9/12 (0.47, 0.91) | acc 14/24
+video  TP=6 FN=3 FP=6 TN=1 | recall 6/9 (0.35, 0.88) | clean-FP 6/7 (0.49, 0.97) | acc 7/16

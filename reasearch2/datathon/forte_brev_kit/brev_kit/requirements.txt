@@ -1,0 +1,7 @@
+# клиентская часть (скрипты brev_kit)
+pillow>=10
+requests>=2.31
+# опционально: эмбеддинги для other_to_codex.py (веса скачать заранее)
+sentence-transformers>=3.0
+# сервер модели ставится отдельно (на GPU-машине): pip install vllm   (или sglang)
+# системное: ffmpeg/ffprobe

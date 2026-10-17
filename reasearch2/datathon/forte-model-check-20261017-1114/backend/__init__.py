@@ -1,0 +1,1 @@
+"""Local cash-discipline checker."""

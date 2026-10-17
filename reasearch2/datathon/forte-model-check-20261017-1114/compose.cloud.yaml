@@ -1,0 +1,7 @@
+services:
+  checker:
+    volumes:
+      - ./runtime:/app/runtime
+      - ./backend:/app/backend:ro
+      - ./scripts:/app/scripts:ro
+      - ./tests:/app/tests:ro

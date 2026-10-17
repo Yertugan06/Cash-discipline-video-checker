@@ -1,0 +1,165 @@
+{
+  "checked_at_utc": "2026-10-17T12:10:38Z",
+  "cpu_count": 4,
+  "load_average": [
+    3.9541015625,
+    5.5400390625,
+    5.2431640625
+  ],
+  "containers": "forte-full-eval-20261017 | Up 38 minutes | forte-cash-checker:brev-l4 | \nforte-cloud-checker-1 | Up 40 minutes | forte-cash-checker:cuda | 127.0.0.1:8000->8000/tcp",
+  "workloads": {
+    "forte-cloud-checker-1": {
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "ExitCode": 0,
+        "Pid": 69095,
+        "StartedAt": "2026-10-17T11:29:47.288441991Z",
+        "FinishedAt": "0001-01-01T00:00:00Z"
+      },
+      "mounts": [
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/backend",
+          "Destination": "/app/backend",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/config",
+          "Destination": "/app/config",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/data",
+          "Destination": "/app/data",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/runtime",
+          "Destination": "/app/runtime",
+          "RW": true
+        },
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/scripts",
+          "Destination": "/app/scripts",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/tests",
+          "Destination": "/app/tests",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-model-check-20261017-1114/weights",
+          "Destination": "/app/weights",
+          "RW": false
+        }
+      ],
+      "recent_error_lines": []
+    },
+    "forte-full-eval-20261017": {
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "ExitCode": 0,
+        "Pid": 71516,
+        "StartedAt": "2026-10-17T11:32:06.836608467Z",
+        "FinishedAt": "0001-01-01T00:00:00Z"
+      },
+      "mounts": [
+        {
+          "Source": "/home/ubuntu/forte-cash-checker/backend",
+          "Destination": "/app/backend",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-cash-checker/data",
+          "Destination": "/app/data",
+          "RW": false
+        },
+        {
+          "Source": "/home/ubuntu/forte-cash-checker/eval_runtime",
+          "Destination": "/app/runtime",
+          "RW": true
+        },
+        {
+          "Source": "/home/ubuntu/forte-cash-checker/weights",
+          "Destination": "/app/weights",
+          "RW": false
+        }
+      ],
+      "recent_error_lines": []
+    }
+  },
+  "api_checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "expected": 200,
+      "latency_ms": 31.4
+    },
+    {
+      "path": "/api/v1/jobs/audit-missing",
+      "status": 401,
+      "expected": 401,
+      "latency_ms": 8.1
+    }
+  ],
+  "database_error": "attempt to write a readonly database",
+  "snapshots": [
+    {
+      "time": "12:10:39",
+      "memory": {
+        "MemTotal_mib": 15990.4,
+        "MemAvailable_mib": 6192.9,
+        "SwapTotal_mib": 0.0,
+        "SwapFree_mib": 0.0
+      },
+      "gpu": "NVIDIA L4, 23034 MiB, 18617 MiB, 50 %, 37 %, 76",
+      "gpu_processes": "69095, /usr/local/bin/python3.13, 2036 MiB\n71516, python, 2036 MiB\n102120, VLLM::EngineCore, 14526 MiB",
+      "containers": "{\"BlockIO\":\"662MB / 510MB\",\"CPUPerc\":\"194.61%\",\"Container\":\"ce4414ddbf8b916bdbcbeae88238db0f9c761a682a1fd4f61de04d8e9fa582f5\",\"ID\":\"ce4414ddbf8b\",\"MemPerc\":\"11.62%\",\"MemUsage\":\"1.814GiB / 15.62GiB\",\"Name\":\"forte-full-eval-20261017\",\"NetIO\":\"0B / 0B\",\"PIDs\":\"30\"}\n{\"BlockIO\":\"5.16MB / 14.3MB\",\"CPUPerc\":\"0.31%\",\"Container\":\"c103147832964716eff9283d1c3510ac4170112dfa78cc1d71f8f04d6cd45836\",\"ID\":\"c10314783296\",\"MemPerc\":\"10.76%\",\"MemUsage\":\"1.68GiB / 15.62GiB\",\"Name\":\"forte-cloud-checker-1\",\"NetIO\":\"3.59MB / 869kB\",\"PIDs\":\"32\"}",
+      "evaluation": {
+        "status": "processing",
+        "completed": 31,
+        "total": 40,
+        "failed": 0,
+        "current": [
+          "X-39"
+        ],
+        "last_video": [
+          "X-38"
+        ],
+        "last_runtime_sec": 256.3153425159999,
+        "seconds_since_update": 168.7
+      }
+    },
+    {
+      "time": "12:10:49",
+      "memory": {
+        "MemTotal_mib": 15990.4,
+        "MemAvailable_mib": 6198.7,
+        "SwapTotal_mib": 0.0,
+        "SwapFree_mib": 0.0
+      },
+      "gpu": "NVIDIA L4, 23034 MiB, 18643 MiB, 45 %, 49 %, 76",
+      "gpu_processes": "69095, /usr/local/bin/python3.13, 2036 MiB\n71516, python, 2036 MiB\n102120, VLLM::EngineCore, 14552 MiB",
+      "containers": "{\"BlockIO\":\"662MB / 510MB\",\"CPUPerc\":\"195.01%\",\"Container\":\"ce4414ddbf8b916bdbcbeae88238db0f9c761a682a1fd4f61de04d8e9fa582f5\",\"ID\":\"ce4414ddbf8b\",\"MemPerc\":\"11.62%\",\"MemUsage\":\"1.814GiB / 15.62GiB\",\"Name\":\"forte-full-eval-20261017\",\"NetIO\":\"0B / 0B\",\"PIDs\":\"30\"}\n{\"BlockIO\":\"5.16MB / 14.3MB\",\"CPUPerc\":\"0.31%\",\"Container\":\"c103147832964716eff9283d1c3510ac4170112dfa78cc1d71f8f04d6cd45836\",\"ID\":\"c10314783296\",\"MemPerc\":\"10.76%\",\"MemUsage\":\"1.68GiB / 15.62GiB\",\"Name\":\"forte-cloud-checker-1\",\"NetIO\":\"3.59MB / 869kB\",\"PIDs\":\"32\"}",
+      "evaluation": {
+        "status": "processing",
+        "completed": 31,
+        "total": 40,
+        "failed": 0,
+        "current": [
+          "X-39"
+        ],
+        "last_video": [
+          "X-38"
+        ],
+        "last_runtime_sec": 256.3153425159999,
+        "seconds_since_update": 178.9
+      }
+    }
+  ],
+  "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/root       267G  115G  153G  43% /"
+}

@@ -1,0 +1,11 @@
+{
+  "status": "failed",
+  "input": "synthetic RGB image, 464x848; no bank footage",
+  "purpose": "execution and timing check; does not measure detection accuracy",
+  "requested_device": "cuda",
+  "python": "3.13.16",
+  "repeats": 3,
+  "stages": {},
+  "error": "No username set in the environment",
+  "runtime_sec": 5.7322
+}

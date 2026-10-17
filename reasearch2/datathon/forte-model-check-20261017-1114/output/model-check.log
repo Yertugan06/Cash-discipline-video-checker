@@ -1,0 +1,25 @@
+2026-10-17 11:27:17,085 INFO Loading pinned RT-DETR, OWLv2, CLIP and RTMPose checkpoints
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+2026-10-17 11:27:29,721 INFO Models loaded in 12.63 s; Torch=cuda; RTMPose=cpu
+2026-10-17 11:27:29,728 INFO person: warm-up
+2026-10-17 11:27:32,065 INFO person: pass 1/3 completed in 0.0492 s
+2026-10-17 11:27:32,104 INFO person: pass 2/3 completed in 0.0386 s
+2026-10-17 11:27:32,141 INFO person: pass 3/3 completed in 0.0372 s
+2026-10-17 11:27:32,142 INFO scene: warm-up
+2026-10-17 11:27:32,776 INFO scene: pass 1/3 completed in 0.1976 s
+2026-10-17 11:27:32,956 INFO scene: pass 2/3 completed in 0.1792 s
+2026-10-17 11:27:33,144 INFO scene: pass 3/3 completed in 0.1879 s
+2026-10-17 11:27:33,144 INFO objects: warm-up
+2026-10-17 11:27:33,507 INFO objects: pass 1/3 completed in 0.1804 s
+2026-10-17 11:27:33,688 INFO objects: pass 2/3 completed in 0.1807 s
+2026-10-17 11:27:33,869 INFO objects: pass 3/3 completed in 0.1806 s
+2026-10-17 11:27:33,870 INFO state: warm-up
+2026-10-17 11:27:34,200 INFO state: pass 1/3 completed in 0.1037 s
+2026-10-17 11:27:34,304 INFO state: pass 2/3 completed in 0.1031 s
+2026-10-17 11:27:34,406 INFO state: pass 3/3 completed in 0.1022 s
+2026-10-17 11:27:34,406 INFO pose: warm-up
+2026-10-17 11:27:34,610 INFO pose: pass 1/3 completed in 0.0377 s
+2026-10-17 11:27:34,645 INFO pose: pass 2/3 completed in 0.0344 s
+2026-10-17 11:27:34,680 INFO pose: pass 3/3 completed in 0.0341 s
+2026-10-17 11:27:34,681 INFO All production model adapters passed execution checks
+2026-10-17 11:27:34,685 INFO Result saved to /app/runtime/model-check/result.json

@@ -1,0 +1,21 @@
+services:
+  checker:
+    image: forte-cash-checker:cpu
+    build: .
+    environment:
+      API_KEY: ${API_KEY:?Set API_KEY in your environment or .env}
+      SAMPLE_FPS: ${SAMPLE_FPS:-5}
+      DEVICE: ${DEVICE:-auto}
+      CPU_THREADS: ${CPU_THREADS:-4}
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    volumes:
+      - work:/app/runtime
+      - ./weights:/app/weights:ro
+      - ./config:/app/config:ro
+      - ./data:/app/data:ro
+    restart: unless-stopped
+
+volumes:
+  work:
+

@@ -17,7 +17,7 @@ from sklearn.preprocessing import StandardScaler
 
 ROOT, ENC = sys.argv[1], sys.argv[2]
 RAW = len(sys.argv) > 3 and sys.argv[3] == 'raw'  # shortcut control: no per-clip centring
-P = os.path.join(ROOT, 'data', 'validation-private')
+P = os.path.join(ROOT, 'validation-private')
 gt = json.load(open(os.path.join(P, 'gt.json')))
 MODELS = {'dinov2': ('facebook/dinov2-base', 'f9e44c814b77203eaa57a6bdbbd535f21ede1415'),
           'siglip2': ('google/siglip2-base-patch16-384', 'f775b65a79762255128c981547af89addcfe0f88')}

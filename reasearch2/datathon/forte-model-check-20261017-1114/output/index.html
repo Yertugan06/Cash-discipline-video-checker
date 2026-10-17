@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forte · GPU model check</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; color: #24222b; background: #f4f3f6; }
+    body { max-width: 1080px; margin: 32px auto; padding: 0 20px; }
+    h1 { font-size: clamp(24px, 5vw, 38px); margin-bottom: 8px; }
+    h2 { font-size: 20px; margin-top: 0; }
+    p { line-height: 1.5; }
+    .muted { color: #625e6b; }
+    .card { background: white; border: 1px solid #dedbe4; border-radius: 12px; padding: 22px; margin: 18px 0; }
+    #stage { font-size: 22px; font-weight: 650; color: #7143a2; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 6px; border-bottom: 1px solid #e9e7ed; }
+    th { font-size: 13px; color: #625e6b; }
+    .scroll { overflow: auto; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #211d29; color: #e8e1f2; padding: 16px; border-radius: 8px; max-height: 400px; overflow-y: auto; font-size: 12px; line-height: 1.6; }
+    a { color: #684090; }
+    summary { cursor: pointer; padding: 8px 0; font-weight: 600; }
+    #connection { min-height: 24px; }
+  </style>
+</head>
+<body>
+  <p class="muted">FORTE CASH CHECKER · BREV VALIDATION</p>
+  <h1>GPU execution and results</h1>
+  <p>GPU model checks, cloud service logs and evaluation of the supplied hackathon dataset.</p>
+  <section class="card" aria-label="Run progress">
+    <div id="stage" role="status">Connecting…</div>
+    <p id="hardware" class="muted"></p>
+    <p id="note"></p>
+    <p id="updated" class="muted"></p>
+    <p id="connection" class="muted" aria-live="polite"></p>
+    <p id="app-link"></p>
+  </section>
+  <section class="card">
+    <h2>First real hackathon clip · X-2</h2>
+    <p id="first-result">The first real-video report will appear here as soon as processing finishes.</p>
+  </section>
+  <section class="card">
+    <h2>Hackathon dataset evaluation</h2>
+    <p id="eval-summary">Waiting for the supplied dataset and GPU checks.</p>
+    <progress id="eval-progress" value="0" max="40" aria-label="Videos evaluated"></progress>
+    <p id="eval-result"></p>
+    <div class="scroll"><table><thead><tr><th>Clip</th><th>Label</th><th>Predictions</th><th>Runtime</th></tr></thead><tbody id="eval-rows"></tbody></table></div>
+  </section>
+  <section class="card">
+    <h2>Production model adapters</h2>
+    <p id="models-summary">Waiting for the CUDA image and model check.</p>
+    <div class="scroll"><table><thead><tr><th>Adapter</th><th>Execution device</th><th>Mean / pass</th><th>Minimum</th><th>Maximum</th></tr></thead><tbody id="model-rows"></tbody></table></div>
+    <p id="model-result"></p>
+  </section>
+  <section class="card">
+    <h2>145-second synthetic pipeline</h2>
+    <p id="pipeline-summary">Waiting for model checks.</p>
+    <p id="pipeline-result"></p>
+  </section>
+  <section class="card">
+    <h2>Live logs</h2>
+    <p class="muted">Refreshes every three seconds. Expand a log to inspect its latest lines.</p>
+    <div id="logs"></div>
+  </section>
+  <script>
+    const byId = id => document.getElementById(id);
+    const titles = { building: 'Building the CUDA image', models: 'Running the four model adapters', pipeline: 'Running the synthetic video pipeline', done: 'GPU checks completed', failed: 'Check failed', evaluating: 'Evaluating the hackathon videos', evaluated: 'Dataset evaluation completed' };
+    const allowedLogs = new Set(['build.log', 'download.log', 'model-check/run.log', 'model-check.log', 'synthetic-pipeline/run.log', 'pipeline-console.log', 'service.log', 'eval.log', 'first-video.log']);
+    const logPanels = new Map();
+    async function read(path, json = false) {
+      const response = await fetch(path, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+      return json ? response.json() : response.text();
+    }
+    function link(container, path, text) {
+      const element = document.createElement('a');
+      element.href = path;
+      element.textContent = text;
+      byId(container).replaceChildren(element);
+    }
+    async function refresh() {
+      try {
+        const progress = await read('progress.json', true);
+        byId('stage').textContent = titles[progress.stage] || progress.stage;
+        byId('hardware').textContent = progress.hardware || '';
+        byId('note').textContent = progress.note || '';
+        byId('updated').textContent = `Stage updated: ${progress.updated_at}`;
+        byId('connection').textContent = `Connected · checked ${new Date().toLocaleTimeString()}`;
+        if (progress.app_ready) link('app-link', 'http://localhost:8018', 'Open the cloud app');
+        if (progress.first_report_ready) link('first-result', 'first-video/index.html', 'Open X-2: predictions, evidence, labels and timeline');
+        if (progress.evaluation) {
+          const value = progress.evaluation;
+          byId('eval-progress').max = value.total;
+          byId('eval-progress').value = value.completed;
+          byId('eval-summary').textContent = `${value.completed}/${value.total} unique videos completed · ${value.failed} failed · processing: ${(value.current || []).join(' / ') || 'between videos'}`;
+          byId('eval-rows').replaceChildren();
+          for (const video of value.videos || []) {
+            const row = document.createElement('tr');
+            const labels = video.labels.map(label => `${label.rule_ids.join(' + ')} @ ${label.timestamp_sec}s`).join('; ') || 'No violation';
+            const predictions = video.status === 'failed' ? video.error : (video.violations.map(item => `${item.rule_id} @ ${item.timecode_sec.toFixed(1)}s`).join('; ') || 'No violation');
+            for (const text of [video.aliases.join(' / '), labels, predictions, `${video.runtime_sec.toFixed(2)} s`]) {
+              const td = document.createElement('td'); td.textContent = text; row.append(td);
+            }
+            byId('eval-rows').append(row);
+          }
+        }
+        if (progress.evaluation_report_ready) link('eval-result', 'gpu/index.html', 'Open evaluation results, evidence and timelines');
+        if (progress.models_ready) {
+          const result = await read('model-check/result.json', true);
+          byId('models-summary').textContent = result.status === 'passed'
+            ? `${result.gpu} · loaded in ${result.load_sec.toFixed(2)} s · peak Torch allocation ${result.peak_torch_memory_mib} MiB · ${result.repeats} measured passes per adapter`
+            : `Model check ${result.status}: ${result.error || ''}`;
+          byId('model-rows').replaceChildren();
+          for (const [name, value] of Object.entries(result.stages)) {
+            const row = document.createElement('tr');
+            for (const cell of [name, name === 'pose' ? result.pose_device : result.device, ...['mean_sec', 'min_sec', 'max_sec'].map(key => `${(value[key] * 1000).toFixed(1)} ms`)]) {
+              const td = document.createElement('td'); td.textContent = cell; row.append(td);
+            }
+            byId('model-rows').append(row);
+          }
+          link('model-result', 'model-check/result.json', 'Download full model result JSON');
+        }
+        if (progress.pipeline_ready) {
+          const result = await read('synthetic-pipeline/result.json', true);
+          byId('pipeline-summary').textContent = result.status === 'passed'
+            ? `${result.duration_sec} s input · ${result.sampled_frames} frames at ${result.sample_fps} fps · ${result.runtime_sec.toFixed(2)} s runtime · verdict: ${result.verdict} · ${result.warnings.length} coverage warnings. Sparse synthetic input does not establish the bank-video deadline.`
+            : `Pipeline ${result.status}: ${result.error || ''}`;
+          link('pipeline-result', 'synthetic-pipeline/result.json', 'Download pipeline result JSON');
+        }
+        const logs = (progress.logs || []).filter(path => allowedLogs.has(path));
+        await Promise.all(logs.map(async path => {
+          let pre = logPanels.get(path);
+          if (!pre) {
+            const details = document.createElement('details');
+            const summary = document.createElement('summary'); summary.textContent = path;
+            const anchor = document.createElement('a'); anchor.href = path; anchor.textContent = 'Open full log';
+            pre = document.createElement('pre'); pre.textContent = 'Loading…';
+            details.append(summary, anchor, pre); byId('logs').append(details); logPanels.set(path, pre);
+          }
+          try { pre.textContent = (await read(path)).split('\n').slice(-100).join('\n'); }
+          catch (error) { pre.textContent = String(error); }
+        }));
+      } catch (error) {
+        byId('connection').textContent = `Connection error: ${error}. Retrying…`;
+      }
+    }
+    async function poll() { await refresh(); setTimeout(poll, 3000); }
+    poll();
+  </script>
+</body>
+</html>

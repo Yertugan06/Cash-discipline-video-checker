@@ -1,0 +1,8 @@
+windows per set: {'pos': 22, 'pair_neg': 19, 'off_neg': 11, 'rand_neg': 19}
+pos       yes 16/22
+pair_neg  yes 15/19
+off_neg   yes 8/11
+rand_neg  yes 14/19
+parse failures 0 | code agreement on reliable yes-positives 7/12
+time error |t - (label+0.5)| on yes-positives: median 2.0s, <=1s 3/16, <=2s 8/16
+per-window total s: median 8.5 max 12.0 | peak VRAM 18.4 GB | in_tokens max 6468 | errors 0

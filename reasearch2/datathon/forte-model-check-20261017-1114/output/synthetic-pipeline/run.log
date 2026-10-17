@@ -1,0 +1,19 @@
+2026-10-17 11:27:37,450 INFO Generating 145 s of synthetic 464x848 pixels at 30 fps; no bank footage
+2026-10-17 11:27:44,137 INFO generated new fontManager
+2026-10-17 11:27:54,391 INFO Perception 1/725 sampled frames (0.1%); 13.46 s elapsed
+2026-10-17 11:28:00,910 INFO Perception 50/725 sampled frames (6.9%); 19.98 s elapsed
+2026-10-17 11:28:07,436 INFO Perception 100/725 sampled frames (13.8%); 26.51 s elapsed
+2026-10-17 11:28:13,951 INFO Perception 150/725 sampled frames (20.7%); 33.02 s elapsed
+2026-10-17 11:28:20,483 INFO Perception 200/725 sampled frames (27.6%); 39.55 s elapsed
+2026-10-17 11:28:27,033 INFO Perception 250/725 sampled frames (34.5%); 46.10 s elapsed
+2026-10-17 11:28:33,575 INFO Perception 300/725 sampled frames (41.4%); 52.64 s elapsed
+2026-10-17 11:28:40,112 INFO Perception 350/725 sampled frames (48.3%); 59.18 s elapsed
+2026-10-17 11:28:47,179 INFO Perception 400/725 sampled frames (55.2%); 66.25 s elapsed
+2026-10-17 11:28:53,979 INFO Perception 450/725 sampled frames (62.1%); 73.05 s elapsed
+2026-10-17 11:29:02,078 INFO Perception 500/725 sampled frames (69.0%); 81.15 s elapsed
+2026-10-17 11:29:10,952 INFO Perception 550/725 sampled frames (75.9%); 90.02 s elapsed
+2026-10-17 11:29:20,168 INFO Perception 600/725 sampled frames (82.8%); 99.24 s elapsed
+2026-10-17 11:29:29,189 INFO Perception 650/725 sampled frames (89.7%); 108.26 s elapsed
+2026-10-17 11:29:38,406 INFO Perception 700/725 sampled frames (96.6%); 117.48 s elapsed
+2026-10-17 11:29:42,576 INFO Perception 725/725 sampled frames (100.0%); 121.65 s elapsed
+2026-10-17 11:29:48,434 INFO Pipeline completed: {"input": "synthetic gray clip; no bank footage", "duration_sec": 145, "sample_fps": 5, "network": "none", "device": "cuda", "caveat": "Sparse synthetic scene; does not establish bank-video accuracy or the worst-case five-minute limit.", "status": "passed", "runtime_sec": 127.48354923800025, "under_300s": true, "sampled_frames": 725, "verdict": "no_violation", "violations": 0, "warnings": ["\u0420\u0430\u0431\u043e\u0447\u0430\u044f \u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0430\u044f \u0437\u043e\u043d\u044b \u043d\u0435 \u043e\u0442\u043a\u0430\u043b\u0438\u0431\u0440\u043e\u0432\u0430\u043d\u044b \u0443\u0432\u0435\u0440\u0435\u043d\u043d\u043e; \u0437\u0430\u0434\u0430\u0439\u0442\u0435 \u0440\u0443\u0447\u043d\u044b\u0435 \u0437\u043e\u043d\u044b.", "\u041d\u0435 \u043b\u043e\u043a\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u043d\u044b \u043e\u0431\u044a\u0435\u043a\u0442\u044b \u0441\u0446\u0435\u043d\u044b: desk, laptop, safe, door, counter", "\u0420\u043e\u043b\u044c \u043a\u0430\u0441\u0441\u0438\u0440\u0430 \u043d\u0435 \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u0430 \u0443\u0432\u0435\u0440\u0435\u043d\u043d\u043e; \u043f\u0440\u0430\u0432\u0438\u043b\u0430, \u0442\u0440\u0435\u0431\u0443\u044e\u0449\u0438\u0435 \u044d\u0442\u043e\u0439 \u0440\u043e\u043b\u0438, \u043e\u0442\u043a\u043b\u044e\u0447\u0435\u043d\u044b.", "\u041d\u0430\u043b\u0438\u0447\u043d\u044b\u0435 \u043d\u0435 \u0440\u0430\u0441\u043f\u043e\u0437\u043d\u0430\u043d\u044b \u0443\u0432\u0435\u0440\u0435\u043d\u043d\u043e; \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f \u043d\u0430\u043b\u0438\u0447\u043d\u044b\u0445 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u044b.", "\u041d\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442 \u0443\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u0445 \u0442\u043e\u0447\u0435\u043a \u0440\u0443\u043a; \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0438 \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u043e\u0432 \u043c\u043e\u0433\u043b\u0438 \u0431\u044b\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u044b."], "coverage": {"roles": false, "desk": false, "safe": false, "door": false, "laptop": false, "counter": false, "hands": false, "cash": false}, "events": 3, "debug_available": true}

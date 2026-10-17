@@ -1,0 +1,42 @@
+Unable to find image 'python:3.13-slim-bookworm' locally
+3.13-slim-bookworm: Pulling from library/python
+7fd1ebe418b5: Pulling fs layer
+29d8700fe216: Pulling fs layer
+aded561bdc17: Pulling fs layer
+29a6e787b2e0: Pulling fs layer
+29d8700fe216: Download complete
+29a6e787b2e0: Download complete
+d956f4b979ee: Download complete
+a5e642e55fad: Download complete
+aded561bdc17: Download complete
+7fd1ebe418b5: Download complete
+7fd1ebe418b5: Pull complete
+29a6e787b2e0: Pull complete
+29d8700fe216: Pull complete
+aded561bdc17: Pull complete
+Digest: sha256:a1165e272e578941b84abc79e4ab38a0305cd12803a5c4247979ac7655f4d641
+Status: Downloaded newer image for python:3.13-slim-bookworm
+Downloaded person/config.json
+Downloaded person/README.md
+Downloaded person/preprocessor_config.json
+Downloaded objects/README.md
+Downloaded objects/added_tokens.json
+Downloaded objects/config.json
+Downloaded objects/merges.txt
+Downloaded person/model.safetensors
+Downloaded objects/preprocessor_config.json
+Downloaded objects/special_tokens_map.json
+Downloaded objects/tokenizer_config.json
+Downloaded objects/vocab.json
+Downloaded states/README.md
+Downloaded states/config.json
+Downloaded states/merges.txt
+Downloaded objects/model.safetensors
+Downloaded states/preprocessor_config.json
+Downloaded states/special_tokens_map.json
+Downloaded states/tokenizer.json
+Downloaded states/tokenizer_config.json
+Downloaded states/vocab.json
+Downloaded states/model.safetensors
+Downloaded pose/rtmpose-m-wholebody.onnx
+Weights verified. Inference can now run offline.

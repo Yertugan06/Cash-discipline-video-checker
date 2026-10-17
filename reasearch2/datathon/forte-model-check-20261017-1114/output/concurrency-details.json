@@ -1,0 +1,44 @@
+{
+  "gpu_process_activity": "# gpu         pid   type     sm    mem    enc    dec    jpg    ofa     fb   ccpm    command \n# Idx           #    C/G      %      %      %      %      %      %     MB     MB    name \n    0      69095     C      -      -      -      -      -      -   2036      0    python3.13     \n    0      71516     C     16     16      -      -      -      -   2036      0    python         \n    0     102120     C     69     53      -      -      -      -  14608      0    VLLM::EngineCor\n    0      69095     C      -      -      -      -      -      -   2036      0    python3.13     \n    0      71516     C     28     27      -      -      -      -   2036      0    python         \n    0     102120     C     53     50      -      -      -      -  14608      0    VLLM::EngineCor\n    0      69095     C      -      -      -      -      -      -   2036      0    python3.13     \n    0      71516     C     37     36      -      -      -      -   2036      0    python         \n    0     102120     C     39     37      -      -      -      -  14608      0    VLLM::EngineCor\n",
+  "source_sha256": {
+    "backend/perception.py": "6277d16bb6203009f0633f6814e85c44e8974e52f662c7cd8de6d630a868369f",
+    "backend/calibration.py": "d0551ad3f6a5ff1379cad32bbaa7c9f7005eed013b158ee79aa636b71ce4294f",
+    "backend/events.py": "bb60734a1b4672653a74624c286c320fbfc89790335818066cceb9c46e0e84c0",
+    "backend/rules.py": "952ddcd1f6da9df15c8f83210e6939fd789bac09f36dc21b1dee89e39cd85049",
+    "backend/vision_types.py": "3787522f85d6444600e598e1f4212a7593848013261d5031217860ffa9f9a0d6",
+    "backend/evidence.py": "4d81e93d1b5addc31c1e2b194cde40286f0db61f13b2449af26503130f47d3f4",
+    "backend/pipeline.py": "f25f3a32e64d8afc8b1a66b71e4ca47b5027df845999ff32c1c61770da4806ad",
+    "config/perception.yaml": "0ed0a64cefad90e0319c3ba8d947695e444a091fe15178ac8213c5504792f170",
+    "config/overrides.yaml": "66ef96a57809c4ca39497303c1f5399ce596be3c1d20f5c5a8d6ea399fb0e787",
+    "codex.yaml": "6530efaa236f6dbfe880326566ee32bb5162cb67dbbaaecd9f688879abdbffc3",
+    "models.lock.json": "2f4a4b92ff8935282f98cf375b5c2c8941f51d414acadc0b028d675672e3d4a9"
+  },
+  "gpu_process_location": [
+    [],
+    [],
+    [
+      {
+        "pid": 102120,
+        "name": "VLLM::EngineCor",
+        "cwd": "/home/ubuntu/forte_brev_kit/brev_kit"
+      },
+      {
+        "pid": 101475,
+        "name": "vllm",
+        "cwd": "/home/ubuntu/forte_brev_kit/brev_kit"
+      },
+      {
+        "pid": 101472,
+        "name": "bash",
+        "cwd": "/home/ubuntu/forte_brev_kit/brev_kit"
+      }
+    ]
+  ],
+  "api_jobs": {
+    "done": 1
+  },
+  "error_scan": {
+    "forte-cloud-checker-1": [],
+    "forte-full-eval-20261017": []
+  }
+}
