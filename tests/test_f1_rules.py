@@ -40,7 +40,7 @@ def context(events=(), sessions=None):
     return Context(
         load_codex(ROOT / "config" / "f1_codex.yaml"),
         log,
-        [Observation(timestamp_sec=0, detections=[cash, bag, document])],
+        [Observation(timestamp_sec=i / 2, detections=[cash, bag, document]) for i in range(40)],
         scene,
         20,
     )
@@ -840,7 +840,9 @@ def test_the_laptop_seen_as_a_tablet_is_not_left_on_the_desk():
 
     ctx = context(deepcopy(LEAVE))
     on_laptop = Detection(label="tablet", score=0.5, box=(0.22, 0.41, 0.38, 0.49), track_id="t:9")
-    ctx.observations = [Observation(timestamp_sec=5, detections=[on_laptop])]
+    ctx.observations = [
+        Observation(timestamp_sec=i / 2, detections=[on_laptop]) for i in range(10, 19)
+    ]
     assert not l_no_docs_on_leave(ctx)
 
 
@@ -855,10 +857,76 @@ def test_an_item_counts_as_left_only_if_still_there_after_the_cashier_walks_off(
     document = Detection(label="document", score=0.5, box=(0.55, 0.45, 0.65, 0.55), track_id="d:1")
     later = [] if picked_up else [document]
     ctx.observations = [
-        Observation(timestamp_sec=5, detections=[document]),
-        Observation(timestamp_sec=7, detections=later),
+        Observation(timestamp_sec=i / 2, detections=[document] if i < 14 else later)
+        for i in range(10, 19)
     ]
     assert len(l_no_docs_on_leave(ctx)) == expected
+
+
+@requires_cv2
+@pytest.mark.parametrize(
+    "identity", ["L-NO-CASH-ON-LEAVE", "L-NO-DOCS-ON-LEAVE", "L-NO-BAG-ON-LEAVE"]
+)
+@pytest.mark.parametrize("missing", [{5}, {7}, {5, 7}])
+def test_leave_items_survive_missing_detections_at_the_exact_check_times(identity, missing):
+    ctx = context(deepcopy(LEAVE))
+    for frame in ctx.observations:
+        if frame.timestamp_sec in missing:
+            frame.detections = []
+        elif frame.timestamp_sec == 8.5:
+            frame.detections = [d.model_copy(update={"score": 0.4}) for d in frame.detections]
+    findings = RULES[identity](ctx)
+    assert len(findings) == 1
+    assert findings[0].timestamp_sec == 5
+    assert findings[0].confidence == 0.4  # Include confidence from the later evidence window.
+
+
+@requires_cv2
+@pytest.mark.parametrize("timestamps", [[5, 7], [0], [5, 5, 7, 7]])
+def test_leave_evidence_needs_repeated_observations_in_each_bounded_window(timestamps):
+    ctx = context(deepcopy(LEAVE))
+    items = ctx.observations[0].detections
+    ctx.observations = [Observation(timestamp_sec=t, detections=items) for t in timestamps]
+    assert RULES["L-NO-DOCS-ON-LEAVE"](ctx) == []
+
+
+@requires_cv2
+def test_leave_evidence_does_not_count_one_nearby_detection_for_two_observations():
+    ctx = context(deepcopy(LEAVE))
+    items = ctx.observations[0].detections
+    ctx.observations = [
+        Observation(timestamp_sec=t, detections=items if detected else [])
+        for t, detected in [(5, False), (5.3, True), (7, False), (7.3, True)]
+    ]
+    assert RULES["L-NO-DOCS-ON-LEAVE"](ctx) == []
+
+
+@requires_cv2
+def test_item_leave_requires_the_cashier_to_remain_away_for_the_confirmation_delay():
+    ctx = context(interval("WORKSTATION_AWAY", 1))
+    assert ctx.leaves()  # Other leave rules keep their existing departure semantics.
+    assert RULES["L-NO-DOCS-ON-LEAVE"](ctx) == []
+
+
+@requires_cv2
+def test_a_short_away_interval_does_not_hide_a_following_sustained_departure():
+    ctx = context(
+        [
+            event("WORKSTATION_AWAY_START", 5, condition_id="away", actor_id="person:1"),
+            event("WORKSTATION_AWAY_END", 6, condition_id="away"),
+            event("WORKSTATION_AWAY_START", 6.5, condition_id="away", actor_id="person:1"),
+            event("WORKSTATION_AWAY_END", 10.5, condition_id="away"),
+        ]
+    )
+    assert [f.timestamp_sec for f in RULES["L-NO-DOCS-ON-LEAVE"](ctx)] == [6.5]
+
+
+@requires_cv2
+def test_an_item_is_not_confirmed_left_if_the_recording_ends_before_the_later_window():
+    ctx = context(deepcopy(LEAVE))
+    ctx.duration = 6.5
+    ctx.observations = [o for o in ctx.observations if o.timestamp_sec < ctx.duration]
+    assert RULES["L-NO-DOCS-ON-LEAVE"](ctx) == []
 
 
 @requires_cv2

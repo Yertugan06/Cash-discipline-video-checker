@@ -74,10 +74,12 @@ class Context:
                 start = starts.pop(key)
                 yield start, event.timestamp_sec - start.timestamp_sec
 
-    def leaves(self):
+    def leaves(self, minimum_away: float = 0.6) -> list[Event]:
         candidates = [e for e in self.events("EXIT") if e.facts.get("role") == "cashier"]
         candidates += [
-            event for event, duration in self.intervals("WORKSTATION_AWAY") if duration >= 0.6
+            event
+            for event, duration in self.intervals("WORKSTATION_AWAY")
+            if duration >= minimum_away
         ]
         output = []
         for event in sorted(candidates, key=lambda e: e.timestamp_sec):
@@ -87,6 +89,9 @@ class Context:
 
     def on_desk(self, timestamp: float, labels: set[str]) -> list[Detection]:
         frame = self.nearby(min(timestamp + 0.2, self.duration))
+        return self.items_on_desk(frame, labels)
+
+    def items_on_desk(self, frame: Observation, labels: set[str]) -> list[Detection]:
         people = [d for d in frame.detections if d.label == "person"]
         # The open-vocabulary "tablet"/"document" prompts also fire on the laptop and the
         # counter themselves; those are workstation fixtures, not items left on the desk.
@@ -104,6 +109,21 @@ class Context:
             )
         ]
 
+    def persistent_on_desk(
+        self, start: float, end: float, labels: set[str]
+    ) -> dict[str, Detection]:
+        tracks: dict[str, dict[float, Detection]] = {}
+        for frame in self.observations:
+            if start <= frame.timestamp_sec <= end:
+                for item in self.items_on_desk(frame, labels):
+                    tracks.setdefault(item.track_id, {})[frame.timestamp_sec] = item
+        # Corroborate each track in distinct observations; never reuse a nearest frame.
+        return {
+            track_id: min(samples.values(), key=lambda d: d.score)
+            for track_id, samples in tracks.items()
+            if len(samples) >= 2
+        }
+
     def has_event(self, kind: str, start: float, end: float, **facts) -> bool:
         return any(
             start <= event.timestamp_sec <= end
@@ -116,16 +136,20 @@ def left_with(ctx: Context, rule_id: str, labels: set[str]) -> list[Finding]:
     if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("desk"):
         return []
     result = []
-    for leave in ctx.leaves():
+    for leave in ctx.leaves(minimum_away=LEFT_BEHIND_SEC):
         # Left behind = still on the desk a moment after the cashier walked off; a cashier
-        # standing up usually picks the item up on the way.
+        # standing up usually picks the item up on the way. A shorter absence cannot
+        # confirm this: the later sample would show the item after the cashier returned.
         start, later = leave.timestamp_sec, leave.timestamp_sec + LEFT_BEHIND_SEC
         facts: dict = {"actor_id": leave.facts.get("actor_id", "")}
         if ctx.desk_objects is None:
-            kept = {d.track_id for d in ctx.on_desk(later, labels)}
-            objects = [d for d in ctx.on_desk(start, labels) if d.track_id in kept]
+            visible = ctx.persistent_on_desk(
+                start - LEFT_BEHIND_SEC / 2, start + LEFT_BEHIND_SEC / 2, labels
+            )
+            kept = ctx.persistent_on_desk(later, later + LEFT_BEHIND_SEC, labels)
+            objects = [d for track_id, d in visible.items() if track_id in kept]
             facts["track_ids"] = [d.track_id for d in objects]
-            confidence = min((d.score for d in objects), default=0)
+            confidence = min((min(d.score, kept[d.track_id].score) for d in objects), default=0)
         else:
             objects = [
                 o

@@ -37,6 +37,7 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A17](A17-leave-rule-fixes/) | agent (datathon) | A16 + leave rules: laptop not a tablet, away = out of laptop reach, item still on desk 2 s later | as A14 | 26/42 (files) | 12/22 | 6/20 | - | 144.4 s | live; replay = live on all 42 files |
 | [A18](A18-desk-object-history/) | agent (offline replay) | Desk objects by history: items found by desk change (emptiest moment of the clip as background), named only when 2 clues agree (origin zone, counter ran, detector label) | as A14 + OpenCV | 22/40 (replay; A17 25) | - | 6/19 (A17 5) | - | 74 s for 40 clips (CPU) | rejected: failed the agreed bar; "any item left" cuts misses 10 -> 7 but clean FP 5 -> 9 |
 | [A19](A19-desk-objects-strict-origin/) | agent (offline replay) | A18 + strict origin (hand inside the open safe / on the counter) + blob shape filter; pre-registered, one run | as A18 | 22/40 (replay) | - | 5/19 | - | ~75 s for 40 clips (CPU) | rejected: 13 missed; naming items from history doesn't beat the detector without new labels |
+| [ORCH-L](ORCH-leave-persistence/) | orch/leave (offline replay) | Night + corroborated leave evidence and absence confirmation | as A17 | 27/40 | 11/21 | 3/19 | see report | - | measured offline; loss-seed mean 25.33 -> 26.33/40; no verdict regressions |
 
 ## Takeaways so far
 
