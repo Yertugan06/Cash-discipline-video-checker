@@ -1065,3 +1065,12 @@ def test_a_seated_cashier_in_front_of_the_glass_door_is_not_away():
     )
     away = [e.timestamp_sec for e in log.events if e.type == "WORKSTATION_AWAY_START"]
     assert away == [5.0]
+
+
+@requires_cv2
+def test_a_cash_bag_left_on_the_desk_is_cash_left_unattended():
+    ctx = context(deepcopy(LEAVE))
+    for frame in ctx.observations:
+        frame.detections = [d for d in frame.detections if d.label == "bag"]
+    findings = RULES["L-NO-CASH-ON-LEAVE"](ctx)
+    assert [f.facts["track_ids"] for f in findings] == [["bag:1"]]

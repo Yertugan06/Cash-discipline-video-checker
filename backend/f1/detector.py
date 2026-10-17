@@ -298,7 +298,7 @@ def _extra_template_facts(
     is a one-off translation from the legacy F1 facts to a display value."""
     if rule_id == "L-NO-CASH-ON-LEAVE":
         labels = {str(tid).split(":", 1)[0] for tid in legacy_facts.get("track_ids", [])}
-        label_ru = {"cash": "наличные", "bundle": "пачка наличных"}
+        label_ru = {"cash": "наличные", "bundle": "пачка наличных", "bag": "сумка с ценностями"}
         translated = sorted(label_ru.get(label, label) for label in labels)
         return {"object": "/".join(translated) or "наличные"}
     if rule_id == "A-OUTSIDER-ZONE":

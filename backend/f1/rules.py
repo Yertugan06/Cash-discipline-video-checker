@@ -168,7 +168,8 @@ def left_with(ctx: Context, rule_id: str, labels: set[str]) -> list[Finding]:
 
 
 def l_no_cash_on_leave(ctx: Context) -> list[Finding]:
-    return left_with(ctx, "L-NO-CASH-ON-LEAVE", {"cash", "bundle"})
+    # The Knowledge Pack's mechanism for this id: "cash or a cash bag is visible on the desk".
+    return left_with(ctx, "L-NO-CASH-ON-LEAVE", {"cash", "bundle", "bag"})
 
 
 def l_no_bag_on_leave(ctx: Context) -> list[Finding]:
