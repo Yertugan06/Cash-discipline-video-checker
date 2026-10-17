@@ -1,0 +1,30 @@
+# systemd unit for the app container (architecture.md §7, §8: "restart
+# policies on; readiness gate on; uptime probe on"). Docker Compose already
+# sets `restart: unless-stopped` on the container itself; this unit makes
+# sure `docker compose up` for this project also comes back after a host
+# reboot, without relying on the Docker daemon's own "restart containers on
+# boot" setting.
+#
+# Install (adjust WorkingDirectory/User to the VM's checkout path):
+#   sudo cp deploy/forte-checker.service /etc/systemd/system/forte-checker.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now forte-checker.service
+#   sudo systemctl status forte-checker.service
+#   journalctl -u forte-checker.service -f
+[Unit]
+Description=Forte cash-discipline checker (FastAPI app, Docker Compose)
+After=network.target docker.service vllm.service
+Wants=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=ubuntu
+WorkingDirectory=/home/ubuntu/hackathon
+EnvironmentFile=/home/ubuntu/hackathon/.env
+ExecStart=/usr/bin/docker compose -f compose.yaml up -d --remove-orphans
+ExecStop=/usr/bin/docker compose -f compose.yaml down
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target

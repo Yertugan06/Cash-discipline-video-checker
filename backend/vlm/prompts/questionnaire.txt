@@ -1,0 +1,29 @@
+The image is one frame from an overhead camera in a small bank cash room.
+Typical scene: a cashier's desk with a laptop, a desk phone, a banknote counting machine and a small banknote detector;
+a grey metal safe/cabinet (sometimes on a white pedestal); a glass door to the room; a client may sit or stand on the other side of the desk;
+a cash collector (инкассатор) may bring or take a green collection bag. The camera angle and furniture layout can differ between videos.
+
+Fill every field:
+- cashier_at_desk: the cashier (bank employee working with cash) is at the cashier's workplace — sitting or standing at the desk on the cashier side.
+- cashier_in_room: the cashier is anywhere inside the room (e.g. at the safe), even if not at the desk. false if the cashier walked out or is behind the glass door outside.
+- people_cashier_side: number of people on the cashier's side of the desk or deep inside the room (cashier included). Clients sitting/standing at the client side of the desk are NOT counted.
+- clients_at_desk: number of non-employees sitting or standing at the client side of the desk (being served or waiting there).
+- person_at_door: someone is entering or leaving through the room door right now.
+- collector_present: a cash collector is in the room (usually carries/handles a green collection bag, wears a dark jacket).
+- desk_cash: banknotes or bundles of banknotes lie on the desk surface (not inside the counting machine).
+- desk_bag: a collection bag (often green fabric) lies on the desk.
+- desk_documents: papers, folders, a tablet or a notebook with documents lie on the desk.
+- desk_personal_items: personal items on the desk or chair: coat/jacket, handbag, backpack, wallet.
+- desk_food_drink: food, a cup, a bottle or a snack is on the desk or in someone's hand at the desk.
+- phone_in_cashier_hand: the cashier holds a mobile phone.
+- id_document_visible: an ID card or passport is visible in someone's hand or on the desk.
+- counting_machine_in_use: banknotes are being fed into / taken out of the counting machine, or are in its tray.
+- detector_in_use: banknotes are placed on or held at the small banknote detector.
+- safe_door: is the door of the metal safe/cabinet open or closed.
+- key_in_safe_lock: is a key (often with a keychain) sticking out of the safe lock. Zoom mentally into the lock area; if you cannot tell, use not_visible.
+- laptop_screen: unlocked = a working screen (spreadsheet, application, desktop); lock_screen = Windows lock/login screen (full-screen picture, clock); off_or_closed = dark screen or lid closed.
+- room_door: is the room's glass door open or closed.
+- cash_in_hands_of: who holds banknotes right now.
+- cashier_action: the main thing the cashier is doing in this frame (not_present if the cashier is not visible).
+
+The image below is one frame, at time {t} s.

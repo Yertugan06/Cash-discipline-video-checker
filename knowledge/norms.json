@@ -1,0 +1,222 @@
+[
+  {
+    "norm_id": "231-20-2",
+    "act": "231",
+    "punkt": "п. 20 ч. 2",
+    "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-22",
+    "act": "231",
+    "punkt": "п. 22",
+    "quote": "Кассовому работнику не допускается покидать рабочее место до окончания обслуживания клиента.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z114:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%BC%D1%83%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D1%83%20%D0%BD%D0%B5%20%D0%B4%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-80-1",
+    "act": "231",
+    "punkt": "п. 80",
+    "quote": "ключей от специальных устройств, находящихся на рабочем месте кассового работника, предназначенных для хранения наличных денег (металлический шкаф, сейф, тележка, ящики стола), определяется внутренними документами банка, обеспечивающими исключение их несанкционированного использования",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%B9%20%D0%BE%D1%82%20%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%2C",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "53-71-9",
+    "act": "53",
+    "punkt": "п. 71 пп. 9)",
+    "quote": "при неактивности пользователя более 30 (тридцати) минут информационная система автоматически завершает сеанс работы пользователя либо блокирует рабочую станцию или ноутбук с возможностью разблокировки только при вводе аутентификационных данных пользователя",
+    "url": "https://adilet.zan.kz/rus/docs/V2600038336#z239:~:text=%D0%BF%D1%80%D0%B8%20%D0%BD%D0%B5%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F%20%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-80-3",
+    "act": "231",
+    "punkt": "п. 80",
+    "quote": "Порядок хранения, выдачи и передачи ценностей, печатей, ключей и кодов от электронных и механических замков кладовой и (или) сейфовой комнаты",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B8%20%D0%B8",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-20-2b",
+    "act": "231",
+    "punkt": "п. 20 ч. 2",
+    "quote": "Все ранее принятые наличные деньги хранятся в специальных устройствах, находящихся на рабочем месте кассового работника, закрывающихся на ключ, предназначенных для хранения наличных денег (металлический шкаф, сейф, тележка, ящики стола, тумба).",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%92%D1%81%D0%B5%20%D1%80%D0%B0%D0%BD%D0%B5%D0%B5%20%D0%BF%D1%80%D0%B8%D0%BD%D1%8F%D1%82%D1%8B%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-21",
+    "act": "231",
+    "punkt": "п. 21",
+    "quote": "кассовый работник принимает наличные деньги по каждому приходному кассовому документу отдельно",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z113:~:text=%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D0%B5%D1%82%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "14-8-1",
+    "act": "14",
+    "punkt": "п. 8 ч. 1",
+    "quote": "8. Кассовый узел подлежит изолированию от других производственных, подсобных, подвальных и служебных помещений одним закрывающимся служебным входом.",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z49:~:text=8.%20%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%83%D0%B7%D0%B5%D0%BB%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B5%D0%B6%D0%B8%D1%82",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-20-1",
+    "act": "231",
+    "punkt": "п. 20 ч. 1",
+    "quote": "Наличные деньги принимаются и пересчитываются кассовым работником в присутствии клиента.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z111:~:text=%D0%9D%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5%20%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D1%8E%D1%82%D1%81%D1%8F%20%D0%B8",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-19-1",
+    "act": "231",
+    "punkt": "п. 19 пп. 1)",
+    "quote": "проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством сервиса цифровых документов",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-7",
+    "act": "231",
+    "punkt": "п. 7",
+    "quote": "Кассовые операции по приему и выдаче наличных денег банк осуществляет после принятия мер по надлежащей проверке",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z76:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%D1%83%20%D0%B8",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-19-2b",
+    "act": "231",
+    "punkt": "п. 19 пп. 2)",
+    "quote": "с проверкой на подлинность и платежность наличных денег в соответствии с пунктами 57 и 58 Правил",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z445:~:text=%D1%81%20%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%BE%D0%B9%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B8%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D1%8C",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-12-1",
+    "act": "231",
+    "punkt": "п. 12 ч. 1",
+    "quote": "Хранение личных вещей, наличных денег и ценностей работников банка осуществляется вне кассового узла в порядке, установленном внутренними документами банка.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z81:~:text=%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85%20%D0%B2%D0%B5%D1%89%D0%B5%D0%B9%2C%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-12-2",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "Допускается внос работниками банка в кассовый узел лекарственных средств, медицинских изделий и средств связи",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0",
+    "strength": "indirect",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-12-2b",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "средств связи, не имеющих функции фото и видео фиксации",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-24-3",
+    "act": "231",
+    "punkt": "п. 24 пп. 3)",
+    "quote": "проверяет целостность сумки",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z121",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-24-4",
+    "act": "231",
+    "punkt": "п. 24 пп. 4)",
+    "quote": "проверяет правильность пломбирования сумки",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z122:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D1%8F%D0%B5%D1%82%20%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D1%8C%20%D0%BF%D0%BB%D0%BE%D0%BC%D0%B1%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D1%81%D1%83%D0%BC%D0%BA%D0%B8.",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-74-1",
+    "act": "231",
+    "punkt": "п. 74",
+    "quote": "Банки обеспечивают хранение наличных денег в кладовых и (или) сейфовой комнате после их учета в автоматизированной цифровой системе в соответствии с внутренними документами банка.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z220:~:text=%D0%91%D0%B0%D0%BD%D0%BA%D0%B8%20%D0%BE%D0%B1%D0%B5%D1%81%D0%BF%D0%B5%D1%87%D0%B8%D0%B2%D0%B0%D1%8E%D1%82%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  },
+  {
+    "norm_id": "231-42",
+    "act": "231",
+    "punkt": "п. 42",
+    "quote": "Кассовые операции по пересчету, сортировке и упаковке наличных денег осуществляются кассовым работником в присутствии контролирующего работника, за исключением случаев совершения кассовых операций по приему и выдаче наличных денег клиенту.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z163:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%BF%D0%B5%D1%80%D0%B5%D1%81%D1%87%D0%B5%D1%82%D1%83%2C",
+    "strength": "direct",
+    "human_verified": false,
+    "verified_by": null,
+    "verified_at": null
+  }
+]

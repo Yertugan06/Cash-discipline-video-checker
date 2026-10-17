@@ -1,0 +1,3 @@
+# Keys are SHA-256 video hashes, never clip names or labels. Empty means automatic calibration.
+# Coordinates below each entry must be normalised to [0,1]. Example structure in README.md.
+videos: {}

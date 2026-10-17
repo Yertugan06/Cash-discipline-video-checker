@@ -1,0 +1,37 @@
+# systemd unit for the perception VLM server (architecture.md §7, §8).
+#
+# Install (adjust WorkingDirectory/User to the VM's checkout path and the
+# VLM_MODEL_PATH env var to where the Qwen3.5-9B checkpoint was copied):
+#   sudo cp deploy/vllm/vllm.service /etc/systemd/system/vllm.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now vllm.service
+#   sudo systemctl status vllm.service
+#   journalctl -u vllm.service -f
+[Unit]
+Description=vLLM perception server (Qwen3.5-9B FP8) for the cashier-violation service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/hackathon
+Environment=VLM_MODEL_PATH=/home/ubuntu/hackathon/models/Qwen3.5-9B
+# Environment=VLM_MODEL_PATH=/home/ubuntu/hackathon/models/Qwen3-VL-4B   # fallback L2, see serve.sh
+Environment=VLM_SERVED_MODEL_NAME=Qwen/Qwen3.5-9B
+ExecStart=/home/ubuntu/hackathon/deploy/vllm/serve.sh
+Restart=always
+RestartSec=5
+# vLLM init alone takes ~225 s (eager) + weight load (architecture.md §6); give it room.
+TimeoutStartSec=600
+TimeoutStopSec=30
+
+# Locality: no outbound network needed to serve (architecture.md §8); the
+# offline env vars are also set inside serve.sh, repeated here for anyone
+# invoking the ExecStart binary directly outside the script during debugging.
+Environment=HF_HUB_OFFLINE=1
+Environment=TRANSFORMERS_OFFLINE=1
+Environment=VLLM_NO_USAGE_STATS=1
+Environment=DO_NOT_TRACK=1
+
+[Install]
+WantedBy=multi-user.target

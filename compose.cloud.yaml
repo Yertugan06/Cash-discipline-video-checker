@@ -1,0 +1,11 @@
+# Dev overlay: mount source over the built image so code/config edits on the
+# host are picked up without a rebuild (restart the container to apply).
+services:
+  checker:
+    volumes:
+      - ./runtime:/app/runtime
+      - ./backend:/app/backend:ro
+      - ./scripts:/app/scripts:ro
+      - ./tests:/app/tests:ro
+      - ./knowledge:/app/knowledge:ro
+      - ./config:/app/config:ro

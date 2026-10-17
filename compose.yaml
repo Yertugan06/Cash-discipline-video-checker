@@ -1,0 +1,35 @@
+# Default (CPU/F1) profile. See compose.gpu.yaml for CUDA F1 inference and
+# deploy/README.md for the vLLM (DETECTOR=vlm) deployment, which needs the
+# app to reach vLLM at 127.0.0.1:8010 on the host -- hence `network_mode:
+# host` below, per architecture.md §8 ("the app runs ... with host
+# networking or loopback access to vLLM"). With host networking there is no
+# `ports:` mapping to declare: the app listens directly on the host's
+# 127.0.0.1:${API_PORT:-8000} (see CMD in Dockerfile), and deploy/Caddyfile
+# reverse-proxies to that same loopback address.
+services:
+  checker:
+    image: forte-cash-checker:cpu
+    build: .
+    environment:
+      API_KEY: ${API_KEY:?Set API_KEY in your environment or .env}
+      API_HOST: 127.0.0.1
+      API_PORT: ${API_PORT:-8000}
+      DETECTOR: ${DETECTOR:-f1}
+      JOB_BUDGET_S: ${JOB_BUDGET_S:-270}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-67108864}
+      RESULTS_TTL_HOURS: ${RESULTS_TTL_HOURS:-24}
+      DEVICE: ${DEVICE:-auto}
+      CPU_THREADS: ${CPU_THREADS:-4}
+      VLM_BASE_URL: ${VLM_BASE_URL:-http://127.0.0.1:8010/v1}
+      VLM_MODEL: ${VLM_MODEL:-}
+    network_mode: host
+    volumes:
+      - work:/app/runtime
+      - ./weights:/app/weights:ro
+      - ./config:/app/config:ro
+      - ./knowledge:/app/knowledge:ro
+    restart: unless-stopped
+
+volumes:
+  work:
+

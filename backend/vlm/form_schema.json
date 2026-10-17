@@ -1,0 +1,143 @@
+{
+  "properties": {
+    "cashier_at_desk": {
+      "type": "boolean"
+    },
+    "cashier_in_room": {
+      "type": "boolean"
+    },
+    "people_cashier_side": {
+      "maximum": 5,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "clients_at_desk": {
+      "maximum": 5,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "person_at_door": {
+      "type": "boolean"
+    },
+    "collector_present": {
+      "type": "boolean"
+    },
+    "desk_cash": {
+      "type": "boolean"
+    },
+    "desk_bag": {
+      "type": "boolean"
+    },
+    "desk_documents": {
+      "type": "boolean"
+    },
+    "desk_personal_items": {
+      "type": "boolean"
+    },
+    "desk_food_drink": {
+      "type": "boolean"
+    },
+    "phone_in_cashier_hand": {
+      "type": "boolean"
+    },
+    "id_document_visible": {
+      "type": "boolean"
+    },
+    "counting_machine_in_use": {
+      "type": "boolean"
+    },
+    "detector_in_use": {
+      "type": "boolean"
+    },
+    "safe_door": {
+      "enum": [
+        "open",
+        "closed",
+        "not_visible"
+      ],
+      "type": "string"
+    },
+    "key_in_safe_lock": {
+      "enum": [
+        "yes",
+        "no",
+        "not_visible"
+      ],
+      "type": "string"
+    },
+    "laptop_screen": {
+      "enum": [
+        "unlocked",
+        "lock_screen",
+        "off_or_closed",
+        "not_visible"
+      ],
+      "type": "string"
+    },
+    "room_door": {
+      "enum": [
+        "open",
+        "closed",
+        "not_visible"
+      ],
+      "type": "string"
+    },
+    "cash_in_hands_of": {
+      "enum": [
+        "nobody",
+        "cashier",
+        "client",
+        "collector",
+        "several"
+      ],
+      "type": "string"
+    },
+    "cashier_action": {
+      "enum": [
+        "not_present",
+        "seated_idle",
+        "working_on_laptop",
+        "counting_by_hand",
+        "using_counting_machine",
+        "using_detector",
+        "receiving_cash",
+        "handing_cash_to_client",
+        "checking_id_document",
+        "at_safe",
+        "packing_or_opening_bag",
+        "walking_in",
+        "walking_out",
+        "eating_drinking",
+        "using_phone",
+        "other"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "cashier_at_desk",
+    "cashier_in_room",
+    "people_cashier_side",
+    "clients_at_desk",
+    "person_at_door",
+    "collector_present",
+    "desk_cash",
+    "desk_bag",
+    "desk_documents",
+    "desk_personal_items",
+    "desk_food_drink",
+    "phone_in_cashier_hand",
+    "id_document_visible",
+    "counting_machine_in_use",
+    "detector_in_use",
+    "safe_door",
+    "key_in_safe_lock",
+    "laptop_screen",
+    "room_door",
+    "cash_in_hands_of",
+    "cashier_action"
+  ],
+  "title": "cash_desk_frame_state_v1",
+  "type": "object",
+  "additionalProperties": false
+}

@@ -2,3 +2,30 @@ run-claude.sh
 .env
 # Hackathon dataset: hackathon use only (task.md FAQ 6), never commit
 open
+
+# Python / Node tooling
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+frontend/dist/
+.pytest_cache/
+.ruff_cache/
+
+# Runtime state (jobs, uploads, frames) - never committed
+backend/work/
+backend/*.db
+backend/*.sqlite*
+runtime/
+weights/
+
+# VM workspace copies: contain .env, organizer frames, HTML reports - never commit
+reasearch2/
+
+# Self-filmed robustness clips and any video - never committed
+robustness/clips/
+*.mov
+*.MOV
+
+# Per-clip private outputs (labels, predictions, detections) - never add more
+reasearch1/validation-private/

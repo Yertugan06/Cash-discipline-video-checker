@@ -1,0 +1,38 @@
+# TLS reverse proxy for the app (architecture.md §8: "The reverse proxy
+# terminates TLS"). Caddy gets a cert automatically for a real hostname via
+# Let's Encrypt; for an IP-only public address (architecture.md §8 option 2)
+# replace the site address below with the IP and `tls internal` (self-signed)
+# or a DNS name you control pointed at the VM.
+#
+# Install:
+#   sudo apt-get install -y caddy      # or the official Caddy apt repo
+#   sudo cp deploy/Caddyfile /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+#
+# The app listens on 127.0.0.1:8000 (see compose.yaml: `network_mode: host`
+# + Dockerfile `EXPOSE 8000`; with host networking the container binds the
+# host's loopback address directly, so Caddy on the same host reaches it
+# over localhost -- nothing but Caddy's :443/:80 is exposed externally.
+
+your-team-domain.example.kz {
+	reverse_proxy 127.0.0.1:8000
+
+	encode gzip
+
+	# Uploads can be ~29-64 MiB (task.md §10/FAQ A.1); request bodies
+	# larger than this are rejected by the app itself with 413, but Caddy's
+	# default has no body-size cap, so nothing further is needed here.
+
+	log {
+		output file /var/log/caddy/forte-checker-access.log
+		format json
+	}
+}
+
+# Fallback for an IP-only public address instead of a domain (no ACME
+# challenge possible): uncomment and replace with the VM's public IP, or
+# delete this block once a real hostname is available.
+# https://203.0.113.10 {
+# 	tls internal
+# 	reverse_proxy 127.0.0.1:8000
+# }
