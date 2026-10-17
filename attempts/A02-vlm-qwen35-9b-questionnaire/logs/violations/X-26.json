@@ -1,0 +1,43 @@
+{
+ "video": "X-26",
+ "verdict": "violation",
+ "violations": [
+  {
+   "rule": "phone",
+   "type": "Телефон в руках кассира в кассовом узле",
+   "timecode_sec": 0.0,
+   "codex_ids": [
+    "231-12-2b"
+   ],
+   "evidence_t": [
+    0,
+    0.0,
+    1.0
+   ],
+   "verify_question": "Is the cashier holding or using a mobile phone?",
+   "description": "Телефон в руках кассира в кассовом узле (по кадрам около 0.0 с).",
+   "norm": {
+    "id": "231-12-2b",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "средств связи, не имеющих функции фото и видео фиксации",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85",
+    "strength": "direct"
+   }
+  }
+ ],
+ "observations": [
+  {
+   "t": 3.0,
+   "other": "кассир держит в руках купюры и телефон"
+  },
+  {
+   "t": 10.0,
+   "other": "кассир стоит спиной к камере и принимает деньги"
+  },
+  {
+   "t": 17.0,
+   "other": "кассир считает купюры вручную"
+  }
+ ]
+}

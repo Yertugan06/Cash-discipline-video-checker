@@ -1,0 +1,66 @@
+>>> модель Qwen/Qwen3.5-9B (json_schema), промпт prompts_v2, max_side 1024, workers 8
+NVIDIA L4, 0 %, 17476 MiB, 23034 MiB
+X-1: 1/1 ok (schema), 23.6s wall, 23.6s per frame
+X-11: 1/1 ok (schema), 20.1s wall, 20.1s per frame
+X-12: 1/1 ok (schema), 20.9s wall, 20.9s per frame
+X-15: 1/1 ok (schema), 20.8s wall, 20.8s per frame
+X-17: 1/1 ok (schema), 19.9s wall, 19.9s per frame
+X-18: 1/1 ok (schema), 20.9s wall, 20.9s per frame
+X-2: 1/1 ok (schema), 20.0s wall, 20.0s per frame
+X-20: 1/1 ok (schema), 20.9s wall, 20.9s per frame
+X-21: 1/1 ok (schema), 20.8s wall, 20.8s per frame
+X-22: 1/1 ok (schema), 20.7s wall, 20.7s per frame
+X-23: 1/1 ok (schema), 20.6s wall, 20.6s per frame
+X-24: 1/1 ok (schema), 21.0s wall, 21.0s per frame
+X-26: 1/1 ok (schema), 21.5s wall, 21.5s per frame
+X-27: 1/1 ok (schema), 21.0s wall, 21.0s per frame
+X-28: 2/2 ok (schema), 41.7s wall, 20.8s per frame
+X-29: 1/1 ok (schema), 21.1s wall, 21.1s per frame
+X-30: 1/1 ok (schema), 21.6s wall, 21.6s per frame
+X-31: 1/1 ok (schema), 21.5s wall, 21.5s per frame
+X-32: 1/1 ok (schema), 21.2s wall, 21.2s per frame
+X-33: 1/1 ok (schema), 21.2s wall, 21.2s per frame
+X-34: 1/1 ok (schema), 21.2s wall, 21.2s per frame
+X-35: 2/2 ok (schema), 41.9s wall, 20.9s per frame
+X-37: 1/1 ok (schema), 18.4s wall, 18.4s per frame
+X-38: 1/1 ok (schema), 18.3s wall, 18.3s per frame
+X-39: 1/1 ok (schema), 18.2s wall, 18.2s per frame
+X-40: 1/1 ok (schema), 17.7s wall, 17.7s per frame
+X-43: 1/1 ok (schema), 17.7s wall, 17.7s per frame
+X-44: 1/1 ok (schema), 17.7s wall, 17.7s per frame
+X-45: 1/1 ok (schema), 17.7s wall, 17.7s per frame
+X-46: 1/1 ok (schema), 16.8s wall, 16.8s per frame
+!!! В среднем 20.2 с на кадр — очень медленно. Для 4B-модели на GPU норма 1–3 с. Проверьте, что модель на GPU (`ollama ps` → 100% GPU, `nvidia-smi`), и что не включён режим рассуждений.
+done 82.2 s
+# Анкета на золотых кадрах
+Всего проверок: 56, верно: 50 (89%); не найдено кадров: 0
+
+| Поле | Верно | Всего | Точность |
+|---|---|---|---|
+| key_in_safe_lock | 0 | 2 | 0% |
+| room_door | 1 | 2 | 50% |
+| cashier_action | 2 | 3 | 67% |
+| clients_at_desk | 3 | 4 | 75% |
+| laptop_screen | 6 | 7 | 86% |
+| cashier_at_desk | 14 | 14 | 100% |
+| safe_door | 6 | 6 | 100% |
+| desk_cash | 3 | 3 | 100% |
+| desk_bag | 2 | 2 | 100% |
+| desk_personal_items | 2 | 2 | 100% |
+| desk_food_drink | 2 | 2 | 100% |
+| people_cashier_side | 3 | 3 | 100% |
+| counting_machine_in_use | 1 | 1 | 100% |
+| collector_present | 1 | 1 | 100% |
+| id_document_visible | 1 | 1 | 100% |
+| detector_in_use | 2 | 2 | 100% |
+| desk_documents | 1 | 1 | 100% |
+
+## Ошибки
+| Видео | t | Поле | Ожидалось | Модель | Комментарий |
+|---|---|---|---|---|---|
+| X-22 | 17.0 | key_in_safe_lock | yes | not_visible | ключ со связкой в замке (нарушение) |
+| X-22 | 17.0 | laptop_screen | lock_screen | unlocked |  |
+| X-23 | 16.0 | key_in_safe_lock | no | not_visible | ключ забран (норма) |
+| X-46 | 14.0 | cashier_action | eating_drinking | counting_by_hand |  |
+| X-32 | 10.0 | room_door | open | closed | дверь не закрыта (нарушение) |
+| X-18 | 21.0 | clients_at_desk | 2 | 1 | второй человек подаёт карточку |

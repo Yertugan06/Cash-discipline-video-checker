@@ -1,0 +1,123 @@
+[
+  {
+    "clips": [
+      "X-11"
+    ],
+    "timestamp_sec": 18.0,
+    "rule_ids": [
+      "L-PC-LOCKED"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены."
+  },
+  {
+    "clips": [
+      "X-13"
+    ],
+    "timestamp_sec": 47.0,
+    "rule_ids": [
+      "K-RECOUNT-BEFORE-SAFE"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены."
+  },
+  {
+    "clips": [
+      "X-15"
+    ],
+    "timestamp_sec": 15.0,
+    "rule_ids": [
+      "L-NO-BAG-ON-LEAVE"
+    ],
+    "reason": "No prediction within ±2 seconds; inspect event log and debug video"
+  },
+  {
+    "clips": [
+      "X-18"
+    ],
+    "timestamp_sec": 20.0,
+    "rule_ids": [
+      "A-SECOND-PERSON"
+    ],
+    "reason": "Есть сессии без наблюдаемого входа; отсутствие документа до начала записи не оценивается."
+  },
+  {
+    "clips": [
+      "X-20"
+    ],
+    "timestamp_sec": 5.0,
+    "rule_ids": [
+      "S-SAFE-CLOSED"
+    ],
+    "reason": "No prediction within ±2 seconds; inspect event log and debug video"
+  },
+  {
+    "clips": [
+      "X-22"
+    ],
+    "timestamp_sec": 14.0,
+    "rule_ids": [
+      "L-SAFE-LOCKED-ON-LEAVE"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены."
+  },
+  {
+    "clips": [
+      "X-24"
+    ],
+    "timestamp_sec": 8.0,
+    "rule_ids": [
+      "L-NO-DOCS-ON-LEAVE",
+      "W-NO-FOOD"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены."
+  },
+  {
+    "clips": [
+      "X-26"
+    ],
+    "timestamp_sec": 9.0,
+    "rule_ids": [
+      "L-NO-CASH-ON-LEAVE"
+    ],
+    "reason": "No prediction within ±2 seconds; inspect event log and debug video"
+  },
+  {
+    "clips": [
+      "X-28"
+    ],
+    "timestamp_sec": 7.0,
+    "rule_ids": [
+      "L-PC-LOCKED"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены."
+  },
+  {
+    "clips": [
+      "X-32"
+    ],
+    "timestamp_sec": 5.0,
+    "rule_ids": [
+      "A-DOOR-LOCK"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены.; Состояние laptop часто неразборчиво; связанные проверки ограничены."
+  },
+  {
+    "clips": [
+      "X-40"
+    ],
+    "timestamp_sec": 17.0,
+    "rule_ids": [
+      "W-NO-PERSONAL-ITEMS"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены."
+  },
+  {
+    "clips": [
+      "X-44"
+    ],
+    "timestamp_sec": 16.0,
+    "rule_ids": [
+      "C-DETECTOR-CHECK"
+    ],
+    "reason": "Наличные не распознаны уверенно; проверки движения наличных ограничены.; Состояние door часто неразборчиво; связанные проверки ограничены."
+  }
+]
