@@ -1,0 +1,3 @@
+# Added on top of the checker image (which already has fastapi, uvicorn, httpx,
+# python-multipart): uvicorn needs a WebSocket implementation to accept /ws.
+websockets==15.0.1

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Verdicts</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #16181d; --muted: #646b78; --line: #e2e5ea;
+    --viol: #c62f2f; --viol-bg: #fdecec; --ok: #1f8a4c; --ok-bg: #e7f6ed;
+    --run: #2b63d9; --run-bg: #e8effc; --warn: #a86a00; --warn-bg: #fdf3e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111317; --card: #1a1d23; --text: #e8eaee; --muted: #9aa1ad; --line: #2b3038;
+      --viol: #ff7b7b; --viol-bg: #3a1d1f; --ok: #5fd08f; --ok-bg: #173023;
+      --run: #7ba4ff; --run-bg: #1b2640; --warn: #f0b75a; --warn-bg: #3a2c14;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+  h1 { font-size: 20px; margin: 0; }
+  .conn { font-size: 12px; color: var(--muted); }
+  .conn b { color: var(--ok); } .conn.off b { color: var(--viol); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  button, label.btn { border: 1px solid var(--line); background: var(--card); color: var(--text);
+    padding: 7px 12px; border-radius: 8px; cursor: pointer; font: inherit; }
+  button:hover, label.btn:hover { border-color: var(--run); }
+  button:disabled { opacity: .5; cursor: default; }
+  input[type=file] { display: none; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 16px 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .stat .v { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: 12px; color: var(--muted); }
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .item { background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+  .row { display: grid; grid-template-columns: minmax(80px, 1.2fr) auto auto auto minmax(0, 2fr) auto;
+         gap: 12px; align-items: center; padding: 10px 12px; cursor: pointer; }
+  .name { font-weight: 600; overflow-wrap: anywhere; }
+  .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .violation { color: var(--viol); background: var(--viol-bg); }
+  .no_violation { color: var(--ok); background: var(--ok-bg); }
+  .processing, .submitting { color: var(--run); background: var(--run-bg); }
+  .queued { color: var(--muted); background: var(--bg); }
+  .failed { color: var(--warn); background: var(--warn-bg); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .top { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
+  .match { font-size: 12px; font-weight: 600; }
+  .match.yes { color: var(--ok); } .match.no { color: var(--viol); }
+  .detail { display: none; border-top: 1px solid var(--line); padding: 12px; }
+  .item.open .detail { display: block; }
+  .viol { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin-bottom: 14px; }
+  .viol h3 { margin: 0; font-size: 14px; }
+  .frames { display: flex; gap: 8px; flex-wrap: wrap; }
+  .frames figure { margin: 0; }
+  .frames img { width: 240px; max-width: 100%; border-radius: 6px; border: 1px solid var(--line); display: block; }
+  .frames figcaption { font-size: 12px; color: var(--muted); }
+  .pulse { animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .45; } }
+  @media (max-width: 700px) {
+    .row { grid-template-columns: 1fr auto; }
+    .row .top, .row .time { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Live verdicts</h1>
+      <div class="conn off" id="conn">WebSocket: <b>connecting...</b></div>
+    </div>
+    <div class="actions">
+      <label class="btn">Upload .mov<input id="files" type="file" accept=".mov" multiple></label>
+      <button id="folder" disabled>Run server folder</button>
+    </div>
+  </header>
+  <section class="stats" id="stats"></section>
+  <div class="muted" id="hint"></div>
+  <section class="list" id="list"></section>
+</main>
+<script>
+const items = new Map();
+let openId = null; // only one result is expanded at a time
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const VERDICT = { violation: "нарушение", no_violation: "без нарушения" };
+
+function secs(it) {
+  if (!it.started_at) return "";
+  const end = it.finished_at ?? Date.now() / 1000;
+  return `${(end - it.started_at).toFixed(1)} s`;
+}
+
+function stats() {
+  const all = [...items.values()];
+  const done = all.filter((i) => i.status === "done");
+  const labelled = done.filter((i) => i.label);
+  const correct = labelled.filter((i) => i.label === i.verdict).length;
+  const cleanLab = labelled.filter((i) => i.label === "no_violation");
+  const falseAlarm = cleanLab.filter((i) => i.verdict === "violation").length;
+  const violLab = labelled.filter((i) => i.label === "violation");
+  const missed = violLab.filter((i) => i.verdict === "no_violation").length;
+  const cells = [
+    ["Done", `${done.length} / ${all.length}`],
+    ["Violation", done.filter((i) => i.verdict === "violation").length],
+    ["No violation", done.filter((i) => i.verdict === "no_violation").length],
+    ["Failed", all.filter((i) => i.status === "failed").length],
+    ["Matches label", labelled.length ? `${correct}/${labelled.length}` : "-"],
+    ["False alarms", cleanLab.length ? `${falseAlarm}/${cleanLab.length}` : "-"],
+    ["Missed", violLab.length ? `${missed}/${violLab.length}` : "-"],
+  ];
+  $("stats").innerHTML = cells.map(([k, v]) => `<div class="stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join("");
+}
+
+function detail(it) {
+  if (it.status === "failed") return `<div class="failed chip">${esc(it.error)}</div>`;
+  if (!it.result) return `<div class="muted">job ${esc(it.job_id ?? "not submitted yet")}</div>`;
+  const r = it.result;
+  const warn = (r.warnings ?? []).map((w) => `<div class="muted">! ${esc(w)}</div>`).join("");
+  const cov = r.coverage ? `<div class="muted">coverage: ${r.coverage.mode}, ${r.coverage.done}/${r.coverage.planned} frames${r.coverage.deadline_hit ? ", deadline hit" : ""}</div>` : "";
+  const viols = r.violations.map((v) => `
+    <div class="viol">
+      <h3>${esc(v.type)} <span class="muted">@ ${v.timecode_sec.toFixed(1)} s · ${esc(v.rule_id ?? "")}</span></h3>
+      <div>${esc(v.description)}</div>
+      ${v.source ? `<div class="muted">${esc(v.source)}${v.citation_status ? " · " + esc(v.citation_status) : ""}</div>` : ""}
+      <div class="frames">${v.evidence_frames.map((f) => `<figure><img loading="lazy" src="data:image/jpeg;base64,${f.image_base64}" alt="frame at ${f.timestamp_sec} s"><figcaption>${f.timestamp_sec.toFixed(1)} s</figcaption></figure>`).join("")}</div>
+    </div>`).join("");
+  return `<div class="muted">job ${esc(it.job_id)}</div>${cov}${warn}<div style="margin-top:10px">${viols || "No violations reported."}</div>`;
+}
+
+function render() {
+  const list = [...items.values()].sort((a, b) => a.queued_at - b.queued_at);
+  $("list").innerHTML = list.map((it) => {
+    const state = it.status === "done" ? it.verdict : it.status;
+    const label = state in VERDICT ? VERDICT[state] : it.status;
+    const top = it.result?.violations?.[0];
+    const match = it.status === "done" && it.label
+      ? `<span class="match ${it.label === it.verdict ? "yes" : "no"}">${it.label === it.verdict ? "= label" : "≠ label"}</span>`
+      : `<span></span>`;
+    return `<div class="item ${openId === it.id ? "open" : ""}" data-id="${it.id}">
+      <div class="row">
+        <div class="name">${esc(it.name)}</div>
+        <span class="chip ${state} ${it.status === "processing" ? "pulse" : ""}">${label}</span>
+        <span class="muted">${it.label ? "label: " + VERDICT[it.label] : ""}</span>
+        ${match}
+        <div class="top">${top ? esc(top.type) + " @ " + top.timecode_sec.toFixed(1) + " s" : ""}</div>
+        <span class="muted time">${secs(it)}</span>
+      </div>
+      <div class="detail">${openId === it.id ? detail(it) : ""}</div>
+    </div>`;
+  }).join("");
+  stats();
+}
+
+$("list").addEventListener("click", (e) => {
+  if (e.target.closest(".detail")) return;
+  const el = e.target.closest(".item");
+  if (!el) return;
+  openId = openId === el.dataset.id ? null : el.dataset.id;
+  render();
+  // closing a tall panel above shifts the list; keep the clicked row on screen
+  document.querySelector(`.item[data-id="${el.dataset.id}"]`)?.scrollIntoView({ block: "nearest" });
+});
+
+function applySnapshot(snapshot) {
+  items.clear();
+  snapshot.items.forEach((i) => items.set(i.id, i));
+  render();
+}
+
+// Past results come over plain HTTP first, so they show even before (or without) the socket.
+let polling = null;
+const loadState = () => fetch("/api/state").then((r) => r.json()).then(applySnapshot).catch(() => {});
+
+function connect() {
+  const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
+  ws.onopen = () => {
+    clearInterval(polling); polling = null;
+    $("conn").className = "conn"; $("conn").innerHTML = "WebSocket: <b>live</b>";
+  };
+  ws.onclose = () => {
+    $("conn").className = "conn off";
+    $("conn").innerHTML = "WebSocket: <b>offline, refreshing every 3 s, reconnecting...</b>";
+    if (!polling) polling = setInterval(loadState, 3000);
+    setTimeout(connect, 3000);
+  };
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === "snapshot") return applySnapshot(msg);
+    if (msg.type === "item") items.set(msg.item.id, msg.item);
+    render();
+  };
+}
+loadState();
+
+async function post(url, body) {
+  const res = await fetch(url, { method: "POST", body });
+  if (!res.ok) alert(`${res.status}: ${await res.text()}`);
+}
+
+$("files").addEventListener("change", async (e) => {
+  const form = new FormData();
+  [...e.target.files].forEach((f) => form.append("files", f));
+  e.target.value = "";
+  await post("/api/upload", form);
+});
+$("folder").addEventListener("click", () => post("/api/run-folder"));
+
+fetch("/api/config").then((r) => r.json()).then((c) => {
+  $("folder").disabled = !c.folder;
+  $("folder").title = c.folder ?? "VIDEO_DIR not set";
+  $("hint").textContent = `${c.folder ? "Server folder: " + c.folder + ". " : ""}${c.labels ? c.labels + " organizer labels loaded for comparison." : "No labels loaded."} Videos run one at a time; click a row for evidence.`;
+});
+setInterval(() => {
+  for (const it of items.values()) {
+    if (it.status !== "processing" && it.status !== "submitting") continue;
+    const el = document.querySelector(`.item[data-id="${it.id}"] .time`);
+    if (el) el.textContent = secs(it);
+  }
+}, 1000);
+connect();
+</script>
+</body>
+</html>
