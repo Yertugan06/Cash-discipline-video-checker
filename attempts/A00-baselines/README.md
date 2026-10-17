@@ -2,12 +2,12 @@
 
 - **Date:** 2026-10-17
 - **Status:** reference
-- **Source:** `reasearch1/problem-validation.md` §2, `reasearch1/validation-evidence/PREREGISTRATION.md`
+- **Source:** `archive/research1/problem-validation.md` §2, `validation/validation-evidence/PREREGISTRATION.md`
 
 ## Approach
 
 Pixel-free answers every real approach has to beat, scored with the pre-registered scorer
-(`reasearch1/validation-evidence/harness/score.py`).
+(`validation/validation-evidence/harness/score.py`).
 
 ## Results
 
@@ -22,5 +22,5 @@ Differences of 2 videos or fewer count as ties (n is small, Wilson intervals abo
 
 ## Logs
 
-- `reasearch1/validation-evidence/logs/score_F0_blind.txt`
-- `reasearch1/validation-evidence/logs/score_all_gtv2.txt`
+- `validation/validation-evidence/logs/score_F0_blind.txt`
+- `validation/validation-evidence/logs/score_all_gtv2.txt`

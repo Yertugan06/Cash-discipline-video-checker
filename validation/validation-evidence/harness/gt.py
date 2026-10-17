@@ -2,9 +2,10 @@
 reads organizer labels and human annotations), reading the team data root described in `eval/data.py`.
 
     .venv/bin/python -m eval.ground_truth            # build, report discrepancies, check the split
-    .venv/bin/python -m eval.ground_truth --write    # rewrite reasearch1/validation-private/gt.json
+    .venv/bin/python -m eval.ground_truth --write    # rewrite validation/validation-private/gt.json
 
-The previous version is in git history (`git log -p -- reasearch1/validation-evidence/harness/gt.py`).
+The previous version is in git history (`git log -p -- validation/validation-evidence/harness/gt.py`).
+The builder prints aggregate counts only. The data root is managed by `eval.data`.
 """
 import sys
 

@@ -3,7 +3,7 @@
 - **Date:** 2026-10-17, 10:45-10:50 UTC (the earliest experiment on `datathon`)
 - **Status:** measured; it shaped the choice of OWLv2 for A01 and of a VLM questionnaire for A02
 - **Where it ran:** `datathon` (L4), `~/spike_test.py`, outputs `~/spike_out/` and `~/spike_out_vlm/`
-  (also in the local VM copy `reasearch2/datathon/`)
+  (also in the local VM copy `archive/vm-copies/datathon/`)
 - **Models:** OWLv2 `google/owlv2-base-patch16-ensemble`, Grounding DINO
   `IDEA-Research/grounding-dino-base`, Qwen2.5-VL-7B-Instruct (bf16)
 

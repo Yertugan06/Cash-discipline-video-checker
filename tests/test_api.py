@@ -212,3 +212,18 @@ def test_purge_expired_removes_old_finished_rows_but_keeps_fresh_ones(tmp_path):
     assert removed == 1
     assert store.get("old") is None
     assert store.get("fresh") is not None
+
+
+def test_trace_is_served_by_job_id_and_guarded(settings):
+    job_id = "a" * 32
+    settings.traces_dir.mkdir(parents=True)
+    (settings.traces_dir / f"{job_id}.json").write_text('{"frames": []}')
+    headers = {"X-API-Key": API_KEY}
+    with TestClient(create_app(settings, pipeline=FakePipeline(result=done_job()))) as client:
+        assert client.get(f"/api/v1/jobs/{job_id}/trace").status_code == 401
+        found = client.get(f"/api/v1/jobs/{job_id}/trace", headers=headers)
+        missing = client.get(f"/api/v1/jobs/{'b' * 32}/trace", headers=headers)
+        traversal = client.get("/api/v1/jobs/..%2Fjobs.sqlite3/trace", headers=headers)
+    assert found.status_code == 200 and found.json() == {"frames": []}
+    assert missing.status_code == 404
+    assert traversal.status_code == 404

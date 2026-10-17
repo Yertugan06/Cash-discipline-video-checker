@@ -1,7 +1,7 @@
 """Temporal rules: ``StateTimeline`` -> ``list[Finding]``.
 
 A typed, pure port of the kit's
-``reasearch2/datathon/forte_brev_kit/brev_kit/scripts/timeline_rules.py`` (``detect()``).
+``archive/vm-copies/datathon/forte_brev_kit/brev_kit/scripts/timeline_rules.py`` (``detect()``).
 No I/O, no randomness, no label access. Every legal/business threshold is read
 from the matching ``RuleEntry.params`` in ``knowledge/rules.yaml`` -- nothing here is a hardcoded
 legal threshold.

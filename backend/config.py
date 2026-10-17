@@ -58,6 +58,11 @@ class Settings:
     # dataclass default_factory.
     vlm: VlmSettings | None = None
 
+    @property
+    def traces_dir(self) -> Path:
+        """Per-job F1 trace files (`<job_id>.json`), see `backend.f1.detector`."""
+        return self.work_dir / "traces"
+
     def __post_init__(self) -> None:
         if not self.api_key.strip():
             raise ValueError(

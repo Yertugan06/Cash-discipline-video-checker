@@ -6,7 +6,20 @@ import numpy as np
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from backend.f1.vision_types import Box, Detection, Point, Scene, center, distance, overlap
+from backend.f1.vision_types import (
+    Box,
+    Detection,
+    Observation,
+    Point,
+    Scene,
+    center,
+    contains,
+    distance,
+    overlap,
+)
+
+LAPTOP_REACH = 0.25  # normalised distance from the laptop centre to someone working at it
+MIN_ALONE_FRAMES = 3  # 1.5 s at the F1 sampling rate
 
 
 class Override(BaseModel):
@@ -63,8 +76,14 @@ def half_plane(origin: Point, direction: Point, sign: int) -> list[Point]:
 
 def calibrate(candidates: list[Detection], overrides_path: Path, checksum: str) -> Scene:
     objects = {}
-    for label in ("desk", "safe", "door", "laptop", "counter"):
+    # Laptop first: the cash desk is the desk the laptop stands on. Without this the desk
+    # prompt often matches an office desk seen through the glass wall, which flips the
+    # cashier/client half-planes over the whole frame.
+    for label in ("laptop", "desk", "safe", "door", "counter"):
         matches = [d for d in candidates if d.label == label]
+        if label == "desk":
+            laptop = objects.get("laptop")
+            matches = [d for d in matches if laptop and contains(d.box, center(laptop.box), 0.02)]
         if not matches:
             continue
         best = max(
@@ -89,19 +108,13 @@ def calibrate(candidates: list[Detection], overrides_path: Path, checksum: str) 
         if label not in {"desk", "safe", "door", "laptop", "counter"}:
             raise ValueError(f"Unknown static object override: {label}")
         objects[label] = Detection(label=label, score=1, box=box)
-    scene = Scene(objects=objects, zones=override.zones)
+    scene = Scene(objects=objects, zones=override.zones, candidates=candidates)
     for name, detection in objects.items():
         x1, y1, x2, y2 = detection.box
         scene.zones.setdefault(name, [(x1, y1), (x2, y1), (x2, y2), (x1, y2)])
     if "desk" in objects and "laptop" in objects:
-        origin = center(objects["desk"].box)
-        anchor = center(objects["laptop"].box)
-        length = distance(origin, anchor)
-        if length > 0.025:
-            scene.cashier_direction = tuple((anchor[i] - origin[i]) / length for i in (0, 1))
-            scene.zones.setdefault("cashier", half_plane(origin, scene.cashier_direction, 1))
-            scene.zones.setdefault("client", half_plane(origin, scene.cashier_direction, -1))
-            scene.confidence = min(objects["desk"].score * 3, objects["laptop"].score * 3, 1)
+        # The cashier/client split needs to know where the cashier works; see orient_cashier_side.
+        scene.confidence = min(objects["desk"].score * 3, objects["laptop"].score * 3, 1)
     if "cashier" in override.zones and "client" in override.zones:
         scene.confidence = 1
     if scene.confidence < 0.3:
@@ -114,6 +127,47 @@ def calibrate(candidates: list[Detection], overrides_path: Path, checksum: str) 
     if missing:
         scene.warnings.append("Не локализованы объекты сцены: " + ", ".join(missing))
     return scene
+
+
+def behind_glass(scene: Scene, box: Box, margin: float) -> bool:
+    """Anyone in the room stands in front of, at or behind the desk (hidden by it); a person box
+    ending above the desk's far edge is a reflection in the glass wall or someone behind it."""
+    desk = scene.objects.get("desk")
+    return desk is not None and box[3] < desk.box[1] - margin
+
+
+def orient_cashier_side(scene: Scene, observations: list[Observation], glass_margin: float) -> None:
+    """Split the room along the desk's long side, cashier on the side where a person works at
+    the laptop while alone in the room. Clients and collectors only come in while the cashier
+    is there, so a lone person at the workstation is the cashier, whatever the camera angle
+    (over the shoulder, facing the cashier, from the side). Manual zones win."""
+    if "cashier" in scene.zones or "desk" not in scene.objects or "laptop" not in scene.objects:
+        return
+    laptop = center(scene.objects["laptop"].box)
+    alone = []
+    for observation in observations:
+        people = [
+            d.position()
+            for d in observation.detections
+            if d.label == "person" and not behind_glass(scene, d.box, glass_margin)
+        ]
+        if len(people) == 1 and distance(people[0], laptop) <= LAPTOP_REACH:
+            alone.append(people[0])
+    if len(alone) < MIN_ALONE_FRAMES:
+        scene.confidence = 0
+        scene.warnings.append(
+            "Кассир ни разу не виден один за рабочим местом; сторону кассира не определить, "
+            "задайте ручные зоны."
+        )
+        return
+    anchor = tuple(float(np.median([p[i] for p in alone])) for i in (0, 1))
+    x1, y1, x2, y2 = scene.objects["desk"].box
+    origin = center(scene.objects["desk"].box)
+    axis = 1 if x2 - x1 >= y2 - y1 else 0  # a desk wide in the image splits top/bottom
+    side = 1.0 if anchor[axis] >= origin[axis] else -1.0
+    scene.cashier_direction = (0.0, side) if axis else (side, 0.0)
+    scene.zones["cashier"] = half_plane(origin, scene.cashier_direction, 1)
+    scene.zones["client"] = half_plane(origin, scene.cashier_direction, -1)
 
 
 def in_zone(scene: Scene, name: str, point: Point, margin: float = 0) -> bool:

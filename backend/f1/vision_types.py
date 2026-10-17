@@ -116,6 +116,7 @@ class Scene(BaseModel):
     cashier_direction: Point | None = None
     confidence: float = Field(default=0, ge=0, le=1)
     warnings: list[str] = Field(default_factory=list)
+    candidates: list[Detection] = Field(default_factory=list)  # raw calibration detections
 
     def cashier_side(self, point: Point) -> bool:
         if not self.cashier_direction or "desk" not in self.objects:

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare Runs</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #16181d; --muted: #646b78; --line: #e2e5ea;
+    --viol: #c62f2f; --viol-bg: #fdecec; --ok: #1f8a4c; --ok-bg: #e7f6ed;
+    --run: #2b63d9; --run-bg: #e8effc; --warn: #a86a00; --warn-bg: #fdf3e0; --diff: #fff8e1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111317; --card: #1a1d23; --text: #e8eaee; --muted: #9aa1ad; --line: #2b3038;
+      --viol: #ff7b7b; --viol-bg: #3a1d1f; --ok: #5fd08f; --ok-bg: #173023;
+      --run: #7ba4ff; --run-bg: #1b2640; --warn: #f0b75a; --warn-bg: #3a2c14; --diff: #2e2915;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+  h1 { font-size: 20px; margin: 0; }
+  a { color: var(--run); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .conn b { color: var(--ok); } .conn.off b { color: var(--viol); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 14px 0; align-items: center; }
+  .controls label { white-space: nowrap; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .stat h2 { font-size: 14px; margin: 0 0 6px; overflow-wrap: anywhere; }
+  .stat .v { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: 12px; color: var(--muted); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .scroll { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { position: sticky; top: 0; background: var(--card); font-size: 12px; color: var(--muted); font-weight: 600; }
+  tr.diff td { background: var(--diff); }
+  td.name { font-weight: 600; white-space: nowrap; }
+  .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; display: inline-block; }
+  .violation { color: var(--viol); background: var(--viol-bg); }
+  .no_violation { color: var(--ok); background: var(--ok-bg); }
+  .processing, .submitting { color: var(--run); background: var(--run-bg); }
+  .queued, .missing { color: var(--muted); background: var(--bg); }
+  .failed { color: var(--warn); background: var(--warn-bg); }
+  .mark { font-weight: 700; margin-left: 4px; }
+  .mark.yes { color: var(--ok); } .mark.no { color: var(--viol); }
+  .rules { font: 11px/1.4 ui-monospace, monospace; color: var(--muted); margin-top: 3px; min-width: 150px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Compare runs</h1>
+      <div class="conn off muted" id="conn">live column: <b>connecting...</b></div>
+    </div>
+    <span><a href="/">Live verdicts</a> · <a href="/annotate">Annotate</a></span>
+  </header>
+  <div class="controls" id="runs"></div>
+  <div class="controls">
+    <label><input type="checkbox" id="onlyDiff"> Only clips where the selected runs disagree</label>
+    <label><input type="checkbox" id="onlyWrong"> Only clips some run gets wrong</label>
+  </div>
+  <section class="stats" id="stats"></section>
+  <div class="scroll"><table><thead id="head"></thead><tbody id="body"></tbody></table></div>
+  <p class="muted">Earlier runs are files <code>state.&lt;name&gt;.json</code> next to the gateway's state file; copy the live <code>state.json</code> to such a name before starting a new run to keep it.</p>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const VERDICT = { violation: "нарушение", no_violation: "без нарушения" };
+const runs = new Map(); // run name -> Map(clip name -> compact item)
+let names = [];
+let selected = [];
+
+const load = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+const save = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} };
+
+// live items carry evidence and ids; reduce them to the same shape /api/runs returns
+function compact(it) {
+  const r = it.result ?? {};
+  return {
+    name: it.name, label: it.label, status: it.status, verdict: it.verdict, error: it.error,
+    seconds: it.started_at && it.finished_at ? +(it.finished_at - it.started_at).toFixed(1) : null,
+    violations: (r.violations ?? []).map((v) => ({ rule_id: v.rule_id, type: v.type, timecode_sec: v.timecode_sec })),
+  };
+}
+
+async function fetchRun(name) {
+  const res = await fetch(`/api/runs/${encodeURIComponent(name)}`);
+  if (!res.ok) throw new Error(`${name}: ${res.status}`);
+  const data = await res.json();
+  runs.set(name, new Map(data.items.map((i) => [i.name, i])));
+}
+
+function score(map) {
+  const done = [...map.values()].filter((i) => i.status === "done" && i.label);
+  const clean = done.filter((i) => i.label === "no_violation");
+  const viol = done.filter((i) => i.label === "violation");
+  return {
+    total: map.size, done: done.length,
+    correct: done.filter((i) => i.label === i.verdict).length,
+    falseAlarm: clean.filter((i) => i.verdict === "violation").length, clean: clean.length,
+    missed: viol.filter((i) => i.verdict === "no_violation").length, viol: viol.length,
+  };
+}
+
+const clipNumber = (n) => Number((n.match(/(\d+)/) ?? [0, 1e6])[1]);
+
+function render() {
+  const shown = selected.filter((n) => runs.has(n));
+  $("stats").innerHTML = shown.map((n) => {
+    const s = score(runs.get(n));
+    return `<div class="stat"><h2>${esc(n)}</h2><div class="grid3">
+      <div><div class="v">${s.correct}/${s.done}</div><div class="k">match label</div></div>
+      <div><div class="v">${s.falseAlarm}/${s.clean}</div><div class="k">false alarms</div></div>
+      <div><div class="v">${s.missed}/${s.viol}</div><div class="k">missed</div></div></div>
+      <div class="k">${s.done} of ${s.total} clips scored</div></div>`;
+  }).join("");
+  $("head").innerHTML = `<tr><th>Clip</th><th>Label</th>${shown.map((n) => `<th>${esc(n)}</th>`).join("")}</tr>`;
+  const clips = new Set();
+  shown.forEach((n) => runs.get(n).forEach((_, clip) => clips.add(clip)));
+  const rows = [...clips].sort((a, b) => clipNumber(a) - clipNumber(b) || a.localeCompare(b)).map((clip) => {
+    const cells = shown.map((n) => runs.get(n).get(clip));
+    const label = cells.find((c) => c?.label)?.label;
+    const verdicts = cells.map((c) => (c?.status === "done" ? c.verdict : c?.status ?? "missing"));
+    const diff = new Set(verdicts).size > 1;
+    const wrong = label && cells.some((c) => c?.status === "done" && c.verdict !== label);
+    return { clip, cells, label, diff, wrong };
+  }).filter((r) => (!$("onlyDiff").checked || r.diff) && (!$("onlyWrong").checked || r.wrong));
+  $("body").innerHTML = rows.map((r) => `<tr class="${r.diff ? "diff" : ""}">
+    <td class="name">${esc(r.clip)}</td>
+    <td>${r.label ? `<span class="chip ${r.label}">${VERDICT[r.label]}</span>` : '<span class="muted">-</span>'}</td>
+    ${r.cells.map((c) => cell(c, r.label)).join("")}</tr>`).join("")
+    || `<tr><td colspan="${shown.length + 2}" class="muted">No clips match the filters.</td></tr>`;
+}
+
+function cell(c, label) {
+  if (!c) return '<td><span class="chip missing">not in run</span></td>';
+  const state = c.status === "done" ? c.verdict : c.status;
+  const text = VERDICT[state] ?? state;
+  const mark = c.status === "done" && label ? `<span class="mark ${c.verdict === label ? "yes" : "no"}">${c.verdict === label ? "✓" : "✗"}</span>` : "";
+  const rules = c.violations.map((v) => `${esc(v.rule_id ?? v.type)} @${v.timecode_sec.toFixed(1)}`).join("<br>");
+  const extra = c.error ? `<div class="rules">${esc(c.error)}</div>` : rules ? `<div class="rules">${rules}</div>` : "";
+  return `<td><span class="chip ${state}">${esc(text)}</span>${mark}${extra}</td>`;
+}
+
+function renderRunPicker() {
+  $("runs").innerHTML = "<span class=\"muted\">Runs:</span>" + names.map((n) =>
+    `<label><input type="checkbox" value="${esc(n)}" ${selected.includes(n) ? "checked" : ""}> ${esc(n)}</label>`).join("");
+}
+
+$("runs").addEventListener("change", async (e) => {
+  const name = e.target.value;
+  selected = names.filter((n) => (n === name ? e.target.checked : selected.includes(n)));
+  save("compare.runs", selected);
+  if (e.target.checked && !runs.has(name)) await fetchRun(name).catch((err) => console.error(err));
+  render();
+});
+["onlyDiff", "onlyWrong"].forEach((id) => {
+  $(id).checked = load(`compare.${id}`, false);
+  $(id).addEventListener("change", () => { save(`compare.${id}`, $(id).checked); render(); });
+});
+
+// The live column follows the gateway's WebSocket, like the main page.
+function connect() {
+  const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
+  ws.onopen = () => { $("conn").className = "conn muted"; $("conn").innerHTML = "live column: <b>updating over WebSocket</b>"; };
+  ws.onclose = () => {
+    $("conn").className = "conn off muted"; $("conn").innerHTML = "live column: <b>offline, reconnecting...</b>";
+    setTimeout(connect, 3000);
+  };
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    const items = msg.type === "snapshot" ? msg.items : [msg.item];
+    if (msg.type === "snapshot") runs.set("live", new Map());
+    items.forEach((it) => runs.get("live").set(it.name, compact(it)));
+    render();
+  };
+}
+
+fetch("/api/runs").then((r) => r.json()).then(async (data) => {
+  names = data.runs;
+  const remembered = load("compare.runs", null);
+  selected = (remembered ?? names).filter((n) => names.includes(n));
+  if (!selected.length) selected = names.slice();
+  renderRunPicker();
+  await Promise.all(selected.filter((n) => n !== "live").map((n) => fetchRun(n).catch((err) => console.error(err))));
+  runs.set("live", runs.get("live") ?? new Map());
+  render();
+  connect();
+});
+</script>
+</body>
+</html>

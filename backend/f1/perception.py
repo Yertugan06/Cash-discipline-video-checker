@@ -30,8 +30,10 @@ def load_perception_config(path: Path) -> dict:
         "hysteresis_sec",
         "exit_gap_sec",
         "hand_distance",
+        "glass_margin",
         "object_score",
         "person_score",
+        "person_min_height",
         "state_score",
         "state_margin",
         "owl_image_size",
@@ -50,7 +52,15 @@ def load_perception_config(path: Path) -> dict:
             or config[key] <= 0
         ):
             raise ValueError(f"Invalid perception setting: {key}")
-    for key in ("object_score", "person_score", "state_score", "state_margin", "hand_distance"):
+    for key in (
+        "object_score",
+        "person_score",
+        "person_min_height",
+        "state_score",
+        "state_margin",
+        "hand_distance",
+        "glass_margin",
+    ):
         if config[key] >= 1:
             raise ValueError(f"{key} must be below 1")
     if int(config["owl_image_size"]) % 16:
@@ -195,7 +205,9 @@ class LocalModels:
             if int(label) != 0:
                 continue
             normal = normal_box(box.detach().cpu().numpy(), image.width, image.height)
-            if normal:
+            # A box shorter than this is not a person in this room (e.g. a blob on the laptop)
+            # but would still win the cashier role by sitting closest to the laptop.
+            if normal and normal[3] - normal[1] >= self.config["person_min_height"]:
                 detections.append(Detection(label="person", score=float(score), box=normal))
         return self.nms(detections)
 

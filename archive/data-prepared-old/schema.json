@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ForteBank Datathon 26 data preparation records",
+  "$defs": {
+    "video": {
+      "type": "object",
+      "required": ["video_id", "original_id", "path", "duration_sec", "sha256", "organizer_verdict", "organizer_timestamps", "organizer_label_raw", "label_provenance", "duplicate_group"],
+      "properties": {
+        "video_id": {"type": "string", "pattern": "^X-[0-9]{3}$"},
+        "original_id": {"type": "string"},
+        "path": {"type": ["string", "null"]},
+        "duration_sec": {"type": ["number", "null"], "minimum": 0},
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "organizer_verdict": {"enum": ["violation", "no_violation", null]},
+        "organizer_timestamps": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "organizer_label_raw": {
+          "type": "object",
+          "required": ["timestamp", "verdict"],
+          "properties": {"timestamp": {"type": ["string", "null"]}, "verdict": {"type": ["string", "null"]}},
+          "additionalProperties": false
+        },
+        "label_provenance": {
+          "type": "object",
+          "required": ["file", "sheet", "row"],
+          "properties": {"file": {"type": "string"}, "sheet": {"type": "string"}, "row": {"type": "integer", "minimum": 1}},
+          "additionalProperties": false
+        },
+        "duplicate_group": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": ["event_id", "video_id", "start_sec", "end_sec", "anchor_sec", "observation", "annotation_status", "source_confidence", "source_notes", "source_interpretation", "provenance"],
+      "properties": {
+        "event_id": {"type": "string", "pattern": "^EV-[0-9]{3}$"},
+        "video_id": {"type": "string", "pattern": "^X-[0-9]{3}$"},
+        "start_sec": {"type": ["number", "null"], "minimum": 0},
+        "end_sec": {"type": ["number", "null"], "minimum": 0},
+        "anchor_sec": {"type": ["number", "null"], "minimum": 0},
+        "observation": {
+          "type": "object",
+          "required": ["text", "actor_role", "action", "object_state"],
+          "properties": {
+            "text": {"type": "string", "minLength": 1},
+            "actor_role": {"type": ["string", "null"]},
+            "action": {"type": ["string", "null"]},
+            "object_state": {"type": ["string", "null"]}
+          },
+          "additionalProperties": false
+        },
+        "annotation_status": {"enum": ["human_reviewed", "needs_review", "uncertain"]},
+        "source_confidence": {"type": ["string", "null"]},
+        "source_notes": {
+          "type": "object",
+          "required": ["annotation_note", "reviewer_note", "manual_check_flag"],
+          "properties": {
+            "annotation_note": {"type": ["string", "null"]},
+            "reviewer_note": {"type": ["string", "null"]},
+            "manual_check_flag": {"type": ["string", "null"]}
+          },
+          "additionalProperties": false
+        },
+        "source_interpretation": {"type": ["string", "null"]},
+        "provenance": {
+          "type": "object",
+          "required": ["file", "sheet", "row", "observation_cell"],
+          "properties": {
+            "file": {"type": "string"}, "sheet": {"type": "string"}, "row": {"type": "integer", "minimum": 1}, "observation_cell": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

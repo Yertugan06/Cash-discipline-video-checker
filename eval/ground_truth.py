@@ -47,7 +47,7 @@ from eval.data import (
     load_manifest,
 )
 
-DEFAULT_OUT = REPO_ROOT / "reasearch1" / "validation-private"
+DEFAULT_OUT = REPO_ROOT / "validation" / "validation-private"
 TIME_GAP_S = 3.0
 SPLIT_SEED = 26
 

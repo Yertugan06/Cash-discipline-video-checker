@@ -18,6 +18,10 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
   later gets every past result in the first snapshot. A restarted gateway reloads it,
   re-queues unfinished folder clips from scratch, and marks unfinished uploads as failed
   (their temp files are gone).
+- Annotations are saved as `annotations/<clip key>.json` next to `STATE_FILE` (so annotating needs
+  `STATE_FILE`). They are team ground truth: they stay in the gateway and never reach the checker.
+- To keep a finished run for `/compare`, copy `state.json` to `state.<name>.json` in the same
+  folder before starting the next run.
 - The page loads `/api/state` over plain HTTP on open, then follows `/ws`. While the socket
   is down it re-reads `/api/state` every 3 s.
 
@@ -31,6 +35,15 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
 | POST | `/api/run-folder` | queues every `.mov` in `VIDEO_DIR`, in clip-number order |
 | GET | `/api/state` | same as the snapshot |
 | GET | `/api/config` | `{folder, labels}` |
+| GET | `/api/items/{id}/video` | the item's source video (Range requests, for the replay player) |
+| GET | `/api/items/{id}/trace` | the checker's per-job trace (boxes, roles, events), proxied with the gateway's key |
+| GET | `/compare` | page comparing runs per clip; the `live` column follows `/ws` |
+| GET | `/api/runs` | `{"runs": ["live", ...saved]}`; saved runs are files `state.<name>.json` next to `STATE_FILE` |
+| GET | `/api/runs/{name}` | that run's items without evidence images |
+| GET | `/annotate` | page for writing what really happens in each clip (blind: no system output until a clip is marked done) |
+| GET | `/api/clips`, `/api/clips/{key}/video` | clips in `VIDEO_DIR` with annotation status; a clip's video |
+| GET, PUT | `/api/annotations/{key}?base_version=` | a clip's timeline (`realtime/annotations.py` schema); PUT refuses with 409 if someone saved since `base_version` |
+| GET | `/api/annotations-score?run=&clip=` | done timelines vs that run's traces: recall/extra per action, role accuracy, clips with no trace |
 
 Item `status`: `queued -> submitting -> processing -> done | failed`. A `done` item carries
 the checker's `DoneJob` verbatim in `result`.

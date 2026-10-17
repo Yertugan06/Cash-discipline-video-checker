@@ -2,27 +2,27 @@
 
 Status: **complete for this round, 2026-10-17 ~19:30.** 9 detector configurations across F1, F2, F3 and F4 (plus 2 F0 floors) were measured on all 40 unique videos, plus 5 window-level verification probes. **None separates violation videos from clean videos, and none localizes better than a pixel-free prior.** The F3 vs. F4 vs. F1 comparison is therefore a tie at chance. The decision and switching conditions are in `solution-decision.md`.
 
-Inputs: `task.md`, `problem-reframing.md` (rev 5), `problem-exploration.md`, `data-exploration.md`, `technology-research-landscape.md`, `senior-ideas.md`, `skills/problem-validate/SKILL.md`, `data/Таблица_нарушений.xlsx`, `data/Cash_Discipline_Cases_Rules.xlsx`.
+Inputs: `task.md`, `problem-reframing.md` (rev 5), `problem-exploration.md`, `data-exploration.md`, `technology-research-landscape.md`, `senior-ideas.md`, `archive/skills/problem-validate/SKILL.md`, `data/Таблица_нарушений.xlsx`, `data/Cash_Discipline_Cases_Rules.xlsx`.
 
-**Evidence labels:** **[M]** measured here (script + log under `validation-evidence/`) · **[R]** reproduced independently · **[Rep]** reported by others, not reproduced · **[H]** hypothesis.
+**Evidence labels:** **[M]** measured here (script + log under `validation/validation-evidence/`) · **[R]** reproduced independently · **[Rep]** reported by others, not reproduced · **[H]** hypothesis.
 
-**Privacy:** inference ran only on team-controlled machines: the laptop RTX 4080 12 GB, and the Brev L4 `datathon2`, a team VM the user directed the work to. No frame, video, model description or per-clip annotation was sent to a cloud AI; scripts print aggregates only. Per-clip ground truth, predictions and raw model text are in `validation-private/`.
+**Privacy:** inference ran only on team-controlled machines: the laptop RTX 4080 12 GB, and the Brev L4 `datathon2`, a team VM the user directed the work to. No frame, video, model description or per-clip annotation was sent to a cloud AI; scripts print aggregates only. Per-clip ground truth, predictions and raw model text are in `validation/validation-private/`.
 **⚠ That folder and both annotation workbooks were pushed to the public GitHub repo in commit `8155025`** (§13).
 
 ## 1. Environment, data and protocol
 
 | Item | Value |
 |---|---|
-| Laptop | RTX 4080 Laptop 12 GB; WSL 9.7 GB RAM; torch 2.14.1+cu126, transformers 5.20.1 (`harness/requirements-lock.txt`) [M] |
-| `datathon2` | NVIDIA L4 23 GB (dedicated), 15 GB RAM, 4 vCPU; torch 2.11.0+cu128, transformers 5.20.1 (`logs/datathon2/requirements-lock-datathon2.txt`) [M] |
+| Laptop | RTX 4080 Laptop 12 GB; WSL 9.7 GB RAM; torch 2.14.1+cu126, transformers 5.20.1 (`validation/validation-evidence/harness/requirements-lock.txt`) [M] |
+| `datathon2` | NVIDIA L4 23 GB (dedicated), 15 GB RAM, 4 vCPU; torch 2.11.0+cu128, transformers 5.20.1 (`validation/validation-evidence/logs/datathon2/requirements-lock-datathon2.txt`) [M] |
 | Models (all Apache-2.0, pinned, SHA-256 verified) | Qwen3-VL-4B-Instruct `ebb281ec`; Qwen3-VL-8B-Instruct `0c351dd0`; RT-DETR v2 r18 `56509617`; DINOv2-base `f9e44c81`; SigLIP2-base-patch16-384 `f775b65a` |
-| Workbook | `data/Таблица_нарушений.xlsx` (sheets Нарушения / Без нарушений / Нормы). **No `Таблица_нарушений(1).xlsx` exists in the project**; the file present matches the latest download. It was edited at 15:43 (2 norm codes, confidence and must-check flags). All scores below are recomputed on the edited version; every number came out identical to the pre-edit scoring (`logs/score_all_gtv2.txt`, `logs/datathon2/*gtv2.txt`) |
+| Workbook | `data/Таблица_нарушений.xlsx` (sheets Нарушения / Без нарушений / Нормы). **No `Таблица_нарушений(1).xlsx` exists in the project**; the file present matches the latest download. It was edited at 15:43 (2 norm codes, confidence and must-check flags). All scores below are recomputed on the edited version; every number came out identical to the pre-edit scoring (`validation/validation-evidence/logs/score_all_gtv2.txt`, `validation/validation-evidence/logs/datathon2/*gtv2.txt`) |
 | Ground truth | Verdict and time: organizer labels only. Mechanism: human norm code on the **mechanism-reliable subset (17/21 violation videos)**. It excludes X-1, X-11, X-13 and X-44, and rows flagged ОБЯЗАТЕЛЬНО unless re-reviewed (X-24 and X-32 count as reviewed). Human times equal the organizer seconds within 1 s for 22/22 events [M], so the workbook adds mechanism, not timing |
 | Units, groups, split | 40 unique videos (21 V / 19 C), 22 events. **22 groups** = byte duplicates (X-4≡X-47, X-5≡X-48) + violation/clean twins from the workbook. Dev 24 (12/12) / lockbox 16 (9/7), grouped and layout-stratified, seed 26 [M, R] |
 | Camera layouts | 3 layouts in `Cash_Discipline_Cases_Rules.xlsx`. Every score is reported per layout. This is **cross-layout within one camera style; no other-angle footage exists**, so no cross-view robustness claim is made |
 | Shortcut controls | No system receives duration, relative position, clip identity or label times. The duration-only verdict (LOO 25/40; video AUC 0.68) and the relative-position timecode prior are **references only** |
-| Pre-registration | `validation-evidence/PREREGISTRATION.md`: claims C1–C6 before any output; Addendum A (A1, A2) before those runs; Addendum B (B1) before the probes |
-| Verification | An independent agent reproduced GT counts, duplicates, split integrity and the scorer on synthetic predictions (`validation-evidence/verify/`) [R]. The pixel-free baselines were reproduced from the original audit script [R]. Qwen3-VL-4B verification reproduced **identically** on the L4 (8/22, 4/19, 2/11, 5/19; greedy decoding) [R] |
+| Pre-registration | `validation/validation-evidence/PREREGISTRATION.md`: claims C1–C6 before any output; Addendum A (A1, A2) before those runs; Addendum B (B1) before the probes |
+| Verification | An independent agent reproduced GT counts, duplicates, split integrity and the scorer on synthetic predictions (`validation/validation-evidence/verify/`) [R]. The pixel-free baselines were reproduced from the original audit script [R]. Qwen3-VL-4B verification reproduced **identically** on the L4 (8/22, 4/19, 2/11, 5/19; greedy decoding) [R] |
 
 ## 2. Floors every candidate must beat
 
@@ -153,7 +153,7 @@ Every configuration finishes within the 5-minute limit. The binding factor is ou
 ## 13. Incident: private data in a public repository
 
 `https://github.com/Yertugan06/Hackathon` is **public** (GitHub API, checked 2026-10-17). Commit `8155025` ("reasreach 1") tracks and pushed:
-- `reasearch1/validation-private/`: GT with workbook text, the local models' frame descriptions, per-clip predictions;
+- `validation/validation-private/`: GT with workbook text, the local models' frame descriptions, per-clip predictions;
 - `data/Таблица_нарушений.xlsx` and `data/Cash_Discipline_Cases_Rules.xlsx`;
 - `data/prepared/`.
 
@@ -161,18 +161,18 @@ The same commit changed `.gitignore` from `data/` to `open`. No videos are track
 
 ## 14. Reproduction
 
-Run from the repository root, with the research root `reasearch1` and the venv `/home/yertugan/.venvs/dt26`.
+Run from the repository root, with the research root `validation` and the venv `/home/yertugan/.venvs/dt26`.
 
 ```
-python -I reasearch1/validation-evidence/harness/gt.py reasearch1
-python -I reasearch1/validation-evidence/harness/split.py reasearch1
-python -I reasearch1/validation-evidence/harness/motion.py reasearch1 && python -I reasearch1/validation-evidence/harness/propose_eval.py reasearch1
-python -I reasearch1/validation-evidence/harness/f3_discovery.py reasearch1 {whole_1fps_s288|chunk30_2fps_s288} all
-python -I reasearch1/validation-evidence/harness/verify_windows.py reasearch1 4 448 [tag] [v1|items] [all|dev]
-python -I reasearch1/validation-evidence/harness/f4_cascade.py reasearch1 {motion_short|uniform10} 5
-python -I reasearch1/validation-evidence/harness/f1_rules.py reasearch1 both cuda
-python -I reasearch1/validation-evidence/harness/f2_probe.py reasearch1 {dinov2|siglip2} [raw]
-python -I reasearch1/validation-evidence/harness/score.py reasearch1 <pred> [--split dev|lockbox]
+python -I validation/validation-evidence/harness/gt.py validation
+python -I validation/validation-evidence/harness/split.py validation
+python -I validation/validation-evidence/harness/motion.py validation && python -I validation/validation-evidence/harness/propose_eval.py validation
+python -I validation/validation-evidence/harness/f3_discovery.py validation {whole_1fps_s288|chunk30_2fps_s288} all
+python -I validation/validation-evidence/harness/verify_windows.py validation 4 448 [tag] [v1|items] [all|dev]
+python -I validation/validation-evidence/harness/f4_cascade.py validation {motion_short|uniform10} 5
+python -I validation/validation-evidence/harness/f1_rules.py validation both cuda
+python -I validation/validation-evidence/harness/f2_probe.py validation {dinov2|siglip2} [raw]
+python -I validation/validation-evidence/harness/score.py validation <pred> [--split dev|lockbox]
 # datathon2: ~/dt26-validation (same layout); VLM_DIR selects the model; queues d2_queue.sh, d2_queue_b.sh
 ```
 
@@ -181,6 +181,6 @@ python -I reasearch1/validation-evidence/harness/score.py reasearch1 <pred> [--s
 - **Agents:**
   - An independent verifier reproduced the protocol.
   - A CV subagent returned unrun code with a broken COCO class list and a placeholder rule. It also made an unrequested local commit; that commit was soft-reset, never pushed. The code was replaced.
-  - The prior agent definitions in `agents/` were reused as instructions; no new definitions were added.
+  - The prior agent definitions in `archive/agents/` were reused as instructions; no new definitions were added.
 - **Downloads:** a rejected local 8B download had started anyway. It was stopped; 7.8 GB of partial files remain in `/home/yertugan/models/Qwen3-VL-8B-Instruct`.
 - **Servers:** the shared `datathon` VM was left alone after a teammate's vLLM server filled its GPU. My workspace there (`~/dt26-validation`, incl. 8B weights and GT) is still on disk; I can delete it on request.

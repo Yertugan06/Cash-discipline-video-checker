@@ -20,7 +20,8 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 CODEX_VERIFIED = (
     ROOT
-    / "reasearch2"
+    / "archive"
+    / "vm-copies"
     / "datathon"
     / "forte_brev_kit"
     / "brev_kit"

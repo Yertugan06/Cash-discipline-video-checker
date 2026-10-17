@@ -33,14 +33,20 @@ GPU host.
 
 ## Repository layout (high level)
 
-- `backend/` — FastAPI service, pipeline, rules, knowledge grounding (Python).
-- `frontend/` — React + TypeScript UI.
-- `knowledge/` — the runtime Knowledge Pack (`rules.yaml`, `norms.json`), read-only at runtime.
-- `tests/`, `tests/e2e/` — unit/integration tests and the external acceptance suite.
-- `robustness/` — the other-angle filming protocol and results.
-- `reasearch1/` — architecture decisions and research notes (`architecture.md`, `architecture-decision.md`, `implementation-plan.md`).
+What is current and what is history: [`STATUS.md`](STATUS.md). Full tree:
+[`tree.md`](tree.md).
 
-See `AGENTS.md` for engineering guidelines and `reasearch1/architecture.md` for the authoritative design.
+- `backend/` - FastAPI service, pipeline, F1 detector, rules, knowledge grounding (Python).
+- `frontend/` - React + TypeScript UI.
+- `realtime/` - live verdict gateway (WebSocket).
+- `config/`, `knowledge/` - detector config, rule thresholds and the Knowledge Pack.
+- `tests/`, `tests/e2e/` - unit/integration tests and the external acceptance suite.
+- `eval/`, `validation/` - scoring of API outputs against the private ground truth.
+- `attempts/` - every experiment with its result and logs.
+- `robustness/` - the other-angle filming protocol and results.
+- `archive/` - research notes, superseded designs, raw VM workspace copies.
+
+See `AGENTS.md` for engineering guidelines and `docs/ARCHITECTURE_SUMMARY.md` for the current design.
 
 ## Local development
 

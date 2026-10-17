@@ -1,5 +1,5 @@
 """Unit tests for `eval.run_eval`, using synthetic `DoneJob` outputs and a synthetic GT/split
-pair written to a tmp dir -- never the real `reasearch1/validation-private/gt.json` (privacy
+pair written to a tmp dir -- never the real `validation/validation-private/gt.json` (privacy
 rule: this suite must not touch organizer labels)."""
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from eval.run_eval import build_pred, clip_id_from_filename, run_scorer, to_pred
 pytestmark = pytest.mark.skipif(
     not (
         Path(__file__).resolve().parent.parent
-        / "reasearch1"
+        / "validation"
         / "validation-evidence"
         / "harness"
         / "score.py"

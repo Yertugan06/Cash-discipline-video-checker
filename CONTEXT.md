@@ -10,6 +10,12 @@ Working notes for coding agents on this project. Read before starting work.
 - Still applies: no cloud AI tools on dataset videos or frames (task.md §7), and never
   commit secrets (`.env`, API keys).
 
+## Layout
+
+- `STATUS.md` says what is current and what is history, where the labels come from, and
+  which paths moved on 2026-10-17. `archive/` is history: don't build on it without moving
+  the file back out.
+
 ## Results
 
 - Every approach tried, with its result and logs: `attempts/README.md` (the map). Add a row
@@ -24,7 +30,16 @@ Working notes for coding agents on this project. Read before starting work.
   Live verdict page: container `datathon26-realtime` (image built from `realtime/Dockerfile`,
   gateway on `127.0.0.1:8100`, WebSocket feed, runs `~/data/open/videos` one at a time,
   results persisted in `~/realtime-state/state.json`). View it with
-  `ssh -N -L 8100:127.0.0.1:8100 datathon` -> http://localhost:8100.
+  `ssh -N -L 8100:127.0.0.1:8100 datathon` -> http://localhost:8100. Open a result to replay
+  the video with the detector's boxes and roles drawn over it ("Objects" toggle).
+  `/compare` shows saved runs side by side; `/annotate` is where the team writes what really
+  happens in each clip (blind; saved on the VM in `~/realtime-state/annotations/<clip>.json`,
+  scored against a run's traces per action). Those files are the event-level ground truth.
+  Debugging a verdict: every F1 job writes `/app/runtime/traces/<job_id>.json` in the checker
+  (volume `datathon26_work`): calibration candidates, raw state changes, the event log (roles,
+  enter/exit, safe/door/screen), every rule finding with `kept`, per-frame boxes. Also served
+  at `GET /api/v1/jobs/{job_id}/trace`. `docker logs datathon26-checker-1` has one line per job
+  stage. To rerun the rules on cached perception without the GPU, see `scripts/replay_f1.py`.
   Team data root: `~/data` (`open/` organizer data, `team/` team workbooks and reviews); the
   canonical copy for `python -m eval.sync_data`. Add files there, never overwrite.
 - `datathon2` (Brev, L4): stopped; its home is copied to `datathon:~/from-datathon2/`.

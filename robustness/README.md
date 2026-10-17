@@ -6,13 +6,13 @@ training dataset and development runs all use one fixed top-down angle, one
 camera, one desk (task.md FAQ 3); the jury's final test video is filmed
 from a different angle (task.md FAQ 4). This protocol produces this team's
 own other-angle evidence before that happens
-(`reasearch1/implementation-plan.md` WP4).
+(`archive/research1/implementation-plan.md` WP4).
 
 ## Why self-filmed clips, and how they are used
 
 Self-filmed clips are a robustness **check**, not a training or tuning set:
 do not adjust rule thresholds to fit them after the dev-set config is
-frozen (`reasearch1/implementation-plan.md` Phase 3 pre-registration,
+frozen (`archive/research1/implementation-plan.md` Phase 3 pre-registration,
 "no lockbox look before freezing on dev" — the same discipline applies
 here). They only tell us whether the service still runs and still finds
 the right kind of thing from an angle it has never seen.
@@ -92,7 +92,7 @@ and compare the reported violation type against the clip's filename.
 Report the result honestly, however it comes out — "tested on N self-filmed
 clips, X/Y" if the run completed, or **"untested on other angles"** if time
 ran out before filming/running this check
-(`reasearch1/implementation-plan.md` WP4: "If time runs out, state
+(`archive/research1/implementation-plan.md` WP4: "If time runs out, state
 'untested on other angles'"). Do not round up, do not omit a clip that
 failed or errored.
 
@@ -112,4 +112,4 @@ correct, Y/Y finished under the time budget" or "untested on other angles".
 
 This summary line is also the one that belongs in `docs/LIMITATIONS.md`
 ("Camera angle" section) and in the G4 checklist (item 5,
-`reasearch1/implementation-plan.md` §4) — keep the two in sync.
+`archive/research1/implementation-plan.md` §4) — keep the two in sync.

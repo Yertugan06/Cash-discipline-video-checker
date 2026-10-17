@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-17
 - **Status:** measured, rejected
-- **Where it ran:** laptop RTX 4080 12 GB (and reproduced on `datathon2` L4); harness `reasearch1/validation-evidence/harness/f3_discovery.py`
+- **Where it ran:** laptop RTX 4080 12 GB (and reproduced on `datathon2` L4); harness `validation/validation-evidence/harness/f3_discovery.py`
 - **Models:** Qwen3-VL-4B-Instruct (rev `ebb281ec`)
 
 ## Approach
@@ -19,8 +19,8 @@ violations with timecodes. No proposals, no rules.
 
 ## Logs
 
-- `reasearch1/validation-evidence/logs/F3_whole_1fps_s288.txt`, `F3_chunk30_2fps_s288.txt`
-- `reasearch1/validation-evidence/logs/score_F3_whole_1fps_s288.txt`, `score_F1_F3chunk.txt`, `score_by_split.txt`
+- `validation/validation-evidence/logs/F3_whole_1fps_s288.txt`, `F3_chunk30_2fps_s288.txt`
+- `validation/validation-evidence/logs/score_F3_whole_1fps_s288.txt`, `score_F1_F3chunk.txt`, `score_by_split.txt`
 
 ## Conclusion
 

@@ -4,7 +4,7 @@
 (`backend/knowledge.py`) only ever reads these two files. They are rebuilt by
 `scripts/build_knowledge.py` from:
 
-- `reasearch2/datathon/forte_brev_kit/brev_kit/codex/codex_verified.json` (217 rows, verbatim
+- `archive/vm-copies/datathon/forte_brev_kit/brev_kit/codex/codex_verified.json` (217 rows, verbatim
   legal text + `act`/`punkt`/`url`/`strength` per norm) -- the source for every `norms.json` row;
 - `config/f1_codex.yaml` (the F1 team's independent rule/citation research) -- used only to
   cross-check sources and to document the conflicts below, **not** used as the primary source
@@ -83,7 +83,7 @@ to `true` (with `verified_by`/`verified_at`) by hand -- not by re-running the bu
      30-minute inactivity auto-lock, `adilet.zan.kz/.../V2600038336`) -- this is what
      `rules.yaml` currently uses, because it is the only one of the three with a verified
      verbatim quote available to this build;
-   - the R1 validation workbook (`reasearch1/validation-evidence`) uses **`48-71-9`** instead
+   - the R1 validation workbook (`validation/validation-evidence`) uses **`48-71-9`** instead
      (act 48, not 53) -- this id is **not present** in `codex_verified.json`, so no quote/URL
      could be filled in without inventing one, which this build will not do;
    - `config/f1_codex.yaml`'s own entry for `L-PC-LOCKED` cites `source: "NBRK 48, п.71 пп.9
@@ -125,7 +125,7 @@ choice" until that one-time, human-approved step).
 ## Equivalence with the kit
 
 `tests/test_rules_equivalence.py` runs the kit's own `timeline_rules.detect()` (loaded via
-`importlib` from the gitignored `reasearch2/` tree, skipped with a clear reason when absent) as
+`importlib` from the gitignored `archive/vm-copies/` tree, skipped with a clear reason when absent) as
 the reference oracle, and `backend.rules.evaluate()` as the port, over every saved state file
 under `runs/q35_9b_fp8/states` (40 files; `KIT_STATES_DIR` overrides the path). As of this build,
 **all 40 are bit-identical** (same `(rule_id, t_anchor)` set, `experimental=True` so
@@ -134,8 +134,8 @@ deviation was needed, so there is nothing further to document here beyond the tw
 signal-processing constants (`SMOOTH_K`, `DEDUPE_S`) and the shared-threshold "owner rule" choices
 already explained in `backend/rules/timeline.py`'s module docstring.
 
-A separate, optional check (not a test -- it touches `reasearch1/validation-private`, which is
-outside this module's file set) ran `reasearch1/validation-evidence/harness/score.py` against the
+A separate, optional check (not a test -- it touches `validation/validation-private`, which is
+outside this module's file set) ran `validation/validation-evidence/harness/score.py` against the
 40-video ranked output of this port (`rank(evaluate(...), rules, cap=3)`, one event per finding,
 `code` = the finding's primary norm id). Aggregate result, labels never printed, matching the
 measured basis in `architecture.md` §4 closely:

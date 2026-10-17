@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Annotate Clips</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #16181d; --muted: #646b78; --line: #e2e5ea;
+    --viol: #c62f2f; --viol-bg: #fdecec; --ok: #1f8a4c; --ok-bg: #e7f6ed;
+    --run: #2b63d9; --run-bg: #e8effc; --warn: #a86a00; --warn-bg: #fdf3e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111317; --card: #1a1d23; --text: #e8eaee; --muted: #9aa1ad; --line: #2b3038;
+      --viol: #ff7b7b; --viol-bg: #3a1d1f; --ok: #5fd08f; --ok-bg: #173023;
+      --run: #7ba4ff; --run-bg: #1b2640; --warn: #f0b75a; --warn-bg: #3a2c14;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  h1 { font-size: 20px; margin: 0; }
+  h2 { font-size: 15px; margin: 0 0 8px; }
+  a { color: var(--run); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+  .clips { display: flex; flex-direction: column; gap: 4px; max-height: 80vh; overflow-y: auto; }
+  .clip { display: flex; justify-content: space-between; gap: 6px; align-items: center; text-align: left;
+          border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 8px;
+          padding: 6px 8px; cursor: pointer; font: inherit; }
+  .clip.active { border-color: var(--run); background: var(--run-bg); }
+  .work { display: grid; grid-template-columns: minmax(240px, 380px) minmax(0, 1fr); gap: 14px; align-items: start; }
+  video { width: 100%; display: block; border-radius: 8px; background: #000; }
+  .time { font: 600 18px/1.4 ui-monospace, monospace; margin: 6px 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+  label.f { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
+  input, select, textarea, button { font: inherit; color: var(--text); background: var(--card);
+         border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+  textarea { width: 100%; min-height: 54px; }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--run); }
+  button.primary { background: var(--run); color: #fff; border-color: var(--run); }
+  .chip { font-size: 11px; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+  .violation { color: var(--viol); background: var(--viol-bg); }
+  .no_violation, .done { color: var(--ok); background: var(--ok-bg); }
+  .draft { color: var(--warn); background: var(--warn-bg); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 5px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .seek { border: 0; padding: 0; background: none; color: var(--run); text-decoration: underline; cursor: pointer; }
+  .save { font-size: 12px; }
+  .save.err { color: var(--viol); font-weight: 600; }
+  .hit { color: var(--ok); font-weight: 700; } .miss { color: var(--viol); font-weight: 700; }
+  .scroll { overflow-x: auto; }
+  @media (max-width: 900px) {
+    .layout, .work { grid-template-columns: 1fr; }
+    .clips { flex-direction: row; flex-wrap: wrap; max-height: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Annotate clips</h1>
+      <div class="muted">Write what really happens, without looking at the system output. Keys: space play/pause, ←/→ ±0.5 s, , / . ±0.1 s</div>
+    </div>
+    <div class="row">
+      <label class="f">Annotator<input id="annotator" placeholder="your name" maxlength="60"></label>
+      <a href="/">Live verdicts</a> <a href="/compare">Compare runs</a>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="card"><h2>Clips</h2><div class="clips" id="clips"></div></nav>
+    <section id="editor" class="muted">Pick a clip.</section>
+  </div>
+  <section class="card" style="margin-top:14px">
+    <h2>Score of done clips against a run</h2>
+    <div class="row">
+      <select id="scoreRun"></select><button id="scoreAll">Score</button>
+      <span class="muted">Recall = truth events the system found (±2 s); extra = system events nobody annotated.</span>
+    </div>
+    <div id="scoreOut" class="scroll"></div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = (t) => (t == null ? "" : Number(t).toFixed(1));
+const VERDICT = { violation: "нарушение", no_violation: "без нарушения" };
+let vocab = null, clips = [], current = null, doc = null, saveTimer = null, saveState = "";
+
+const options = (list, value) => list.map((v) => `<option ${v === value ? "selected" : ""}>${esc(v)}</option>`).join("");
+try { $("annotator").value = localStorage.getItem("annotate.name") ?? ""; } catch {}
+$("annotator").addEventListener("change", () => { try { localStorage.setItem("annotate.name", $("annotator").value); } catch {} });
+
+async function loadClips() {
+  clips = (await (await fetch("/api/clips")).json()).clips;
+  $("clips").innerHTML = clips.map((c) => `<button class="clip ${c.key === current ? "active" : ""}" data-key="${esc(c.key)}">
+    <span>${esc(c.key)} ${c.label ? `<span class="chip ${c.label}">${c.label === "violation" ? "V" : "OK"}</span>` : ""}</span>
+    <span>${c.rows ? c.rows : ""} ${c.status ? `<span class="chip ${c.status}">${c.status}</span>` : ""}</span></button>`).join("")
+    || '<span class="muted">No clips: VIDEO_DIR is not set on the gateway.</span>';
+}
+
+$("clips").addEventListener("click", async (e) => {
+  const button = e.target.closest(".clip");
+  if (!button) return;
+  await flushSave();
+  openClip(button.dataset.key);
+});
+
+async function openClip(key) {
+  const res = await fetch(`/api/annotations/${encodeURIComponent(key)}`);
+  if (!res.ok) { alert(`${res.status}: ${await res.text()}`); return; }
+  current = key;
+  doc = await res.json();
+  renderEditor();
+  loadClips();
+}
+
+function renderEditor() {
+  const clip = clips.find((c) => c.key === current) ?? {};
+  $("editor").className = "";
+  $("editor").innerHTML = `<div class="work">
+    <div class="card">
+      <h2>${esc(clip.name ?? current)} ${clip.label ? `<span class="chip ${clip.label}">label: ${VERDICT[clip.label]}</span>` : ""}</h2>
+      <video id="video" controls playsinline preload="metadata" src="/api/clips/${encodeURIComponent(current)}/video"></video>
+      <div class="time" id="time">0.0 s</div>
+      <div class="row">${[-1, -0.1, 0.1, 1].map((d) => `<button data-step="${d}">${d > 0 ? "+" : ""}${d} s</button>`).join("")}</div>
+      <label class="f">Camera layout<select id="layout">${options(vocab.layout, doc.layout)}</select></label>
+      <label class="f">Max people in room<input id="people" type="number" min="0" max="20" value="${doc.people_max}"></label>
+      <label class="f">What happens (one or two lines)<textarea id="summary" maxlength="2000">${esc(doc.summary)}</textarea></label>
+      <div class="row"><label class="f">Status<select id="status">${options(["draft", "done"], doc.status)}</select></label>
+        <span class="save" id="save">${doc.version ? "saved" : "not saved yet"}${doc.annotator ? " · " + esc(doc.annotator) : ""}</span></div>
+    </div>
+    <div class="card">
+      <h2>Add event at the current time</h2>
+      <div class="row">
+        <label class="f">Who<select id="actor">${options(vocab.actor, "cashier")}</select></label>
+        <label class="f">Description<input id="actorDesc" maxlength="80" placeholder="man in black"></label>
+        <label class="f">Action<select id="action">${options(vocab.action, "enter")}</select></label>
+        <label class="f">Item<select id="item">${options(vocab.item, "none")}</select></label>
+        <label class="f">Where<select id="place">${options(vocab.place, "none")}</select></label>
+      </div>
+      <div class="row"><label class="f" style="flex:1">Note<input id="note" maxlength="500"></label>
+        <button class="primary" id="add">Add at current time</button></div>
+      <div class="scroll"><table><thead><tr><th>Start</th><th>End</th><th>Who</th><th>Action</th><th>Item</th><th>Where</th><th>Note</th><th></th></tr></thead>
+        <tbody id="rows"></tbody></table></div>
+      <div id="system"></div>
+    </div></div>`;
+  const video = $("video");
+  video.addEventListener("timeupdate", () => { $("time").textContent = `${video.currentTime.toFixed(1)} s`; });
+  $("editor").querySelectorAll("[data-step]").forEach((b) => b.addEventListener("click", () => step(Number(b.dataset.step))));
+  ["layout", "people", "summary", "status"].forEach((id) => $(id).addEventListener("change", () => {
+    const statusChanged = doc.status !== $("status").value;
+    doc.layout = $("layout").value; doc.people_max = Number($("people").value) || 0;
+    doc.summary = $("summary").value; doc.status = $("status").value;
+    changed();
+    // Rebuild the comparison box only when it must: a textarea's change fires on blur, and a
+    // rebuild then would swallow the click that caused the blur.
+    if (statusChanged) renderSystem();
+  }));
+  $("add").addEventListener("click", () => {
+    doc.rows.push({
+      t_start: +video.currentTime.toFixed(1), t_end: null, actor: $("actor").value, actor_desc: $("actorDesc").value,
+      action: $("action").value, item: $("item").value, place: $("place").value, note: $("note").value,
+    });
+    doc.rows.sort((a, b) => a.t_start - b.t_start);
+    $("note").value = "";
+    renderRows(); changed();
+  });
+  renderRows();
+  renderSystem();
+}
+
+function renderRows() {
+  $("rows").innerHTML = doc.rows.map((r, i) => `<tr>
+    <td><button class="seek" data-seek="${r.t_start}">${fmt(r.t_start)}</button></td>
+    <td>${r.t_end != null ? `<button class="seek" data-seek="${r.t_end}">${fmt(r.t_end)}</button>` : ""} <button data-end="${i}" title="set end to the current time">end = now</button></td>
+    <td>${esc(r.actor)}${r.actor_desc ? `<div class="muted">${esc(r.actor_desc)}</div>` : ""}</td>
+    <td>${esc(r.action)}</td><td>${esc(r.item)}</td><td>${esc(r.place)}</td><td>${esc(r.note)}</td>
+    <td><button data-del="${i}" title="delete">✕</button></td></tr>`).join("")
+    || '<tr><td colspan="8" class="muted">No events yet.</td></tr>';
+}
+
+$("editor").addEventListener("click", (e) => {
+  const video = $("video");
+  const seek = e.target.closest("[data-seek]");
+  if (seek && video) { video.currentTime = Number(seek.dataset.seek); return; }
+  const end = e.target.closest("[data-end]");
+  if (end && video) {
+    const row = doc.rows[Number(end.dataset.end)];
+    const t = +video.currentTime.toFixed(1);
+    if (t < row.t_start) { alert("End is before the start; move the video past the start first."); return; }
+    row.t_end = t; renderRows(); changed(); return;
+  }
+  const del = e.target.closest("[data-del]");
+  if (del) { doc.rows.splice(Number(del.dataset.del), 1); renderRows(); changed(); }
+});
+
+function step(seconds) {
+  const video = $("video");
+  if (video) video.currentTime = Math.max(0, video.currentTime + seconds);
+}
+
+document.addEventListener("keydown", (e) => {
+  if (!$("video") || e.target.closest("input, textarea, select")) return;
+  const steps = { ArrowLeft: -0.5, ArrowRight: 0.5, ",": -0.1, ".": 0.1 };
+  if (e.key === " ") { e.preventDefault(); const v = $("video"); v.paused ? v.play() : v.pause(); }
+  else if (e.key in steps) { e.preventDefault(); step(steps[e.key]); }
+});
+
+// ---- saving: debounced, with the version we loaded so a parallel edit is never overwritten ----
+function changed() {
+  setSave("unsaved changes...");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 800);
+}
+
+function setSave(text, error = false) {
+  saveState = text;
+  const el = $("save");
+  if (el) { el.textContent = text; el.className = `save ${error ? "err" : ""}`; }
+}
+
+async function flushSave() {
+  if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; await save(); }
+}
+
+async function save() {
+  saveTimer = null;
+  const body = {
+    layout: doc.layout, people_max: doc.people_max, summary: doc.summary, status: doc.status,
+    annotator: $("annotator").value || doc.annotator, rows: doc.rows,
+  };
+  const res = await fetch(`/api/annotations/${encodeURIComponent(current)}?base_version=${doc.version}`, {
+    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+  });
+  if (res.status === 409) {
+    setSave(`${(await res.json()).detail}. Copy your notes, then reopen the clip to load their version.`, true);
+    return;
+  }
+  if (!res.ok) { setSave(`save failed: ${res.status} ${await res.text()}`, true); return; }
+  doc = await res.json();
+  setSave(`saved ${new Date(doc.version * 1000).toLocaleTimeString()} · ${doc.annotator}`);
+  loadClips();
+}
+
+window.addEventListener("beforeunload", (e) => { if (saveTimer || saveState.startsWith("unsaved")) e.preventDefault(); });
+
+// ---- comparison with the system: only after the clip is marked done, so annotation stays blind ----
+function renderSystem() {
+  const box = $("system");
+  if (!box) return;
+  if (doc.status !== "done") { box.innerHTML = '<p class="muted">Mark the clip "done" to compare it with the system.</p>'; return; }
+  box.innerHTML = `<h2 style="margin-top:12px">System vs this timeline</h2>
+    <div class="row"><select id="clipRun">${$("scoreRun").innerHTML}</select><button id="clipScore">Compare</button></div><div id="clipOut"></div>`;
+  $("clipScore").addEventListener("click", async () => {
+    await flushSave();
+    const res = await fetch(`/api/annotations-score?run=${encodeURIComponent($("clipRun").value)}&clip=${encodeURIComponent(current)}`);
+    const data = await res.json();
+    const clip = data.clips?.[0];
+    if (!res.ok || !clip) { $("clipOut").innerHTML = `<p class="muted">${esc(data.detail ?? "No trace for this clip in that run (runs before traces existed, or replay runs).")}</p>`; return; }
+    $("clipOut").innerHTML = `<table><thead><tr><th>Truth</th><th>Found by system</th></tr></thead><tbody>${clip.rows.map((r) => `<tr>
+      <td>${fmt(r.t_start)} s ${esc(r.actor)} ${esc(r.action)} ${r.item !== "none" ? esc(r.item) : ""}</td>
+      <td>${!r.detectable ? '<span class="muted">no system event for this action</span>' : r.matched_t != null
+        ? `<span class="hit">✓</span> at ${fmt(r.matched_t)} s${r.role_ok === false ? ` <span class="miss">role ${esc(r.matched_role)}</span>` : ""}`
+        : '<span class="miss">✗ missed</span>'}</td></tr>`).join("")}</tbody></table>
+      <p class="muted">System events with no matching truth row: ${clip.unmatched_events.map((e) => `${fmt(e.t)} s ${esc(e.type)}${e.role ? " (" + esc(e.role) + ")" : ""}`).join(", ") || "none"}</p>`;
+  });
+}
+
+$("scoreAll").addEventListener("click", async () => {
+  await flushSave();
+  const res = await fetch(`/api/annotations-score?run=${encodeURIComponent($("scoreRun").value)}`);
+  const data = await res.json();
+  if (!res.ok) { $("scoreOut").innerHTML = `<p class="muted">${esc(data.detail)}</p>`; return; }
+  const s = data.summary;
+  const rows = Object.entries(s.per_action).sort((a, b) => b[1].truth - a[1].truth);
+  $("scoreOut").innerHTML = `<p class="muted">${s.clips} done clips scored${data.missing_traces.length ? `; no trace for ${data.missing_traces.map((m) => esc(m.clip)).join(", ")}` : ""}.
+    Roles right on matched events: ${s.roles.checked ? `${s.roles.ok}/${s.roles.checked}` : "-"}.</p>
+    <table><thead><tr><th>Action</th><th>Truth events</th><th>Found (recall)</th><th>Extra system events</th></tr></thead><tbody>
+    ${rows.map(([a, v]) => `<tr><td>${esc(a)}</td><td>${v.truth}</td>
+      <td>${!v.detectable ? '<span class="muted">no system event</span>' : v.truth ? `${v.found}/${v.truth} (${Math.round((100 * v.found) / v.truth)}%)` : "-"}</td>
+      <td>${v.detectable ? v.extra : ""}</td></tr>`).join("")}</tbody></table>`;
+});
+
+Promise.all([
+  fetch("/api/annotation-vocabulary").then((r) => r.json()),
+  fetch("/api/runs").then((r) => r.json()),
+]).then(([v, runs]) => {
+  vocab = v;
+  $("scoreRun").innerHTML = runs.runs.filter((n) => !n.startsWith("replay-")).map((n) => `<option>${esc(n)}</option>`).join("");
+  loadClips();
+});
+</script>
+</body>
+</html>

@@ -1,11 +1,11 @@
 # Limitations and known error cases
 
 task.md §8 requires "перечень ограничений решения и известных случаев
-ошибок". This page replaces the earlier (pre-pivot, F1-CV-only) limitations
-note with the current VLM-primary architecture (`reasearch1/architecture.md`,
-`reasearch1/architecture-decision.md`). Every number below is either cited
-from those research documents or marked `TODO(team)` where it has not been
-measured yet — nothing here is invented.
+ошибок". This page describes the deployed detector, the F1 computer-vision
+stack (`DETECTOR=f1`, `docs/ARCHITECTURE_SUMMARY.md`). The earlier version
+written for the VLM-first design is in `archive/docs-vlm-era/LIMITATIONS.md`.
+Every number below is cited from `attempts/` or marked `TODO(team)` where it
+has not been measured yet; nothing here is invented.
 
 ## Verdict policy: recall first
 
@@ -24,50 +24,42 @@ service never substitutes an unjustified "no violation" for a genuine
 
 ## Sampling gap: events shorter than the step can be missed
 
-There is no proposer stage — the whole video is sampled on a fixed grid,
-not pre-filtered to "interesting" moments. Coverage is coarse-first:
+There is no proposer stage: F1 samples the whole video uniformly at 2 fps
+(0.5 s step) and every rule works on that timeline. A state only counts once
+it has held for `hysteresis_sec` (0.6 s in `config/perception.yaml`,
+`backend/f1/events.py`), which at a 0.5 s step means three consecutive
+samples. So **a violation whose visible signature lasts less than about a
+second can be missed**. If the 270 s budget runs out before perception finishes,
+`coverage.deadline_hit` is `true` and the rules run on what was observed.
 
-- a 4 s grid covers the whole video quickly;
-- 2 s "fill" samples are added between coarse points for as long as the
-  estimated remaining time allows, under a 270 s per-job deadline.
+## Weak perception
 
-Measured on saved states (`arch_rule_sweep.txt`, cited in
-`reasearch1/architecture.md` §4): the 2 s step gives the same result as 1 s
-sampling, while 4 s alone is "offset-sensitive" (lower recall, 6–12/22 any
-event within ±3 s vs 13–14/22 at 2 s). **A violation whose visible signature
-lasts less than the active sampling step can be missed entirely**, and any
-video that hits the deadline before the 2 s fill pass completes is reported
-under coarser, offset-sensitive coverage. The UI and the API both surface
-this: `coverage.mode` is `"full"`, `"coarse"` or `"partial"`, and the UI
-shows an explicit warning whenever it is not `"full"`.
-
-## Weak fields
-
-Two per-frame state fields are measured to be unreliable on the VLM's v1
-prompts: `key_in_safe_lock` (0/2 correct on the gold-frame check) and
-`desk_cash` (1/3 correct), per `reasearch1/architecture.md` §7. Rules that
-depend on these fields (`L-SAFE-LOCKED-ON-LEAVE`, `L-NO-CASH-ON-LEAVE` and
-related cash/safe mechanisms) inherit this uncertainty: a missed or
-hallucinated small object directly affects whether the corresponding
-finding fires. A candidate fix — re-asking the question on a cropped
-desk/safe/laptop region at candidate-finding time only — is gated behind a
-pre-registered dev-and-lockbox improvement check (`reasearch1/implementation-plan.md`
-Phase 4) and is **not adopted unless that check passes**; until then, these
-two fields should be treated as lower-confidence than the rest of the state
-form.
+- **Small objects.** On 20 hand-labelled frames, OWLv2, Grounding DINO and a
+  VLM each answered only 4 of the 11 cash checks correctly (A13 in
+  `attempts/README.md`). Rules that depend on cash, keys, documents or the
+  laptop screen inherit that error.
+- **Static objects read as new ones.** On X-1 the only finding came from
+  OWLv2 matching a fixed object as "a handbag" (A12 trace in
+  `attempts/A12-adr002-service-f1/README.md`).
+- **False alarms concentrate in a few rules.** On the full 40-video run of the
+  same stack (A01), the worst rules were `A-OUTSIDER-ZONE` (71 false events),
+  `A-SECOND-PERSON` (31) and `L-NO-DOCS-ON-LEAVE` (13).
+- **Door rule never fired correctly.** `A-DOOR-LOCK` scored 0 of 2 on the
+  door clips (A01). It needs an observed `ENTER` event and a CLIP "open"
+  state 5 s later; missing either means no finding.
 
 ## Upload concurrency
 
 The worker runs **one GPU job at a time** (a single FIFO queue); running
 jobs in parallel on one L4 GPU does not add throughput, it only splits it
-(`reasearch1/architecture.md` §4). A second upload that arrives while a job
+(`archive/research1/architecture.md` §4). A second upload that arrives while a job
 is running is queued and starts with less of the 270 s budget already
-remaining, which produces a coarser sampling plan through the same
-deadline-aware mechanism described above — not a separate, lower-quality
-code path. Two simultaneous ~145 s uploads are estimated to both still
-finish, but three simultaneous long uploads cannot all finish within the
-jury's 300 s budget on this hardware; this is a known, documented ceiling,
-not a bug (`reasearch1/architecture.md` §4).
+remaining, so a long video behind another long video can hit the deadline
+(`coverage.deadline_hit`); there is no separate, lower-quality code path.
+Single-job runtimes for this stack: mean 83.9 s and worst 294.6 s at 5 fps
+(A01), 50.8 s cold for X-1 at 2 fps in the deployed service (A12). Two long
+uploads at once can therefore exceed the jury's 300 s budget for the second
+one; this is a known ceiling of one L4 GPU, not a bug.
 
 ## Citation status
 
@@ -88,17 +80,18 @@ pass against adilet.zan.kz and record `verified_by`/`verified_at` in
 
 ## Camera angle
 
-The training dataset and all development/validation runs use one fixed
-top-down angle, one camera, one desk (task.md FAQ 3). The VLM's state form
-asks semantic questions ("is the cashier at the desk") rather than relying
-on calibrated zones, so no per-angle recalibration step exists in the
-pipeline — but **no accuracy claim has been measured on a different camera
-angle before this document was written**. The jury's final test video is
-filmed from a different angle (task.md FAQ 4), and the self-filmed
-robustness clips in `robustness/` are this team's only other-angle signal
-before submission:
+The open dataset and all development runs use one fixed over-the-shoulder
+angle (task.md FAQ 3). F1 calibrates zones automatically from the first 2 s
+of each video (`backend/f1/calibration.py`): desk, laptop, safe and door
+boxes, and cashier/client half-planes around the desk. **The half-plane
+split assumes the camera looks over the cashier's shoulder**; a camera that
+faces the cashier needs manual zones in `config/overrides.yaml`, keyed by the
+video's SHA-256. If calibration is not confident, the result carries a
+warning. The jury's final video is filmed from a different angle (task.md
+FAQ 4), and the self-filmed clips in `robustness/` are this team's only
+other-angle signal before submission:
 
-- TODO(team): fill in from `robustness/README.md`'s results table —
+- TODO(team): fill in from `robustness/README.md`'s results table -
   "tested on N self-filmed clips, X/Y", or "untested on other angles" if the
   robustness run did not complete before the freeze.
 
@@ -126,12 +119,14 @@ audio is used (task.md FAQ 28, videos are silent regardless).
   (task.md §7).
 - **Ranking is capped.** At most 3 findings are reported per video
   (persistence-ranked, then rule order); additional lower-ranked findings on
-  a busy video are not surfaced (`reasearch1/architecture.md` §2).
+  a busy video are not surfaced (`archive/research1/architecture.md` §2).
 
 ## Aggregate detection results
 
-TODO(team): once WP1/WP2/WP3 finish the frozen-config run on the full
-40-video training set and the jury's own test clips, record the measured
-aggregates here (correct/40, recall, false-alarm rate, worst runtime) —
-never invent or estimate these numbers in advance of that run (SHARED_BRIEF
-rule 5: "no invented results").
+Measured on the 40 unique open videos (`attempts/README.md`):
+
+- A01, the same F1 stack at 5 fps before it was ported into this service:
+  20/40 correct verdicts, recall 14/21, 13/19 clean videos falsely flagged,
+  worst runtime 294.6 s.
+- A12, the deployed service: TODO(team) - not scored on all 40 videos yet.
+  Record its numbers here once `eval/run_eval.py` has run; never estimate them.
