@@ -312,6 +312,96 @@ def test_client_leaning_and_worn_coat_are_not_zone_or_desk_violations():
 
 
 @requires_cv2
+def test_a_personal_item_stays_on_the_desk_through_a_brief_detection_gap():
+    ctx = context()
+    item = Detection(label="handbag", score=0.8, box=(0.5, 0.4, 0.7, 0.5), track_id="h:1")
+    ctx.observations = [
+        Observation(timestamp_sec=i / 2, detections=[] if i == 4 else [item]) for i in range(9)
+    ]
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        4.5,
+    )
+    findings = RULES["W-NO-PERSONAL-ITEMS"](ctx)
+    assert len(findings) == 1
+    assert findings[0].timestamp_sec == 0
+    assert findings[0].facts["duration_sec"] == 4.5
+
+
+@requires_cv2
+@pytest.mark.parametrize(
+    "ending",
+    ["missing", "carried", "carried_after_gap", "off_desk", "off_desk_after_gap", "end_of_video"],
+)
+def test_personal_item_disappearance_does_not_count_as_time_kept_on_the_desk(ending):
+    ctx = context()
+    item = Detection(label="handbag", score=0.8, box=(0.5, 0.4, 0.7, 0.5), track_id="h:1")
+    ctx.observations = [Observation(timestamp_sec=i / 2, detections=[item]) for i in range(6)]
+    for i in range(6, 10):
+        detections = []
+        if ending.startswith("carried"):
+            detections = [
+                item,
+                Detection(
+                    label="person",
+                    score=0.9,
+                    box=(0.45, 0.2, 0.75, 0.7),
+                    track_id="person:1",
+                    hands=[(0.6, 0.45, 0.9)],
+                ),
+            ]
+        elif ending.startswith("off_desk"):
+            detections = [item.model_copy(update={"box": (0.0, 0.0, 0.1, 0.1)})]
+        if ending.endswith("after_gap") and i == 6:
+            detections = []
+        if ending == "end_of_video" and i > 7:
+            break
+        ctx.observations.append(Observation(timestamp_sec=i / 2, detections=detections))
+    duration = ctx.observations[-1].timestamp_sec + 0.5
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        duration,
+    )
+    intervals = list(ctx.intervals("PERSONAL_ON_DESK"))
+    assert len(intervals) == 1
+    assert intervals[0][1] == 3
+    assert RULES["W-NO-PERSONAL-ITEMS"](ctx) == []
+
+
+@requires_cv2
+def test_personal_item_intervals_do_not_bridge_a_long_gap_or_a_different_track():
+    ctx = context()
+    item = Detection(label="handbag", score=0.8, box=(0.5, 0.4, 0.7, 0.5), track_id="h:1")
+    other = item.model_copy(update={"track_id": "h:2"})
+    ctx.observations = [
+        Observation(
+            timestamp_sec=i / 2,
+            detections=[item] if i < 4 or 8 <= i < 12 else ([other] if 12 <= i < 16 else []),
+        )
+        for i in range(20)
+    ]
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        10,
+    )
+    assert [(e.timestamp_sec, d) for e, d in ctx.intervals("PERSONAL_ON_DESK")] == [
+        (0, 2),
+        (4, 2),
+        (6, 2),
+    ]
+    assert RULES["W-NO-PERSONAL-ITEMS"](ctx) == []
+
+
+@requires_cv2
 def test_session_tags_initial_cash_and_does_not_end_on_unconfirmed_track_loss():
     from backend.f1.vision_types import State
 

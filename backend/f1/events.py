@@ -141,7 +141,7 @@ class EventBuilder:
         self.count_session = ""
         self.count_started = False
         self.bag_contacts = {}
-        self.last_personal_presence = {}
+        self.last_personal_presence: dict[str, float] = {}
         self.last_observation = None
 
     def emit(self, event_type: str, timestamp: float, **facts) -> None:
@@ -608,6 +608,12 @@ class EventBuilder:
                             box=list(target.box),
                         )
                         self.hand_contacts[key] = timestamp
+        # A missed detection is not a removal. Bridge only the existing track-loss window,
+        # and end at the last observed sample so trailing uncertainty adds no desk time.
+        for key, last in list(self.last_personal_presence.items()):
+            if timestamp - last > self.config["exit_gap_sec"]:
+                self.condition(key, "", False, min(timestamp, last + 1 / self.fps))
+                self.last_personal_presence.pop(key)
         for item in observation.detections:
             if (
                 item.label in {"coat", "handbag"}
@@ -616,6 +622,7 @@ class EventBuilder:
             ):
                 key = "personal:" + item.track_id
                 active_conditions.add(key)
+                self.last_personal_presence[key] = timestamp
                 self.condition(
                     key,
                     "PERSONAL_ON_DESK",
@@ -652,13 +659,24 @@ class EventBuilder:
                             object=item.label,
                             box=list(item.box),
                         )
+        visible_tracks = {item.track_id for item in observation.detections}
         for key in list(self.conditions):
             if key.startswith(("zone:", "personal:", "food:")) and key not in active_conditions:
-                self.condition(key, "", False, timestamp)
+                end = timestamp
+                if key.startswith("personal:"):
+                    # Carrying or leaving the desk confirms removal, not a detection gap.
+                    if key.removeprefix("personal:") not in visible_tracks:
+                        continue
+                    last = self.last_personal_presence.pop(key)
+                    end = min(end, last + 1 / self.fps)
+                self.condition(key, "", False, end)
 
     def finish(self, duration: float) -> EventLog:
         for key in list(self.conditions):
-            self.condition(key, "", False, duration)
+            end = duration
+            if key in self.last_personal_presence:
+                end = min(end, self.last_personal_presence[key] + 1 / self.fps)
+            self.condition(key, "", False, end)
         counts = {
             name: self.state_known[name] / max(self.frame_count, 1)
             for name in ("safe", "door", "laptop", "counter")
