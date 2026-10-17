@@ -27,6 +27,14 @@ or video needed).
 
     python scripts/replay_f1.py score replay.jsonl --labels data/prepared/videos.jsonl
 
+`timing` compares every anchor with the nearest organizer timestamp on caught violation
+clips. It prints one JSON line per clip and a summary: best anchor per clip, service top-1,
+and best anchor per rule per clip, with mean offsets and inclusive 1/2/3/5 s counts.
+New replays include `ranked_findings`, using the service adapter and ranking (cap 3);
+older replays can still be timed, but have no service top-1 measurement.
+
+    python scripts/replay_f1.py timing replay.jsonl --labels data/prepared/videos.jsonl
+
 `state` turns a replay into a saved run for the gateway's `/compare` page:
 
     python scripts/replay_f1.py state replay.jsonl --labels data/prepared/videos.jsonl \
@@ -37,6 +45,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -117,19 +126,23 @@ def run(
 ) -> None:
     import yaml
 
-    from backend.config import ROOT
+    from backend.config import ROOT, Settings
+    from backend.contracts import RuleEntry
     from backend.f1.calibration import calibrate, video_checksum
     from backend.f1.codex import load_codex
-    from backend.f1.detector import FPS
+    from backend.f1.detector import FPS, F1Detector
     from backend.f1.events import build_events
     from backend.f1.perception import load_perception_config
     from backend.f1.rules import Context, evaluate_rules
     from backend.f1.vision_types import Observation, Scene
+    from backend.rules.ranking import rank
 
     config = load_perception_config(ROOT / "config" / "perception.yaml")
     codex = load_codex(ROOT / "config" / "f1_codex.yaml")
     rules = yaml.safe_load((ROOT / "knowledge" / "rules.yaml").read_text(encoding="utf-8"))
     enabled = {rule["rule_id"] for rule in rules if rule.get("enabled")}
+    rule_entries = [RuleEntry.model_validate(rule) for rule in rules if rule.get("enabled")]
+    adapter = F1Detector(Settings.from_env(), rule_entries)
     videos = {}
     if videos_dir:
         videos = {video_checksum(p): p for p in sorted(videos_dir.iterdir()) if p.is_file()}
@@ -160,6 +173,13 @@ def run(
                 {"rule_id": f.rule_id, "t": round(f.timestamp_sec, 1)}
                 for f in findings
                 if f.rule_id in enabled
+            ],
+            "ranked_findings": [
+                {"rule_id": f.rule_id, "t": round(f.t_anchor, 1), "rank_score": f.rank_score}
+                for f in rank(
+                    [adapter._to_finding(f, duration) for f in findings if f.rule_id in enabled],
+                    rule_entries,
+                )
             ],
         }
         if desk_objects is not None:
@@ -212,6 +232,109 @@ def score(results: Path, labels: Path) -> None:
     print(json.dumps(totals))
 
 
+def _timing_summary(offsets: list[float]) -> dict:
+    return {
+        "clips": len(offsets),
+        "mean_abs_offset_sec": round(sum(map(abs, offsets)) / len(offsets), 3) if offsets else None,
+        "mean_offset_sec": round(sum(offsets) / len(offsets), 3) if offsets else None,
+        "within_s": {str(s): sum(abs(t) <= s for t in offsets) for s in (1, 2, 3, 5)},
+    }
+
+
+def _timing_anchor(finding: dict, references: list[float]) -> dict:
+    timestamp = finding["t"]
+    if any(not math.isfinite(t) or t < 0 for t in [timestamp, *references]):
+        raise ValueError("Timing needs finite nonnegative timestamps")
+    reference = min(references, key=lambda t: abs(timestamp - t))
+    return {
+        "rule_id": finding["rule_id"],
+        "t": timestamp,
+        "reference_sec": reference,
+        "offset_sec": timestamp - reference,
+        "abs_offset_sec": abs(timestamp - reference),
+    }
+
+
+def timing(results: Path, labels: Path) -> None:
+    """Timing on caught violation clips; nearest label, one vote per clip in each summary."""
+    videos = {}
+    for line in labels.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        previous = videos.get(row["sha256"])
+        if previous is not None:
+            if previous["organizer_verdict"] != row["organizer_verdict"]:
+                raise ValueError(f"Conflicting verdicts for {row['sha256']}")
+            # Identical files can be labelled for different moments; keep both references.
+            row["organizer_timestamps"] = sorted(
+                set(previous["organizer_timestamps"]) | set(row["organizer_timestamps"])
+            )
+        row["original_ids"] = (previous["original_ids"] if previous else []) + [row["original_id"]]
+        videos[row["sha256"]] = row
+    caught = missed = untimed = 0
+    best_offsets, top1_offsets = [], []
+    per_rule: dict[str, list[float]] = {}
+    for line in results.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        result = json.loads(line)
+        row = videos.get(result["sha256"])
+        if row is None:
+            print(f"unlabelled cache entry {result['sha256'][:12]}", file=sys.stderr)
+            continue
+        if row["organizer_verdict"] != "violation":
+            continue
+        if not result["findings"]:
+            missed += 1
+            continue
+        caught += 1
+        references = row["organizer_timestamps"]
+        if not references:
+            untimed += 1
+            continue
+
+        anchors = [_timing_anchor(f, references) for f in result["findings"]]
+        best = min(anchors, key=lambda f: f["abs_offset_sec"])
+        best_offsets.append(best["offset_sec"])
+        for rule_id in sorted({f["rule_id"] for f in anchors}):
+            rule_best = min(
+                (f for f in anchors if f["rule_id"] == rule_id), key=lambda f: f["abs_offset_sec"]
+            )
+            per_rule.setdefault(rule_id, []).append(rule_best["offset_sec"])
+        ranked = result.get("ranked_findings")
+        top1 = _timing_anchor(ranked[0], references) if ranked else None
+        if top1 is not None:
+            top1_offsets.append(top1["offset_sec"])
+        print(
+            json.dumps(
+                {
+                    "original_id": row["original_id"],
+                    "original_ids": row["original_ids"],
+                    "organizer_timestamps": references,
+                    "anchors": anchors,
+                    "best_abs_offset_sec": best["abs_offset_sec"],
+                    "top1": top1,
+                },
+                ensure_ascii=False,
+            )
+        )
+    print(
+        json.dumps(
+            {
+                "caught_violations": caught,
+                "missed_violations": missed,
+                "missing_timestamps": untimed,
+                "best": _timing_summary(best_offsets),
+                "top1": _timing_summary(top1_offsets),
+                "per_rule": {
+                    rule: _timing_summary(offsets) for rule, offsets in sorted(per_rule.items())
+                },
+            }
+        )
+    )
+
+
 def to_state(results: Path, labels: Path, out: Path) -> None:
     """Write a replay as a gateway state file, so `/compare` shows it next to the live runs
     (save it as `state.<name>.json` beside the gateway's STATE_FILE)."""
@@ -258,6 +381,9 @@ def main() -> None:
     score_parser = sub.add_parser("score")
     score_parser.add_argument("results", type=Path)
     score_parser.add_argument("--labels", type=Path, required=True)
+    timing_parser = sub.add_parser("timing")
+    timing_parser.add_argument("results", type=Path)
+    timing_parser.add_argument("--labels", type=Path, required=True)
     state_parser = sub.add_parser("state")
     state_parser.add_argument("results", type=Path)
     state_parser.add_argument("--labels", type=Path, required=True)
@@ -269,6 +395,8 @@ def main() -> None:
         run(args.cache_dir, args.videos_dir, args.mirror, args.zoom, args.drop, args.seed)
     elif args.mode == "score":
         score(args.results, args.labels)
+    elif args.mode == "timing":
+        timing(args.results, args.labels)
     else:
         to_state(args.results, args.labels, args.out)
 
