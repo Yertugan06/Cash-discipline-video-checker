@@ -23,7 +23,15 @@ from pathlib import Path
 from typing import Any
 
 from backend.config import Settings
-from backend.contracts import Coverage, DetectionResult, Finding, RuleEntry, SamplingPlan, VideoInfo
+from backend.contracts import (
+    Coverage,
+    DetectionResult,
+    EvidenceBox,
+    Finding,
+    RuleEntry,
+    SamplingPlan,
+    VideoInfo,
+)
 
 FPS = 2.0
 STEP_S = 1.0 / FPS
@@ -179,6 +187,7 @@ class F1Detector:
             support_t=_support_times(t_anchor, t_end),
             facts=facts,
             rank_score=max(0.0, min(1.0, float(legacy.confidence))),
+            boxes=_evidence_boxes(legacy.facts),
         )
 
 
@@ -195,6 +204,20 @@ def _scalar_facts(facts: dict[str, Any]) -> dict[str, str | int | float | bool]:
         else:
             result[key] = str(value)
     return result
+
+
+def _evidence_boxes(facts: dict[str, Any]) -> list[EvidenceBox]:
+    """The legacy events record the triggering object's normalized box under
+    `box` (an empty list when the scene object was never localized); label it
+    with the object class, else the actor's role, else the track id."""
+    box = facts.get("box")
+    if not isinstance(box, list | tuple) or len(box) != 4:
+        return []
+    x1, y1, x2, y2 = (min(max(float(value), 0.0), 1.0) for value in box)
+    if x2 <= x1 or y2 <= y1:
+        return []
+    label = facts.get("object") or facts.get("role") or facts.get("track_id") or "object"
+    return [EvidenceBox(label=str(label), box=(x1, y1, x2, y2))]
 
 
 def _extra_template_facts(

@@ -110,6 +110,27 @@ def test_extra_template_facts_is_empty_for_unrelated_rules():
     assert _extra_template_facts("L-PC-LOCKED", {"anything": 1}, rule) == {}
 
 
+def test_to_finding_carries_the_triggering_object_box(tmp_path):
+    detector = _detector(tmp_path, [make_rule("W-NO-PERSONAL-ITEMS")])
+    facts = {"object": "handbag", "track_id": "handbag:69", "box": [0.07, 0.5, 0.27, 0.58]}
+    legacy = LegacyFinding("W-NO-PERSONAL-ITEMS", 20.0, facts)
+    finding = detector._to_finding(legacy, duration_sec=60.0)
+    assert [(b.label, b.box) for b in finding.boxes] == [("handbag", (0.07, 0.5, 0.27, 0.58))]
+
+
+@pytest.mark.parametrize("box", [[], [0.1, 0.2, 0.3], [0.5, 0.5, 0.2, 0.9], "0.1,0.2,0.3,0.4"])
+def test_to_finding_has_no_box_when_the_geometry_is_missing_or_degenerate(tmp_path, box):
+    detector = _detector(tmp_path, [make_rule("S-SAFE-CLOSED")])
+    legacy = LegacyFinding("S-SAFE-CLOSED", 5.0, {"box": box})
+    assert detector._to_finding(legacy, duration_sec=60.0).boxes == []
+
+
+def test_box_label_falls_back_to_the_actor_role(tmp_path):
+    detector = _detector(tmp_path, [make_rule("A-OUTSIDER-ZONE")])
+    legacy = LegacyFinding("A-OUTSIDER-ZONE", 5.0, {"role": "visitor", "box": [0, 0, 0.5, 1]})
+    assert detector._to_finding(legacy, duration_sec=60.0).boxes[0].label == "visitor"
+
+
 def test_scalar_facts_narrows_lists_to_joined_strings():
     out = _scalar_facts({"track_ids": ["a", "b"], "n": 1, "ok": True, "skip": None})
     assert out == {"track_ids": "a,b", "n": 1, "ok": True}
