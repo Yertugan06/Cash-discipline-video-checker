@@ -40,7 +40,7 @@ def context(events=(), sessions=None):
     return Context(
         load_codex(ROOT / "config" / "f1_codex.yaml"),
         log,
-        [Observation(timestamp_sec=5, detections=[cash, bag, document])],
+        [Observation(timestamp_sec=0, detections=[cash, bag, document])],
         scene,
         20,
     )
@@ -201,6 +201,27 @@ def test_thresholds_and_required_counterevidence():
     assert RULES["C-COUNT-BEFORE-EXIT"](counted) == []
     inspected = context(COLLECT + [event("BAG_INSPECTED", 6, track_id="bag:1")])
     assert RULES["K-SEAL-CHECK"](inspected) == []
+
+
+@pytest.mark.parametrize("recording_start", [0, 2])
+@pytest.mark.parametrize("entry_offset,expected_findings", [(0, 0), (1, 1)])
+def test_door_requires_an_entry_after_the_first_observation(
+    recording_start, entry_offset, expected_findings
+):
+    ctx = context(
+        [
+            event(
+                "ENTER",
+                recording_start + entry_offset,
+                actor_id="person:1",
+                role="cashier",
+                observed_entry=True,
+            ),
+            event("DOOR_OPEN", recording_start, state="open"),
+        ]
+    )
+    ctx.observations[0].timestamp_sec = recording_start
+    assert len(RULES["A-DOOR-LOCK"](ctx)) == expected_findings
 
 
 def test_hysteresis_and_money_provenance_survive_a_track_change():

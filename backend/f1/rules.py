@@ -219,7 +219,12 @@ def a_door_lock(ctx: Context) -> list[Finding]:
     output = []
     for entry in ctx.events("ENTER"):
         end = entry.timestamp_sec + window
-        if not entry.facts.get("observed_entry") or end > ctx.duration:
+        # A person already in the doorway at the first observation has no observed entry.
+        if (
+            not entry.facts.get("observed_entry")
+            or entry.timestamp_sec <= ctx.observations[0].timestamp_sec
+            or end > ctx.duration
+        ):
             continue
         closed = ctx.has_event("DOOR_CLOSED", entry.timestamp_sec, end)
         touched = ctx.has_event("HAND_ON_DOOR", entry.timestamp_sec, end)
