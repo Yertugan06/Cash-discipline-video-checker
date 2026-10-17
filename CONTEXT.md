@@ -25,4 +25,6 @@ Working notes for coding agents on this project. Read before starting work.
   gateway on `127.0.0.1:8100`, WebSocket feed, runs `~/data/open/videos` one at a time,
   results persisted in `~/realtime-state/state.json`). View it with
   `ssh -N -L 8100:127.0.0.1:8100 datathon` -> http://localhost:8100.
+  Team data root: `~/data` (`open/` organizer data, `team/` team workbooks and reviews); the
+  canonical copy for `python -m eval.sync_data`. Add files there, never overwrite.
 - `datathon2` (Brev, L4): stopped; its home is copied to `datathon:~/from-datathon2/`.

@@ -67,8 +67,10 @@ hit_code = sum(1 for k in rel if any(code_match(e.get('code'), gt[k]['human'][0]
 hit_code_loc = sum(1 for k in rel if any(code_match(e.get('code'), gt[k]['human'][0]['norm1'])
                                          and min(abs(e['t'] - t) for t in gt[k]['org_times']) <= 3
                                          for e in pred[k]['events']))
-print(f'mechanism (reliable subset n={len(rel)}): human norm-1 code among predicted codes {hit_code}/{len(rel)}, '
-      f'and within ±3s {hit_code_loc}/{len(rel)}')
+# Legal-citation match: does any predicted citation share the clause of the human annotation's first
+# norm? This is not violation-type accuracy (nothing here measures that).
+print(f'legal-citation match (reliable subset n={len(rel)}): human norm-1 citation among predicted citations '
+      f'{hit_code}/{len(rel)}, and within ±3s {hit_code_loc}/{len(rel)}')
 rt = [pred[k]['runtime_s'] for k in ids if pred[k].get('runtime_s') is not None]
 if rt:
     print(f'runtime s: median {st.median(rt):.1f} max {max(rt):.1f} total {sum(rt):.0f}')

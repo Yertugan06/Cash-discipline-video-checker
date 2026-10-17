@@ -9,13 +9,13 @@ from openpyxl import load_workbook
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from backend.clip_id import parse_clip_id  # noqa: E402
 from backend.f1.codex import (  # noqa: E402
     ClipInfo,
     Codex,
     Rule,
     duration_seconds,
     load_codex,
-    normalize_clip,
     rules_markdown,
 )
 
@@ -64,11 +64,11 @@ def convert(source: Path, destination: Path, rules_doc: Path) -> Codex:
             )
         clips = [
             ClipInfo(
-                id=normalize_clip(row["Clip"]),
+                id=parse_clip_id(row["Clip"]),
                 camera_layout=row["Camera layout"],
                 rule_ids=links.get(row["Case ID (primary)"], []),
                 case_id=row["Case ID (primary)"],
-                duplicate_of=normalize_clip(row["Duplicate of"]) if row["Duplicate of"] else None,
+                duplicate_of=parse_clip_id(row["Duplicate of"]) if row["Duplicate of"] else None,
             )
             for row in records(workbook["Clips"])
         ]

@@ -145,3 +145,7 @@ video  TP=19 FN=2 FP=16 TN=3 | recall 19/21 | acc 22/40
 loc[N.0] any-event: ±3s 12/22   (architecture.md's own measured range: 13-14/22)
 mechanism (reliable subset n=17): human norm-1 code among predicted codes 8/17, within ±3s 5/17
 ```
+
+The scorer has since renamed that last line `legal-citation match` (same computation): it measures
+whether a predicted citation shares the clause of the human annotation's first norm, not whether the
+violation type is right.

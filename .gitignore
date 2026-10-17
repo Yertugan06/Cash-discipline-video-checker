@@ -29,3 +29,8 @@ robustness/clips/
 
 # Per-clip private outputs (labels, predictions, detections) - never add more
 reasearch1/validation-private/
+
+hackathon_data
+
+# Team data root copies (eval/data.py); the team copy lives on datathon:~/data
+data/team/

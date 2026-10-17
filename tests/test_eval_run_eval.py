@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from backend.clip_id import InvalidClipId
 from eval.run_eval import build_pred, clip_id_from_filename, run_scorer, to_pred_entry
 
 pytestmark = pytest.mark.skipif(
@@ -25,8 +26,21 @@ pytestmark = pytest.mark.skipif(
 
 def test_clip_id_from_filename():
     assert clip_id_from_filename("X-12.json") == "X-12"
-    assert clip_id_from_filename("x12_done.json") == "X-12"
-    assert clip_id_from_filename("no-digits.json") == "no-digits"
+    assert clip_id_from_filename("Х-12.mov.json") == "X-12"  # Cyrillic Х
+
+
+@pytest.mark.parametrize("name", ["x12_done.json", "no-digits.json", "3f9a2c.json"])
+def test_clip_id_from_filename_rejects_names_that_are_not_clips(name):
+    with pytest.raises(InvalidClipId):
+        clip_id_from_filename(name)
+
+
+def test_build_pred_rejects_two_files_for_one_clip(tmp_path: Path):
+    done = {"job_id": "j", "status": "done", "verdict": "no_violation", "violations": []}
+    for name in ("X-3.json", "Х-3.json"):
+        (tmp_path / name).write_text(json.dumps(done), encoding="utf-8")
+    with pytest.raises(ValueError, match="two DoneJob files for X-3"):
+        build_pred(tmp_path)
 
 
 def test_to_pred_entry_violation():

@@ -6,14 +6,6 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
-def normalize_clip(value: str) -> str:
-    name = Path(str(value).strip()).stem.upper().replace("Х", "X")
-    match = re.fullmatch(r"(?:X\s*|#U0425)[-–]\s*(\d+)", name)
-    if not match:
-        raise ValueError(f"Unrecognized clip name: {value!r}")
-    return f"X-{int(match[1])}"
-
-
 class Rule(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str = Field(pattern=r"^[A-Z]+-[A-Z-]+$")
