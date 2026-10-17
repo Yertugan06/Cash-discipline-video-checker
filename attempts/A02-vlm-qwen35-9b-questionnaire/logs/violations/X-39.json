@@ -1,0 +1,270 @@
+{
+ "video": "X-39",
+ "verdict": "violation",
+ "violations": [
+  {
+   "rule": "door_open",
+   "type": "Дверь кассы не закрыта",
+   "timecode_sec": 2.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    1.0,
+    2.0,
+    3.0
+   ],
+   "verify_question": "Is the cash room door left open while the cashier works at the desk?",
+   "description": "Дверь кассы не закрыта (по кадрам около 2.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 3.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    2.0,
+    3.0,
+    4.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 3.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "no_id",
+   "type": "Приём наличных без предъявления документа клиентом",
+   "timecode_sec": 8.0,
+   "codex_ids": [
+    "231-19-1",
+    "231-7"
+   ],
+   "evidence_t": [
+    7.0,
+    8.0,
+    9.0
+   ],
+   "verify_question": "Did the client hand over cash without showing any ID document first?",
+   "description": "Приём наличных без предъявления документа клиентом (по кадрам около 8.0 с).",
+   "norm": {
+    "id": "231-19-1",
+    "act": "231",
+    "punkt": "п. 19 пп. 1)",
+    "quote": "проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством сервиса цифровых документов",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 29.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    28.0,
+    29.0,
+    30.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 29.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "safe_open",
+   "type": "Сейф (хранилище) оставлен открытым",
+   "timecode_sec": 30.0,
+   "codex_ids": [
+    "231-20-2b"
+   ],
+   "evidence_t": [
+    29.0,
+    30.0,
+    31.0
+   ],
+   "verify_question": "Is the safe door left open while the cashier is not standing at the safe?",
+   "description": "Сейф (хранилище) оставлен открытым (по кадрам около 30.0 с).",
+   "norm": {
+    "id": "231-20-2b",
+    "act": "231",
+    "punkt": "п. 20 ч. 2",
+    "quote": "Все ранее принятые наличные деньги хранятся в специальных устройствах, находящихся на рабочем месте кассового работника, закрывающихся на ключ, предназначенных для хранения наличных денег (металлический шкаф, сейф, тележка, ящики стола, тумба).",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%92%D1%81%D0%B5%20%D1%80%D0%B0%D0%BD%D0%B5%D0%B5%20%D0%BF%D1%80%D0%B8%D0%BD%D1%8F%D1%82%D1%8B%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "door_open",
+   "type": "Дверь кассы не закрыта",
+   "timecode_sec": 35.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    34.0,
+    35.0,
+    36.0
+   ],
+   "verify_question": "Is the cash room door left open while the cashier works at the desk?",
+   "description": "Дверь кассы не закрыта (по кадрам около 35.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "door_open",
+   "type": "Дверь кассы не закрыта",
+   "timecode_sec": 45.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    44.0,
+    45.0,
+    46.0
+   ],
+   "verify_question": "Is the cash room door left open while the cashier works at the desk?",
+   "description": "Дверь кассы не закрыта (по кадрам около 45.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "no_id",
+   "type": "Приём наличных без предъявления документа клиентом",
+   "timecode_sec": 56.0,
+   "codex_ids": [
+    "231-19-1",
+    "231-7"
+   ],
+   "evidence_t": [
+    55.0,
+    56.0,
+    57.0
+   ],
+   "verify_question": "Did the client hand over cash without showing any ID document first?",
+   "description": "Приём наличных без предъявления документа клиентом (по кадрам около 56.0 с).",
+   "norm": {
+    "id": "231-19-1",
+    "act": "231",
+    "punkt": "п. 19 пп. 1)",
+    "quote": "проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством сервиса цифровых документов",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 56.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    55.0,
+    56.0,
+    57.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 56.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "safe_open",
+   "type": "Сейф (хранилище) оставлен открытым",
+   "timecode_sec": 67.0,
+   "codex_ids": [
+    "231-20-2b"
+   ],
+   "evidence_t": [
+    66.0,
+    67.0,
+    68.0
+   ],
+   "verify_question": "Is the safe door left open while the cashier is not standing at the safe?",
+   "description": "Сейф (хранилище) оставлен открытым (по кадрам около 67.0 с).",
+   "norm": {
+    "id": "231-20-2b",
+    "act": "231",
+    "punkt": "п. 20 ч. 2",
+    "quote": "Все ранее принятые наличные деньги хранятся в специальных устройствах, находящихся на рабочем месте кассового работника, закрывающихся на ключ, предназначенных для хранения наличных денег (металлический шкаф, сейф, тележка, ящики стола, тумба).",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%92%D1%81%D0%B5%20%D1%80%D0%B0%D0%BD%D0%B5%D0%B5%20%D0%BF%D1%80%D0%B8%D0%BD%D1%8F%D1%82%D1%8B%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+    "strength": "direct"
+   }
+  }
+ ],
+ "observations": [
+  {
+   "t": 10.0,
+   "other": "клиент держит чашку в руке"
+  },
+  {
+   "t": 12.0,
+   "other": "клиент держит пачку купюр и показывает их кассиру"
+  },
+  {
+   "t": 13.0,
+   "other": "клиент держит пачку купюр в руках"
+  },
+  {
+   "t": 29.0,
+   "other": "клиент держит купюру у детектора"
+  },
+  {
+   "t": 49.0,
+   "other": "кассир считает купюры вручную"
+  },
+  {
+   "t": 63.0,
+   "other": "кассир фотографирует деньги на телефон"
+  }
+ ]
+}

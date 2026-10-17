@@ -1,0 +1,414 @@
+{
+ "video": "X-4",
+ "verdict": "violation",
+ "violations": [
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 8.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    7.0,
+    8.0,
+    9.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 8.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "phone",
+   "type": "Телефон в руках кассира в кассовом узле",
+   "timecode_sec": 11.0,
+   "codex_ids": [
+    "231-12-2b"
+   ],
+   "evidence_t": [
+    10.0,
+    11.0,
+    12.0
+   ],
+   "verify_question": "Is the cashier holding or using a mobile phone?",
+   "description": "Телефон в руках кассира в кассовом узле (по кадрам около 11.0 с).",
+   "norm": {
+    "id": "231-12-2b",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "средств связи, не имеющих функции фото и видео фиксации",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "no_id",
+   "type": "Приём наличных без предъявления документа клиентом",
+   "timecode_sec": 14.0,
+   "codex_ids": [
+    "231-19-1",
+    "231-7"
+   ],
+   "evidence_t": [
+    13.0,
+    14.0,
+    15.0
+   ],
+   "verify_question": "Did the client hand over cash without showing any ID document first?",
+   "description": "Приём наличных без предъявления документа клиентом (по кадрам около 14.0 с).",
+   "norm": {
+    "id": "231-19-1",
+    "act": "231",
+    "punkt": "п. 19 пп. 1)",
+    "quote": "проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством сервиса цифровых документов",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "personal_items",
+   "type": "Личные вещи на рабочем месте кассира",
+   "timecode_sec": 21.0,
+   "codex_ids": [
+    "231-12-1"
+   ],
+   "evidence_t": [
+    20.0,
+    21.0,
+    22.0
+   ],
+   "verify_question": "Are personal items (coat, handbag, backpack) on the cashier's desk?",
+   "description": "Личные вещи на рабочем месте кассира (по кадрам около 21.0 с).",
+   "norm": {
+    "id": "231-12-1",
+    "act": "231",
+    "punkt": "п. 12 ч. 1",
+    "quote": "Хранение личных вещей, наличных денег и ценностей работников банка осуществляется вне кассового узла в порядке, установленном внутренними документами банка.",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z81:~:text=%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85%20%D0%B2%D0%B5%D1%89%D0%B5%D0%B9%2C%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 25.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    24.0,
+    25.0,
+    26.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 25.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "food",
+   "type": "Еда/напитки на рабочем месте кассира",
+   "timecode_sec": 36.0,
+   "codex_ids": [
+    "231-12-2"
+   ],
+   "evidence_t": [
+    35.0,
+    36.0,
+    37.0
+   ],
+   "verify_question": "Is the cashier eating or drinking at the cash desk, or food/drink on the desk?",
+   "description": "Еда/напитки на рабочем месте кассира (по кадрам около 36.0 с).",
+   "norm": {
+    "id": "231-12-2",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "Допускается внос работниками банка в кассовый узел лекарственных средств, медицинских изделий и средств связи",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "phone",
+   "type": "Телефон в руках кассира в кассовом узле",
+   "timecode_sec": 48.0,
+   "codex_ids": [
+    "231-12-2b"
+   ],
+   "evidence_t": [
+    47.0,
+    48.0,
+    49.0
+   ],
+   "verify_question": "Is the cashier holding or using a mobile phone?",
+   "description": "Телефон в руках кассира в кассовом узле (по кадрам около 48.0 с).",
+   "norm": {
+    "id": "231-12-2b",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "средств связи, не имеющих функции фото и видео фиксации",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 50.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    49.0,
+    50.0,
+    51.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 50.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "door_open",
+   "type": "Дверь кассы не закрыта",
+   "timecode_sec": 56.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    55.0,
+    56.0,
+    57.0
+   ],
+   "verify_question": "Is the cash room door left open while the cashier works at the desk?",
+   "description": "Дверь кассы не закрыта (по кадрам около 56.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "no_id",
+   "type": "Приём наличных без предъявления документа клиентом",
+   "timecode_sec": 58.0,
+   "codex_ids": [
+    "231-19-1",
+    "231-7"
+   ],
+   "evidence_t": [
+    57.0,
+    58.0,
+    59.0
+   ],
+   "verify_question": "Did the client hand over cash without showing any ID document first?",
+   "description": "Приём наличных без предъявления документа клиентом (по кадрам около 58.0 с).",
+   "norm": {
+    "id": "231-19-1",
+    "act": "231",
+    "punkt": "п. 19 пп. 1)",
+    "quote": "проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством сервиса цифровых документов",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "food",
+   "type": "Еда/напитки на рабочем месте кассира",
+   "timecode_sec": 62.0,
+   "codex_ids": [
+    "231-12-2"
+   ],
+   "evidence_t": [
+    61.0,
+    62.0,
+    63.0
+   ],
+   "verify_question": "Is the cashier eating or drinking at the cash desk, or food/drink on the desk?",
+   "description": "Еда/напитки на рабочем месте кассира (по кадрам около 62.0 с).",
+   "norm": {
+    "id": "231-12-2",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "Допускается внос работниками банка в кассовый узел лекарственных средств, медицинских изделий и средств связи",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "phone",
+   "type": "Телефон в руках кассира в кассовом узле",
+   "timecode_sec": 63.0,
+   "codex_ids": [
+    "231-12-2b"
+   ],
+   "evidence_t": [
+    62.0,
+    63.0,
+    64.0
+   ],
+   "verify_question": "Is the cashier holding or using a mobile phone?",
+   "description": "Телефон в руках кассира в кассовом узле (по кадрам около 63.0 с).",
+   "norm": {
+    "id": "231-12-2b",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "средств связи, не имеющих функции фото и видео фиксации",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85",
+    "strength": "direct"
+   }
+  },
+  {
+   "rule": "outsider",
+   "type": "Посторонний в кассовой кабине",
+   "timecode_sec": 65.0,
+   "codex_ids": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "evidence_t": [
+    64.0,
+    65.0,
+    66.0
+   ],
+   "verify_question": "Is a person other than the cashier (not a client at the client side) inside the cashier zone?",
+   "description": "Посторонний в кассовой кабине (по кадрам около 65.0 с).",
+   "norm": {
+    "id": "14-16-1",
+    "act": "14",
+    "punkt": "п. 16 пп. 1)",
+    "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+    "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+    "strength": "indirect"
+   }
+  }
+ ],
+ "observations": [
+  {
+   "t": 18.0,
+   "other": "клиент держит купюру в руке"
+  },
+  {
+   "t": 19.0,
+   "other": "кассир держит телефон в руке"
+  },
+  {
+   "t": 21.0,
+   "other": "клиент держит чашку в руках"
+  },
+  {
+   "t": 22.0,
+   "other": "клиент держит купюры в руках"
+  },
+  {
+   "t": 23.0,
+   "other": "клиент держит банкноту в руке"
+  },
+  {
+   "t": 24.0,
+   "other": "клиент держит купюру в руках"
+  },
+  {
+   "t": 32.0,
+   "other": "клиент держит банкноту в руке"
+  },
+  {
+   "t": 33.0,
+   "other": "клиент держит банкноты в руках"
+  },
+  {
+   "t": 35.0,
+   "other": "клиент держит банкноту в руке"
+  },
+  {
+   "t": 36.0,
+   "other": "клиент держит купюру в руке"
+  },
+  {
+   "t": 37.0,
+   "other": "клиент держит купюру в руке"
+  },
+  {
+   "t": 38.0,
+   "other": "клиент держит купюры в руках"
+  },
+  {
+   "t": 39.0,
+   "other": "клиент держит купюру в руках"
+  },
+  {
+   "t": 41.0,
+   "other": "клиент держит купюру в руках"
+  },
+  {
+   "t": 47.0,
+   "other": "клиент держит купюры в руках"
+  },
+  {
+   "t": 55.0,
+   "other": "кассир считает купюры вручную"
+  },
+  {
+   "t": 57.0,
+   "other": "клиент стоит у двери"
+  },
+  {
+   "t": 59.0,
+   "other": "клиент стоит у стола и держит купюру"
+  },
+  {
+   "t": 62.0,
+   "other": "кассир считает купюры вручную"
+  },
+  {
+   "t": 63.0,
+   "other": "кассир ест что-то из руки"
+  },
+  {
+   "t": 64.0,
+   "other": "кассир держит телефон в руке"
+  },
+  {
+   "t": 65.0,
+   "other": "кассир держит телефон в руке"
+  },
+  {
+   "t": 70.0,
+   "other": "клиент держит купюры в руках"
+  },
+  {
+   "t": 71.0,
+   "other": "кассир фотографирует что-то на телефоне"
+  },
+  {
+   "t": 72.0,
+   "other": "клиент держит купюры в руках"
+  }
+ ]
+}

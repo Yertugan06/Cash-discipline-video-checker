@@ -116,6 +116,11 @@ class StateTimeline(BaseModel):
 # ---------------------------------------------------------------------------
 
 
+class EvidenceBox(BaseModel):
+    label: str  # what the detector saw, e.g. "handbag"
+    box: tuple[float, float, float, float]  # x1, y1, x2, y2, normalized to [0, 1]
+
+
 class Finding(BaseModel):
     rule_id: str  # canonical id from knowledge/rules.yaml
     t_anchor: float  # reported timecode
@@ -124,6 +129,9 @@ class Finding(BaseModel):
     support_t: list[float]  # sampled times that satisfied the condition
     facts: dict[str, str | int | float | bool]  # template slots, e.g. away_s, object
     rank_score: float  # persistence-based; ranking frozen on dev
+    # Objects behind the finding at t_anchor, drawn on the anchor evidence frame.
+    # Optional: the VLM detector reports no geometry.
+    boxes: list[EvidenceBox] = Field(default_factory=list)
 
 
 class DetectionResult(BaseModel):

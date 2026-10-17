@@ -1,0 +1,115 @@
+<!doctype html><meta charset='utf-8'><title>Detection spike</title>
+<style>body{font:14px Arial,sans-serif;margin:16px;background:#fff;color:#111}table{border-collapse:collapse;margin:8px 0}td,th{border:1px solid #ccc;padding:4px 8px;vertical-align:top}.ok{background:#d7f5dd}.bad{background:#fbd5d5}img{max-width:300px;display:block}pre{white-space:pre-wrap;max-width:320px;font-size:11px}</style>
+<h1>Detection spike test</h1>
+<h2>Accuracy per key (correct / scored)</h2><table><tr><th>Key</th><th>owl</th><th>gdino</th></tr>
+<tr><td>cash</td><td>4 / 11</td><td>4 / 11</td></tr>
+<tr><td>bag</td><td>3 / 5</td><td>4 / 5</td></tr>
+<tr><td>id_card</td><td>1 / 2</td><td>0 / 2</td></tr>
+<tr><td>safe_open</td><td>3 / 4</td><td>1 / 4</td></tr>
+<tr><td>food_cup</td><td>4 / 4</td><td>2 / 4</td></tr>
+<tr><td>coat_bag</td><td>2 / 3</td><td>2 / 3</td></tr>
+<tr><td>screen</td><td>0 / 4</td><td>0 / 4</td></tr>
+<tr><td>sec / frame</td><td>0.20</td><td>0.44</td></tr></table>
+<p>Path A models can't judge <b>screen</b>; it is scored for the VLM only. Rule of thumb: a key needs ~90% here before a rule can rely on it.</p>
+<h2>Frames</h2><table><tr><th>Frame</th><th>Expected</th><th>owl</th><th>gdino</th></tr>
+<tr><td><b>X-4 @ 56.0s</b><br>Client 1 cash left on desk, client 2 entering<img src='img/X-4_56.0_raw.jpg'></td>
+<td>cash: True<br>safe_open: False</td>
+<td><div class='bad'>cash: False</div><div class='ok'>safe_open: False</div><img src='img/X-4_56.0_owl.jpg'><small>0.68s</small></td>
+<td><div class='bad'>cash: False</div><div class='bad'>safe_open: True</div><img src='img/X-4_56.0_gdino.jpg'><small>1.41s</small></td>
+</tr>
+<tr><td><b>X-38 @ 30.0s</b><br>Client 1 notes left on desk<img src='img/X-38_30.0_raw.jpg'></td>
+<td>cash: True</td>
+<td><div class='bad'>cash: False</div><img src='img/X-38_30.0_owl.jpg'><small>0.19s</small></td>
+<td><div class='bad'>cash: False</div><img src='img/X-38_30.0_gdino.jpg'><small>0.39s</small></td>
+</tr>
+<tr><td><b>X-26 @ 15.0s</b><br>Cashier gone, cash on desk<img src='img/X-26_15.0_raw.jpg'></td>
+<td>cash: True</td>
+<td><div class='bad'>cash: False</div><img src='img/X-26_15.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='bad'>cash: False</div><img src='img/X-26_15.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-10 @ 8.0s</b><br>Cashier counting cash alone<img src='img/X-10_8.0_raw.jpg'></td>
+<td>cash: True</td>
+<td><div class='bad'>cash: False</div><img src='img/X-10_8.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='ok'>cash: True</div><img src='img/X-10_8.0_gdino.jpg'><small>0.39s</small></td>
+</tr>
+<tr><td><b>X-2 @ 9.8s</b><br>Notes on desk, no ID shown<img src='img/X-2_9.8_raw.jpg'></td>
+<td>cash: True<br>id_card: False</td>
+<td><div class='bad'>cash: False</div><div class='bad'>id_card: True</div><img src='img/X-2_9.8_owl.jpg'><small>0.17s</small></td>
+<td><div class='bad'>cash: False</div><div class='bad'>id_card: True</div><img src='img/X-2_9.8_gdino.jpg'><small>0.39s</small></td>
+</tr>
+<tr><td><b>X-1 @ 16.0s</b><br>ID card lying on desk<img src='img/X-1_16.0_raw.jpg'></td>
+<td>id_card: True</td>
+<td><div class='ok'>id_card: True</div><img src='img/X-1_16.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='bad'>id_card: False</div><img src='img/X-1_16.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-13 @ 30.0s</b><br>Bundles on desk from opened bag<img src='img/X-13_30.0_raw.jpg'></td>
+<td>cash: True<br>bag: True</td>
+<td><div class='bad'>cash: False</div><div class='ok'>bag: True</div><img src='img/X-13_30.0_owl.jpg'><small>0.18s</small></td>
+<td><div class='bad'>cash: False</div><div class='ok'>bag: True</div><img src='img/X-13_30.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-14 @ 60.0s</b><br>Recounting bundles<img src='img/X-14_60.0_raw.jpg'></td>
+<td>cash: True</td>
+<td><div class='bad'>cash: False</div><img src='img/X-14_60.0_owl.jpg'><small>0.18s</small></td>
+<td><div class='bad'>cash: False</div><img src='img/X-14_60.0_gdino.jpg'><small>0.39s</small></td>
+</tr>
+<tr><td><b>X-15 @ 17.0s</b><br>Packed cash bag left on desk<img src='img/X-15_17.0_raw.jpg'></td>
+<td>bag: True</td>
+<td><div class='bad'>bag: False</div><img src='img/X-15_17.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='ok'>bag: True</div><img src='img/X-15_17.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-17 @ 6.0s</b><br>Collector carrying bag<img src='img/X-17_6.0_raw.jpg'></td>
+<td>bag: True</td>
+<td><div class='bad'>bag: False</div><img src='img/X-17_6.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='bad'>bag: False</div><img src='img/X-17_6.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-20 @ 6.0s</b><br>Safe door wide open<img src='img/X-20_6.0_raw.jpg'></td>
+<td>safe_open: True</td>
+<td><div class='ok'>safe_open: True</div><img src='img/X-20_6.0_owl.jpg'><small>0.18s</small></td>
+<td><div class='ok'>safe_open: True</div><img src='img/X-20_6.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-23 @ 16.0s</b><br>Cashier leaving, desk clear, safe closed, laptop locked<img src='img/X-23_16.0_raw.jpg'></td>
+<td>cash: False<br>safe_open: False<br>screen: locked</td>
+<td><div class='ok'>cash: False</div><div class='bad'>safe_open: True</div><div class=''>screen: None</div><img src='img/X-23_16.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='ok'>cash: False</div><div class='bad'>safe_open: True</div><div class=''>screen: None</div><img src='img/X-23_16.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-29 @ 16.0s</b><br>Laptop on lock screen<img src='img/X-29_16.0_raw.jpg'></td>
+<td>cash: False<br>screen: locked</td>
+<td><div class='ok'>cash: False</div><div class=''>screen: None</div><img src='img/X-29_16.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='bad'>cash: True</div><div class=''>screen: None</div><img src='img/X-29_16.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-28 @ 12.0s</b><br>Laptop unlocked, working app<img src='img/X-28_12.0_raw.jpg'></td>
+<td>screen: working</td>
+<td><div class=''>screen: None</div><img src='img/X-28_12.0_owl.jpg'><small>0.17s</small></td>
+<td><div class=''>screen: None</div><img src='img/X-28_12.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-11 @ 21.0s</b><br>Lights off, laptop unlocked (low light)<img src='img/X-11_21.0_raw.jpg'></td>
+<td>screen: working</td>
+<td><div class=''>screen: None</div><img src='img/X-11_21.0_owl.jpg'><small>0.17s</small></td>
+<td><div class=''>screen: None</div><img src='img/X-11_21.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-40 @ 18.0s</b><br>Coat and handbag on cash desk<img src='img/X-40_18.0_raw.jpg'></td>
+<td>coat_bag: True</td>
+<td><div class='ok'>coat_bag: True</div><img src='img/X-40_18.0_owl.jpg'><small>0.19s</small></td>
+<td><div class='bad'>coat_bag: False</div><img src='img/X-40_18.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-46 @ 13.0s</b><br>Cashier eating / drinking<img src='img/X-46_13.0_raw.jpg'></td>
+<td>food_cup: True</td>
+<td><div class='ok'>food_cup: True</div><img src='img/X-46_13.0_owl.jpg'><small>0.17s</small></td>
+<td><div class='bad'>food_cup: False</div><img src='img/X-46_13.0_gdino.jpg'><small>0.38s</small></td>
+</tr>
+<tr><td><b>X-24 @ 3.0s</b><br>Tablet + cup on desk<img src='img/X-24_3.0_raw.jpg'></td>
+<td>food_cup: True</td>
+<td><div class='ok'>food_cup: True</div><img src='img/X-24_3.0_owl.jpg'><small>0.18s</small></td>
+<td><div class='bad'>food_cup: False</div><img src='img/X-24_3.0_gdino.jpg'><small>0.39s</small></td>
+</tr>
+<tr><td><b>X-32 @ 2.0s</b><br>Empty room<img src='img/X-32_2.0_raw.jpg'></td>
+<td>cash: False<br>safe_open: False<br>coat_bag: False<br>food_cup: False<br>bag: False</td>
+<td><div class='ok'>cash: False</div><div class='ok'>safe_open: False</div><div class='bad'>coat_bag: True</div><div class='ok'>food_cup: False</div><div class='ok'>bag: False</div><img src='img/X-32_2.0_owl.jpg'><small>0.18s</small></td>
+<td><div class='ok'>cash: False</div><div class='bad'>safe_open: True</div><div class='ok'>coat_bag: False</div><div class='ok'>food_cup: False</div><div class='ok'>bag: False</div><img src='img/X-32_2.0_gdino.jpg'><small>0.39s</small></td>
+</tr>
+<tr><td><b>X-33 @ 2.0s</b><br>Empty room (other layout)<img src='img/X-33_2.0_raw.jpg'></td>
+<td>cash: False<br>coat_bag: False<br>food_cup: False<br>bag: False</td>
+<td><div class='ok'>cash: False</div><div class='ok'>coat_bag: False</div><div class='ok'>food_cup: False</div><div class='ok'>bag: False</div><img src='img/X-33_2.0_owl.jpg'><small>0.19s</small></td>
+<td><div class='ok'>cash: False</div><div class='ok'>coat_bag: False</div><div class='ok'>food_cup: False</div><div class='ok'>bag: False</div><img src='img/X-33_2.0_gdino.jpg'><small>0.39s</small></td>
+</tr>
+</table>

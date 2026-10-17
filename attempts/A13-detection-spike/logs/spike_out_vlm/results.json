@@ -1,0 +1,733 @@
+[
+ {
+  "clip": "X-4",
+  "t": 56.0,
+  "note": "Client 1 cash left on desk, client 2 entering",
+  "expected": {
+   "cash": true,
+   "safe_open": false
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "working",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"working\",\n  \"people\": 1\n}\n```",
+    "sec": 5.3805787563323975,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ],
+     [
+      "safe_open",
+      false,
+      false,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-38",
+  "t": 30.0,
+  "note": "Client 1 notes left on desk",
+  "expected": {
+   "cash": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": true,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": true,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 3.994056463241577,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-26",
+  "t": 15.0,
+  "note": "Cashier gone, cash on desk",
+  "expected": {
+   "cash": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 3.9974923133850098,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-10",
+  "t": 8.0,
+  "note": "Cashier counting cash alone",
+  "expected": {
+   "cash": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": true,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": true,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.002421855926514,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-2",
+  "t": 9.8,
+  "note": "Notes on desk, no ID shown",
+  "expected": {
+   "cash": true,
+   "id_card": false
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": true,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "working",
+     "people": 2
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": true,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"working\",\n  \"people\": 2\n}\n```",
+    "sec": 4.003167390823364,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ],
+     [
+      "id_card",
+      false,
+      true,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-1",
+  "t": 16.0,
+  "note": "ID card lying on desk",
+  "expected": {
+   "id_card": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "working",
+     "people": 2
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"working\",\n  \"people\": 2\n}\n```",
+    "sec": 4.006627559661865,
+    "score": [
+     [
+      "id_card",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-13",
+  "t": 30.0,
+  "note": "Bundles on desk from opened bag",
+  "expected": {
+   "cash": true,
+   "bag": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": true,
+     "id_card": true,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": true,\n  \"id_card\": true,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 3.996670722961426,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ],
+     [
+      "bag",
+      true,
+      true,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-14",
+  "t": 60.0,
+  "note": "Recounting bundles",
+  "expected": {
+   "cash": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": true,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": true,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 3.9917900562286377,
+    "score": [
+     [
+      "cash",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-15",
+  "t": 17.0,
+  "note": "Packed cash bag left on desk",
+  "expected": {
+   "bag": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": true,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": true,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.0079569816589355,
+    "score": [
+     [
+      "bag",
+      true,
+      true,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-17",
+  "t": 6.0,
+  "note": "Collector carrying bag",
+  "expected": {
+   "bag": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": true,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 2
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": true,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 2\n}\n```",
+    "sec": 4.002825975418091,
+    "score": [
+     [
+      "bag",
+      true,
+      true,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-20",
+  "t": 6.0,
+  "note": "Safe door wide open",
+  "expected": {
+   "safe_open": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.008296728134155,
+    "score": [
+     [
+      "safe_open",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-23",
+  "t": 16.0,
+  "note": "Cashier leaving, desk clear, safe closed, laptop locked",
+  "expected": {
+   "cash": false,
+   "safe_open": false,
+   "screen": "locked"
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "locked",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"locked\",\n  \"people\": 1\n}\n```",
+    "sec": 4.000598192214966,
+    "score": [
+     [
+      "cash",
+      false,
+      false,
+      true
+     ],
+     [
+      "safe_open",
+      false,
+      false,
+      true
+     ],
+     [
+      "screen",
+      "locked",
+      "locked",
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-29",
+  "t": 16.0,
+  "note": "Laptop on lock screen",
+  "expected": {
+   "cash": false,
+   "screen": "locked"
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "locked",
+     "people": 0
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"locked\",\n  \"people\": 0\n}\n```",
+    "sec": 4.006953239440918,
+    "score": [
+     [
+      "cash",
+      false,
+      false,
+      true
+     ],
+     [
+      "screen",
+      "locked",
+      "locked",
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-28",
+  "t": 12.0,
+  "note": "Laptop unlocked, working app",
+  "expected": {
+   "screen": "working"
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "working",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"working\",\n  \"people\": 1\n}\n```",
+    "sec": 4.017873525619507,
+    "score": [
+     [
+      "screen",
+      "working",
+      "working",
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-11",
+  "t": 21.0,
+  "note": "Lights off, laptop unlocked (low light)",
+  "expected": {
+   "screen": "working"
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.0141472816467285,
+    "score": [
+     [
+      "screen",
+      "working",
+      "closed",
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-40",
+  "t": 18.0,
+  "note": "Coat and handbag on cash desk",
+  "expected": {
+   "coat_bag": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": true,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": true,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.0133349895477295,
+    "score": [
+     [
+      "coat_bag",
+      true,
+      true,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-46",
+  "t": 13.0,
+  "note": "Cashier eating / drinking",
+  "expected": {
+   "food_cup": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": true,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": true,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.016292333602905,
+    "score": [
+     [
+      "food_cup",
+      true,
+      true,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-24",
+  "t": 3.0,
+  "note": "Tablet + cup on desk",
+  "expected": {
+   "food_cup": true
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "working",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"working\",\n  \"people\": 1\n}\n```",
+    "sec": 4.019467830657959,
+    "score": [
+     [
+      "food_cup",
+      true,
+      false,
+      false
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-32",
+  "t": 2.0,
+  "note": "Empty room",
+  "expected": {
+   "cash": false,
+   "safe_open": false,
+   "coat_bag": false,
+   "food_cup": false,
+   "bag": false
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "not_visible",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"not_visible\",\n  \"people\": 1\n}\n```",
+    "sec": 4.085107326507568,
+    "score": [
+     [
+      "cash",
+      false,
+      false,
+      true
+     ],
+     [
+      "safe_open",
+      false,
+      false,
+      true
+     ],
+     [
+      "coat_bag",
+      false,
+      false,
+      true
+     ],
+     [
+      "food_cup",
+      false,
+      false,
+      true
+     ],
+     [
+      "bag",
+      false,
+      false,
+      true
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "clip": "X-33",
+  "t": 2.0,
+  "note": "Empty room (other layout)",
+  "expected": {
+   "cash": false,
+   "coat_bag": false,
+   "food_cup": false,
+   "bag": false
+  },
+  "models": {
+   "vlm": {
+    "pred": {
+     "cash": false,
+     "bag": false,
+     "id_card": false,
+     "safe_open": false,
+     "food_cup": false,
+     "coat_bag": false,
+     "screen": "closed",
+     "people": 1
+    },
+    "raw": "```json\n{\n  \"cash\": false,\n  \"bag\": false,\n  \"id_card\": false,\n  \"safe_open\": false,\n  \"food_cup\": false,\n  \"coat_bag\": false,\n  \"screen\": \"closed\",\n  \"people\": 1\n}\n```",
+    "sec": 4.01819372177124,
+    "score": [
+     [
+      "cash",
+      false,
+      false,
+      true
+     ],
+     [
+      "coat_bag",
+      false,
+      false,
+      true
+     ],
+     [
+      "food_cup",
+      false,
+      false,
+      true
+     ],
+     [
+      "bag",
+      false,
+      false,
+      true
+     ]
+    ]
+   }
+  }
+ }
+]

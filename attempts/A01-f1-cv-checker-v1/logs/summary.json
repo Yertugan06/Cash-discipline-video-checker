@@ -1,0 +1,534 @@
+[
+  {
+    "scope": "all_unique",
+    "input_clips": 42,
+    "unique_videos": 40,
+    "scored_videos": 40,
+    "violation_videos": 21,
+    "correct_videos": 19,
+    "failed": 0,
+    "accuracy": 0.5,
+    "recall": 0.6666666666666666,
+    "false_alarm_rate": 0.6842105263157895,
+    "labelled_events": 22,
+    "predicted_events": 127,
+    "hits_1s": 8,
+    "hits_2s": 10,
+    "hits_5s": 11,
+    "event_recall_1s": 0.36363636363636365,
+    "event_recall_2s": 0.45454545454545453,
+    "event_recall_5s": 0.5,
+    "false_events_2s": 117,
+    "unmapped_label_events": 0,
+    "mean_runtime_sec": 83.85083063434999,
+    "slowest_video": "X-48/X-5",
+    "slowest_sec": 294.627361975,
+    "over_300s": 0,
+    "per_rule": {
+      "A-DOOR-LOCK": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 1
+      },
+      "A-OUTSIDER-ZONE": {
+        "hits": 1,
+        "misses": 0,
+        "false_alarms": 71
+      },
+      "A-SECOND-PERSON": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 31
+      },
+      "C-ID-BEFORE-CASH": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-COUNT-BEFORE-EXIT": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-REJECT-NOT-RETURNED": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-DETECTOR-CHECK": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "S-CLEAN-DESK-HANDOVER": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 2
+      },
+      "S-NO-MERGE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "S-SAFE-CLOSED": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-COLLECTOR-DOC": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-SEAL-CHECK": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-RECOUNT-BEFORE-SAFE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-CASH-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-BAG-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-DOCS-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 13
+      },
+      "L-PC-LOCKED": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 1
+      },
+      "L-SAFE-LOCKED-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "W-NO-PERSONAL-ITEMS": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 4
+      },
+      "W-NO-FOOD": {
+        "hits": 1,
+        "misses": 1,
+        "false_alarms": 2
+      },
+      "W-NO-CAMERA-PHONE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      }
+    }
+  },
+  {
+    "scope": "all_clips",
+    "input_clips": 42,
+    "unique_videos": 40,
+    "scored_videos": 42,
+    "violation_videos": 22,
+    "correct_videos": 20,
+    "failed": 0,
+    "accuracy": 0.5,
+    "recall": 0.6818181818181818,
+    "false_alarm_rate": 0.7,
+    "labelled_events": 24,
+    "predicted_events": 175,
+    "hits_1s": 9,
+    "hits_2s": 12,
+    "hits_5s": 13,
+    "event_recall_1s": 0.375,
+    "event_recall_2s": 0.5,
+    "event_recall_5s": 0.5416666666666666,
+    "false_events_2s": 163,
+    "unmapped_label_events": 0,
+    "mean_runtime_sec": 93.57108452940477,
+    "slowest_video": "X-48/X-5",
+    "slowest_sec": 294.627361975,
+    "over_300s": 0,
+    "per_rule": {
+      "A-DOOR-LOCK": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 1
+      },
+      "A-OUTSIDER-ZONE": {
+        "hits": 1,
+        "misses": 0,
+        "false_alarms": 91
+      },
+      "A-SECOND-PERSON": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 58
+      },
+      "C-ID-BEFORE-CASH": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-COUNT-BEFORE-EXIT": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-REJECT-NOT-RETURNED": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-DETECTOR-CHECK": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "S-CLEAN-DESK-HANDOVER": {
+        "hits": 0,
+        "misses": 3,
+        "false_alarms": 2
+      },
+      "S-NO-MERGE": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 0
+      },
+      "S-SAFE-CLOSED": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-COLLECTOR-DOC": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-SEAL-CHECK": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-RECOUNT-BEFORE-SAFE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-CASH-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-BAG-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-DOCS-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 13
+      },
+      "L-PC-LOCKED": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 1
+      },
+      "L-SAFE-LOCKED-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "W-NO-PERSONAL-ITEMS": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 5
+      },
+      "W-NO-FOOD": {
+        "hits": 1,
+        "misses": 1,
+        "false_alarms": 2
+      },
+      "W-NO-CAMERA-PHONE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      }
+    }
+  },
+  {
+    "scope": "held_out",
+    "input_clips": 9,
+    "unique_videos": 9,
+    "scored_videos": 9,
+    "violation_videos": 6,
+    "correct_videos": 3,
+    "failed": 0,
+    "accuracy": 0.5555555555555556,
+    "recall": 0.6666666666666666,
+    "false_alarm_rate": 0.6666666666666666,
+    "labelled_events": 6,
+    "predicted_events": 13,
+    "hits_1s": 3,
+    "hits_2s": 3,
+    "hits_5s": 3,
+    "event_recall_1s": 0.5,
+    "event_recall_2s": 0.5,
+    "event_recall_5s": 0.5,
+    "false_events_2s": 10,
+    "unmapped_label_events": 0,
+    "mean_runtime_sec": 54.07595375366671,
+    "slowest_video": "X-45",
+    "slowest_sec": 87.79688592899947,
+    "over_300s": 0,
+    "per_rule": {
+      "A-DOOR-LOCK": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 1
+      },
+      "A-OUTSIDER-ZONE": {
+        "hits": 1,
+        "misses": 0,
+        "false_alarms": 7
+      },
+      "A-SECOND-PERSON": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "C-ID-BEFORE-CASH": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "C-COUNT-BEFORE-EXIT": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "C-REJECT-NOT-RETURNED": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "C-DETECTOR-CHECK": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "S-CLEAN-DESK-HANDOVER": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "S-NO-MERGE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "S-SAFE-CLOSED": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "K-COLLECTOR-DOC": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "K-SEAL-CHECK": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "K-RECOUNT-BEFORE-SAFE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "L-NO-CASH-ON-LEAVE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "L-NO-BAG-ON-LEAVE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "L-NO-DOCS-ON-LEAVE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 1
+      },
+      "L-PC-LOCKED": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "L-SAFE-LOCKED-ON-LEAVE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "W-NO-PERSONAL-ITEMS": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "W-NO-FOOD": {
+        "hits": 1,
+        "misses": 0,
+        "false_alarms": 2
+      },
+      "W-NO-CAMERA-PHONE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      }
+    }
+  },
+  {
+    "scope": "training",
+    "input_clips": 33,
+    "unique_videos": 31,
+    "scored_videos": 31,
+    "violation_videos": 15,
+    "correct_videos": 16,
+    "failed": 0,
+    "accuracy": 0.4838709677419355,
+    "recall": 0.6666666666666666,
+    "false_alarm_rate": 0.6875,
+    "labelled_events": 16,
+    "predicted_events": 114,
+    "hits_1s": 5,
+    "hits_2s": 7,
+    "hits_5s": 8,
+    "event_recall_1s": 0.3125,
+    "event_recall_2s": 0.4375,
+    "event_recall_5s": 0.5,
+    "false_events_2s": 107,
+    "unmapped_label_events": 0,
+    "mean_runtime_sec": 92.49514972874192,
+    "slowest_video": "X-48/X-5",
+    "slowest_sec": 294.627361975,
+    "over_300s": 0,
+    "per_rule": {
+      "A-DOOR-LOCK": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "A-OUTSIDER-ZONE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 64
+      },
+      "A-SECOND-PERSON": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 31
+      },
+      "C-ID-BEFORE-CASH": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-COUNT-BEFORE-EXIT": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-REJECT-NOT-RETURNED": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "C-DETECTOR-CHECK": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      },
+      "S-CLEAN-DESK-HANDOVER": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 2
+      },
+      "S-NO-MERGE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "S-SAFE-CLOSED": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-COLLECTOR-DOC": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-SEAL-CHECK": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "K-RECOUNT-BEFORE-SAFE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-CASH-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-BAG-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "L-NO-DOCS-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 12
+      },
+      "L-PC-LOCKED": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 1
+      },
+      "L-SAFE-LOCKED-ON-LEAVE": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "W-NO-PERSONAL-ITEMS": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 4
+      },
+      "W-NO-FOOD": {
+        "hits": 0,
+        "misses": 1,
+        "false_alarms": 0
+      },
+      "W-NO-CAMERA-PHONE": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0
+      }
+    }
+  }
+]

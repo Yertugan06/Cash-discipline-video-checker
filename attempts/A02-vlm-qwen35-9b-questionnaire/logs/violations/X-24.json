@@ -1,0 +1,78 @@
+{
+ "video": "X-24",
+ "verdict": "violation",
+ "violations": [
+  {
+   "rule": "food",
+   "type": "Еда/напитки на рабочем месте кассира",
+   "timecode_sec": 0.0,
+   "codex_ids": [
+    "231-12-2"
+   ],
+   "evidence_t": [
+    0,
+    0.0,
+    1.0
+   ],
+   "verify_question": "Is the cashier eating or drinking at the cash desk, or food/drink on the desk?",
+   "description": "Еда/напитки на рабочем месте кассира (по кадрам около 0.0 с).",
+   "norm": {
+    "id": "231-12-2",
+    "act": "231",
+    "punkt": "п. 12 ч. 2",
+    "quote": "Допускается внос работниками банка в кассовый узел лекарственных средств, медицинских изделий и средств связи",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0",
+    "strength": "indirect"
+   }
+  },
+  {
+   "rule": "leave_docs",
+   "type": "Документы/носители оставлены на столе при уходе",
+   "timecode_sec": 6.0,
+   "codex_ids": [
+    "231-80-3"
+   ],
+   "evidence_t": [
+    5.0,
+    6.0,
+    7.0
+   ],
+   "verify_question": "After the cashier walks away, are documents, a folder or a tablet left on the desk?",
+   "description": "Документы/носители оставлены на столе при уходе (по кадрам около 6.0 с).",
+   "norm": {
+    "id": "231-80-3",
+    "act": "231",
+    "punkt": "п. 80",
+    "quote": "Порядок хранения, выдачи и передачи ценностей, печатей, ключей и кодов от электронных и механических замков кладовой и (или) сейфовой комнаты",
+    "url": "https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B8%20%D0%B8",
+    "strength": "indirect"
+   }
+  }
+ ],
+ "observations": [
+  {
+   "t": 1.0,
+   "other": "кассир считает купюры вручную"
+  },
+  {
+   "t": 2.0,
+   "other": "кассир считает купюры вручную"
+  },
+  {
+   "t": 3.0,
+   "other": "на столе стоит зелёная кружка"
+  },
+  {
+   "t": 5.0,
+   "other": "на столе стоит зеленая кружка"
+  },
+  {
+   "t": 11.0,
+   "other": "человек стоит у двери"
+  },
+  {
+   "t": 12.0,
+   "other": "на столе стоит зелёная кружка"
+  }
+ ]
+}
