@@ -25,17 +25,15 @@ import subprocess
 import sys
 from pathlib import Path
 
+from backend.clip_id import parse_clip_id
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HARNESS_SCORE = REPO_ROOT / "validation" / "validation-evidence" / "harness" / "score.py"
 
 
 def clip_id_from_filename(name: str) -> str:
-    """'X-12.json' / 'x12_done.json' -> 'X-12'; falls back to the bare stem if no digits."""
-    import re
-
-    stem = Path(name).stem
-    m = re.search(r"(\d+)", stem)
-    return f"X-{int(m.group(1))}" if m else stem
+    """'X-12.json' / 'Х-12.mov.json' -> 'X-12'. A file not named after a clip is an error."""
+    return parse_clip_id(Path(name).stem)
 
 
 def to_pred_entry(done_job: dict) -> dict:
@@ -59,8 +57,11 @@ def build_pred(done_jobs_dir: Path) -> dict[str, dict]:
     """Read every `*.json` file in `done_jobs_dir` as a `DoneJob` and build the harness pred map."""
     pred: dict[str, dict] = {}
     for f in sorted(done_jobs_dir.glob("*.json")):
+        clip = clip_id_from_filename(f.name)
+        if clip in pred:
+            raise ValueError(f"two DoneJob files for {clip} in {done_jobs_dir}")
         data = json.loads(f.read_text(encoding="utf-8"))
-        pred[clip_id_from_filename(f.name)] = to_pred_entry(data)
+        pred[clip] = to_pred_entry(data)
     return pred
 
 

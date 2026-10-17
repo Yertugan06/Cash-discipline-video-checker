@@ -2,7 +2,37 @@
 
 Evaluation tooling. Kept out of `backend/` deliberately: `backend/` must never reference
 `data/`, label files or `.xlsx` (architecture.md §2, enforced by `tests/test_no_label_access.py`);
-`eval/` is explicitly allowed to.
+`eval/` is explicitly allowed to, and is the only place that reads organizer labels or human
+annotations.
+
+## Data and ground truth
+
+The team data root has one layout everywhere (see `data.py`): `open/` (organizer labels and
+videos) and `team/` (human annotations, the cases workbook, `reviews.json`). The team copy is
+`datathon:~/data`; locally it defaults to `<repo>/data` (override with `DATATHON_DATA_ROOT`).
+`data_manifest.json` pins the SHA-256 of every file.
+
+```
+.venv/bin/python -m eval.sync_data            # check the local copy (read-only)
+.venv/bin/python -m eval.sync_data --remote   # also check the VM copy (read-only)
+.venv/bin/python -m eval.sync_data --pull     # download missing files; never overwrites
+.venv/bin/python -m eval.ground_truth         # build gt in memory, write discrepancies.json,
+                                              # check the frozen split
+.venv/bin/python -m eval.ground_truth --write # also rewrite validation-private/gt.json
+```
+
+- `ground_truth.py` replaces the retired `reasearch1/.../harness/gt.py` and keeps its output
+  fields. Each `gt.json` entry is one unique video (by SHA-256), keyed by its lowest clip ID;
+  `files` keeps every duplicate clip's own organizer label.
+- `discrepancies.json` lists disagreements for people to review (organizer vs human annotation,
+  duplicates whose labels differ, changes since the previous `gt.json`). Nothing resolves them
+  automatically.
+- Reviewer decisions live in `team/reviews.json`, never in code. After an agreed change, update
+  its hash in `data_manifest.json` and copy it to `datathon:~/data/team/`.
+- `split.json` is frozen. The builder re-derives it with the original algorithm and fails if it
+  no longer matches; nothing writes it.
+- Clip IDs are parsed only by `backend/clip_id.py` (`X-<n>`, Latin X).
+- `tests/test_dataset_real.py` checks the real data root and skips where it is absent.
 
 - `kit_states_adapter.py` -- `load_kit_states(path) -> StateTimeline`: reads one of the kit's
   saved per-video JSON Lines state files (`archive/vm-copies/.../runs/<run>/states/<video>.jsonl`,

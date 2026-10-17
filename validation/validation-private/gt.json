@@ -1,6 +1,6 @@
 {
  "X-1": {
-  "path": "reasearch1/../data/open/videos/X-1.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/X-1.mov",
   "dups": [
    "X-1"
   ],
@@ -22,10 +22,23 @@
   ],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-3"
+  "group": "X-3",
+  "sha256": "8911a9219b9433091824e553a70bb80335f075fd8ac982d2062d2ecf023c16bc",
+  "files": [
+   {
+    "clip_id": "X-1",
+    "video": "open/videos/X-1.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      22.0
+     ]
+    }
+   }
+  ]
  },
  "X-2": {
-  "path": "reasearch1/../data/open/videos/X-2.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/X-2.mov",
   "dups": [
    "X-2"
   ],
@@ -47,10 +60,23 @@
   ],
   "human_reliable": true,
   "layout": "Client-facing desk",
-  "group": "X-3"
+  "group": "X-3",
+  "sha256": "9932ae0a10d3b9371bf52ea558dc19092fcf47adcd275a73a52a56b95464bca6",
+  "files": [
+   {
+    "clip_id": "X-2",
+    "video": "open/videos/X-2.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      10.0
+     ]
+    }
+   }
+  ]
  },
  "X-3": {
-  "path": "reasearch1/../data/open/videos/Х-3.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-3.mov",
   "dups": [
    "X-3"
   ],
@@ -59,10 +85,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-3"
+  "group": "X-3",
+  "sha256": "21468fcef4ea5f45ce7d465e620f84e09c8b50314f4ecdc06f69224c701b3a5b",
+  "files": [
+   {
+    "clip_id": "X-3",
+    "video": "open/videos/Х-3.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-4": {
-  "path": "reasearch1/../data/open/videos/Х-4.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-4.mov",
   "dups": [
    "X-4",
    "X-47"
@@ -70,7 +107,7 @@
   "violation": true,
   "org_times": [
    57.0,
-   68
+   68.0
   ],
   "human": [
    {
@@ -96,10 +133,33 @@
   ],
   "human_reliable": true,
   "layout": "Client-facing desk",
-  "group": "X-5"
+  "group": "X-5",
+  "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+  "files": [
+   {
+    "clip_id": "X-4",
+    "video": "open/videos/Х-4.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      57.0
+     ]
+    }
+   },
+   {
+    "clip_id": "X-47",
+    "video": "open/videos/Х-47.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      68.0
+     ]
+    }
+   }
+  ]
  },
  "X-5": {
-  "path": "reasearch1/../data/open/videos/Х-5.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-5.mov",
   "dups": [
    "X-5",
    "X-48"
@@ -109,10 +169,29 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-5"
+  "group": "X-5",
+  "sha256": "1f5840bff58f298e89c4afa00cb1c18f6dafc5c4096c251d9b507604ebefe906",
+  "files": [
+   {
+    "clip_id": "X-5",
+    "video": "open/videos/Х-5.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   },
+   {
+    "clip_id": "X-48",
+    "video": "open/videos/Х-48.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-8": {
-  "path": "reasearch1/../data/open/videos/Х-8.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-8.mov",
   "dups": [
    "X-8"
   ],
@@ -121,10 +200,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-8"
+  "group": "X-8",
+  "sha256": "6a53e10acdcf52396ad5b1697eead32d8322c0911d792523a5c33fe5b388f4e7",
+  "files": [
+   {
+    "clip_id": "X-8",
+    "video": "open/videos/Х-8.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-10": {
-  "path": "reasearch1/../data/open/videos/Х-10.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-10.mov",
   "dups": [
    "X-10"
   ],
@@ -133,10 +223,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-10"
+  "group": "X-10",
+  "sha256": "57a0e46c7a45f0e831f61d9c80722fefe4b74dbcfe1d3031ff58307d481f9a5c",
+  "files": [
+   {
+    "clip_id": "X-10",
+    "video": "open/videos/Х-10.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-11": {
-  "path": "reasearch1/../data/open/videos/Х-11.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-11.mov",
   "dups": [
    "X-11"
   ],
@@ -158,10 +259,23 @@
   ],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-12"
+  "group": "X-12",
+  "sha256": "b3a954a5b761ad47943e061599315e3fe9d22573eeb92bb14bf315cdcd422fc5",
+  "files": [
+   {
+    "clip_id": "X-11",
+    "video": "open/videos/Х-11.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      18.0
+     ]
+    }
+   }
+  ]
  },
  "X-12": {
-  "path": "reasearch1/../data/open/videos/Х-12.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-12.mov",
   "dups": [
    "X-12"
   ],
@@ -170,10 +284,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-12"
+  "group": "X-12",
+  "sha256": "955755baf54418b48ea645dcd98e7e8dcca1d1e227e9b286a9427062db304fd4",
+  "files": [
+   {
+    "clip_id": "X-12",
+    "video": "open/videos/Х-12.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-13": {
-  "path": "reasearch1/../data/open/videos/Х-13.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-13.mov",
   "dups": [
    "X-13"
   ],
@@ -195,10 +320,23 @@
   ],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-14"
+  "group": "X-14",
+  "sha256": "a37930cf119bb691be77d8624b18333b04d9c67066a7f4627d63e3208dfa6057",
+  "files": [
+   {
+    "clip_id": "X-13",
+    "video": "open/videos/Х-13.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      47.0
+     ]
+    }
+   }
+  ]
  },
  "X-14": {
-  "path": "reasearch1/../data/open/videos/Х-14.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-14.mov",
   "dups": [
    "X-14"
   ],
@@ -207,10 +345,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-14"
+  "group": "X-14",
+  "sha256": "7d6890ecb4a2b28bbdd3b61b6711566eee84a53ab3439c40cd9b6a3a6714c681",
+  "files": [
+   {
+    "clip_id": "X-14",
+    "video": "open/videos/Х-14.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-15": {
-  "path": "reasearch1/../data/open/videos/Х-15.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-15.mov",
   "dups": [
    "X-15"
   ],
@@ -232,10 +381,23 @@
   ],
   "human_reliable": true,
   "layout": "Back-office desk",
-  "group": "X-16"
+  "group": "X-16",
+  "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+  "files": [
+   {
+    "clip_id": "X-15",
+    "video": "open/videos/Х-15.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      15.0
+     ]
+    }
+   }
+  ]
  },
  "X-16": {
-  "path": "reasearch1/../data/open/videos/Х-16.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-16.mov",
   "dups": [
    "X-16"
   ],
@@ -244,10 +406,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-16"
+  "group": "X-16",
+  "sha256": "3f516431cf37e3900b7eae857a7b09be258f485702ab56bc6e5b6129103f1fa5",
+  "files": [
+   {
+    "clip_id": "X-16",
+    "video": "open/videos/Х-16.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-17": {
-  "path": "reasearch1/../data/open/videos/Х-17.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-17.mov",
   "dups": [
    "X-17"
   ],
@@ -269,10 +442,23 @@
   ],
   "human_reliable": true,
   "layout": "Client-facing desk",
-  "group": "X-16"
+  "group": "X-16",
+  "sha256": "0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364",
+  "files": [
+   {
+    "clip_id": "X-17",
+    "video": "open/videos/Х-17.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      7.0
+     ]
+    }
+   }
+  ]
  },
  "X-18": {
-  "path": "reasearch1/../data/open/videos/Х-18.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-18.mov",
   "dups": [
    "X-18"
   ],
@@ -294,10 +480,23 @@
   ],
   "human_reliable": true,
   "layout": "Client-facing desk",
-  "group": "X-18"
+  "group": "X-18",
+  "sha256": "90607b0b0cb772fcf29b0c7e0e56fa6af36da6fac0efe93b8a616b5de94a156c",
+  "files": [
+   {
+    "clip_id": "X-18",
+    "video": "open/videos/Х-18.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      20.0
+     ]
+    }
+   }
+  ]
  },
  "X-19": {
-  "path": "reasearch1/../data/open/videos/Х-19.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-19.mov",
   "dups": [
    "X-19"
   ],
@@ -306,10 +505,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-19"
+  "group": "X-19",
+  "sha256": "16065504b21260bff18698c7bbf048ffa356c9de43d43b92643b6c2eddedac0f",
+  "files": [
+   {
+    "clip_id": "X-19",
+    "video": "open/videos/Х-19.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-20": {
-  "path": "reasearch1/../data/open/videos/Х-20.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-20.mov",
   "dups": [
    "X-20"
   ],
@@ -331,10 +541,23 @@
   ],
   "human_reliable": true,
   "layout": "Back-office desk",
-  "group": "X-21"
+  "group": "X-21",
+  "sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+  "files": [
+   {
+    "clip_id": "X-20",
+    "video": "open/videos/Х-20.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      5.0
+     ]
+    }
+   }
+  ]
  },
  "X-21": {
-  "path": "reasearch1/../data/open/videos/Х-21.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-21.mov",
   "dups": [
    "X-21"
   ],
@@ -343,10 +566,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-21"
+  "group": "X-21",
+  "sha256": "efd876a04224cac781ac64bf5d6e107ded67340b7b7715fd9ca3408b240a1075",
+  "files": [
+   {
+    "clip_id": "X-21",
+    "video": "open/videos/Х-21.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-22": {
-  "path": "reasearch1/../data/open/videos/Х-22.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-22.mov",
   "dups": [
    "X-22"
   ],
@@ -368,10 +602,23 @@
   ],
   "human_reliable": true,
   "layout": "Back-office desk",
-  "group": "X-23"
+  "group": "X-23",
+  "sha256": "c9a30d44907e4a41b3a8ccf101774cd2e0804de20927bfbc9e1ccba1f2326b78",
+  "files": [
+   {
+    "clip_id": "X-22",
+    "video": "open/videos/Х-22.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      14.0
+     ]
+    }
+   }
+  ]
  },
  "X-23": {
-  "path": "reasearch1/../data/open/videos/Х-23.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-23.mov",
   "dups": [
    "X-23"
   ],
@@ -380,10 +627,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-23"
+  "group": "X-23",
+  "sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+  "files": [
+   {
+    "clip_id": "X-23",
+    "video": "open/videos/Х-23.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-24": {
-  "path": "reasearch1/../data/open/videos/Х-24.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-24.mov",
   "dups": [
    "X-24"
   ],
@@ -405,10 +663,23 @@
   ],
   "human_reliable": true,
   "layout": "Back-office desk",
-  "group": "X-25"
+  "group": "X-25",
+  "sha256": "c175a683749401d5a9ecf6f1c188b64fa8a09543f41482c1e4eb2232255715d3",
+  "files": [
+   {
+    "clip_id": "X-24",
+    "video": "open/videos/Х-24.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      8.0
+     ]
+    }
+   }
+  ]
  },
  "X-25": {
-  "path": "reasearch1/../data/open/videos/Х-25.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-25.mov",
   "dups": [
    "X-25"
   ],
@@ -417,10 +688,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-25"
+  "group": "X-25",
+  "sha256": "901f61cf1a1b8754dda56466308c19fc203a1a4c0e85d1e7827849d34e2d52f0",
+  "files": [
+   {
+    "clip_id": "X-25",
+    "video": "open/videos/Х-25.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-26": {
-  "path": "reasearch1/../data/open/videos/Х-26.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-26.mov",
   "dups": [
    "X-26"
   ],
@@ -442,10 +724,23 @@
   ],
   "human_reliable": true,
   "layout": "Back-office desk",
-  "group": "X-27"
+  "group": "X-27",
+  "sha256": "e3a00b6e0f38b1d9b5498140f14906c71e204359262a90ce7a9974d64bf081e9",
+  "files": [
+   {
+    "clip_id": "X-26",
+    "video": "open/videos/Х-26.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      9.0
+     ]
+    }
+   }
+  ]
  },
  "X-27": {
-  "path": "reasearch1/../data/open/videos/Х-27.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-27.mov",
   "dups": [
    "X-27"
   ],
@@ -454,10 +749,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-27"
+  "group": "X-27",
+  "sha256": "d3d21494d74e40a7586fe4f6164e515f6621a2d413538c4e15c67d394e85fc2d",
+  "files": [
+   {
+    "clip_id": "X-27",
+    "video": "open/videos/Х-27.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-28": {
-  "path": "reasearch1/../data/open/videos/Х-28.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-28.mov",
   "dups": [
    "X-28"
   ],
@@ -479,10 +785,23 @@
   ],
   "human_reliable": true,
   "layout": "Back-office desk",
-  "group": "X-29"
+  "group": "X-29",
+  "sha256": "d15ef04bcfae571bd2d7fc4e4d709ba595ae19f44136a43e7277f17e7b6e5b6d",
+  "files": [
+   {
+    "clip_id": "X-28",
+    "video": "open/videos/Х-28.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      7.0
+     ]
+    }
+   }
+  ]
  },
  "X-29": {
-  "path": "reasearch1/../data/open/videos/Х-29.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-29.mov",
   "dups": [
    "X-29"
   ],
@@ -491,10 +810,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Back-office desk",
-  "group": "X-29"
+  "group": "X-29",
+  "sha256": "b9bfb76ac8ea47eb368fc78a2f6370e4d98e79185972f63cf301ee22f12b5941",
+  "files": [
+   {
+    "clip_id": "X-29",
+    "video": "open/videos/Х-29.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-30": {
-  "path": "reasearch1/../data/open/videos/Х-30.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-30.mov",
   "dups": [
    "X-30"
   ],
@@ -516,10 +846,23 @@
   ],
   "human_reliable": true,
   "layout": "Desk near the door",
-  "group": "X-31"
+  "group": "X-31",
+  "sha256": "05af66ce27b83d7c10c5d33b6f1847ec042c01ed21afdcbd43a13abcefd28199",
+  "files": [
+   {
+    "clip_id": "X-30",
+    "video": "open/videos/Х-30.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      13.0
+     ]
+    }
+   }
+  ]
  },
  "X-31": {
-  "path": "reasearch1/../data/open/videos/Х-31.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-31.mov",
   "dups": [
    "X-31"
   ],
@@ -528,10 +871,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Desk near the door",
-  "group": "X-31"
+  "group": "X-31",
+  "sha256": "6a9fa7dd2e6db4cbe57f3c96a6cb256f23c04aa4e6fd44622fdf5de662cc0649",
+  "files": [
+   {
+    "clip_id": "X-31",
+    "video": "open/videos/Х-31.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-32": {
-  "path": "reasearch1/../data/open/videos/Х-32.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-32.mov",
   "dups": [
    "X-32"
   ],
@@ -553,10 +907,23 @@
   ],
   "human_reliable": true,
   "layout": "Desk near the door",
-  "group": "X-31"
+  "group": "X-31",
+  "sha256": "bcc277cbf1a36245156b2bb9a0e0b826432390b42040c0b82201a8c21ab23ce9",
+  "files": [
+   {
+    "clip_id": "X-32",
+    "video": "open/videos/Х-32.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      5.0
+     ]
+    }
+   }
+  ]
  },
  "X-33": {
-  "path": "reasearch1/../data/open/videos/Х-33.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-33.mov",
   "dups": [
    "X-33"
   ],
@@ -578,10 +945,23 @@
   ],
   "human_reliable": true,
   "layout": "Desk near the door",
-  "group": "X-33"
+  "group": "X-33",
+  "sha256": "209e8aaca88df59064e5f28b3bcc489fee3eea9eb920889b69c03c83d52430c6",
+  "files": [
+   {
+    "clip_id": "X-33",
+    "video": "open/videos/Х-33.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      6.0
+     ]
+    }
+   }
+  ]
  },
  "X-34": {
-  "path": "reasearch1/../data/open/videos/Х-34.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-34.mov",
   "dups": [
    "X-34"
   ],
@@ -603,10 +983,23 @@
   ],
   "human_reliable": true,
   "layout": "Client-facing desk",
-  "group": "X-37"
+  "group": "X-37",
+  "sha256": "f3e351bea71150f4e8c76e2c8f0656a4e92063319d7cd39e264078c5ba9139c3",
+  "files": [
+   {
+    "clip_id": "X-34",
+    "video": "open/videos/Х-34.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      13.0
+     ]
+    }
+   }
+  ]
  },
  "X-35": {
-  "path": "reasearch1/../data/open/videos/Х-35.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-35.mov",
   "dups": [
    "X-35"
   ],
@@ -615,10 +1008,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-35"
+  "group": "X-35",
+  "sha256": "26430119e074d6f0eb5dbc7ec3e26bbc31cf18903265bb4372bd7d7104908640",
+  "files": [
+   {
+    "clip_id": "X-35",
+    "video": "open/videos/Х-35.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-37": {
-  "path": "reasearch1/../data/open/videos/Х-37.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-37.mov",
   "dups": [
    "X-37"
   ],
@@ -627,10 +1031,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-37"
+  "group": "X-37",
+  "sha256": "ac4cf04844c0aa08a5e19f5f7fe984f1477943294922d6ef77bdc5b88b97160e",
+  "files": [
+   {
+    "clip_id": "X-37",
+    "video": "open/videos/Х-37.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-38": {
-  "path": "reasearch1/../data/open/videos/Х-38.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-38.mov",
   "dups": [
    "X-38"
   ],
@@ -652,10 +1067,23 @@
   ],
   "human_reliable": true,
   "layout": "Client-facing desk",
-  "group": "X-39"
+  "group": "X-39",
+  "sha256": "5a6f6a13ef88191ec1d9a2a303f1be74d16aa3381a57aaadba8850aac715ff10",
+  "files": [
+   {
+    "clip_id": "X-38",
+    "video": "open/videos/Х-38.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      33.0
+     ]
+    }
+   }
+  ]
  },
  "X-39": {
-  "path": "reasearch1/../data/open/videos/Х-39.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-39.mov",
   "dups": [
    "X-39"
   ],
@@ -664,10 +1092,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Client-facing desk",
-  "group": "X-39"
+  "group": "X-39",
+  "sha256": "deeeee54539fb894b17447296bd7f0807b9dc662bad9af4dcd27f4fbdd677187",
+  "files": [
+   {
+    "clip_id": "X-39",
+    "video": "open/videos/Х-39.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-40": {
-  "path": "reasearch1/../data/open/videos/Х-40.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-40.mov",
   "dups": [
    "X-40"
   ],
@@ -689,10 +1128,23 @@
   ],
   "human_reliable": true,
   "layout": "Desk near the door",
-  "group": "X-40"
+  "group": "X-40",
+  "sha256": "6a81739ced0efdcd4a4feb76ea16562a20ceb53a2232a801528716c450366c9f",
+  "files": [
+   {
+    "clip_id": "X-40",
+    "video": "open/videos/Х-40.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      17.0
+     ]
+    }
+   }
+  ]
  },
  "X-43": {
-  "path": "reasearch1/../data/open/videos/Х-43.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-43.mov",
   "dups": [
    "X-43"
   ],
@@ -701,10 +1153,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Desk near the door",
-  "group": "X-45"
+  "group": "X-45",
+  "sha256": "39e28d7be01cdb090ede1881ce3ef704fa413271deb69d6735c1953f340d6069",
+  "files": [
+   {
+    "clip_id": "X-43",
+    "video": "open/videos/Х-43.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-44": {
-  "path": "reasearch1/../data/open/videos/Х-44.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-44.mov",
   "dups": [
    "X-44"
   ],
@@ -726,10 +1189,23 @@
   ],
   "human_reliable": false,
   "layout": "Desk near the door",
-  "group": "X-45"
+  "group": "X-45",
+  "sha256": "9774ed882153af3ba1a7e71c9b9249619e2b3a97ae336aad6143369802ca3522",
+  "files": [
+   {
+    "clip_id": "X-44",
+    "video": "open/videos/Х-44.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      16.0
+     ]
+    }
+   }
+  ]
  },
  "X-45": {
-  "path": "reasearch1/../data/open/videos/Х-45.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-45.mov",
   "dups": [
    "X-45"
   ],
@@ -738,10 +1214,21 @@
   "human": [],
   "human_reliable": false,
   "layout": "Desk near the door",
-  "group": "X-45"
+  "group": "X-45",
+  "sha256": "524bf9ff2d5e81211dbbeff73129dbb5f3a5e5e35a64f443f53e16b1c2d471c7",
+  "files": [
+   {
+    "clip_id": "X-45",
+    "video": "open/videos/Х-45.mov",
+    "organizer": {
+     "violation": false,
+     "times": []
+    }
+   }
+  ]
  },
  "X-46": {
-  "path": "reasearch1/../data/open/videos/Х-46.mov",
+  "path": "/home/yertugan/Repositories/hackathon/data/open/videos/Х-46.mov",
   "dups": [
    "X-46"
   ],
@@ -763,6 +1250,19 @@
   ],
   "human_reliable": true,
   "layout": "Desk near the door",
-  "group": "X-46"
+  "group": "X-46",
+  "sha256": "66fc5d28c2371592f9260305589bdc86636fdd2ebe7a7ec976eec00a23d43df4",
+  "files": [
+   {
+    "clip_id": "X-46",
+    "video": "open/videos/Х-46.mov",
+    "organizer": {
+     "violation": true,
+     "times": [
+      11.0
+     ]
+    }
+   }
+  ]
  }
 }
