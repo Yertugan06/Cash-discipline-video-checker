@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KIT = os.path.join(ROOT, 'brev_kit')
 sys.path.insert(0, os.path.join(KIT, 'scripts'))
 from common import chat, load_schema, load_prompt, load_codex, validate_state   # noqa: E402
-from timeline_rules import detect, to_output                                     # noqa: E402
+from timeline_rules import detect, to_output, NEEDS_VERIFY                       # noqa: E402
 import zoom_checks as Z                                                          # noqa: E402
 from run_trace import Tracer                                                      # noqa: E402
 import people                                                                    # noqa: E402
@@ -83,7 +83,7 @@ def extract_frames(path, out_dir, fps=2.0, long_side=1280):
     Разрешение не увеличивается, длинная сторона ограничена long_side (мелкие объекты — пачка денег, ключ — не теряются)."""
     os.makedirs(out_dir, exist_ok=True)
     vf = f"fps={fps},scale='min({long_side},iw)':'min({long_side},ih)':force_original_aspect_ratio=decrease"
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', path, '-vf', vf, '-q:v', '3',
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-threads', os.environ.get('FFMPEG_THREADS', '0'), '-i', path, '-vf', vf, '-q:v', '3',
                     os.path.join(out_dir, '%06d.jpg')], check=True)
     files = sorted(f for f in os.listdir(out_dir) if f.endswith('.jpg'))
     return [{'t': round(i / fps, 3), 'path': os.path.join(out_dir, f)} for i, f in enumerate(files)]
@@ -133,7 +133,7 @@ def desk_moments(S):
     for k in range(1, len(S)):
         if S[k]['state']['clients_at_desk'] >= 1 and S[k - 1]['state']['clients_at_desk'] == 0 and first_client is not None and k > first_client:
             pick |= {s['t'] for s in S if S[k]['t'] - 4.0 <= s['t'] <= S[k]['t']}
-    return sorted(pick)[:14]
+    return sorted(pick)[:8]
 
 
 def grid(t_end, step, cap):
@@ -179,7 +179,7 @@ def zoom_pass(ex, samples, frames, boxes, duration, progress, tr):
     path_at = lambda t: min(frames, key=lambda f: abs(f['t'] - t))['path']
     chk = lambda kind: (lambda t: Z.check(path_at(t), boxes, [kind], CFG_Z, ZSYSTEM))
     plan = {'desk': desk_moments(samples) if boxes.get('desk') else [],
-            'safe': grid(duration, 3, 30) if boxes.get('safe') else [],
+            'safe': grid(duration, 4, 20) if boxes.get('safe') else [],      # правилу safe_open нужно ≥ 8 с открытым — хватает шага 4 с
             'laptop': [s['t'] for s in samples[::2] if not s['state']['cashier_at_desk']][:8] if boxes.get('laptop') else [],
             'door': [t for t in door_moments(samples) if t <= duration] if boxes.get('door') else []}
     n_checks = sum(len(v) for v in plan.values())
@@ -188,7 +188,7 @@ def zoom_pass(ex, samples, frames, boxes, duration, progress, tr):
     res = {k: dict(zip(ts, ex.map(chk(k), ts))) for k, ts in plan.items()}
     changed = apply_answers(samples, {t: a.get('desk_cash') for t, a in res['desk'].items()}, 'desk_cash', lambda v: v, 0.01)
     changed += apply_answers(samples, {t: a.get('desk_bag') for t, a in res['desk'].items()}, 'desk_bag', lambda v: v, 0.01)
-    changed += apply_answers(samples, res['safe'], 'safe_door', lambda a: a.get('safe_door'), 1.6)
+    changed += apply_answers(samples, res['safe'], 'safe_door', lambda a: a.get('safe_door'), 2.1)   # половина шага сетки 4 с
     changed += apply_answers(samples, res['laptop'], 'laptop_screen', lambda a: a.get('laptop_screen'), 1.6)
     changed += apply_answers(samples, res['door'], 'room_door', lambda a: a.get('room_door'), 1.6)
     for k, ans in res.items():
@@ -198,7 +198,7 @@ def zoom_pass(ex, samples, frames, boxes, duration, progress, tr):
 
     # удостоверение: в каждой сессии до первого «да» (правилу no_id нужно «было ли хоть раз»)
     n_id = 0
-    if boxes.get('desk'):
+    if boxes.get('desk') and 'no_id' not in NEEDS_VERIFY:       # пока «нет документа» выдаётся только с подтверждением — кропы не нужны
         def ask_id(t):
             cp = Z.crop(path_at(t), boxes['desk'], margin=0.1)
             a, *_ = chat(CFG['base_url'], CFG['model'], ZSYSTEM, ID_Q, [cp], ID_SCHEMA, CFG['structured'], 896); os.unlink(cp)
@@ -301,6 +301,8 @@ def _analyze(video_path, progress, dump_states, tr):
                 n_changed = len(zoom_changes)
 
             progress('Проверка правил и норм', 0.92)
+            if det is not None:
+                tr.note(at_safe_samples=people.mark_at_safe(samples, det, boxes))
             V, obs = detect(samples, {}, experimental=False)
             ppl = None
             if det is not None:          # люди — по детектору, а не по анкете 4B
@@ -320,6 +322,8 @@ def _analyze(video_path, progress, dump_states, tr):
                         tr.action(w0, why, ans, ps, lat)
                     tr.note(windows=len(wins), mean_latency_s=round(sum(w['latency_s'] for w in act_windows) / len(wins), 1))
                     V = sorted(V + actions.rules(act_windows), key=lambda v: v['t'])
+                    if CFG['structured'] == 'ollama':       # 8B выгрузить, 4B загрузить заранее — следующее видео без перезагрузки модели
+                        actions.swap_back(CFG['base_url'], CFG['model'])
             tr.note(candidates=[f"{v['rule']}@{v['t']}" for v in V])
             if CFG['zoom'] and det is None and any(v['rule'] == 'outsider' for v in V):
                 progress('Подтверждение кандидатов', 0.94)

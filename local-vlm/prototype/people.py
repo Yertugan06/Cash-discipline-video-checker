@@ -22,6 +22,8 @@ except Exception:                                   # noqa: BLE001
 from PIL import Image
 
 MODEL_ID = os.environ.get('DET_MODEL', 'ustc-community/dfine-small-coco')
+if AVAILABLE and os.environ.get('TORCH_THREADS'):
+    torch.set_num_threads(int(os.environ['TORCH_THREADS']))      # на слабом CPU (4 vCPU) не забирать все ядра
 P = {'thr': 0.45, 'stand_ar': 2.1, 'crowd': 3, 'crowd_s': 5, 'stand': 2, 'stand_s': 2}
 _M = {}
 
@@ -63,6 +65,22 @@ def in_room(p, boxes):
 def standing(p, aspect):
     """aspect = ширина кадра / высота кадра (в пикселях)."""
     return (p[3] - p[1]) / max(1e-6, p[2] - p[0]) / aspect >= P['stand_ar']
+
+
+def mark_at_safe(samples, det, boxes, min_cover=0.15):
+    """Кто-то в комнате стоит/сидит у сейфа (рамка человека перекрывает ≥ 15 % рамки сейфа) → cashier_action = at_safe.
+    4B это поле не различает; без него правило «сейф открыт без присмотра» срабатывает, когда кассир сам работает с сейфом."""
+    sb = boxes.get('safe')
+    if not sb or not det: return 0
+    x1, y1, x2, y2 = [v / 1000 for v in sb]; area = max(1e-6, (x2 - x1) * (y2 - y1)); ts = sorted(det); n = 0
+    for smp in samples:
+        t = min(ts, key=lambda x: abs(x - smp['t']))
+        for p in det[t]:
+            if not in_room(p, boxes): continue
+            ix = max(0, min(x2, p[2]) - max(x1, p[0])) * max(0, min(y2, p[3]) - max(y1, p[1]))
+            if ix / area >= min_cover:
+                smp['state']['cashier_action'] = 'at_safe'; n += 1; break
+    return n
 
 
 def per_second(det, boxes, aspect, duration):

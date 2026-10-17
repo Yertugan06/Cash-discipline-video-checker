@@ -11,12 +11,12 @@
   client_left_count — в окне ухода идёт пересчёт, клиента в конце нет, деньги у кассира (Правила № 231, п. 20 ч. 1);
   no_detector       — в сессии считали только руками и ни разу не положили купюры на детектор (п. 19 пп. 2).
 """
-import os
+import json, os, threading, urllib.request
 
 from common import chat
 
 MODEL = os.environ.get('ACTION_MODEL', 'qwen3-vl:8b-instruct')     # '' — выключить
-MAX_WINDOWS = int(os.environ.get('ACTION_MAX_WINDOWS', '6'))
+MAX_WINDOWS = int(os.environ.get('ACTION_MAX_WINDOWS', '4'))
 SIDE = 768
 
 SCHEMA = {'type': 'object', 'additionalProperties': False,
@@ -80,6 +80,21 @@ def ask(frames, t0, base_url, structured, system):
     ps = [path_at(t0 + k) for k in range(4)]
     ans, raw, lat, err = chat(base_url, MODEL, system, Q, ps, SCHEMA, structured, SIDE)
     return ans or {}, ps, lat
+
+
+def _ollama(base_url, body):
+    root = base_url.rstrip('/').removesuffix('/v1')
+    req = urllib.request.Request(root + '/api/generate', json.dumps(body).encode(), {'Content-Type': 'application/json'})
+    try:
+        urllib.request.urlopen(req, timeout=120).read()
+    except Exception as e:                          # noqa: BLE001 — прогрев необязателен, ошибка не должна ронять анализ
+        print('[actions] ollama', body.get('model'), type(e).__name__, e, flush=True)
+
+
+def swap_back(base_url, main_model):
+    """Выгрузить 8B сразу (освободить видеопамять) и в фоне загрузить основную 4B."""
+    _ollama(base_url, {'model': MODEL, 'keep_alive': 0})
+    threading.Thread(target=_ollama, args=(base_url, {'model': main_model, 'keep_alive': '30m'}), daemon=True).start()
 
 
 def rules(windows):
