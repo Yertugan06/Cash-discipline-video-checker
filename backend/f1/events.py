@@ -22,6 +22,8 @@ from backend.f1.vision_types import (
     worn_or_carried,
 )
 
+PERSONAL_FIXTURE_IOU = 0.6
+
 
 @dataclass
 class PersonHistory:
@@ -155,6 +157,19 @@ class EventBuilder:
         self.bag_contacts = {}
         self.last_personal_presence: dict[str, float] = {}
         self.last_observation = None
+        fixtures = [d for name, d in scene.objects.items() if name in {"laptop", "counter"}]
+        candidates = [d for d in scene.candidates if d.label in {"laptop", "counter"}]
+        # A secondary fixture may lose calibration's single-object vote. Repeated matches
+        # still identify work equipment; one weak candidate alone does not disprove a bag.
+        self.personal_fixture_boxes = [d.box for d in fixtures] + [
+            d.box
+            for d in candidates
+            if sum(
+                other.label == d.label and overlap(d.box, other.box) > PERSONAL_FIXTURE_IOU
+                for other in candidates
+            )
+            >= 2
+        ]
 
     def emit(self, event_type: str, timestamp: float, **facts) -> None:
         self.events.append(Event(timestamp_sec=max(0, timestamp), type=event_type, facts=facts))
@@ -725,6 +740,10 @@ class EventBuilder:
             if (
                 item.label in {"coat", "handbag"}
                 and in_zone(self.scene, "desk", center(item.box))
+                and not any(
+                    overlap(item.box, box) > PERSONAL_FIXTURE_IOU
+                    for box in self.personal_fixture_boxes
+                )
                 and not worn_or_carried(item, people, self.config["hand_distance"])
             ):
                 key = "personal:" + item.track_id

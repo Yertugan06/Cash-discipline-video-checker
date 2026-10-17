@@ -312,6 +312,113 @@ def test_client_leaning_and_worn_coat_are_not_zone_or_desk_violations():
 
 
 @requires_cv2
+@pytest.mark.parametrize("label", ["laptop", "counter"])
+def test_a_workstation_fixture_is_not_a_personal_item(label):
+    ctx = context()
+    fixture = Detection(label=label, score=0.8, box=(0.5, 0.4, 0.7, 0.5))
+    ctx.scene.objects[label] = fixture
+    item = fixture.model_copy(update={"label": "handbag", "track_id": "h:1"})
+    ctx.observations = [Observation(timestamp_sec=i / 2, detections=[item]) for i in range(9)]
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        4.5,
+    )
+    assert RULES["W-NO-PERSONAL-ITEMS"](ctx) == []
+
+
+@requires_cv2
+@pytest.mark.parametrize("label", ["laptop", "counter"])
+@pytest.mark.parametrize("view", ["original", "mirror", "zoom"])
+def test_repeated_alternative_fixture_candidates_disambiguate_a_handbag(label, view):
+    from scripts.replay_f1 import transform_detection
+
+    ctx = context()
+    candidate = Detection(label=label, score=0.2, box=(0.5, 0.4, 0.7, 0.5))
+    ctx.scene.candidates = [
+        candidate,
+        candidate.model_copy(update={"box": (0.501, 0.4, 0.701, 0.501)}),
+    ]
+    item = candidate.model_copy(update={"label": "handbag", "track_id": "h:1"})
+
+    def point(x, y):
+        if view == "mirror":
+            return 1 - x, y
+        if view == "zoom":
+            return 0.5 + (x - 0.5) * 0.6, 0.5 + (y - 0.5) * 0.6
+        return x, y
+
+    ctx.scene.objects = {
+        name: Detection.model_validate(transform_detection(d.model_dump(), point))
+        for name, d in ctx.scene.objects.items()
+    }
+    ctx.scene.candidates = [
+        Detection.model_validate(transform_detection(d.model_dump(), point))
+        for d in ctx.scene.candidates
+    ]
+    ctx.scene.zones = {name: [point(*p) for p in zone] for name, zone in ctx.scene.zones.items()}
+    item = Detection.model_validate(transform_detection(item.model_dump(), point))
+    ctx.observations = [Observation(timestamp_sec=i / 2, detections=[item]) for i in range(9)]
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        4.5,
+    )
+    assert RULES["W-NO-PERSONAL-ITEMS"](ctx) == []
+
+
+@requires_cv2
+@pytest.mark.parametrize("label", ["coat", "handbag"])
+@pytest.mark.parametrize("evidence", ["single_candidate", "partial_overlap", "other_labels"])
+def test_a_personal_item_needs_matching_fixture_evidence_to_be_excluded(label, evidence):
+    ctx = context()
+    item = Detection(label=label, score=0.8, box=(0.5, 0.4, 0.7, 0.5), track_id="item:1")
+    candidate = item.model_copy(update={"label": "counter"})
+    if evidence == "single_candidate":
+        ctx.scene.candidates = [candidate]
+    elif evidence == "partial_overlap":
+        ctx.scene.objects["counter"] = candidate.model_copy(update={"box": (0.66, 0.4, 0.76, 0.5)})
+    else:
+        ctx.scene.candidates = [candidate.model_copy(update={"label": "desk"})] * 3
+    ctx.observations = [Observation(timestamp_sec=i / 2, detections=[item]) for i in range(9)]
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        4.5,
+    )
+    assert len(RULES["W-NO-PERSONAL-ITEMS"](ctx)) == 1
+
+
+@requires_cv2
+def test_a_handbag_moving_away_from_a_fixture_is_still_a_personal_item():
+    ctx = context()
+    fixture = Detection(label="counter", score=0.8, box=(0.5, 0.4, 0.7, 0.5))
+    ctx.scene.objects["counter"] = fixture
+    item = fixture.model_copy(update={"label": "handbag", "track_id": "h:1"})
+    moved = item.model_copy(update={"box": (0.5, 0.6, 0.7, 0.7)})
+    ctx.observations = [
+        Observation(timestamp_sec=i / 2, detections=[item if i < 8 else moved]) for i in range(17)
+    ]
+    ctx.log = build_events(
+        ctx.scene,
+        ctx.observations,
+        load_perception_config(ROOT / "config/perception.yaml"),
+        2,
+        8.5,
+    )
+    findings = RULES["W-NO-PERSONAL-ITEMS"](ctx)
+    assert len(findings) == 1
+    assert findings[0].timestamp_sec == 4
+    assert findings[0].facts["duration_sec"] == 4.5
+
+
+@requires_cv2
 def test_a_personal_item_stays_on_the_desk_through_a_brief_detection_gap():
     ctx = context()
     item = Detection(label="handbag", score=0.8, box=(0.5, 0.4, 0.7, 0.5), track_id="h:1")
