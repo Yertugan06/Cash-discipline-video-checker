@@ -4,6 +4,7 @@ object_interval_sec: 0.4
 state_interval_sec: 0.6
 hysteresis_sec: 0.6
 exit_gap_sec: 1.2
+# Event distances use a desk whose long side spans 0.70 of the image as reference.
 hand_distance: 0.07
 glass_margin: 0.03
 object_score: 0.12

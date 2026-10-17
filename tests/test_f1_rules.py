@@ -1033,8 +1033,9 @@ def test_a_client_nearer_the_laptop_does_not_flip_the_cashier_side():
     # laptop at the desk's end: during service the client is closer to it than the cashier,
     # but only the cashier is ever alone at the workstation
     desk, laptop = (0.1, 0.45, 0.76, 0.57), (0.13, 0.42, 0.29, 0.52)
-    scene = oriented(desk, laptop, (0.4, 0.62), client_point=(0.3, 0.44), client_frames=7)
-    assert scene.cashier_side((0.4, 0.62)) and not scene.cashier_side((0.3, 0.44))
+    # Keep the lone cashier within reach relative to this smaller desk.
+    scene = oriented(desk, laptop, (0.39, 0.61), client_point=(0.3, 0.44), client_frames=7)
+    assert scene.cashier_side((0.39, 0.61)) and not scene.cashier_side((0.3, 0.44))
 
 
 def test_cashier_side_stays_unknown_when_nobody_works_at_the_laptop():

@@ -103,9 +103,13 @@ class Context:
             for d in frame.detections
             if d.label in labels
             and in_zone(self.scene, "desk", center(d.box))
-            and not any(contains(box, center(d.box), 0.01) for box in fixtures)
             and not any(
-                distance(center(d.box), hand) < 0.045 for p in people for hand in p.wrists()
+                contains(box, center(d.box), self.scene.scaled_distance(0.01)) for box in fixtures
+            )
+            and not any(
+                distance(center(d.box), hand) < self.scene.scaled_distance(0.045)
+                for p in people
+                for hand in p.wrists()
             )
         ]
 

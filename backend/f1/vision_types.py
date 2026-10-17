@@ -28,6 +28,12 @@ def distance(a: Point, b: Point) -> float:
     return hypot(a[0] - b[0], a[1] - b[1])
 
 
+def desk_scale(box: Box) -> float:
+    """The desk's long side relative to the original 70%-of-image reference."""
+    x1, y1, x2, y2 = box
+    return max(x2 - x1, y2 - y1) / 0.70
+
+
 def contains(box: Box, point: Point, margin: float = 0) -> bool:
     return box[0] - margin <= point[0] <= box[2] + margin and (
         box[1] - margin <= point[1] <= box[3] + margin
@@ -130,6 +136,17 @@ class Scene(BaseModel):
     confidence: float = Field(default=0, ge=0, le=1)
     warnings: list[str] = Field(default_factory=list)
     candidates: list[Detection] = Field(default_factory=list)  # raw calibration detections
+
+    def scaled_distance(self, value: float) -> float:
+        """Distances were specified for a desk spanning about 70% of the image.
+
+        Use its long side for either desk orientation; without a calibrated desk the
+        scale is unknown, so retain the original distance.
+        """
+        desk = self.objects.get("desk")
+        if desk is None:
+            return value
+        return value * desk_scale(desk.box)
 
     def cashier_side(self, point: Point) -> bool:
         if not self.cashier_direction or "desk" not in self.objects:

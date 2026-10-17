@@ -92,7 +92,8 @@ class StableState:
 
 
 class MoneyFlow:
-    def __init__(self):
+    def __init__(self, reassociation_distance: float = 0.12):
+        self.reassociation_distance = reassociation_distance
         self.cash: dict[str, CashRecord] = {}
         self.aliases: dict[str, str] = {}
         self.next_id = 0
@@ -107,7 +108,8 @@ class MoneyFlow:
             cash
             for cash in self.cash.values()
             if 0 < timestamp - cash.last <= 1.2
-            and distance(center(cash.detection.box), center(detection.box)) < 0.12
+            and distance(center(cash.detection.box), center(detection.box))
+            < self.reassociation_distance
         ]
         if len(candidates) == 1:
             result = candidates[0]
@@ -140,7 +142,7 @@ class EventBuilder:
         self.cashier = ""
         self.sessions: dict[str, dict] = {}
         self.active_session = ""
-        self.money = MoneyFlow()
+        self.money = MoneyFlow(scene.scaled_distance(0.12))
         self.conditions: dict[str, tuple[str, float, dict]] = {}
         self.state_filters = defaultdict(
             lambda: StableState(config["hysteresis_sec"], config["exit_gap_sec"])
@@ -193,13 +195,15 @@ class EventBuilder:
         hands = [(distance(point, hand), person) for person in people for hand in person.wrists()]
         if hands:
             gap, owner = min(hands, key=lambda value: value[0])
-            if gap <= self.config["hand_distance"]:
+            if gap <= self.scene.scaled_distance(self.config["hand_distance"]):
                 return f"hand:{owner.track_id}", owner.track_id
         for name in ("counter", "safe"):
-            if name in self.scene.objects and contains(self.scene.objects[name].box, point, 0.015):
+            if name in self.scene.objects and contains(
+                self.scene.objects[name].box, point, self.scene.scaled_distance(0.015)
+            ):
                 return name, ""
         for bag in self.current_bags:
-            if contains(bag.box, point, 0.01):
+            if contains(bag.box, point, self.scene.scaled_distance(0.01)):
                 return f"bag:{bag.track_id}", ""
         return ("desk", "") if in_zone(self.scene, "desk", point) else ("unknown", "")
 
@@ -284,7 +288,8 @@ class EventBuilder:
                 at_laptop = bool(
                     laptop
                     and any(
-                        contains(laptop.box, hand, LAPTOP_HAND_MARGIN) for hand in person.wrists()
+                        contains(laptop.box, hand, self.scene.scaled_distance(LAPTOP_HAND_MARGIN))
+                        for hand in person.wrists()
                     )
                 )
                 if (
@@ -314,9 +319,12 @@ class EventBuilder:
                 history.role = "cashier"
             elif history.role != "collector":
                 carrying = any(
-                    contains(person.box, center(bag.box), 0.03)
+                    contains(person.box, center(bag.box), self.scene.scaled_distance(0.03))
                     and not in_zone(self.scene, "desk", center(bag.box))
-                    and any(distance(hand, center(bag.box)) < 0.12 for hand in person.wrists())
+                    and any(
+                        distance(hand, center(bag.box)) < self.scene.scaled_distance(0.12)
+                        for hand in person.wrists()
+                    )
                     for bag in self.current_bags
                 )
                 if carrying and timestamp - history.first < 3:
@@ -395,11 +403,13 @@ class EventBuilder:
             last_point = history.detection.position()
             door = in_zone(self.scene, "door", last_point, 0.05)
             border = min(last_point[0], last_point[1], 1 - last_point[0], 1 - last_point[1]) < 0.18
-            confirmed = door or (border and history.moved > 0.04)
+            confirmed = door or (border and history.moved > self.scene.scaled_distance(0.04))
             if history.role == "client" and "desk" in self.scene.objects:
                 # The door overlaps seated/approaching clients in the image. Disappearance
                 # there is an exit only after visible movement away from the service desk.
-                confirmed &= self.desk_distance(last_point) > history.closest_desk + 0.04
+                confirmed &= self.desk_distance(
+                    last_point
+                ) > history.closest_desk + self.scene.scaled_distance(0.04)
             history.exited = True
             kind = "EXIT" if confirmed else "TRACK_LOST"
             anchor = history.last + 1 / self.fps
@@ -585,7 +595,8 @@ class EventBuilder:
                     for p in people
                     if p.role == "cashier"
                     and any(
-                        distance(hand, center(item.box)) <= self.config["hand_distance"]
+                        distance(hand, center(item.box))
+                        <= self.scene.scaled_distance(self.config["hand_distance"])
                         for hand in p.wrists()
                     )
                 ]
@@ -663,7 +674,9 @@ class EventBuilder:
             # Use the working position learned during calibration in that layout.
             laptop = center(self.scene.objects["laptop"].box)
             anchor = self.scene.cashier_position
-            if anchor is None or distance(anchor, laptop) <= LAPTOP_REACH:
+            if anchor is None or distance(anchor, laptop) <= self.scene.scaled_distance(
+                LAPTOP_REACH
+            ):
                 anchor = laptop
             # Reaching the laptop or counter is still working at the desk, even when
             # the hips move outside laptop reach. Require an actual hand inside its box.
@@ -673,7 +686,10 @@ class EventBuilder:
                 if name in {"laptop", "counter"}
                 for hand in cashier.wrists()
             )
-            cashier_away = distance(cashier.position(), anchor) > LAPTOP_REACH and not working
+            cashier_away = (
+                distance(cashier.position(), anchor) > self.scene.scaled_distance(LAPTOP_REACH)
+                and not working
+            )
         self.condition(
             "workstation_away",
             "WORKSTATION_AWAY",
@@ -687,8 +703,11 @@ class EventBuilder:
             cashier
             and safe
             and (
-                contains(safe.box, center(cashier.box), 0.08)
-                or any(contains(safe.box, hand, 0.05) for hand in cashier.wrists())
+                contains(safe.box, center(cashier.box), self.scene.scaled_distance(0.08))
+                or any(
+                    contains(safe.box, hand, self.scene.scaled_distance(0.05))
+                    for hand in cashier.wrists()
+                )
             )
         )
         away_confirmed = cashier is not None or cashier_away
@@ -727,7 +746,10 @@ class EventBuilder:
                 )
             for name in ("door", "safe"):
                 target = self.scene.objects.get(name)
-                if target and any(contains(target.box, hand, 0.025) for hand in person.wrists()):
+                if target and any(
+                    contains(target.box, hand, self.scene.scaled_distance(0.025))
+                    for hand in person.wrists()
+                ):
                     key = (person.track_id, name)
                     previous = self.hand_contacts.get(key, -100)
                     if timestamp - previous > 1:
@@ -752,7 +774,9 @@ class EventBuilder:
                     overlap(item.box, box) > PERSONAL_FIXTURE_IOU
                     for box in self.personal_fixture_boxes
                 )
-                and not worn_or_carried(item, people, self.config["hand_distance"])
+                and not worn_or_carried(
+                    item, people, self.scene.scaled_distance(self.config["hand_distance"])
+                )
             ):
                 key = "personal:" + item.track_id
                 active_conditions.add(key)
@@ -775,8 +799,11 @@ class EventBuilder:
                     ):
                         continue
                     head = person.body[0][:2]
-                    close = distance(center(item.box), head) < 0.10 and any(
-                        distance(hand, center(item.box)) < self.config["hand_distance"]
+                    close = distance(center(item.box), head) < self.scene.scaled_distance(
+                        0.10
+                    ) and any(
+                        distance(hand, center(item.box))
+                        < self.scene.scaled_distance(self.config["hand_distance"])
                         for hand in person.wrists()
                     )
                     at_desk = in_zone(self.scene, "desk", center(person.box), 0.12)

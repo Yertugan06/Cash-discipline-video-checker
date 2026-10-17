@@ -14,11 +14,12 @@ from backend.f1.vision_types import (
     Scene,
     center,
     contains,
+    desk_scale,
     distance,
     overlap,
 )
 
-LAPTOP_REACH = 0.25  # normalised distance from the laptop centre to someone working at it
+LAPTOP_REACH = 0.25  # reach at the reference desk size; see Scene.scaled_distance
 LAPTOP_HAND_MARGIN = 0.08
 MIN_ALONE_FRAMES = 3  # 1.5 s at the F1 sampling rate
 
@@ -84,7 +85,11 @@ def calibrate(candidates: list[Detection], overrides_path: Path, checksum: str) 
         matches = [d for d in candidates if d.label == label]
         if label == "desk":
             laptop = objects.get("laptop")
-            matches = [d for d in matches if laptop and contains(d.box, center(laptop.box), 0.02)]
+            matches = [
+                d
+                for d in matches
+                if laptop and contains(d.box, center(laptop.box), 0.02 * desk_scale(d.box))
+            ]
         if not matches:
             continue
         best = max(
@@ -134,7 +139,7 @@ def behind_glass(scene: Scene, box: Box, margin: float) -> bool:
     """Anyone in the room stands in front of, at or behind the desk (hidden by it); a person box
     ending above the desk's far edge is a reflection in the glass wall or someone behind it."""
     desk = scene.objects.get("desk")
-    return desk is not None and box[3] < desk.box[1] - margin
+    return desk is not None and box[3] < desk.box[1] - scene.scaled_distance(margin)
 
 
 def orient_cashier_side(scene: Scene, observations: list[Observation], glass_margin: float) -> None:
@@ -155,10 +160,12 @@ def orient_cashier_side(scene: Scene, observations: list[Observation], glass_mar
         ]
         if len(people) == 1:
             person = people[0]
-            if distance(person.position(), laptop) <= LAPTOP_REACH:
+            if distance(person.position(), laptop) <= scene.scaled_distance(LAPTOP_REACH):
                 alone.append(person.position())
             elif any(
-                contains(scene.objects["laptop"].box, hand, LAPTOP_HAND_MARGIN)
+                contains(
+                    scene.objects["laptop"].box, hand, scene.scaled_distance(LAPTOP_HAND_MARGIN)
+                )
                 for hand in person.wrists()
             ):
                 reaching.append(person.position())
@@ -184,9 +191,12 @@ def orient_cashier_side(scene: Scene, observations: list[Observation], glass_mar
 
 
 def in_zone(scene: Scene, name: str, point: Point, margin: float = 0) -> bool:
+    """Test a zone with its margin expressed at the reference desk size."""
     import cv2
 
     polygon = scene.zones.get(name)
     if not polygon:
         return False
-    return cv2.pointPolygonTest(np.asarray(polygon, dtype=np.float32), point, True) >= -margin
+    return cv2.pointPolygonTest(
+        np.asarray(polygon, dtype=np.float32), point, True
+    ) >= -scene.scaled_distance(margin)
