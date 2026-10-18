@@ -22,6 +22,13 @@ function fileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+/** Hackathon organizers shown in the footer; files live in public/partners. */
+const PARTNERS = [
+  { name: 'ForteBank', src: '/partners/forte.png', tile: false },
+  { name: 'DataSci', src: '/partners/datasci.png', tile: true },
+  { name: 'NU Impact Foundation', src: '/partners/nu-impact-foundation.png', tile: false },
+];
+
 export default function App() {
   const [language, setLanguage] = useState<Language>('ru');
   const [theme, setTheme] = useState<Theme>(preferredTheme);
@@ -185,7 +192,6 @@ export default function App() {
         <section className="workspace" id="analyzer" aria-label={text.workspace}>
           <div className="workspace-header">
             <div>
-              <p className="section-kicker">01 / {text.analyzeKicker}</p>
               <h2>{text.analyzeTitle}</h2>
             </div>
             <span className="secure-chip"><Icon name="lock" size={15} />{text.secureSession}</span>
@@ -219,7 +225,7 @@ export default function App() {
                 <div className="field-group">
                   <div className="field-heading">
                     <label htmlFor="video">{text.file}</label>
-                    <span>MOV · {text.maxSize}</span>
+                    <span>MOV / MP4 / MKV · {text.maxSize}</span>
                   </div>
                   <input
                     className="sr-only"
@@ -385,7 +391,6 @@ export default function App() {
 
         <section className="how-section" id="how-it-works" aria-labelledby="how-title">
           <div className="section-intro">
-            <p className="section-kicker">02 / {text.howKicker}</p>
             <h2 id="how-title">{text.howTitle}</h2>
             <p>{text.howIntro}</p>
           </div>
@@ -416,12 +421,27 @@ export default function App() {
       </main>
 
       <footer>
-        <a href="#top" className="brand footer-brand" aria-label="Forte Vision">
-          <span className="brand-mark" aria-hidden="true"><span /><span /><span /></span>
-          <span className="brand-name">forte</span><span className="brand-product">vision</span>
-        </a>
-        <p>{text.footer}</p>
-        <a href="#top" className="back-to-top">{text.backToTop}<Icon name="arrowUp" size={15} /></a>
+        <div className="footer-top">
+          <a href="#top" className="brand footer-brand" aria-label="Forte Vision">
+            <span className="brand-mark" aria-hidden="true"><span /><span /><span /></span>
+            <span className="brand-name">forte</span><span className="brand-product">vision</span>
+          </a>
+          <p className="team-name">{text.team} <strong>AIS LOP</strong></p>
+        </div>
+        <section className="partners" aria-label={text.organizers}>
+          <p className="partners-label">{text.organizers}</p>
+          <ul className="partner-logos">
+            {PARTNERS.map((partner) => (
+              <li key={partner.name} className={partner.tile ? 'partner-tile' : undefined}>
+                <img src={partner.src} alt={partner.name} />
+              </li>
+            ))}
+          </ul>
+        </section>
+        <div className="footer-bottom">
+          <p>{text.footer}</p>
+          <a href="#top" className="back-to-top">{text.backToTop}<Icon name="arrowUp" size={15} /></a>
+        </div>
       </footer>
     </div>
   );

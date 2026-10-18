@@ -37,6 +37,7 @@ export const words = {
     featureVisionTitle: 'Анализ событий', featureVisionText: 'Система отслеживает роли, действия и объекты в контексте рабочей зоны.', featureVisionDetail: 'Точные таймкоды и кадры',
     featureReviewTitle: 'Решение с контекстом', featureReviewText: 'Каждое наблюдение связано с описанием и релевантным нормативным источником.', featureReviewDetail: 'Финальное решение принимает человек',
     footer: 'Локальная система анализа кассовой дисциплины · Datathon 2026', backToTop: 'Наверх',
+    organizers: 'Организаторы', team: 'Команда',
     // Contract fields from main: legal-basis details and before/moment/after frame labels.
     title: 'Проверка кассовой дисциплины',
     pending: 'ожидает проверки',
@@ -88,6 +89,7 @@ export const words = {
     featureVisionTitle: 'Event analysis', featureVisionText: 'The system tracks roles, actions, and objects in the context of the cash desk.', featureVisionDetail: 'Exact timecodes and frames',
     featureReviewTitle: 'Context-rich decision', featureReviewText: 'Every observation is connected to an explanation and a relevant policy source.', featureReviewDetail: 'A human makes the final decision',
     footer: 'Local cash-discipline intelligence · Datathon 2026', backToTop: 'Back to top',
+    organizers: 'Organizers', team: 'Team',
     // Contract fields from main: legal-basis details and before/moment/after frame labels.
     title: 'Cash-discipline video checker',
     pending: 'pending review',

@@ -373,3 +373,21 @@ footer p { color: var(--muted); font-size: 10px; }
 .norm-meta { margin-top: 6px !important; font-size: 12px; color: var(--muted); }
 .badge-invalid { color: var(--danger); background: var(--danger-soft); }
 .detection-confidence { color: var(--muted); font-size: .9rem; }
+
+/* Footer: team name and the hackathon organizers' logos. Logos sit on white tiles so
+   their own brand colours read the same in the light and the dark theme. */
+footer { display: grid; align-items: stretch; justify-content: stretch; gap: 22px; }
+.footer-top, .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.team-name { margin: 0; color: var(--muted); font-size: 13px; }
+.team-name strong { margin-left: 4px; color: var(--text); font-weight: 800; letter-spacing: .12em; }
+.partners { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.partners-label { margin: 0; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.partner-logos { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.partner-logos li { display: flex; align-items: center; justify-content: center; height: 64px; padding: 12px 20px; background: #ffffff; border: 1px solid var(--line); border-radius: 14px; }
+.partner-logos img { display: block; height: 38px; width: auto; max-width: 220px; object-fit: contain; }
+.partner-logos li.partner-tile { padding: 0; overflow: hidden; background: #1c1c1c; }
+.partner-logos li.partner-tile img { height: 64px; }
+@media (max-width: 720px) {
+  .footer-top, .footer-bottom, .partners { flex-direction: column; justify-content: center; text-align: center; }
+  .partner-logos { justify-content: center; }
+}

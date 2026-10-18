@@ -15,7 +15,7 @@ extraction and serving all run on the team's own GPU host from pre-downloaded, p
 
 ## Live Demo
 
-![Forte Cash Discipline Checker interface](docs/forte-ui.png)
+![Forte Vision: cash-discipline video review, home screen (dark theme)](docs/screenshots/01-home-dark.png)
 
 Latest recorded public deployment: [Open Web UI](https://forte-checker-wwi4jcrss.gobrev.dev/)
 (A20 on `datathon`, last recorded 2026-10-18; see [deployment notes](deploy/README.md)).
@@ -23,8 +23,27 @@ The corresponding API base is `https://forte-checker-wwi4jcrss.gobrev.dev/api/v1
 The jury received its API key out of band; it is not stored in this repository.
 
 Enter the key and choose a video to submit. The key stays in page memory and must be entered
-again after reload. **«Пример (демо-данные)»** displays the result layout with synthetic data.
+again after reload. **«Посмотреть пример результата»** displays the result layout with synthetic data.
 The API flow is documented in [API usage](#api-usage).
+
+### Screenshots
+
+The result below is the built-in sample (synthetic demo data, placeholder frames), shown in the
+dark and the light theme: verdict, coverage warning, each finding with its timecode, what the
+video shows and cannot confirm, evidence frames labelled before / moment / after, and the legal
+basis with its citation status and a link to adilet.zan.kz.
+
+<p>
+  <img src="docs/screenshots/02-result-dark.png" alt="Sample result, dark theme" width="49%">
+  <img src="docs/screenshots/03-result-light.png" alt="Sample result, light theme" width="49%">
+</p>
+
+![How it works: secure upload, event analysis, decision with context](docs/screenshots/04-how-it-works-light.png)
+
+Footer with the hackathon organizers (ForteBank, DataSci, NU Impact Foundation) and the team, **AIS LOP**:
+
+![Footer, light theme](docs/screenshots/05-footer-light.png)
+![Footer, dark theme](docs/screenshots/06-footer-dark.png)
 
 ## Features
 
