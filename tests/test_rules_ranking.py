@@ -9,6 +9,8 @@ from backend.rules import rank
 def _rule(rule_id: str) -> RuleEntry:
     return RuleEntry(
         rule_id=rule_id,
+        business_status="confirmed",
+        implementation_status="implemented",
         title_ru=rule_id,
         title_en=rule_id,
         mechanism="m",
@@ -17,6 +19,7 @@ def _rule(rule_id: str) -> RuleEntry:
         description_template="t={t}",
         visibility_caveat="v",
         norm_ids=["n1"],
+        citation_strengths={"n1": "direct"},
         enabled=True,
     )
 

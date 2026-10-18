@@ -54,15 +54,22 @@ def test_one_grounded_finding_maps_to_a_violation_with_the_primary_norm():
     assert violation.source == f"{primary.act}, {primary.punkt}"
     assert violation.source_url == str(primary.url)
     assert violation.source_quote == primary.quote
-    assert violation.strength == primary.strength
+    assert violation.strength == rule.citation_strengths["N-primary"]
     assert violation.citation_status == "verified"
+    assert violation.jurisdiction == "KZ"
+    assert violation.document_title == primary.document_title
+    assert violation.issuing_authority == primary.issuing_authority
+    assert violation.adopted_on == primary.adopted_on
+    assert violation.detection_confidence == finding.detection_confidence
+    assert violation.business_status == "confirmed"
+    assert violation.implementation_status == "implemented"
     assert len(violation.evidence_frames) == 1
 
 
 def test_rule_without_norms_is_rejected_rather_than_silently_dropped():
     rule = make_rule("T-RULE", norm_ids=[])
     finding = make_finding("T-RULE")
-    grounded = GroundedFinding(finding=finding, rule=rule, norms=[], citation_status="needs_review")
+    grounded = GroundedFinding(finding=finding, rule=rule, norms=[], citation_status="pending")
     result = DetectionResult(findings=[finding], coverage=coverage(), warnings=[])
     with pytest.raises(SerializeError):
         to_done_job("job-3", [grounded], result, [[frame()]], describe)
@@ -77,3 +84,31 @@ def test_evidence_list_must_line_up_with_grounded_findings():
     result = DetectionResult(findings=[finding], coverage=coverage(), warnings=[])
     with pytest.raises(SerializeError):
         to_done_job("job-4", [grounded], result, [], describe)
+
+
+def test_two_findings_from_one_clip_survive_in_the_same_json_result():
+    first = make_finding("S-CLEAN-DESK-HANDOVER", t_anchor=57.0)
+    second = make_finding("S-NO-MERGE", t_anchor=68.0)
+    grounded = [
+        GroundedFinding(
+            finding=first,
+            rule=make_rule("S-CLEAN-DESK-HANDOVER"),
+            norms=[make_norm("N-first")],
+            citation_status="pending",
+        ),
+        GroundedFinding(
+            finding=second,
+            rule=make_rule("S-NO-MERGE"),
+            norms=[make_norm("N-second")],
+            citation_status="pending",
+        ),
+    ]
+    result = DetectionResult(findings=[first, second], coverage=coverage(), warnings=[])
+    job = to_done_job("x-4", grounded, result, [[frame(57.0)], [frame(68.0)]], describe)
+    payload = job.model_dump(mode="json")
+    assert payload["verdict"] == "violation"
+    assert [v["timecode_sec"] for v in payload["violations"]] == [57.0, 68.0]
+    assert [v["rule_id"] for v in payload["violations"]] == [
+        "S-CLEAN-DESK-HANDOVER",
+        "S-NO-MERGE",
+    ]

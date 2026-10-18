@@ -41,16 +41,25 @@ def test_models_loadable_is_false_without_downloaded_weights(tmp_path):
 def test_constructor_loads_the_real_f1_codex_and_indexes_rules(tmp_path):
     knowledge = Knowledge.load(ROOT / "knowledge")
     settings = Settings(api_key="k", work_dir=tmp_path)
-    detector = F1Detector(settings, knowledge.enabled_rules())
+    detector = F1Detector(settings, knowledge.rules)
     assert "L-NO-CASH-ON-LEAVE" in detector._rules_by_id
-    # Not canonical (see knowledge/rules.yaml); must be dropped by the detector.
-    assert "L-NO-BAG-ON-LEAVE" not in detector._rules_by_id
-    assert "K-COLLECTOR-DOC" not in detector._rules_by_id
+    # Disabled rules are indexed (startup checks the whole catalogue) but never evaluated.
+    assert detector._rules_by_id["L-NO-BAG-ON-LEAVE"].enabled is False
+    assert detector._rules_by_id["K-COLLECTOR-DOC"].enabled is False
 
 
-def _detector(tmp_path, rules=None) -> F1Detector:
-    rules = rules if rules is not None else [make_rule(rid) for rid in ("L-PC-LOCKED",)]
-    return F1Detector(Settings(api_key="k", work_dir=tmp_path), rules)
+def test_constructor_rejects_only_the_enabled_rules(tmp_path):
+    # main.py once passed knowledge.enabled_rules(); that must fail loudly, not start.
+    knowledge = Knowledge.load(ROOT / "knowledge")
+    with pytest.raises(ValueError, match="rule IDs differ"):
+        F1Detector(Settings(api_key="k", work_dir=tmp_path), knowledge.enabled_rules())
+
+
+def _detector(tmp_path, overrides=()) -> F1Detector:
+    """The real catalogue, with the given test rules replacing the real ones by ID."""
+    rules = {r.rule_id: r for r in Knowledge.load(ROOT / "knowledge").rules}
+    rules.update({r.rule_id: r for r in overrides})
+    return F1Detector(Settings(api_key="k", work_dir=tmp_path), list(rules.values()))
 
 
 def test_to_finding_adds_t_start_and_t_end_facts_for_the_generic_case(tmp_path):

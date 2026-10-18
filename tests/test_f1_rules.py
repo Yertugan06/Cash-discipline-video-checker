@@ -101,6 +101,28 @@ CASES = [
         {},
     ),
     (
+        "S-NO-MERGE",
+        [
+            event(
+                "CASH_STATE",
+                1,
+                cash_id="cash-1",
+                session_id="old",
+                location="desk",
+                track_id="cash:1",
+            ),
+            event(
+                "HANDOVER",
+                5,
+                from_id="person:2",
+                from_role="client",
+                object="cash",
+                session_id="new",
+            ),
+        ],
+        {"new": {"client_id": "person:2", "start": 5, "end": 10}},
+    ),
+    (
         "A-DOOR-LOCK",
         [
             event("ENTER", 1, actor_id="person:1", observed_entry=True),
@@ -166,6 +188,7 @@ _NEEDS_CV2 = {
     "L-NO-DOCS-ON-LEAVE",
     "L-PC-LOCKED",
     "S-CLEAN-DESK-HANDOVER",
+    "S-NO-MERGE",
 }
 
 
@@ -193,14 +216,49 @@ def test_thresholds_and_required_counterevidence():
     bootstrap = deepcopy(SESSION)
     bootstrap["s1"]["observed_entry"] = False
     assert RULES["C-ID-BEFORE-CASH"](context(CASES[10][1], bootstrap)) == []
+    count_before_exit = next(case for case in CASES if case[0] == "C-COUNT-BEFORE-EXIT")
     unfinished = context(
-        CASES[9][1] + [event("COUNT_START", 2, session_id="s1")], deepcopy(SESSION)
+        count_before_exit[1] + [event("COUNT_START", 2, session_id="s1")], deepcopy(SESSION)
     )
     assert len(RULES["C-COUNT-BEFORE-EXIT"](unfinished)) == 1
-    counted = context(CASES[9][1] + [event("COUNT_END", 2, session_id="s1")], deepcopy(SESSION))
+    counted = context(
+        count_before_exit[1] + [event("COUNT_END", 2, session_id="s1")], deepcopy(SESSION)
+    )
     assert RULES["C-COUNT-BEFORE-EXIT"](counted) == []
     inspected = context(COLLECT + [event("BAG_INSPECTED", 6, track_id="bag:1")])
     assert RULES["K-SEAL-CHECK"](inspected) == []
+
+
+def test_runtime_rule_allowlist_skips_disabled_evaluators_before_evaluation():
+    findings = evaluate_rules(context(LEAVE), {"S-SAFE-CLOSED"})
+    assert findings == []
+
+
+def test_s_no_merge_finds_prior_session_cash_without_opencv(monkeypatch):
+    events = [
+        event(
+            "CASH_STATE",
+            1,
+            cash_id="cash-1",
+            session_id="old",
+            location="desk",
+            track_id="cash:1",
+        ),
+        event(
+            "HANDOVER",
+            5,
+            from_id="person:2",
+            from_role="client",
+            object="cash",
+            session_id="new",
+        ),
+    ]
+    ctx = context(events, {"new": {"client_id": "person:2", "start": 5, "end": 10}})
+    monkeypatch.setattr(ctx, "on_desk", lambda *_args: [ctx.observations[0].detections[0]])
+    findings = RULES["S-NO-MERGE"](ctx)
+    assert len(findings) == 1
+    assert findings[0].timestamp_sec == 5
+    assert findings[0].facts["track_ids"] == ["cash:1"]
 
 
 def test_hysteresis_and_money_provenance_survive_a_track_change():

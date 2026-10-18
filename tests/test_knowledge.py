@@ -23,17 +23,21 @@ def _write_pack(tmp_path: Path, rules: list[dict], norms: list[dict]) -> Path:
     return tmp_path
 
 
-def _norm(norm_id: str, human_verified: bool = False) -> dict:
+def _norm(norm_id: str, citation_status: str = "pending") -> dict:
     return {
         "norm_id": norm_id,
+        "jurisdiction": "KZ",
+        "document_title": "Test regulation",
+        "issuing_authority": "Test authority",
         "act": "1",
+        "act_number": "1",
+        "adopted_on": "2026-01-01",
         "punkt": "п. 1",
         "quote": "quote",
         "url": "https://adilet.zan.kz/rus/docs/V0000000001#z1",
-        "strength": "direct",
-        "human_verified": human_verified,
-        "verified_by": "jane" if human_verified else None,
-        "verified_at": "2026-01-01" if human_verified else None,
+        "citation_status": citation_status,
+        "verified_by": "jane" if citation_status == "verified" else None,
+        "verified_at": "2026-01-01" if citation_status == "verified" else None,
     }
 
 
@@ -52,6 +56,8 @@ def _simple_finding(rule_id: str) -> Finding:
 def _rule(rule_id: str, norm_ids: list[str], enabled: bool = True, template: str = "t={t}") -> dict:
     return {
         "rule_id": rule_id,
+        "business_status": "confirmed",
+        "implementation_status": "implemented",
         "title_ru": f"{rule_id}-ru",
         "title_en": f"{rule_id}-en",
         "mechanism": "m",
@@ -60,7 +66,9 @@ def _rule(rule_id: str, norm_ids: list[str], enabled: bool = True, template: str
         "description_template": template,
         "visibility_caveat": "v",
         "norm_ids": norm_ids,
+        "citation_strengths": {norm_id: "direct" for norm_id in norm_ids},
         "enabled": enabled,
+        "disabled_reason": None if enabled else "Disabled for test.",
     }
 
 
@@ -78,13 +86,13 @@ def test_real_pack_loads_and_every_enabled_rule_has_a_norm():
             assert k.norm(norm_id) is not None
 
 
-def test_real_pack_has_no_human_verified_norms_yet():
-    """An AI must never set human_verified=true (AGENTS.md rule 6); this is the current,
+def test_real_pack_citations_are_pending_until_human_review():
+    """An AI must never mark a citation verified (AGENTS.md rule 6); this is the current,
     honest state of the pack until a human does the adilet.zan.kz pass."""
     k = Knowledge.load(KNOWLEDGE_ROOT)
     for rule in k.rules:
         for norm_id in rule.norm_ids:
-            assert k.norm(norm_id).human_verified is False
+            assert k.norm(norm_id).citation_status == "pending"
 
 
 # ---------------------------------------------------------------------------------------------
@@ -141,33 +149,49 @@ def test_unknown_rule_id_lookup_raises():
 # ---------------------------------------------------------------------------------------------
 
 
-def test_citation_status_needs_review_when_norm_unverified(tmp_path):
-    pack = _write_pack(tmp_path, [_rule("R1", ["n1"])], [_norm("n1", human_verified=False)])
+def test_citation_status_pending_when_norm_unverified(tmp_path):
+    pack = _write_pack(tmp_path, [_rule("R1", ["n1"])], [_norm("n1", "pending")])
     k = Knowledge.load(pack)
     finding = _simple_finding("R1")
     grounded = k.ground([finding])
-    assert grounded[0].citation_status == "needs_review"
+    assert grounded[0].citation_status == "pending"
 
 
 def test_citation_status_verified_only_if_every_norm_is_verified(tmp_path):
     pack = _write_pack(
         tmp_path,
         [_rule("R1", ["n1", "n2"])],
-        [_norm("n1", human_verified=True), _norm("n2", human_verified=False)],
+        [_norm("n1", "verified"), _norm("n2", "pending")],
     )
     k = Knowledge.load(pack)
     finding = _simple_finding("R1")
-    assert k.ground([finding])[0].citation_status == "needs_review"
+    assert k.ground([finding])[0].citation_status == "pending"
 
     all_verified_dir = tmp_path / "all_verified"
     all_verified_dir.mkdir()
     pack2 = _write_pack(
         all_verified_dir,
         [_rule("R1", ["n1", "n2"])],
-        [_norm("n1", human_verified=True), _norm("n2", human_verified=True)],
+        [_norm("n1", "verified"), _norm("n2", "verified")],
     )
     k2 = Knowledge.load(pack2)
     assert k2.ground([finding])[0].citation_status == "verified"
+
+
+def test_invalid_norm_propagates_invalid_citation_status(tmp_path):
+    pack = _write_pack(
+        tmp_path,
+        [_rule("R1", ["n1"], enabled=False)],
+        [_norm("n1", "invalid")],
+    )
+    k = Knowledge.load(pack)
+    assert k.ground([_simple_finding("R1")])[0].citation_status == "invalid"
+
+
+def test_enabled_rule_rejects_invalid_citation_at_load(tmp_path):
+    pack = _write_pack(tmp_path, [_rule("R1", ["n1"])], [_norm("n1", "invalid")])
+    with pytest.raises(KnowledgeError, match="invalid citation"):
+        Knowledge.load(pack)
 
 
 # ---------------------------------------------------------------------------------------------

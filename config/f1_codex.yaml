@@ -160,10 +160,12 @@ rules:
   source_url: https://adilet.zan.kz/rus/docs/V1900019680
   strength: Direct
   status: Confirmed
-  title: S-NO-MERGE
-  description_template: ''
-  title_en: ''
-  description_template_en: ''
+  title: Наличные нового клиента приняты, пока деньги предыдущего остаются на столе
+  description_template: В {time} с зафиксирована передача наличных нового клиента;
+    на столе остаются наличные, связанные с предыдущей наблюдаемой клиентской сессией.
+  title_en: New client cash accepted while previous-session cash remains on the desk
+  description_template_en: At {time} s a new client's cash was handed over while cash
+    tracked from a previous observed client session remained on the desk.
 - id: S-SAFE-CLOSED
   family: Storage & desk
   requirement: The safe is closed whenever the cashier is not using it.

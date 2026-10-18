@@ -22,7 +22,7 @@ export type EvidenceFrame = {
   image_base64: string;
 };
 
-export type CitationStatus = 'verified' | 'needs_review';
+export type CitationStatus = 'verified' | 'pending' | 'invalid';
 
 export type Violation = {
   // jury-required fields (task.md §10) -- never rename, never add a required one
@@ -38,6 +38,14 @@ export type Violation = {
   source_quote?: string | null;
   strength?: string | null;
   citation_status?: CitationStatus | string | null;
+  jurisdiction?: string | null;
+  document_title?: string | null;
+  issuing_authority?: string | null;
+  act_number?: string | null;
+  adopted_on?: string | null;
+  detection_confidence?: number | null;
+  business_status?: 'confirmed' | 'candidate' | null;
+  implementation_status?: 'implemented' | 'unimplemented' | null;
 };
 
 export type DoneJob = {

@@ -1,4 +1,6 @@
 - rule_id: L-NO-CASH-ON-LEAVE
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: 'Наличные/ценности оставлены без присмотра: кассир покинул рабочее место'
   title_en: 'Cash left unattended: the cashier left the desk'
   mechanism: The cashier is away from the desk for at least min_away_s; within the first check_window_s
@@ -18,8 +20,14 @@
   norm_ids:
   - 231-20-2
   - 231-22
+  citation_strengths:
+    231-20-2: direct
+    231-22: direct
   enabled: true
+  disabled_reason: null
 - rule_id: L-SAFE-LOCKED-ON-LEAVE
+  business_status: candidate
+  implementation_status: unimplemented
   title_ru: Ключ оставлен в замке сейфа
   title_en: Key left in the safe lock
   mechanism: After the cashier exits the room (within the away run), a key is visible sticking out of
@@ -41,8 +49,13 @@
     замке.
   norm_ids:
   - 231-80-1
-  enabled: true
+  citation_strengths:
+    231-80-1: indirect
+  enabled: false
+  disabled_reason: No evaluator is wired for this rule.
 - rule_id: L-PC-LOCKED
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Рабочее место (ноутбук) оставлено незаблокированным
   title_en: Workstation (laptop) left unlocked
   mechanism: After the cashier exits the room, the laptop screen is classified 'unlocked' for at least
@@ -61,8 +74,13 @@
     только визуальное состояние экрана.
   norm_ids:
   - 53-71-9
+  citation_strengths:
+    53-71-9: indirect
   enabled: true
+  disabled_reason: null
 - rule_id: L-NO-DOCS-ON-LEAVE
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Документы/носители оставлены на столе при уходе
   title_en: Documents/media left on the desk on exit
   mechanism: After the cashier exits the room, documents are visible on the desk for at least docs_frac_threshold
@@ -81,8 +99,13 @@
   visibility_caveat: Содержимое документов и факт их конфиденциальности по видео не определяются.
   norm_ids:
   - 231-80-3
+  citation_strengths:
+    231-80-3: indirect
   enabled: true
+  disabled_reason: null
 - rule_id: S-SAFE-CLOSED
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Сейф (хранилище) оставлен открытым
   title_en: Safe/vault left open
   mechanism: The safe door is visible open, and the cashier's action is not 'at_safe', for at least safe_open_s
@@ -96,8 +119,13 @@
   visibility_caveat: Физический статус замка сейфа по видео не определяется, только положение дверцы.
   norm_ids:
   - 231-20-2b
+  citation_strengths:
+    231-20-2b: direct
   enabled: true
+  disabled_reason: null
 - rule_id: S-CLEAN-DESK-HANDOVER
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Деньги предыдущего клиента не убраны при обслуживании следующего
   title_en: Previous client's cash not cleared before the next one
   mechanism: A new client session starts (clients_at_desk >= 1, merged across gaps <= session_gap_s) while
@@ -119,8 +147,13 @@
     визуальное присутствие наличных на столе между сессиями.
   norm_ids:
   - 231-20-2
+  citation_strengths:
+    231-20-2: direct
   enabled: true
+  disabled_reason: null
 - rule_id: S-NO-MERGE
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Наличные разных клиентов смешаны на рабочем месте
   title_en: Different clients' cash merged on the desk
   mechanism: Within a session flagged by S-CLEAN-DESK-HANDOVER, the cashier receives or counts cash from
@@ -138,8 +171,14 @@
   norm_ids:
   - 231-20-2
   - 231-21
+  citation_strengths:
+    231-20-2: direct
+    231-21: weak
   enabled: true
+  disabled_reason: null
 - rule_id: A-OUTSIDER-ZONE
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Посторонний в кассовой кабине
   title_en: An outsider in the cashier booth
   mechanism: Two or more people are on the cashier's side of the desk at once, with no collector present,
@@ -156,8 +195,14 @@
   norm_ids:
   - 14-16-1
   - 14-8-1
+  citation_strengths:
+    14-16-1: indirect
+    14-8-1: indirect
   enabled: true
+  disabled_reason: null
 - rule_id: A-DOOR-LOCK
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Дверь кассы не закрыта
   title_en: Cash-room door not closed
   mechanism: The room door is open for at least door_open_s, and the cashier is at the desk for at least
@@ -175,8 +220,14 @@
   norm_ids:
   - 14-16-1
   - 14-8-1
+  citation_strengths:
+    14-16-1: indirect
+    14-8-1: indirect
   enabled: true
+  disabled_reason: null
 - rule_id: A-SECOND-PERSON
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Одновременное обслуживание нескольких клиентов
   title_en: Two clients served at once
   mechanism: Two or more clients are at the client side of the desk at once, with no collector present,
@@ -191,8 +242,14 @@
   norm_ids:
   - 231-20-2
   - 231-21
+  citation_strengths:
+    231-20-2: indirect
+    231-21: indirect
   enabled: true
+  disabled_reason: null
 - rule_id: C-COUNT-BEFORE-EXIT
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Пересчёт денег не в присутствии клиента (клиент ушёл)
   title_en: Cash counted without the client present (client left)
   mechanism: A client session ends and, in the window around the end (count_window_before_s before, count_window_after_s
@@ -213,8 +270,13 @@
   visibility_caveat: Завершение пересчёта определяется по действию кассира/машине, а не по итоговой сумме.
   norm_ids:
   - 231-20-1
+  citation_strengths:
+    231-20-1: direct
   enabled: true
+  disabled_reason: null
 - rule_id: C-ID-BEFORE-CASH
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Приём наличных без предъявления документа клиентом
   title_en: Cash accepted without an ID document shown
   mechanism: The first cash handover of a client session happens with no document shown (id_document_visible
@@ -236,8 +298,14 @@
   norm_ids:
   - 231-19-1
   - 231-7
+  citation_strengths:
+    231-19-1: direct
+    231-7: indirect
   enabled: true
+  disabled_reason: null
 - rule_id: C-DETECTOR-CHECK
+  business_status: candidate
+  implementation_status: unimplemented
   title_ru: Пересчёт без проверки подлинности на детекторе (эксперимент)
   title_en: Counting without a detector check (experimental)
   mechanism: 'Experimental, whole-video check: the cashier is seen counting by hand at some point, and
@@ -252,8 +320,13 @@
     видео, что не покрывает интервалы между сэмплами и части кадра вне обзора.'
   norm_ids:
   - 231-19-2b
+  citation_strengths:
+    231-19-2b: direct
   enabled: false
+  disabled_reason: Experimental rule has no F1 evaluator.
 - rule_id: W-NO-PERSONAL-ITEMS
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Личные вещи на рабочем месте кассира
   title_en: Personal items at the cashier's workplace
   mechanism: Personal items (coat, bag, backpack) are visible on the desk for at least min_samples consecutive
@@ -266,8 +339,13 @@
   visibility_caveat: Принадлежность вещи кассиру, а не клиенту, не всегда достоверна по видео.
   norm_ids:
   - 231-12-1
+  citation_strengths:
+    231-12-1: direct
   enabled: true
+  disabled_reason: null
 - rule_id: W-NO-FOOD
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Еда/напитки на рабочем месте кассира
   title_en: Food/drink at the cashier's workplace
   mechanism: Food or drink is visible on the desk, or the cashier's action is 'eating_drinking', for at
@@ -281,8 +359,13 @@
   visibility_caveat: Факт употребления пищи не подтверждается, только присутствие еды/напитка в кадре.
   norm_ids:
   - 231-12-2
+  citation_strengths:
+    231-12-2: weak
   enabled: true
+  disabled_reason: null
 - rule_id: W-NO-CAMERA-PHONE
+  business_status: candidate
+  implementation_status: unimplemented
   title_ru: Телефон в руках кассира в кассовом узле
   title_en: Phone in the cashier's hands in the cash unit
   mechanism: The phone is visible in the cashier's hand, or the cashier's action is 'using_phone', for
@@ -296,8 +379,13 @@
   visibility_caveat: Содержание звонка или переписки не определяется, только факт удержания телефона.
   norm_ids:
   - 231-12-2b
-  enabled: true
+  citation_strengths:
+    231-12-2b: direct
+  enabled: false
+  disabled_reason: No evaluator is wired for this rule.
 - rule_id: K-SEAL-CHECK
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Сумка от инкассатора принята без проверки (инкассатор сразу ушёл)
   title_en: Collector's bag accepted without inspection (collector left right away)
   mechanism: A collector is present; a bag appears on the desk; the collector leaves within collector_quick_s
@@ -314,8 +402,14 @@
   norm_ids:
   - 231-24-3
   - 231-24-4
+  citation_strengths:
+    231-24-3: direct
+    231-24-4: direct
   enabled: true
+  disabled_reason: null
 - rule_id: K-RECOUNT-BEFORE-SAFE
+  business_status: confirmed
+  implementation_status: implemented
   title_ru: Деньги из вскрытой сумки убраны в сейф без пересчёта
   title_en: Cash from an opened bag moved to the safe without a recount
   mechanism: After the cashier opens a bag (cashier_action='packing_or_opening_bag'), the safe is used
@@ -332,4 +426,58 @@
   norm_ids:
   - 231-74-1
   - 231-42
+  citation_strengths:
+    231-74-1: weak
+    231-42: indirect
   enabled: true
+  disabled_reason: null
+- rule_id: L-NO-BAG-ON-LEAVE
+  business_status: confirmed
+  implementation_status: implemented
+  title_ru: 'Сумка оставлена без присмотра: кассир покинул рабочее место'
+  title_en: 'Collection bag left unattended: cashier left the desk'
+  mechanism: A collection bag remains visible on the desk after the cashier leaves.
+  states_used:
+  - cashier_at_desk
+  - desk_bag
+  params: {}
+  description_template: После ухода кассира на столе видна сумка.
+  visibility_caveat: Видео не устанавливает принадлежность сумки и её содержимое.
+  norm_ids: []
+  citation_strengths: {}
+  enabled: false
+  disabled_reason: Legal basis for treating a collection bag as unattended valuables needs review.
+- rule_id: C-REJECT-NOT-RETURNED
+  business_status: confirmed
+  implementation_status: unimplemented
+  title_ru: Сомнительная банкнота возвращена клиенту без оформления
+  title_en: Doubtful banknote returned to client without required handling
+  mechanism: A banknote rejected by a counter is returned to the client without the required procedure.
+  states_used:
+  - cashier_action
+  - counting_machine_in_use
+  params: {}
+  description_template: ''
+  visibility_caveat: Видео не подтверждает, что именно счётчик отбросил купюру и был ли составлен акт.
+  norm_ids: []
+  citation_strengths: {}
+  enabled: false
+  disabled_reason: No evaluator is wired for this rule.
+- rule_id: K-COLLECTOR-DOC
+  business_status: confirmed
+  implementation_status: implemented
+  title_ru: Приём сумки инкассатора без видимого сопроводительного документа
+  title_en: Collector bag accepted without a visible accompanying document
+  mechanism: A collector hands over a bag and no accompanying document is visible during the visit.
+  states_used:
+  - collector_present
+  - desk_bag
+  - id_document_visible
+  params: {}
+  description_template: При передаче сумки инкассатором сопроводительный документ в кадре не виден.
+  visibility_caveat: Отсутствие документа в кадре не доказывает отсутствие документа вне поля зрения.
+  norm_ids: []
+  citation_strengths: {}
+  enabled: false
+  disabled_reason: The video cannot establish that no accompanying document exists outside the camera
+    view; legal and visibility basis needs review.

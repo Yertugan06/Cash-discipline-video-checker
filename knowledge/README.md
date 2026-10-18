@@ -1,15 +1,12 @@
 # Knowledge Pack: provenance, open verification, open conflicts
 
-`rules.yaml` and `norms.json` in this directory are **build outputs**. The runtime
-(`backend/knowledge.py`) only ever reads these two files. They are rebuilt by
-`scripts/build_knowledge.py` from:
+`rules.yaml` and `norms.json` are build outputs read by `backend/knowledge.py`.
+`scripts/build_knowledge.py` builds rule lifecycle metadata from its registry and norm text from:
 
 - `archive/vm-copies/datathon/forte_brev_kit/brev_kit/codex/codex_verified.json` (217 rows, verbatim
-  legal text + `act`/`punkt`/`url`/`strength` per norm) -- the source for every `norms.json` row;
-- `config/f1_codex.yaml` (the F1 team's independent rule/citation research) -- used only to
-  cross-check sources and to document the conflicts below, **not** used as the primary source
-  for any `norms.json` row (several of its ids are not present in `codex_verified.json`, see
-  "Open conflicts").
+  legal text + `act`/`punkt`/`url` per norm) -- the source for every `norms.json` row;
+- `config/f1_codex.yaml`, regenerated from `data/Cash_Discipline_Cases_Rules.xlsx`, for rule IDs
+  and business statuses. The lifecycle registry below must stay in sync with it.
 
 Re-run after editing the rule table in `scripts/build_knowledge.py`:
 
@@ -18,19 +15,17 @@ Re-run after editing the rule table in `scripts/build_knowledge.py`:
 .venv/bin/python scripts/render_rules_doc.py   # regenerates docs/RULES.md
 ```
 
-## Canonical rule ids
+## Rule lifecycle
 
-18 rules, matching the kit short name -> canonical id mapping agreed in `architecture.md` §3 (the
-mapping itself only exists as data in this file / in `scripts/build_knowledge.py`'s `RULES` table
-and in the `backend/rules/timeline.py` constants -- there is no third copy). 17 are `enabled:
-true`; `C-DETECTOR-CHECK` (kit's `no_detector`) is `enabled: false` because it is explicitly
-flagged experimental by the kit (`EXPERIMENTAL = {'no_detector'}`) and checks a whole-video
-condition with a single weak signal (never any `detector_in_use` observed anywhere).
+The pack currently mirrors all 21 rule IDs in the business workbook. Each entry carries separate
+`business_status`, `implementation_status`, `enabled`, and `disabled_reason` fields. The F1 detector
+checks these fields against the converted codex and evaluator registry at startup.
 
-`config/f1_codex.yaml` additionally defines three ids with no kit-side detection logic
-(`L-NO-BAG-ON-LEAVE`, `C-REJECT-NOT-RETURNED`, `K-COLLECTOR-DOC`). They are **not** in
-`rules.yaml`: nothing in this build implements them, and adding a rule_id with no detector behind
-it would be a dangling, untestable entry. Adding them is a future decision, not resolved here.
+Fifteen rules are enabled. `L-SAFE-LOCKED-ON-LEAVE`, `C-DETECTOR-CHECK`, and
+`W-NO-CAMERA-PHONE` are candidate/unimplemented. `S-NO-MERGE` has an F1 evaluator and is enabled.
+`L-NO-BAG-ON-LEAVE` and `K-COLLECTOR-DOC` have evaluators but remain disabled because their legal
+and video-visibility basis needs review. `C-REJECT-NOT-RETURNED` is confirmed business-side but has
+no evaluator yet. Disabled rules carry a reason and are skipped by the evaluator.
 
 ## Three distinct statements (architecture.md §3)
 
@@ -41,17 +36,17 @@ carried as separate `GroundedFinding`/`Violation` fields, not inlined into the d
    `round(t_anchor, 1)`), e.g. "С 9.0 по 19.0 с кассир отсутствует на рабочем месте; на столе
    видны наличные.";
 2. **claim** -- always the fixed sentence "Признаки возможного нарушения: `<title_ru>`.";
-3. **citation** -- `rule.norm_ids[0]` resolved to a `NormRef` (`act`, `punkt`, `quote`, `url`,
-   `strength`, `human_verified`), surfaced by the serializer as `source`/`source_url`/
-   `source_quote`/`strength`/`citation_status` (WP1's `backend/serialize.py`), never embedded in
-   the description text.
+3. **citation** -- `rule.norm_ids[0]` resolves to a `NormRef` with structured KZ jurisdiction,
+   document title, issuing authority, number, adoption date, clause, quote, URL, and citation status.
+   Rule-to-clause strength (`direct`, `indirect`, or `weak`) lives on the rule because the same
+   clause can support different rules with different strength.
 
 ## Human verification checklist
 
-**No norm in `norms.json` is `human_verified: true`.** An AI must never set that field (AGENTS.md
-/ shared brief, rule 6). Every one of the 20 norms below needs a human to open the `url`,
-confirm the `quote` is still the current text of `act`, `punkt`, and then flip `human_verified`
-to `true` (with `verified_by`/`verified_at`) by hand -- not by re-running the build script.
+Every norm currently has `citation_status: "pending"`. A human must open the URL and confirm the
+metadata, current clause text, and legal status before marking it `verified` with
+`verified_by`/`verified_at`. A known incorrect citation should be `invalid`; the runtime refuses to
+enable rules that rely on invalid citations.
 
 | norm_id | act, punkt | used by (primary unless noted) |
 |---|---|---|
@@ -97,9 +92,8 @@ to `true` (with `verified_by`/`verified_at`) by hand -- not by re-running the bu
      as repealed with the successor unconfirmed; not added to `norms.json` because no verbatim
      quote for it has been verified yet.
 
-   Until a human resolves this, `L-PC-LOCKED`'s citation should be treated as unverified evidence
-   of *a* workplace-security norm, not a confirmed specific clause -- it is already
-   `human_verified: false`, so `Knowledge.ground()` reports `citation_status: "needs_review"`.
+   Until a human resolves this, `L-PC-LOCKED`'s citation remains pending review. `Knowledge.ground()`
+   reports `citation_status: "pending"`.
 
 2. **Kit `CODEX` list vs. F1 `codex.yaml` `source` field, per rule.** The kit's own
    `timeline_rules.py` `CODEX` dict (what this build uses) and F1's `codex.yaml` `source` strings

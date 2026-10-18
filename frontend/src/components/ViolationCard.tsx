@@ -16,6 +16,11 @@ export default function ViolationCard({ violation, language }: { violation: Viol
         {violation.type}
       </h3>
       <p>{violation.description}</p>
+      {typeof violation.detection_confidence === 'number' ? (
+        <p className="detection-confidence">
+          {text.confidence}: {Math.round(violation.detection_confidence * 100)}% ({text.confidenceNote})
+        </p>
+      ) : null}
       <div className="evidence" aria-label={text.frames}>
         {violation.evidence_frames.map((frame, index) => (
           <figure key={`${frame.timestamp_sec}-${index}`}>

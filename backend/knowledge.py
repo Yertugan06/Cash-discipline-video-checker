@@ -69,12 +69,26 @@ class Knowledge:
             norms[norm.norm_id] = norm
 
         for rule in rules:
+            if rule.enabled and rule.business_status != "confirmed":
+                raise KnowledgeError(f"enabled rule {rule.rule_id!r} is not business-confirmed")
+            if rule.enabled and rule.implementation_status != "implemented":
+                raise KnowledgeError(f"enabled rule {rule.rule_id!r} is marked unimplemented")
+            if not rule.enabled and not rule.disabled_reason:
+                raise KnowledgeError(f"disabled rule {rule.rule_id!r} needs a disabled_reason")
             if rule.enabled and not rule.norm_ids:
                 raise KnowledgeError(f"enabled rule {rule.rule_id!r} has no norm_ids")
+            if set(rule.citation_strengths) != set(rule.norm_ids):
+                raise KnowledgeError(
+                    f"rule {rule.rule_id!r} citation_strengths must cover every norm_id exactly"
+                )
             for norm_id in rule.norm_ids:
                 if norm_id not in norms:
                     raise KnowledgeError(
                         f"rule {rule.rule_id!r} references unknown norm {norm_id!r}"
+                    )
+                if rule.enabled and norms[norm_id].citation_status == "invalid":
+                    raise KnowledgeError(
+                        f"enabled rule {rule.rule_id!r} uses invalid citation {norm_id!r}"
                     )
 
         return cls(rules, norms)
@@ -105,8 +119,12 @@ class Knowledge:
         for finding in findings:
             rule = self.rule(finding.rule_id)
             norms = [self._norms[nid] for nid in rule.norm_ids]
-            all_verified = norms and all(n.human_verified for n in norms)
-            citation_status = "verified" if all_verified else "needs_review"
+            if any(n.citation_status == "invalid" for n in norms):
+                citation_status = "invalid"
+            elif norms and all(n.citation_status == "verified" for n in norms):
+                citation_status = "verified"
+            else:
+                citation_status = "pending"
             grounded.append(
                 GroundedFinding(
                     finding=finding, rule=rule, norms=norms, citation_status=citation_status

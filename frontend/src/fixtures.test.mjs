@@ -25,7 +25,7 @@ test('sample DoneJob fixtures match the contract shape used by the UI', () => {
     }
   }
   assert.equal(sampleDoneJobViolation.violations[0].citation_status, 'verified');
-  assert.equal(sampleDoneJobViolation.violations[1].citation_status, 'needs_review');
+  assert.equal(sampleDoneJobViolation.violations[1].citation_status, 'pending');
   assert.equal(sampleDoneJobViolation.coverage?.mode, 'partial');
   assert.equal(sampleDoneJobClean.coverage?.mode, 'full');
 });

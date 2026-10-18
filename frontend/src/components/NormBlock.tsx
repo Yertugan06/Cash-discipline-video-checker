@@ -20,19 +20,25 @@ export default function NormBlock({ violation, language }: { violation: Violatio
         <span className="norm-label">{text.source}:</span>{' '}
         {violation.source_url ? (
           <a href={violation.source_url} rel="noreferrer" target="_blank">
-            {violation.source ?? text.openSource}
+            {violation.document_title ?? violation.source ?? text.openSource}
           </a>
         ) : (
-          <span>{violation.source}</span>
+          <span>{violation.document_title ?? violation.source}</span>
         )}
         {violation.strength ? <span className="norm-strength"> ({violation.strength})</span> : null}
         <span
-          className={badge.verified ? 'badge badge-verified' : 'badge badge-needs-review'}
+          className={`badge ${badge.verified ? 'badge-verified' : badge.invalid ? 'badge-invalid' : 'badge-needs-review'}`}
           role="status"
         >
           {badge.label}
         </span>
       </p>
+      <dl className="norm-metadata">
+        {violation.jurisdiction ? <div><dt>{text.jurisdiction}</dt><dd>{violation.jurisdiction === 'KZ' ? 'Қазақстан Республикасы / Республика Казахстан' : violation.jurisdiction}</dd></div> : null}
+        {violation.issuing_authority ? <div><dt>{text.authority}</dt><dd>{violation.issuing_authority}</dd></div> : null}
+        {violation.source ? <div><dt>{text.source}</dt><dd>{violation.source}</dd></div> : null}
+        {violation.adopted_on ? <div><dt>{text.adoptedOn}</dt><dd>{violation.adopted_on}</dd></div> : null}
+      </dl>
       {violation.source_quote ? (
         <blockquote className="norm-quote">
           <span className="norm-label">{text.quote}:</span> «{violation.source_quote}»

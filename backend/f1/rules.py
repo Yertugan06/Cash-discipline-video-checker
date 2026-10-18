@@ -23,7 +23,7 @@ class Finding:
     rule_id: str
     timestamp_sec: float
     facts: dict = field(default_factory=dict)
-    confidence: float = 1.0
+    confidence: float | None = None
 
 
 @dataclass
@@ -191,6 +191,56 @@ def s_clean_desk_handover(ctx: Context) -> list[Finding]:
                     "S-CLEAN-DESK-HANDOVER",
                     session.timestamp_sec,
                     {**session.facts, "track_ids": [str(e.facts["track_id"]) for e in previous]},
+                )
+            )
+    return output
+
+
+def s_no_merge(ctx: Context) -> list[Finding]:
+    """Flag a new cash handover while cash from a different client session remains on the desk."""
+    if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("desk"):
+        return []
+    output = []
+    cash_states: dict[str, Event] = {}
+    for event in ctx.log.events:
+        if event.type == "CASH_STATE":
+            cash_id = str(event.facts.get("cash_id", ""))
+            if cash_id:
+                cash_states[cash_id] = event
+            continue
+        if event.type != "HANDOVER" or event.facts.get("object") not in {"cash", "bundle"}:
+            continue
+        session_id = str(event.facts.get("session_id", ""))
+        session = ctx.log.sessions.get(session_id)
+        if (
+            not session
+            or event.facts.get("from_role") != "client"
+            or event.facts.get("from_id") != session.get("client_id")
+        ):
+            continue
+        candidates = [
+            state
+            for state in cash_states.values()
+            if state.facts.get("session_id")
+            and state.facts.get("session_id") != session_id
+            and state.facts.get("location") == "desk"
+        ]
+        if not candidates:
+            continue
+        visible_tracks = {
+            detection.track_id for detection in ctx.on_desk(event.timestamp_sec, {"cash", "bundle"})
+        }
+        previous = [state for state in candidates if state.facts.get("track_id") in visible_tracks]
+        if previous:
+            output.append(
+                Finding(
+                    "S-NO-MERGE",
+                    event.timestamp_sec,
+                    {
+                        "session_id": session_id,
+                        "actor_id": event.facts.get("from_id", ""),
+                        "track_ids": [str(state.facts["track_id"]) for state in previous],
+                    },
                 )
             )
     return output
@@ -378,6 +428,7 @@ RULES = {
     "L-PC-LOCKED": l_pc_locked,
     "S-SAFE-CLOSED": s_safe_closed,
     "S-CLEAN-DESK-HANDOVER": s_clean_desk_handover,
+    "S-NO-MERGE": s_no_merge,
     "A-DOOR-LOCK": a_door_lock,
     "A-OUTSIDER-ZONE": a_outsider_zone,
     "A-SECOND-PERSON": a_second_person,
@@ -391,12 +442,14 @@ RULES = {
 }
 
 
-def evaluate_rules(ctx: Context) -> list[Finding]:
+def evaluate_rules(ctx: Context, enabled_rule_ids: set[str] | None = None) -> list[Finding]:
     identities = {rule.id for rule in ctx.codex.rules}
     if missing := set(RULES) - identities:
         raise ValueError(f"Required rules absent from codex: {sorted(missing)}")
     output = []
     for identity, function in RULES.items():
+        if enabled_rule_ids is not None and identity not in enabled_rule_ids:
+            continue
         rule = ctx.rule(identity)
         if not rule.title or not rule.description_template:
             raise ValueError(f"Missing codex report template: {identity}; regenerate codex.yaml")

@@ -64,18 +64,52 @@ class F1Detector:
     """`Detector` implementation wrapping the existing F1 CV stack.
 
     `rules` is the Knowledge Pack's rule list (same shape `VlmDetector` takes):
-    the F1 engine's own rule functions cover a slightly wider mechanism set
-    than the canonical knowledge pack (e.g. the legacy `L-NO-BAG-ON-LEAVE`
-    and `K-COLLECTOR-DOC` are not canonical ids -- see knowledge/rules.yaml),
-    so findings for any rule_id not in `rules` are dropped before returning.
+    startup validates that configured evaluator IDs and Knowledge Pack lifecycle
+    metadata agree. Only enabled rules are passed to the evaluator, so there is
+    no post-detection allowlist filter that can silently remove findings.
     """
 
     def __init__(self, settings: Settings, rules: list[RuleEntry]) -> None:
         from backend.f1.codex import load_codex
+        from backend.f1.rules import RULES as EVALUATORS
 
         self._settings = settings
         self._codex = load_codex(settings.f1_codex_path)
         self._rules_by_id = {r.rule_id: r for r in rules}
+        codex_by_id = {rule.id: rule for rule in self._codex.rules}
+        errors: list[str] = []
+        if set(codex_by_id) != set(self._rules_by_id):
+            errors.append(
+                "F1 codex and Knowledge Pack rule IDs differ: "
+                f"codex-only={sorted(set(codex_by_id) - set(self._rules_by_id))}, "
+                f"knowledge-only={sorted(set(self._rules_by_id) - set(codex_by_id))}"
+            )
+        implemented_ids = {
+            rule_id
+            for rule_id, rule in self._rules_by_id.items()
+            if rule.implementation_status == "implemented"
+        }
+        evaluator_ids = set(EVALUATORS)
+        if evaluator_ids != implemented_ids:
+            errors.append(
+                "F1 evaluator IDs do not match implementation_status: "
+                f"evaluator-only={sorted(evaluator_ids - implemented_ids)}, "
+                f"pack-only={sorted(implemented_ids - evaluator_ids)}"
+            )
+        for rule_id, rule in self._rules_by_id.items():
+            source = codex_by_id.get(rule_id)
+            if source is None:
+                continue
+            codex_status = source.status.lower()
+            if codex_status != rule.business_status:
+                errors.append(
+                    f"{rule_id} business_status={rule.business_status!r} "
+                    f"does not match F1 codex status={source.status!r}"
+                )
+            if rule.enabled and rule_id not in EVALUATORS:
+                errors.append(f"enabled rule {rule_id} has no F1 evaluator")
+        if errors:
+            raise ValueError("Invalid rule configuration: " + "; ".join(errors))
 
     def detect(self, video: Path, info: VideoInfo, plan: SamplingPlan) -> DetectionResult:
         from backend.f1.calibration import video_checksum
@@ -103,16 +137,11 @@ class F1Detector:
                 raise F1DetectorError("F1 perception failed on this video") from exc
             log = build_events(scene, observations, config, FPS, info.duration_sec)
             context = Context(self._codex, log, observations, scene, info.duration_sec)
-            legacy_findings = evaluate_rules(context)
-            findings = [
-                self._to_finding(f, info.duration_sec)
-                for f in legacy_findings
-                if f.rule_id in self._rules_by_id
-            ]
+            enabled_ids = {rule_id for rule_id, rule in self._rules_by_id.items() if rule.enabled}
+            legacy_findings = evaluate_rules(context, enabled_ids)
+            findings = [self._to_finding(f, info.duration_sec) for f in legacy_findings]
             trace = build_trace(checksum, config, info.duration_sec, scene, observations, log)
-            trace["findings"] = [
-                {**vars(f), "kept": f.rule_id in self._rules_by_id} for f in legacy_findings
-            ]
+            trace["findings"] = [{**vars(f), "kept": True} for f in legacy_findings]
             write_trace(settings.traces_dir / f"{video.stem}.json", trace)
             planned = len(frames)
             coverage = Coverage(
@@ -200,7 +229,15 @@ class F1Detector:
             t_end=t_end,
             support_t=_support_times(t_anchor, t_end),
             facts=facts,
-            rank_score=max(0.0, min(1.0, float(legacy.confidence))),
+            rank_score=max(
+                0.0,
+                min(1.0, float(legacy.confidence if legacy.confidence is not None else 1.0)),
+            ),
+            detection_confidence=(
+                max(0.0, min(1.0, float(legacy.confidence)))
+                if legacy.confidence is not None
+                else None
+            ),
             boxes=_evidence_boxes(legacy.facts),
         )
 

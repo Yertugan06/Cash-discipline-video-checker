@@ -62,23 +62,29 @@ def video(tmp_path: Path, request: pytest.FixtureRequest) -> Path:
     return make_video(tmp_path / "clip.mov", duration=duration)
 
 
-def make_norm(norm_id: str = "N-1", *, human_verified: bool = True) -> NormRef:
+def make_norm(norm_id: str = "N-1", *, citation_status: str = "verified") -> NormRef:
     return NormRef(
         norm_id=norm_id,
+        jurisdiction="KZ",
+        document_title="Test regulation",
+        issuing_authority="Test authority",
         act="Test act",
+        act_number="1",
+        adopted_on=date(2026, 1, 1),
         punkt="п. 1",
         quote="Verbatim quote.",
         url="https://adilet.zan.kz/rus/docs/TEST",
-        strength="direct",
-        human_verified=human_verified,
-        verified_by="tester" if human_verified else None,
-        verified_at=date(2026, 1, 1) if human_verified else None,
+        citation_status=citation_status,
+        verified_by="tester" if citation_status == "verified" else None,
+        verified_at=date(2026, 1, 1) if citation_status == "verified" else None,
     )
 
 
 def make_rule(rule_id: str = "T-RULE", *, norm_ids: list[str] | None = None) -> RuleEntry:
     return RuleEntry(
         rule_id=rule_id,
+        business_status="confirmed",
+        implementation_status="implemented",
         title_ru="Тестовое правило",
         title_en="Test rule",
         mechanism="test",
@@ -87,6 +93,9 @@ def make_rule(rule_id: str = "T-RULE", *, norm_ids: list[str] | None = None) -> 
         description_template="С {t_start} по {t_end} с: тест.",
         visibility_caveat="",
         norm_ids=norm_ids if norm_ids is not None else ["N-1"],
+        citation_strengths={
+            norm_id: "direct" for norm_id in (norm_ids if norm_ids is not None else ["N-1"])
+        },
         enabled=True,
     )
 
@@ -100,6 +109,7 @@ def make_finding(rule_id: str = "T-RULE", t_anchor: float = 1.0) -> Finding:
         support_t=[t_anchor],
         facts={"t_start": t_anchor, "t_end": t_anchor},
         rank_score=1.0,
+        detection_confidence=0.82,
     )
 
 
@@ -146,7 +156,13 @@ class FakeKnowledge:
         for finding in findings:
             rule = self.rule(finding.rule_id)
             norms = [self.norms[nid] for nid in rule.norm_ids]
-            status = "verified" if all(n.human_verified for n in norms) else "needs_review"
+            status = (
+                "invalid"
+                if any(n.citation_status == "invalid" for n in norms)
+                else "verified"
+                if all(n.citation_status == "verified" for n in norms)
+                else "pending"
+            )
             grounded.append(
                 GroundedFinding(finding=finding, rule=rule, norms=norms, citation_status=status)
             )

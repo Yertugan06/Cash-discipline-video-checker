@@ -29,6 +29,12 @@ def render(knowledge: Knowledge) -> str:
         status = "enabled" if rule.enabled else "disabled"
         lines.append(f"## {rule.rule_id} ({status})")
         lines.append("")
+        lines.append(
+            f"- **Business status**: {rule.business_status}; **implementation**: "
+            f"{rule.implementation_status}"
+        )
+        if rule.disabled_reason:
+            lines.append(f"- **Disabled reason**: {rule.disabled_reason}")
         lines.append(f"- **RU**: {rule.title_ru}")
         lines.append(f"- **EN**: {rule.title_en}")
         lines.append(f"- **Mechanism**: {rule.mechanism}")
@@ -37,11 +43,13 @@ def render(knowledge: Knowledge) -> str:
         lines.append("- **Norms**:")
         for norm_id in rule.norm_ids:
             norm = knowledge.norm(norm_id)
-            status_txt = "verified" if norm.human_verified else "needs_review"
+            status_txt = norm.citation_status
             primary = " (primary)" if norm_id == rule.norm_ids[0] else ""
             lines.append(
-                f"  - `{norm.norm_id}`{primary}: {norm.act}, {norm.punkt} -- "
-                f"[{status_txt}]({norm.url}) -- strength: {norm.strength}"
+                f"  - `{norm.norm_id}`{primary}: {norm.jurisdiction}, {norm.document_title}, "
+                f"{norm.issuing_authority}, № {norm.act_number} ({norm.adopted_on}), "
+                f"{norm.punkt} -- [{status_txt}]({norm.url}) -- relationship: "
+                f"{rule.citation_strengths[norm_id]}"
             )
             lines.append(f"    > {norm.quote}")
         lines.append("")

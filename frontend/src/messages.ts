@@ -29,7 +29,13 @@ export const words = {
     quote: 'Цитата нормы',
     openSource: 'Открыть источник',
     verified: 'проверено',
-    needsReview: 'требует проверки',
+    pending: 'ожидает проверки',
+    invalid: 'ссылка или трактовка недействительна',
+    jurisdiction: 'Юрисдикция',
+    authority: 'Орган',
+    adoptedOn: 'Дата принятия',
+    confidence: 'Уверенность обнаружения',
+    confidenceNote: 'Оценка модели, не калиброванная вероятность.',
     failed: 'Обработка завершилась ошибкой',
     language: 'Язык / Language',
     empty: 'Выберите видео, чтобы начать проверку.',
@@ -60,7 +66,13 @@ export const words = {
     quote: 'Norm quote',
     openSource: 'Open source',
     verified: 'verified',
-    needsReview: 'needs review',
+    pending: 'pending review',
+    invalid: 'invalid source or interpretation',
+    jurisdiction: 'Jurisdiction',
+    authority: 'Issuing authority',
+    adoptedOn: 'Adopted',
+    confidence: 'Detection confidence',
+    confidenceNote: 'Model score, not a calibrated probability.',
     failed: 'Processing failed',
     language: 'Language / Язык',
     empty: 'Select a video to start.',
@@ -79,16 +91,23 @@ export function verdictText(verdict: 'violation' | 'no_violation', language: Lan
 
 /**
  * Citation badge for a violation's `citation_status`. Anything other than
- * exactly "verified" is shown as "needs review" ("требует проверки") --
+ * exactly "verified" is shown as verified. Pending or invalid sources retain
+ * distinct labels so a human can distinguish review from a known conflict --
  * an AI must never present an unverified norm as confirmed (AGENTS.md,
  * SHARED_BRIEF rule 6; architecture.md §7).
  */
 export function citationBadge(
   status: string | null | undefined,
   language: Language,
-): { label: string; verified: boolean } {
+): { label: string; verified: boolean; invalid: boolean } {
   const verified = status === 'verified';
-  return { label: verified ? words[language].verified : words[language].needsReview, verified };
+  const invalid = status === 'invalid';
+  const label = verified
+    ? words[language].verified
+    : invalid
+      ? words[language].invalid
+      : words[language].pending;
+  return { label, verified, invalid };
 }
 
 /**

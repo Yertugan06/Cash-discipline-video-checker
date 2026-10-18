@@ -36,7 +36,8 @@ def _build_pipeline(config: Settings) -> Pipeline:
     if config.detector == "f1":
         from backend.f1.detector import F1Detector
 
-        detector = F1Detector(config, knowledge.enabled_rules())
+        # F1 checks the whole catalogue against its config and evaluates the enabled rules.
+        detector = F1Detector(config, knowledge.rules)
     else:
         from backend.vlm.detector import VlmDetector
 

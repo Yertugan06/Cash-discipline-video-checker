@@ -36,9 +36,9 @@ curl https://TODO-team-host.example/api/v1/jobs/3f2a9c1e \
 ```
 
 A `done` response looks like this (see `backend/contracts.py:DoneJob` for the
-exact, frozen shape; `rule_id`/`source`/`source_url`/`source_quote`/`strength`/
-`citation_status` are optional extras used only by the UI, never required by
-the jury contract):
+exact, frozen required shape; the rule lifecycle, detection confidence, and
+structured citation metadata are optional extras used by the UI, never
+required by the jury contract):
 
 ```json
 {
@@ -58,7 +58,15 @@ the jury contract):
       "source_url": "https://adilet.zan.kz/rus/docs/V1900019680",
       "source_quote": "...",
       "strength": "direct",
-      "citation_status": "verified"
+      "citation_status": "pending",
+      "jurisdiction": "KZ",
+      "document_title": "Об утверждении Правил осуществления кассовых операций ...",
+      "issuing_authority": "Правление Национального Банка Республики Казахстан",
+      "act_number": "231",
+      "adopted_on": "2019-11-29",
+      "business_status": "confirmed",
+      "implementation_status": "implemented",
+      "detection_confidence": 0.82
     }
   ],
   "warnings": [],

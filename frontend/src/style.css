@@ -39,6 +39,12 @@ a { color: #76214e; overflow-wrap: anywhere; }
 .norm-block { margin-top: 10px; font-size: 13px; }
 .norm-label { font-weight: 600; }
 .norm-strength { color: #656068; }
+.norm-metadata { display: grid; gap: .3rem; margin: .6rem 0; }
+.norm-metadata div { display: grid; grid-template-columns: minmax(7rem, max-content) 1fr; gap: .6rem; }
+.norm-metadata dt { color: #656068; }
+.norm-metadata dd { margin: 0; }
+.badge-invalid { color: #9a1b1b; background: #ffe5e5; }
+.detection-confidence { color: #656068; font-size: .9rem; }
 .badge { display: inline-block; margin-left: 8px; padding: 2px 9px; border-radius: 999px; font: 11px monospace; text-transform: uppercase; letter-spacing: .3px; }
 .badge-verified { background: #e3f1e6; color: #1f6b3a; }
 .badge-needs-review { background: #fff5df; color: #8a5a10; border: 1px solid #ba8533; }

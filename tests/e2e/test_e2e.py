@@ -143,7 +143,7 @@ def test_clip_processes_within_budget_and_matches_contract(
         assert violation.rule_id, f"{clip.stem}: violation missing rule_id"
         assert violation.source, f"{clip.stem}: violation missing source"
         assert violation.source_url, f"{clip.stem}: violation missing source_url"
-        assert violation.citation_status in ("verified", "needs_review"), (
+        assert violation.citation_status in ("verified", "pending", "invalid"), (
             f"{clip.stem}: violation has no/invalid citation_status"
         )
 
