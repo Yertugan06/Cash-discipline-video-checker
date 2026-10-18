@@ -1,5 +1,6 @@
 """One deterministic function per supported codex ID; legal prose lives only in YAML."""
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -14,6 +15,7 @@ from backend.f1.vision_types import (
     center,
     contains,
     distance,
+    overlap,
 )
 
 if TYPE_CHECKING:  # desk_objects needs cv2 at import time
@@ -395,31 +397,140 @@ def k_collector_doc(ctx: Context) -> list[Finding]:
     return output
 
 
+def seal_check_deliveries(ctx: Context) -> Iterator[tuple[Event, Event, float]]:
+    """Observed transfers or a bag appearing during an observed visitor's short departure."""
+    transfers = list(collector_transfers(ctx))
+    for transfer, exit_event in transfers:
+        yield transfer, exit_event, exit_event.timestamp_sec
+    if not ctx.log.coverage.get("desk"):
+        return
+    limit = ctx.rule("K-SEAL-CHECK").min_duration_sec
+    assert limit is not None  # collector_transfers validates the codex duration above
+    fixtures = [ctx.scene.objects[n].box for n in ("laptop", "counter") if n in ctx.scene.objects]
+    bags: dict[str, list[tuple[float, Detection]]] = {}
+    for frame in ctx.observations:
+        for bag in frame.detections:
+            if bag.label == "bag":
+                bags.setdefault(bag.track_id, []).append((frame.timestamp_sec, bag))
+    for exit_event in ctx.events("EXIT"):
+        actor = exit_event.facts.get("actor_id")
+        if exit_event.facts.get("role") not in {"client", "visitor", "collector"}:
+            continue
+        entries = [
+            e
+            for e in ctx.events("ENTER")
+            if e.facts.get("actor_id") == actor
+            and e.facts.get("observed_entry")
+            and ctx.observations[0].timestamp_sec < e.timestamp_sec < exit_event.timestamp_sec
+        ]
+        if not entries:
+            continue
+        entry = entries[-1].timestamp_sec
+        for track_id, samples in bags.items():
+            on_desk = [
+                (t, d)
+                for t, d in samples
+                if in_zone(ctx.scene, "desk", center(d.box))
+                and not any(
+                    contains(box, center(d.box), ctx.scene.scaled_distance(0.01))
+                    for box in fixtures
+                )
+            ]
+            if not on_desk:
+                continue
+            appeared, bag = on_desk[0]
+            point = center(bag.box)
+            if (
+                not entry < appeared <= exit_event.timestamp_sec
+                or exit_event.timestamp_sec - appeared > limit
+                or any(
+                    e.facts.get("from_id") == actor and e.facts.get("track_id") == track_id
+                    for e, _ in transfers
+                )
+            ):
+                continue
+            # A tracker change cannot turn a bag already there into a new delivery.
+            if any(
+                t <= entry
+                and (previous.track_id == track_id or overlap(previous.box, bag.box) > 0.3)
+                for history in bags.values()
+                for t, previous in history
+            ):
+                continue
+            retained = {
+                t
+                for t, d in samples
+                if exit_event.timestamp_sec <= t <= exit_event.timestamp_sec + LEFT_BEHIND_SEC
+                and overlap(d.box, bag.box) > 0.3
+            }
+            if len(retained) < 2:
+                continue
+            # A bag may be occluded until accepted. Associate it with a visitor who
+            # reached its eventual desk position, using the existing carrying reach.
+            reaches = [
+                frame.timestamp_sec
+                for frame in ctx.observations
+                if max(entry, appeared - limit) <= frame.timestamp_sec < exit_event.timestamp_sec
+                and any(
+                    person.track_id == actor
+                    and any(
+                        distance(hand, point) < ctx.scene.scaled_distance(0.12)
+                        for hand in person.wrists()
+                    )
+                    for person in frame.detections
+                    if person.label == "person"
+                )
+            ]
+            if len(reaches) < 2:
+                continue
+            arrival = Event(
+                type="BAG_ARRIVAL",
+                timestamp_sec=appeared,
+                facts={
+                    "from_id": actor,
+                    "object": "bag",
+                    "track_id": track_id,
+                    "inferred_delivery": True,
+                    "visit_start_sec": entry,
+                    "bag_appeared_sec": appeared,
+                    "last_bag_area_reach_sec": reaches[-1],
+                    "window_end": exit_event.timestamp_sec,
+                    "confirmed_exit": True,
+                },
+            )
+            yield arrival, exit_event, reaches[-1]
+
+
 def k_seal_check(ctx: Context) -> list[Finding]:
     output = []
     if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("hands"):
         return output
-    for transfer, exit_event in collector_transfers(ctx):
+    for transfer, exit_event, inspection_end in seal_check_deliveries(ctx):
         if not ctx.has_event(
             "BAG_INSPECTED",
-            max(0, transfer.timestamp_sec - 1),
-            exit_event.timestamp_sec,
+            max(0, transfer.facts.get("visit_start_sec", transfer.timestamp_sec - 1)),
+            inspection_end,
             track_id=transfer.facts.get("track_id"),
         ):
-            # Inspection can still happen after handover; the omission is established on exit.
-            facts = {**transfer.facts, "handover_sec": transfer.timestamp_sec}
+            inferred = transfer.type == "BAG_ARRIVAL"
+            # An occluded handover has no observed timestamp. Use the first visible
+            # bag as evidence, with the confirmed exit ending the window.
+            anchor = transfer.timestamp_sec if inferred else exit_event.timestamp_sec
+            facts = {**transfer.facts, "exit_sec": exit_event.timestamp_sec}
+            if not inferred:
+                facts["handover_sec"] = transfer.timestamp_sec
             facts.pop("box", None)
             bag = next(
                 (
                     d
-                    for d in ctx.nearby(exit_event.timestamp_sec).detections
+                    for d in ctx.nearby(anchor).detections
                     if d.track_id == transfer.facts.get("track_id")
                 ),
                 None,
             )
             if bag is not None:
                 facts["box"] = list(bag.box)
-            output.append(Finding("K-SEAL-CHECK", exit_event.timestamp_sec, facts))
+            output.append(Finding("K-SEAL-CHECK", anchor, facts))
     return output
 
 

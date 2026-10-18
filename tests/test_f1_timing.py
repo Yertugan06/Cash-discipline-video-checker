@@ -7,7 +7,7 @@ from backend.f1.detector import F1Detector
 from backend.f1.rules import RULES
 from backend.knowledge import Knowledge
 from backend.rules import rank
-from tests.test_f1_rules import COLLECT, context, event
+from tests.test_f1_rules import COLLECT, bag_visit_context, context, event
 
 
 def test_seal_check_anchors_when_collector_leaves_before_inspection():
@@ -33,6 +33,19 @@ def test_seal_check_does_not_reuse_handover_geometry_at_exit(visible_on_exit):
         assert finding.facts["box"] != old_box
     else:
         assert "box" not in finding.facts
+
+
+def test_inferred_bag_delivery_uses_visible_evidence_and_keeps_the_actual_exit_time(tmp_path):
+    ctx = bag_visit_context()
+    finding = RULES["K-SEAL-CHECK"](ctx)[0]
+    rules = Knowledge.load(Settings(api_key="x").knowledge_dir).enabled_rules()
+    detector = F1Detector(Settings(api_key="x", work_dir=tmp_path), rules)
+    adapted = detector._to_finding(finding, ctx.duration)
+    assert adapted.t_anchor == adapted.t_start == 6
+    assert adapted.t_end == adapted.facts["t_end"] == 8
+    assert adapted.support_t[0] == 6
+    assert adapted.support_t[-1] == 8
+    assert adapted.boxes[0].box == tuple(finding.facts["box"])
 
 
 def test_confirmed_exit_breaks_a_tie_between_the_same_leave_rule(tmp_path):

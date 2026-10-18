@@ -203,6 +203,171 @@ def test_thresholds_and_required_counterevidence():
     assert RULES["K-SEAL-CHECK"](inspected) == []
 
 
+def bag_visit_context():
+    ctx = context(
+        [
+            event("ENTER", 1, actor_id="visitor", role="client", observed_entry=True),
+            event("EXIT", 8, actor_id="visitor", role="client"),
+            # Cashier contact after the visitor withdraws does not establish a joint check.
+            event("BAG_INSPECTED", 6, track_id="bag:1"),
+        ]
+    )
+    bag = Detection(label="bag", track_id="bag:1", score=0.8, box=(0.55, 0.45, 0.65, 0.55))
+    visitor = Detection(
+        label="person",
+        track_id="visitor",
+        role="client",
+        score=0.9,
+        box=(0.4, 0.1, 0.7, 0.42),
+        hands=[(0.59, 0.46, 0.9)],
+    )
+    ctx.observations = []
+    for i in range(23):
+        t = i / 2
+        detections = [bag.model_copy(deep=True)] if t >= 6 else []
+        if 1 <= t < 8:
+            person = visitor.model_copy(deep=True)
+            if t not in (4.5, 5):
+                person.box = (0.0, 0.0, 0.2, 0.2)
+                person.hands = [(0.1, 0.1, 0.9)]
+            detections.append(person)
+        ctx.observations.append(Observation(timestamp_sec=t, detections=detections))
+    ctx.duration = 11.5
+    return ctx
+
+
+@requires_cv2
+@pytest.mark.parametrize("zoom", [0.8, 1.0, 1.2])
+@pytest.mark.parametrize("mirror", [False, True])
+@pytest.mark.parametrize("transpose", [False, True])
+def test_seal_check_infers_an_occluded_delivery_without_a_collector_role(zoom, mirror, transpose):
+    from scripts.replay_f1 import transform_detection
+
+    ctx = bag_visit_context()
+
+    def point(x, y):
+        x = 1 - x if mirror else x
+        x, y = 0.5 + (x - 0.5) * zoom, 0.5 + (y - 0.5) * zoom
+        return (y, x) if transpose else (x, y)
+
+    def moved(detection):
+        return Detection.model_validate(transform_detection(detection.model_dump(), point))
+
+    ctx.scene.objects = {key: moved(d) for key, d in ctx.scene.objects.items()}
+    ctx.scene.zones = {
+        key: [point(x, y) for x, y in polygon] for key, polygon in ctx.scene.zones.items()
+    }
+    for frame in ctx.observations:
+        frame.detections = [moved(d) for d in frame.detections]
+    findings = RULES["K-SEAL-CHECK"](ctx)
+    assert len(findings) == 1
+    finding = findings[0]
+    assert finding.timestamp_sec == 6
+    assert finding.facts["last_bag_area_reach_sec"] == 5
+    assert finding.facts["exit_sec"] == finding.facts["window_end"] == 8
+    assert finding.facts["inferred_delivery"] is True
+    assert "handover_sec" not in finding.facts
+    assert finding.facts["box"] == list(ctx.nearby(6).detections[0].box)
+    assert RULES["K-COLLECTOR-DOC"](ctx) == []
+
+
+@requires_cv2
+@pytest.mark.parametrize(
+    "missing", ["exit", "observed_entry", "later_entry", "reach", "second_reach", "retained"]
+)
+def test_inferred_bag_delivery_needs_a_complete_visit_and_repeated_evidence(missing):
+    ctx = bag_visit_context()
+    if missing == "exit":
+        next(e for e in ctx.log.events if e.type == "EXIT").type = "TRACK_LOST"
+    elif missing == "observed_entry":
+        ctx.log.events[0].facts["observed_entry"] = False
+    elif missing == "later_entry":
+        ctx.log.events[0].timestamp_sec = 0
+    else:
+        for frame in ctx.observations:
+            if missing == "retained" and frame.timestamp_sec > 8:
+                frame.detections = []
+            for person in frame.detections:
+                if person.label == "person" and (
+                    missing == "reach" or (missing == "second_reach" and frame.timestamp_sec == 5)
+                ):
+                    person.hands = []
+    assert RULES["K-SEAL-CHECK"](ctx) == []
+
+
+@requires_cv2
+@pytest.mark.parametrize("same_track", [False, True])
+def test_an_existing_bag_does_not_become_a_new_delivery(same_track):
+    ctx = bag_visit_context()
+    bag = ctx.nearby(6).detections[0].model_copy(deep=True)
+    if same_track:
+        bag.box = (0.4, 0.1, 0.5, 0.2)
+    else:
+        bag.track_id = "previous-bag"
+    ctx.observations[0].detections.append(bag)
+    assert RULES["K-SEAL-CHECK"](ctx) == []
+
+
+@requires_cv2
+def test_duplicate_boxes_in_one_frame_do_not_confirm_a_bag_was_left():
+    ctx = bag_visit_context()
+    for frame in ctx.observations:
+        if frame.timestamp_sec > 8:
+            frame.detections = []
+    ctx.nearby(8).detections.append(ctx.nearby(8).detections[0].model_copy())
+    assert RULES["K-SEAL-CHECK"](ctx) == []
+
+
+@requires_cv2
+def test_a_bag_seen_before_reaching_the_desk_can_still_be_delivered():
+    ctx = bag_visit_context()
+    bag = ctx.nearby(6).detections[0].model_copy(update={"box": (0.4, 0.1, 0.5, 0.2)})
+    ctx.nearby(2).detections.append(bag)
+    assert len(RULES["K-SEAL-CHECK"](ctx)) == 1
+
+
+@requires_cv2
+def test_bag_inspection_before_the_visitor_withdraws_prevents_a_finding():
+    ctx = bag_visit_context()
+    person = ctx.nearby(5).detections[0].model_copy(deep=True)
+    ctx.nearby(6.5).detections = [ctx.nearby(6).detections[0], person]
+    assert RULES["K-SEAL-CHECK"](ctx) == []
+
+
+@requires_cv2
+def test_a_visitor_who_stays_with_a_new_bag_is_not_a_quick_departure():
+    ctx = bag_visit_context()
+    next(e for e in ctx.log.events if e.type == "EXIT").timestamp_sec = 11.5
+    assert RULES["K-SEAL-CHECK"](ctx) == []
+
+
+@requires_cv2
+def test_a_bag_label_on_workstation_equipment_does_not_establish_a_delivery():
+    ctx = bag_visit_context()
+    for frame in ctx.observations:
+        for d in frame.detections:
+            if d.label == "bag":
+                d.box = ctx.scene.objects["laptop"].box
+            elif d.hands == [(0.59, 0.46, 0.9)]:
+                d.hands = [(0.3, 0.45, 0.9)]
+    assert RULES["K-SEAL-CHECK"](ctx) == []
+
+
+@requires_cv2
+def test_inferred_delivery_does_not_duplicate_an_observed_handover():
+    ctx = bag_visit_context()
+    ctx.log.events = [e for e in ctx.log.events if e.type != "BAG_INSPECTED"]
+    ctx.log.events.append(
+        event(
+            "HANDOVER", 6, from_id="visitor", from_role="collector", object="bag", track_id="bag:1"
+        )
+    )
+    findings = RULES["K-SEAL-CHECK"](ctx)
+    assert len(findings) == 1
+    assert findings[0].timestamp_sec == 8
+    assert findings[0].facts["handover_sec"] == 6
+
+
 @pytest.mark.parametrize("recording_start", [0, 2])
 @pytest.mark.parametrize("entry_offset,expected_findings", [(0, 0), (1, 1)])
 def test_door_requires_an_entry_after_the_first_observation(
