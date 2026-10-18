@@ -305,17 +305,15 @@ $("list").addEventListener("click", (e) => {
   document.querySelector(`.item[data-id="${el.dataset.id}"]`)?.scrollIntoView({ block: "nearest" });
 });
 
-const RUN_LABELS = {
-  "live": "Live Stream (Current Feed)",
-  "run4-leavefix": "A17: Leave Fixes (Live Run 4)",
-  "run3-nearfar": "A14: Near/Far Split (Live Run 3)",
-  "run2-sideways": "A14: Sideways Split (Live Run 2)",
-  "before-glass-fix": "A12: Baseline (Before Glass Fix)",
-  "replay-leavefix": "A17: Leave Fixes (Offline Replay)",
-  "replay-alone": "A16: Lone Person Cashier (Offline Replay)",
-  "replay-nearfar": "A14: Near/Far Split (Offline Replay)",
-  "replay-learned": "A14: Learned Split (Offline Replay)"
-};
+const runMetadata = {};
+const runLabel = (name) => runMetadata[name]?.label || `Legacy / unknown · ${name === "live" ? "Live Stream" : name}`;
+
+function updateRunInfo() {
+  const meta = runMetadata[currentRun];
+  $("runBadge").className = `run-badge ${currentRun === "live" ? "live" : "archive"}`;
+  $("runBadge").textContent = runLabel(currentRun);
+  $("runDesc").textContent = `${currentRun === "live" ? "Live feed" : "Saved snapshot"} · run: ${currentRun} · source: ${meta?.source_commit || "not recorded"}`;
+}
 
 const runFromUrl = () => new URLSearchParams(location.search).get("run") || "live";
 let currentRun = runFromUrl();
@@ -356,7 +354,13 @@ function updateNavButtons() {
   $("nextRun").disabled = idx < 0 || idx >= availableRuns.length - 1;
   $("runPosition").textContent = idx < 0 ? "Unavailable" : `${idx + 1} / ${availableRuns.length}`;
   const options = availableRuns.includes(currentRun) ? availableRuns : [...availableRuns, currentRun];
-  $("runSelect").innerHTML = options.map((run) => `<option value="${esc(run)}">${esc(RUN_LABELS[run] ? `${RUN_LABELS[run]} [${run}]` : run)}</option>`).join("");
+  const groups = new Map();
+  for (const run of options) {
+    const group = run === "live" ? "Current feed" : runMetadata[run]?.attempt_prefix || "Legacy / unknown";
+    if (!groups.has(group)) groups.set(group, []);
+    groups.get(group).push(run);
+  }
+  $("runSelect").innerHTML = [...groups].map(([group, runs]) => `<optgroup label="${esc(group)}">${runs.map((run) => `<option value="${esc(run)}">${esc(runLabel(run))} [${esc(run)}]</option>`).join("")}</optgroup>`).join("");
   $("runSelect").value = currentRun;
 }
 
@@ -364,9 +368,11 @@ async function loadRuns() {
   try {
     $("refreshRuns").disabled = true;
     const data = await fetchJson("/api/runs");
-    // Saved files are ordered oldest first; Previous from live opens the latest snapshot.
+    Object.assign(runMetadata, data.metadata || {});
+    // Saved attempts are ordered numerically; Live remains at the end for navigation.
     availableRuns = [...data.runs.filter((name) => name !== "live"), "live"];
     updateNavButtons();
+    updateRunInfo();
   } catch (err) {
     showError(`Could not list runs: ${err.message}`, loadRuns);
   } finally {
@@ -378,6 +384,7 @@ async function selectRun(name, updateHistory = true) {
   const request = ++runRequest;
   currentRun = name;
   updateNavButtons();
+  updateRunInfo();
   openId = null;
   clearError();
   loadingRun = name !== "live" || !liveItems.size;
@@ -390,19 +397,16 @@ async function selectRun(name, updateHistory = true) {
   }
 
   if (name === "live") {
-    $("runBadge").className = "run-badge live";
-    $("runBadge").textContent = "● Live Stream";
-    $("runDesc").textContent = "Active WebSocket evaluation";
     $("jumpLive").hidden = true;
     await loadState();
   } else {
-    $("runBadge").className = "run-badge archive";
-    $("runBadge").textContent = "Snapshot: " + name;
-    $("runDesc").textContent = `${RUN_LABELS[name] || name} (Read-only archive)`;
     $("jumpLive").hidden = false;
     try {
       const data = await fetchJson(`/api/runs/${encodeURIComponent(name)}?full=true`);
       if (request !== runRequest) return;
+      if (data.metadata) runMetadata[name] = data.metadata;
+      updateNavButtons();
+      updateRunInfo();
       loadingRun = false;
       showItems(data.items);
     } catch (err) {
@@ -435,6 +439,9 @@ document.addEventListener("keydown", (e) => {
 });
 
 function applySnapshot(snapshot) {
+  if (snapshot.metadata) runMetadata.live = snapshot.metadata;
+  updateNavButtons();
+  updateRunInfo();
   liveRevision++;
   liveItems.clear();
   snapshot.items.forEach((item) => liveItems.set(item.id, item));

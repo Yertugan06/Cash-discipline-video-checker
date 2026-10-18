@@ -8,6 +8,7 @@ from pathlib import Path
 
 import httpx
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from backend.media import VIDEO_SUFFIXES
@@ -110,7 +111,9 @@ def test_upload_streams_status_changes_and_final_verdict_over_websocket(tmp_path
     labels.write_text(json.dumps({"original_id": "X-1", "organizer_verdict": "no_violation"}))
     client = make_client(tmp_path, fake, labels=labels)
     with client, client.websocket_connect("/ws") as ws:
-        assert ws.receive_json() == {"type": "snapshot", "items": []}
+        snapshot = ws.receive_json()
+        assert snapshot["type"] == "snapshot" and snapshot["items"] == []
+        assert snapshot["metadata"]["attempt_prefix"] is None
         response = client.post(
             "/api/upload", files=[("files", ("X-1.mov", b"fake-bytes", "video/quicktime"))]
         )
@@ -132,6 +135,18 @@ def test_upload_rejects_non_video(tmp_path):
     with make_client(tmp_path, FakeChecker()) as client:
         response = client.post("/api/upload", files=[("files", ("a.avi", b"x", "video/avi"))])
     assert response.status_code == 415
+
+
+def test_completed_upload_replays_after_gateway_restart(tmp_path):
+    state = tmp_path / "state.live.json"
+    with make_client(tmp_path, FakeChecker(), state_file=state) as client:
+        with client.websocket_connect("/ws") as ws:
+            ws.receive_json()
+            client.post("/api/upload", files=[("files", ("t1.mp4", b"0123", "video/mp4"))])
+            item = receive_until_finished(ws, 1)["t1.mp4"]
+    with make_client(tmp_path, FakeChecker(), state_file=state) as restarted:
+        response = restarted.get(f"/api/items/{item['id']}/video")
+    assert response.status_code == 200 and response.content == b"0123"
 
 
 def test_every_accepted_suffix_has_a_media_type():
@@ -316,7 +331,8 @@ def test_compare_lists_saved_runs_and_serves_them_without_evidence(tmp_path):
         unknown = client.get("/api/runs/..%2F..%2Fetc").status_code
         page = client.get("/compare")
         run_full = client.get("/api/runs/before-fix?full=true").json()
-        assert run_full == {"name": "before-fix", "items": saved}
+        assert run_full["name"] == "before-fix" and run_full["items"] == saved
+        assert run_full["metadata"]["attempt_prefix"] is None
     assert names == ["live", "before-fix"]
     assert run["items"] == [
         {
@@ -331,7 +347,7 @@ def test_compare_lists_saved_runs_and_serves_them_without_evidence(tmp_path):
             ],
         }
     ]
-    assert live == {"name": "live", "items": []}
+    assert live["name"] == "live" and live["items"] == []
     assert unknown == 404
     assert page.status_code == 200 and "Compare runs" in page.text
 
@@ -397,7 +413,30 @@ def test_saved_runs_exclude_the_active_state_and_reserved_live_name(tmp_path):
     (tmp_path / "state.live.json").write_text("[]")
     (tmp_path / "state.saved.json").write_text("[]")
     with make_client(tmp_path, FakeChecker(), state_file=state) as client:
-        assert client.get("/api/runs").json() == {"runs": ["live", "saved"]}
+        assert client.get("/api/runs").json()["runs"] == ["live", "saved"]
+
+
+def test_attempt_metadata_preserves_legacy_runs_and_orders_real_prefixes(tmp_path):
+    state = tmp_path / "state.json"
+    for name in ("a23-synthetic", "a9-baseline", "legacy"):
+        (tmp_path / f"state.{name}.json").write_text("[]")
+    meta = {"attempt_prefix": "a23", "title": "Synthetic videos", "source_commit": "4a3b9ea"}
+    (tmp_path / "state.a23-synthetic.meta.json").write_text(json.dumps(meta))
+    (tmp_path / "state.live.meta.json").write_text(json.dumps({"attempt_prefix": "A21"}))
+    app = make_client(tmp_path, FakeChecker(), state_file=state).app
+    endpoints = {route.path: route.endpoint for route in app.routes}
+    data = endpoints["/api/runs"]()
+    assert data["runs"] == ["live", "legacy", "a9-baseline", "a23-synthetic"]
+    assert data["metadata"]["legacy"]["attempt_prefix"] is None
+    assert data["metadata"]["a9-baseline"]["attempt_prefix"] == "A9"
+    assert data["metadata"]["a23-synthetic"]["label"] == "A23 · Synthetic videos"
+    assert endpoints["/api/state"]()["metadata"]["attempt_prefix"] == "A21"
+    run = endpoints["/api/runs/{name}"]("a23-synthetic")
+    assert run["items"] == [] and run["metadata"]["source_commit"] == "4a3b9ea"
+    (tmp_path / "state.a23-synthetic.meta.json").write_text('{"attempt_prefix": "A23x"}')
+    with pytest.raises(HTTPException) as error:
+        endpoints["/api/runs/{name}"]("a23-synthetic")
+    assert error.value.status_code == 500
 
 
 def test_corrupt_saved_run_returns_an_explicit_error(tmp_path):

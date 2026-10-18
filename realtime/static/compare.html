@@ -65,6 +65,7 @@
     <label><input type="checkbox" id="onlyDiff"> Only clips where the selected runs disagree</label>
     <label><input type="checkbox" id="onlyWrong"> Only clips some run gets wrong</label>
   </div>
+  <p class="muted" id="liveSource"></p>
   <section class="stats" id="stats"></section>
   <div class="scroll"><table><thead id="head"></thead><tbody id="body"></tbody></table></div>
   <p class="muted">Earlier runs are files <code>state.&lt;name&gt;.json</code> next to the gateway's state file; copy the live <code>state.json</code> to such a name before starting a new run to keep it.</p>
@@ -74,6 +75,9 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const VERDICT = { violation: "нарушение", no_violation: "без нарушения" };
 const runs = new Map(); // run name -> Map(clip name -> compact item)
+const metadata = {};
+const runLabel = (name) => metadata[name]?.label || `Legacy / unknown · ${name}`;
+const runSource = (name) => `run: ${name} · source: ${metadata[name]?.source_commit || "not recorded"}`;
 let names = [];
 let selected = [];
 
@@ -94,6 +98,7 @@ async function fetchRun(name) {
   const res = await fetch(`/api/runs/${encodeURIComponent(name)}`);
   if (!res.ok) throw new Error(`${name}: ${res.status}`);
   const data = await res.json();
+  if (data.metadata) metadata[name] = data.metadata;
   runs.set(name, new Map(data.items.map((i) => [i.name, i])));
 }
 
@@ -113,15 +118,16 @@ const clipNumber = (n) => Number((n.match(/(\d+)/) ?? [0, 1e6])[1]);
 
 function render() {
   const shown = selected.filter((n) => runs.has(n));
+  $("liveSource").textContent = `Current feed: ${runLabel("live")} · ${runSource("live")}`;
   $("stats").innerHTML = shown.map((n) => {
     const s = score(runs.get(n));
-    return `<div class="stat"><h2>${esc(n)}</h2><div class="grid3">
-      <div><div class="v">${s.correct}/${s.done}</div><div class="k">match label</div></div>
-      <div><div class="v">${s.falseAlarm}/${s.clean}</div><div class="k">false alarms</div></div>
-      <div><div class="v">${s.missed}/${s.viol}</div><div class="k">missed</div></div></div>
-      <div class="k">${s.done} of ${s.total} clips scored</div></div>`;
+    return `<div class="stat"><h2>${esc(runLabel(n))}</h2><div class="k">${esc(runSource(n))}</div><div class="grid3">
+      <div><div class="v">${s.done ? `${s.correct}/${s.done}` : "—"}</div><div class="k">match label</div></div>
+      <div><div class="v">${s.clean ? `${s.falseAlarm}/${s.clean}` : "—"}</div><div class="k">false alarms</div></div>
+      <div><div class="v">${s.viol ? `${s.missed}/${s.viol}` : "—"}</div><div class="k">missed</div></div></div>
+      <div class="k">${s.done ? `${s.done} of ${s.total} clips scored` : `Not scored · ${s.total} clips; no completed labelled results`}</div></div>`;
   }).join("");
-  $("head").innerHTML = `<tr><th>Clip</th><th>Label</th>${shown.map((n) => `<th>${esc(n)}</th>`).join("")}</tr>`;
+  $("head").innerHTML = `<tr><th>Clip</th><th>Label</th>${shown.map((n) => `<th>${esc(runLabel(n))}</th>`).join("")}</tr>`;
   const clips = new Set();
   shown.forEach((n) => runs.get(n).forEach((_, clip) => clips.add(clip)));
   const rows = [...clips].sort((a, b) => clipNumber(a) - clipNumber(b) || a.localeCompare(b)).map((clip) => {
@@ -150,8 +156,14 @@ function cell(c, label) {
 }
 
 function renderRunPicker() {
-  $("runs").innerHTML = "<span class=\"muted\">Runs:</span>" + names.map((n) =>
-    `<label><input type="checkbox" value="${esc(n)}" ${selected.includes(n) ? "checked" : ""}> ${esc(n)}</label>`).join("");
+  const groups = new Map();
+  for (const name of names) {
+    const prefix = metadata[name]?.attempt_prefix || "Legacy / unknown";
+    if (!groups.has(prefix)) groups.set(prefix, []);
+    groups.get(prefix).push(name);
+  }
+  $("runs").innerHTML = [...groups].map(([prefix, group]) => `<div><strong>${esc(prefix)}</strong> ${group.map((n) =>
+    `<label title="${esc(runSource(n))}"><input type="checkbox" value="${esc(n)}" ${selected.includes(n) ? "checked" : ""}> ${esc(runLabel(n))}${n === "live" ? " (live)" : ""}</label>`).join(" ")}</div>`).join("");
 }
 
 $("runs").addEventListener("change", async (e) => {
@@ -177,16 +189,23 @@ function connect() {
   ws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     const items = msg.type === "snapshot" ? msg.items : [msg.item];
-    if (msg.type === "snapshot") runs.set("live", new Map());
+    if (msg.type === "snapshot") {
+      if (msg.metadata) metadata.live = msg.metadata;
+      runs.set("live", new Map());
+      renderRunPicker();
+    }
     items.forEach((it) => runs.get("live").set(it.name, compact(it)));
     render();
   };
 }
 
 fetch("/api/runs").then((r) => r.json()).then(async (data) => {
+  Object.assign(metadata, data.metadata || {});
   names = data.runs;
+  names.sort((a, b) => Number(metadata[a]?.attempt_prefix?.slice(1) || -1) - Number(metadata[b]?.attempt_prefix?.slice(1) || -1));
   const remembered = load("compare.runs", null);
-  selected = (remembered ?? names).filter((n) => names.includes(n));
+  const linked = new URLSearchParams(location.search).getAll("run");
+  selected = (linked.length ? linked : remembered ?? names).filter((n) => names.includes(n));
   if (!selected.length) selected = names.slice();
   renderRunPicker();
   await Promise.all(selected.filter((n) => n !== "live").map((n) => fetchRun(n).catch((err) => console.error(err))));

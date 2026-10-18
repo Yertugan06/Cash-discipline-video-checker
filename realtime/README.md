@@ -61,6 +61,8 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
   folder before starting the next run.
 - The page loads `/api/state` over plain HTTP on open, then follows `/ws`. While the socket
   is down it re-reads `/api/state` every 3 s.
+- With `STATE_FILE` configured, uploaded replay videos persist in its sibling `uploads/`
+  directory across gateway restarts. Remove old uploads explicitly when no saved run needs them.
 - On the live page, choose a saved run in **Run / Attempt**, or use **Previous / Next**
   (left/right arrow keys outside form fields and the video player). Previous from Live opens
   the most recently saved snapshot. **Back to Live** returns to the current feed; live updates
@@ -184,3 +186,35 @@ out-of-order responses, saved-run links, offline results, and live updates while
 Annotation tests also cover old-file compatibility, review provenance, object feedback, invalid
 inputs, one-clip detection, concurrent browser edits during saving, retry/conflict handling,
 and navigation with unfinished notes.
+
+## Attempt metadata
+
+Saved item arrays remain `state.<run>.json`. Add an optional adjacent
+`state.<run>.meta.json` with real provenance:
+
+```json
+{"attempt_prefix":"A23","title":"Synthetic videos","source_commit":"4a3b9ea"}
+```
+
+Use `state.live.meta.json` for the active feed, regardless of the `STATE_FILE` name.
+Copy its metadata when archiving a live run. A run ID starting with `a23-` can supply
+its own prefix if no sidecar prefix exists; other legacy IDs stay **Legacy / unknown**.
+No prefix is inferred from the running checkout. Metadata files are excluded from run
+items. Invalid metadata produces an explicit error. Runs sort by numeric attempt,
+retaining file order within one attempt; the live navigator keeps the current feed last.
+
+`/api/runs` retains `runs: string[]` and adds `metadata: {runId: metadata}`.
+`/api/runs/{name}`, `/api/state`, and WebSocket snapshots add `metadata` alongside
+unchanged item payloads. Metadata includes `attempt_prefix` (string or null), `title`,
+`source_commit` (string or null), and a generated `label`; extra sidecar keys survive.
+
+The existing `evaluation.json` audit may additionally include top-level
+`attempt_prefix`, `source_commit`, and `attempt_reports`, an array of:
+
+```json
+{"attempt_prefix":"A23","title":"Synthetic videos","source_commit":"4a3b9ea","status":"completed","kind":"synthetic","summary":"Actual result summary, including any unscored limits.","runs":["a23-synthetic"]}
+```
+
+Reports render as text and link to `/compare?run=<run>`. Older audit files still render.
+Synthetic or other unlabelled runs show **Not scored**; publishing a report does not
+invent organizer labels, accuracy scores, or future attempts.

@@ -53,6 +53,8 @@
   </header>
   <p id="status" role="status">Loading published evaluation…</p>
   <section id="report" hidden>
+    <p id="reportSource" class="muted"></p>
+    <section id="attemptReports" hidden aria-label="Attempt reports"></section>
     <h2>Organizer verdict agreement</h2>
     <p class="muted">Counts by unique video SHA. Organizer labels and timestamps do not verify the reason.</p>
     <p id="samples" class="muted"></p>
@@ -129,6 +131,24 @@ function render(data) {
       !data.clips.every((clip) => clip && typeof clip === "object" && !Array.isArray(clip))) {
     throw new Error("Unsupported or invalid evaluation audit schema.");
   }
+  $("reportSource").textContent = `Published audit: ${text(data.attempt_prefix ?? "Legacy / unknown")} · source: ${text(data.source_commit)}`;
+  const reports = list(data.attempt_reports).filter((report) => report && typeof report === "object");
+  reports.sort((a, b) => Number(String(a.attempt_prefix).match(/^A(\d+)$/i)?.[1] ?? -1) - Number(String(b.attempt_prefix).match(/^A(\d+)$/i)?.[1] ?? -1));
+  for (const report of reports) {
+    const block = node("article", undefined, "caveats");
+    block.append(node("h2", `${text(report.attempt_prefix)} · ${text(report.title)}`));
+    block.append(node("p", `${text(report.kind)} · ${text(report.status)} · source: ${text(report.source_commit)}`, "muted"));
+    block.append(node("p", text(report.summary)));
+    const links = node("p");
+    for (const run of list(report.runs).filter((run) => typeof run === "string")) {
+      const link = node("a", `Compare ${run}`);
+      link.href = `/compare?run=${encodeURIComponent(run)}`;
+      links.append(link, document.createTextNode(" "));
+    }
+    block.append(links);
+    $("attemptReports").append(block);
+  }
+  $("attemptReports").hidden = !reports.length;
   const summary = data.summary;
   $("samples").textContent = `${count(summary.unique_sha_groups)} unique videos · ${count(summary.organizer_samples)} organizer files · ${count(summary.duplicate_samples)} duplicate samples`;
   for (const [key, label] of [["TP", "True positives"], ["TN", "True negatives"], ["FP", "False positives"], ["FN", "False negatives"], ["missing", "Missing predictions"], ["invalid", "Invalid predictions"], ["failed", "Failed predictions"], ["label_conflict", "Label conflicts"]]) {

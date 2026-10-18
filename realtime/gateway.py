@@ -259,7 +259,12 @@ def create_app(
     config = settings or GatewaySettings.from_env()
     labels = load_labels(config.labels_path)
     hub = Hub(state_file=config.state_file)
-    upload_dir = Path(tempfile.mkdtemp(prefix="rt-gateway-"))
+    upload_dir = (
+        config.state_file.parent / "uploads"
+        if config.state_file is not None
+        else Path(tempfile.mkdtemp(prefix="rt-gateway-"))
+    )
+    upload_dir.mkdir(parents=True, exist_ok=True)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -279,8 +284,7 @@ def create_app(
                 task.cancel()
 
     async def resume(runner: Runner, loaded: list[Item]) -> None:
-        """Items a previous gateway process left unfinished: folder clips go back
-        in the queue from scratch; uploads are gone (temp files), so they fail."""
+        """Requeue interrupted folder jobs; mark interrupted uploads failed."""
         for item in loaded:
             if item.status in ("done", "failed"):
                 continue
@@ -329,10 +333,39 @@ def create_app(
                 p
                 for p in config.state_file.parent.glob("state.*.json")
                 if p != config.state_file and p.name != "state.live.json"
+                and not p.name.endswith(".meta.json")
             ),
             key=lambda p: (p.stat().st_mtime, p.name),
         )
         return {p.name[len("state.") : -len(".json")]: p for p in files}
+
+    def run_metadata(name: str) -> dict:
+        data = {}
+        path = config.state_file.parent / f"state.{name}.meta.json" if config.state_file else None
+        if path is not None and path.is_file():
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                if not isinstance(data, dict):
+                    raise ValueError("Expected a metadata object")
+                for key in ("attempt_prefix", "title", "source_commit"):
+                    if data.get(key) is not None and not isinstance(data[key], str):
+                        raise ValueError(f"Expected a string for {key}")
+            except (OSError, ValueError) as exc:
+                raise HTTPException(500, f"Could not read run metadata: {name}") from exc
+        match = re.match(r"^(a\d+)(?:-|$)", name, re.IGNORECASE)
+        prefix = data.get("attempt_prefix") or (match.group(1) if match else None)
+        if prefix is not None:
+            if not re.fullmatch(r"A\d+", prefix, re.IGNORECASE):
+                raise HTTPException(500, f"Invalid attempt prefix for run: {name}")
+            prefix = f"A{int(prefix[1:])}"
+        title = data.get("title") or ("Live Stream" if name == "live" else name)
+        return {
+            **data,
+            "attempt_prefix": prefix,
+            "title": title,
+            "source_commit": data.get("source_commit"),
+            "label": f"{prefix or 'Legacy / unknown'} · {title}",
+        }
 
     def run_rows(name: str) -> list[dict]:
         if name == "live":
@@ -353,14 +386,20 @@ def create_app(
 
     @app.get("/api/runs")
     def runs() -> dict:
-        return {"runs": ["live", *saved_runs()]}
+        names = ["live", *saved_runs()]
+        metadata = {name: run_metadata(name) for name in names}
+        saved = sorted(names[1:], key=lambda name: (
+            int(metadata[name]["attempt_prefix"][1:]) if metadata[name]["attempt_prefix"] else -1
+        ))
+        return {"runs": ["live", *saved], "metadata": metadata}
 
     @app.get("/api/runs/{name}")
     def run(name: str, full: bool = False) -> dict:
         rows = run_rows(name)
+        metadata = run_metadata(name)
         if full:
-            return {"name": name, "items": rows}
-        return {"name": name, "items": [compact(row) for row in rows]}
+            return {"name": name, "items": rows, "metadata": metadata}
+        return {"name": name, "items": [compact(row) for row in rows], "metadata": metadata}
 
     @app.get("/api/config")
     def gateway_config() -> dict:
@@ -371,7 +410,7 @@ def create_app(
 
     @app.get("/api/state")
     def state() -> dict:
-        return hub.snapshot()
+        return {**hub.snapshot(), "metadata": run_metadata("live")}
 
     @app.post("/api/upload", status_code=202)
     async def upload(files: list[UploadFile]) -> dict:
@@ -389,8 +428,7 @@ def create_app(
             with path.open("xb") as output:
                 while chunk := await upload_file.read(1024 * 1024):
                     output.write(chunk)
-            # Kept for the replay player. shortcut: temp files grow until the gateway restarts,
-            # add a cap if this runs for more than a demo session.
+            # shortcut: replay uploads need an explicit retention cap for long-lived service use.
             await app.state.runner.enqueue(item, path, delete_after=False)
             ids.append(item.id)
         return {"queued": ids}
@@ -613,7 +651,7 @@ def create_app(
     @app.websocket("/ws")
     async def ws(socket: WebSocket) -> None:
         await socket.accept()
-        await socket.send_json(hub.snapshot())
+        await socket.send_json(state())
         hub.sockets.add(socket)
         try:
             while True:
