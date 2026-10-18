@@ -23,12 +23,19 @@ MAX_FRAMES = 3
 BOX_COLOR = (255, 32, 32)
 
 
-def collect(video: Path, grounded: list[GroundedFinding]) -> list[list[EvidenceFrame]]:
-    """Return one evidence-frame list per grounded finding, same order as `grounded`."""
-    return [_frames_for(video, g) for g in grounded]
+def collect(
+    video: Path, grounded: list[GroundedFinding], last_frame_sec: float
+) -> list[list[EvidenceFrame]]:
+    """Return one evidence-frame list per grounded finding, same order as `grounded`.
+
+    `last_frame_sec` is the time of the video's last decodable frame (duration - 1/fps): findings
+    may be anchored up to the very end, where there is no frame, so later times show that frame
+    and say so in `timestamp_sec`.
+    """
+    return [_frames_for(video, g, last_frame_sec) for g in grounded]
 
 
-def _frames_for(video: Path, g: GroundedFinding) -> list[EvidenceFrame]:
+def _frames_for(video: Path, g: GroundedFinding, last_frame_sec: float) -> list[EvidenceFrame]:
     finding = g.finding
     anchor = finding.t_anchor
     times = [anchor]
@@ -37,14 +44,17 @@ def _frames_for(video: Path, g: GroundedFinding) -> list[EvidenceFrame]:
         times.append(nearest)
     frames: list[EvidenceFrame] = []
     for t in times[:MAX_FRAMES]:
+        shown = min(t, last_frame_sec)
+        if any(abs(f.timestamp_sec - shown) < 1e-6 for f in frames):
+            continue
         try:
-            jpeg = extract_jpeg(video, t)
+            jpeg = extract_jpeg(video, shown)
         except MediaError:
             continue
         if t == anchor and finding.boxes:
             jpeg = draw_boxes(jpeg, finding.boxes)
         frames.append(
-            EvidenceFrame(timestamp_sec=t, image_base64=base64.b64encode(jpeg).decode("ascii"))
+            EvidenceFrame(timestamp_sec=shown, image_base64=base64.b64encode(jpeg).decode("ascii"))
         )
     if not frames:
         raise MediaError(f"Could not extract an evidence frame for rule {finding.rule_id}")

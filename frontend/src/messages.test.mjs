@@ -10,9 +10,10 @@ test('verdict texts are verbatim from task.md §4', () => {
 });
 
 test('citation badge shows verified only for citation_status === "verified"', () => {
-  assert.deepEqual(citationBadge('verified', 'ru'), { label: 'проверено', verified: true });
-  assert.deepEqual(citationBadge('needs_review', 'ru'), { label: 'требует проверки', verified: false });
-  // Anything unexpected (missing, null, a typo) must fail safe to "needs review",
+  assert.deepEqual(citationBadge('verified', 'ru'), { label: 'проверено', verified: true, invalid: false });
+  assert.deepEqual(citationBadge('pending', 'ru'), { label: 'ожидает проверки', verified: false, invalid: false });
+  assert.deepEqual(citationBadge('invalid', 'ru'), { label: 'ссылка или трактовка недействительна', verified: false, invalid: true });
+  // Anything unexpected (missing, null, a typo) must fail safe to pending,
   // never be presented as a confirmed citation (AGENTS.md rule 6).
   assert.equal(citationBadge(undefined, 'ru').verified, false);
   assert.equal(citationBadge(null, 'en').verified, false);

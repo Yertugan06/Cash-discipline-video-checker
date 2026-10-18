@@ -65,8 +65,8 @@ Client --POST .mov--> API --> Worker (1 GPU job at a time, FIFO)
 | Worker (`backend/worker.py`) | One job at a time from a FIFO queue; other uploads wait |
 | Orchestration (`backend/pipeline.py`) | probe, plan, detect, rank, ground, evidence, serialize |
 | Detector (`backend/f1/`) | Perception, calibration, events and rules described above |
-| Rule thresholds (`config/f1_codex.yaml`) | Generated from `data/Cash_Discipline_Cases_Rules.xlsx` by `scripts/convert_codex.py` |
-| Knowledge Pack (`backend/knowledge.py`, `knowledge/`) | Deterministic `rule_id -> norm_ids` lookup; a citation is `needs_review` until a human verifies it on adilet.zan.kz. Built by `scripts/build_knowledge.py` |
+| Rule thresholds (`config/f1_codex.yaml`) | `rules` generated from `knowledge/rulebook.yaml` by `scripts/build_knowledge.py` |
+| Knowledge Pack (`backend/knowledge.py`, `knowledge/`) | Rule lifecycle and deterministic `rule_id -> norm_ids` lookup; citations carry KZ document metadata and `verified`/`pending`/`invalid` status. F1 startup checks codex, evaluator IDs, and enabled rules. Built by `scripts/build_knowledge.py` |
 | Evidence (`backend/evidence.py`) | Frames from the original video at the finding's anchor time, never from the detector's sampled frames |
 | Serializer (`backend/serialize.py`) | Maps `GroundedFinding` to the jury's `Violation` shape |
 | Live gateway (`realtime/`) | Optional: feeds a folder of videos through the API one by one and streams verdicts over a WebSocket |

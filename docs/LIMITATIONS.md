@@ -12,8 +12,8 @@ has not been measured yet; nothing here is invented.
 The task brief is explicit that a missed violation is worse than a false
 alarm (task.md FAQ 16: "ложных срабатываний должно быть как можно меньше,
 пропуск нарушения недопустим"). The pipeline is tuned accordingly: a finding
-is reported whenever the rules engine's conditions are met on the observed
-timeline, even when its citation is still `needs_review` (see "Citation
+is reported whenever an enabled rule's conditions are met on the observed
+timeline, even when its citation is still `pending` (see "Citation
 status" below) — the alternative, suppressing a real finding until a human
 has verified its law citation, would turn a detection miss into a legal
 one. This means **false positives are possible and expected to be more
@@ -65,18 +65,20 @@ one; this is a known ceiling of one L4 GPU, not a bug.
 
 Every displayed norm carries a `citation_status`: `"verified"` only if a
 human has checked it against adilet.zan.kz and recorded that in
-`knowledge/norms.json` (`verified_by`, `verified_at`); otherwise it is
-`"needs_review"` and the UI shows the badge "требует проверки" next to it.
+`knowledge/norms.json` (`verified_by`, `verified_at`); `"pending"` means it
+still needs review and `"invalid"` means a known citation conflict. The UI
+shows each state separately.
 **An AI-produced result never marks a citation `verified` on its own**
 — the violation is still reported (recall-first policy above), but its legal
 grounding is never presented as confirmed until a person has done that check.
 As of this writing every norm in `knowledge/norms.json` still has
-`human_verified: false`. The screen-lock citation is still an open conflict:
+`citation_status: "pending"`. The screen-lock citation is still an open conflict:
 `53-71-9` in the kit vs `48-71-9` in the R1 workbook (see
 `knowledge/README.md`). Every citation currently shows as
-"требует проверки" in the UI. TODO(team): complete the human verification
+"ожидает проверки" in the UI. TODO(team): complete the human verification
 pass against adilet.zan.kz and record `verified_by`/`verified_at` in
-`knowledge/norms.json` before the freeze (G4 checklist item 4).
+`knowledge/norms.json` before the freeze. Rule-to-clause strength is recorded
+per rule because one clause can support different rules with different strength.
 
 ## Camera angle
 

@@ -61,13 +61,31 @@ A kind of violation, e.g. cash left unattended while the cashier is away.
 _Avoid_: mechanism, mechanism class, category
 
 **Rule**:
-Our machine-checkable definition of one violation type: an ID such as `L-NO-CASH-ON-LEAVE`, an
-observable condition, parameters, and the norms it cites.
+Our machine-checkable definition of one visible breach: an ID such as `L-NO-CASH-ON-LEAVE`, an
+observable condition, parameters, and the norms it cites. Each rule reports one violation type.
 _Avoid_: check, detector
 
+**Act**:
+A Kazakhstan legal act (e.g. NBRK resolution № 231) whose clauses can be cited. Only acts in force
+count.
+_Avoid_: law, document (alone)
+
 **Norm**:
-One clause of a legal act, e.g. `231-20-2`, cited as the basis for a rule.
+One clause of an act, e.g. `231-20-2`, quoted verbatim and cited as the basis for a rule.
 _Avoid_: law, regulation, code (alone)
+
+**Requirement**:
+What a norm obliges the cashier to do or not do, in plain words.
+_Avoid_: rule (for the legal side)
+
+**Visible breach**:
+What an overhead camera would show if a requirement were not met, together with what it cannot show.
+_Avoid_: trigger, symptom
+
+**Rulebook**:
+The one record of acts, norms, requirements, visible breaches and rules, from which everything the
+service reports about the law is generated.
+_Avoid_: codex, rule table, workbook
 
 **Legal-citation match**:
 Whether a finding cites the same clause as the human annotation's first norm. Says nothing about

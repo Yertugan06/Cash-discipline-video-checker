@@ -129,6 +129,7 @@ class Finding(BaseModel):
     support_t: list[float]  # sampled times that satisfied the condition
     facts: dict[str, str | int | float | bool]  # template slots, e.g. away_s, object
     rank_score: float  # persistence-based; ranking frozen on dev
+    detection_confidence: float | None = Field(default=None, ge=0, le=1)
     # Objects behind the finding at t_anchor, drawn on the anchor evidence frame.
     # Optional: the VLM detector reports no geometry.
     boxes: list[EvidenceBox] = Field(default_factory=list)
@@ -151,18 +152,27 @@ class Detector(Protocol):
 
 class NormRef(BaseModel):
     norm_id: str
+    jurisdiction: Literal["KZ"]
+    document_title: str
+    issuing_authority: str
     act: str
+    act_number: str
+    adopted_on: date
     punkt: str
     quote: str
     url: HttpUrl
-    strength: Literal["direct", "indirect"]
-    human_verified: bool
+    citation_status: Literal["verified", "pending", "invalid"]
     verified_by: str | None = None
     verified_at: date | None = None
 
 
+RuleScope = Literal["detector", "jury"]
+
+
 class RuleEntry(BaseModel):
     rule_id: str
+    business_status: Literal["confirmed", "candidate"]
+    implementation_status: Literal["implemented", "unimplemented"]
     title_ru: str
     title_en: str
     mechanism: str
@@ -171,14 +181,19 @@ class RuleEntry(BaseModel):
     description_template: str  # slots from Finding.facts plus {t}
     visibility_caveat: str  # what the video cannot establish
     norm_ids: list[str]  # first = primary citation
-    enabled: bool
+    citation_strengths: dict[str, Literal["direct", "indirect", "weak"]]
+    enabled: bool  # the detector runs it
+    disabled_reason: str | None = None
+    # Enabled, and every cited norm and its act are human-verified (knowledge/rulebook.yaml).
+    # Only these are reported under RULE_SCOPE=jury.
+    jury_eligible: bool = False
 
 
 class GroundedFinding(BaseModel):
     finding: Finding
     rule: RuleEntry
     norms: list[NormRef]
-    citation_status: Literal["verified", "needs_review"]
+    citation_status: Literal["verified", "pending", "invalid"]
 
 
 # ---------------------------------------------------------------------------
@@ -203,7 +218,15 @@ class Violation(BaseModel):
     source_url: str | None = None
     source_quote: str | None = None  # verbatim norm text for the UI norm block
     strength: str | None = None
-    citation_status: str | None = None
+    citation_status: Literal["verified", "pending", "invalid"] | None = None
+    jurisdiction: str | None = None
+    document_title: str | None = None
+    issuing_authority: str | None = None
+    act_number: str | None = None
+    adopted_on: date | None = None
+    detection_confidence: float | None = Field(default=None, ge=0, le=1)
+    business_status: Literal["confirmed", "candidate"] | None = None
+    implementation_status: Literal["implemented", "unimplemented"] | None = None
 
 
 class DoneJob(BaseModel):

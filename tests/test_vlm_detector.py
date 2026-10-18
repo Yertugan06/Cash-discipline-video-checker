@@ -189,6 +189,8 @@ def test_detector_runs_through_the_real_rules_module() -> None:
 
     rule = RuleEntry(
         rule_id="L-NO-CASH-ON-LEAVE",
+        business_status="confirmed",
+        implementation_status="implemented",
         title_ru="Деньги оставлены без присмотра",
         title_en="Cash left unattended",
         mechanism="cashier leaves the desk while cash is visible on it",
@@ -204,6 +206,7 @@ def test_detector_runs_through_the_real_rules_module() -> None:
         ),
         visibility_caveat="camera cannot confirm who, if anyone, is near the cash",
         norm_ids=["placeholder-norm"],
+        citation_strengths={"placeholder-norm": "direct"},
         enabled=True,
     )
 

@@ -105,18 +105,18 @@ realtime/
 
 ```text
 config/
-├── f1_codex.yaml        - rules and thresholds (from the rulebook xlsx)
+├── f1_codex.yaml        - F1 rules and thresholds (rules generated from knowledge/rulebook.yaml)
 ├── perception.yaml      - prompts, score thresholds, intervals
-├── overrides.yaml       - manual zones per video SHA-256 (empty)
-└── rule_templates.yaml  - input for scripts/convert_codex.py
+└── overrides.yaml       - manual zones per video SHA-256 (empty)
 
 knowledge/
+├── rulebook.yaml        - the one source: acts, norms, rules (law first)
 ├── rules.yaml           - canonical rules, RU/EN titles, templates
 ├── norms.json           - norm texts and adilet links
 └── README.md            - provenance and open conflicts
 
 data/                    - see data/README.md
-├── Cash_Discipline_Cases_Rules.xlsx - rulebook -> config/f1_codex.yaml
+├── Cash_Discipline_Cases_Rules.xlsx - team workbook (history for rules; camera layouts for eval)
 ├── Таблица_нарушений.xlsx           - annotation -> gt.json human
 └── prepared/videos.jsonl            - label index for realtime/
 ```
@@ -125,8 +125,8 @@ data/                    - see data/README.md
 
 ```text
 scripts/
-├── convert_codex.py     - rulebook xlsx -> config/f1_codex.yaml
-├── build_knowledge.py   - codex sources -> knowledge/
+├── convert_codex.py     - retired stub
+├── build_knowledge.py   - knowledge/rulebook.yaml -> knowledge/ + config/f1_codex.yaml rules
 ├── render_rules_doc.py  - knowledge/ -> docs/RULES.md
 ├── download_weights.py  - fetch pinned weights (+ .sh wrapper)
 ├── check_models.py      - run model adapters on synthetic pixels

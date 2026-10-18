@@ -1,135 +1,97 @@
 version: 1
 source_workbook: Cash_Discipline_Cases_Rules.xlsx
 rules:
-- id: A-DOOR-LOCK
-  family: Access
-  requirement: Door is closed and locked within ~5 s after anyone enters.
-  breach_condition: ENTER(person) and no door-close / hand-on-door event within 5
-    s while the person walks to the desk.
-  signals: Person tracker; door zone; door state; hand pose
-  min_duration_text: 5 s
-  min_duration_sec: 5.0
-  timecode_anchor: Person passes the door
-  source: NBRK 14, п.8, п.16(1)
-  source_url: https://adilet.zan.kz/rus/docs/V2000020075
-  strength: Indirect
-  status: Confirmed
-  title: Закрытие двери после входа не зафиксировано
-  description_template: В {time} с зафиксирован вход; в последующем наблюдаемом интервале
-    не обнаружены закрытая дверь или контакт руки с дверью. Фактическое запирание
-    замка по видео не определяется.
-  title_en: Door closure after entry not observed
-  description_template_en: An entry was observed at {time} s. No closed-door state
-    or hand contact with the door was detected in the subsequent observed window.
-    The physical lock cannot be verified.
-- id: A-OUTSIDER-ZONE
-  family: Access
-  requirement: Only the cashier stands in the cashier zone.
-  breach_condition: A person other than the cashier stays inside the cashier zone.
-  signals: Person tracker; zones from calibration
-  min_duration_text: 2 s
-  min_duration_sec: 2.0
-  timecode_anchor: First frame in the zone
-  source: NBRK 14, п.8; NBRK 231, п.75
-  source_url: https://adilet.zan.kz/rus/docs/V2000020075
-  strength: Indirect
-  status: Confirmed
-  title: Другой человек в рабочей зоне кассира
-  description_template: С {time} с человек, не назначенный кассиром по положению и
-    поведению, находится в рабочей зоне дольше установленного интервала. Его личность
-    и допуск не определяются.
-  title_en: Another person in the cashier work zone
-  description_template_en: From {time} s a person not assigned the cashier role by
-    position and behaviour stayed in the cashier zone beyond the rule duration. Identity
-    and permission are not determined.
-- id: A-SECOND-PERSON
-  family: Access
-  requirement: One client at a time.
-  breach_condition: Client session open and a second non-staff person hands an item
-    to the cashier.
-  signals: Sessions; handover detection
+- id: L-NO-CASH-ON-LEAVE
+  family: Leaving
+  requirement: No cash is on the desk when the cashier leaves.
+  breach_condition: EXIT(cashier) while cash is on the desk.
+  signals: Money detector; person tracker
   min_duration_text: '-'
   min_duration_sec: null
-  timecode_anchor: Second person's handover
-  source: NBRK 231, п.21, п.22
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Indirect
-  status: Confirmed
-  title: Передача предмета вторым посетителем
-  description_template: В {time} с во время открытой клиентской сессии другой посетитель
-    передал предмет кассиру или на стол.
-  title_en: Item passed by a second visitor
-  description_template_en: At {time} s another visitor passed an item to the cashier
-    or desk during an open client session.
-- id: C-ID-BEFORE-CASH
-  family: Client checks
-  requirement: Client shows an ID document before cash is accepted or issued.
-  breach_condition: First HANDOVER(client to cashier, cash) of a session with no ID_SHOWN
-    before it.
-  signals: ID card / document detector; handover
-  min_duration_text: whole session
-  min_duration_sec: null
-  timecode_anchor: First cash handover
-  source: NBRK 231, п.7, п.19 пп.1, п.31 пп.1
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
+  timecode_anchor: Cashier leaves the desk zone
+  source: Постановление № 231, п. 20 ч. 2; Постановление № 231, п. 22
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE
   strength: Direct
   status: Confirmed
-  title: Передача наличных без ранее показанного документа
-  description_template: В {time} с зафиксирована первая передача наличных в полностью
-    наблюдаемой клиентской сессии; до нее показ документа не зафиксирован.
-  title_en: Cash transfer without an earlier document display
-  description_template_en: At {time} s the first cash transfer occurred in a session
-    with a visible entry; no document display was observed earlier in that session.
-- id: C-COUNT-BEFORE-EXIT
-  family: Client checks
-  requirement: Client's cash is counted while the client is present.
-  breach_condition: EXIT(client) before COUNT_END for that client's cash.
-  signals: Counting machine running state; hand count; exit
+  title: Наличные на столе после ухода кассира
+  description_template: В {time} с кассир покинул рабочую зону; после этого на поверхности
+    стола видны наличные.
+  title_en: Cash left on the desk after the cashier leaves
+  description_template_en: At {time} s the cashier left the work area while detected
+    cash remained on the desk.
+- id: L-SAFE-LOCKED-ON-LEAVE
+  family: Leaving
+  requirement: The safe is locked before the cashier leaves.
+  breach_condition: EXIT(cashier) with no safe-locking motion after the last safe
+    use.
+  signals: Safe state; hand pose at the lock
   min_duration_text: '-'
   min_duration_sec: null
-  timecode_anchor: Client exit
-  source: NBRK 231, п.19 пп.2, п.20
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Direct
-  status: Confirmed
-  title: Уход клиента без зафиксированного пересчета
-  description_template: В {time} с клиент вышел после наблюдаемой передачи наличных;
-    для этих наличных до выхода не зафиксировано завершение пересчета.
-  title_en: Client exit without observed count completion
-  description_template_en: At {time} s a client exited after a visible cash transfer;
-    completion of counting for this cash was not observed before the exit.
-- id: C-REJECT-NOT-RETURNED
-  family: Client checks
-  requirement: A doubtful note is kept and an act drawn up; it is not returned.
-  breach_condition: Note from the machine's reject pocket handed to the client.
-  signals: Counter reject event; handover
-  min_duration_text: '-'
-  min_duration_sec: null
-  timecode_anchor: Handover to client
-  source: NBRK 231, п.59-61
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Direct
-  status: Confirmed
-  title: C-REJECT-NOT-RETURNED
-  description_template: ''
-  title_en: ''
-  description_template_en: ''
-- id: C-DETECTOR-CHECK
-  family: Client checks
-  requirement: Notes rejected by the counter are checked on the detector before re-stacking.
-  breach_condition: Rejected note re-stacked with no detector use in between.
-  signals: Detector device state; hand pose
-  min_duration_text: '-'
-  min_duration_sec: null
-  timecode_anchor: Re-stack moment
-  source: NBRK 231, п.9, п.59
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Weak
+  timecode_anchor: Cashier leaves
+  source: Постановление № 231, п. 80
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%B9%20%D0%BE%D1%82%20%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%2C
+  strength: Indirect
   status: Candidate
-  title: C-DETECTOR-CHECK
+  title: L-SAFE-LOCKED-ON-LEAVE
   description_template: ''
   title_en: ''
   description_template_en: ''
+- id: L-PC-LOCKED
+  family: Leaving
+  requirement: The computer is locked when the cashier leaves.
+  breach_condition: EXIT(cashier) while the laptop shows a working (not lock) screen.
+  signals: Screen state classifier on the laptop crop
+  min_duration_text: '-'
+  min_duration_sec: null
+  timecode_anchor: Cashier leaves the desk zone
+  source: Постановление № 53, п. 71 пп. 9)
+  source_url: https://adilet.zan.kz/rus/docs/V2600038336#z239:~:text=%D0%BF%D1%80%D0%B8%20%D0%BD%D0%B5%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F%20%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5
+  strength: Indirect
+  status: Confirmed
+  title: Рабочий экран ноутбука при уходе кассира
+  description_template: В {time} с кассир покинул рабочую зону; видимый экран ноутбука
+    классифицирован как рабочее приложение. Блокировку системы по видео подтвердить
+    нельзя.
+  title_en: Working laptop screen when the cashier leaves
+  description_template_en: At {time} s the cashier left and the visible laptop screen
+    was classified as a working application. The actual system lock cannot be verified
+    from video.
+- id: L-NO-DOCS-ON-LEAVE
+  family: Leaving
+  requirement: No documents or work devices are on the desk when the cashier leaves.
+  breach_condition: EXIT(cashier) while a document or tablet is on the desk.
+  signals: Document / tablet detector; person tracker
+  min_duration_text: '-'
+  min_duration_sec: null
+  timecode_anchor: Cashier leaves the desk zone
+  source: Постановление № 231, п. 80
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B8%20%D0%B8
+  strength: Indirect
+  status: Confirmed
+  title: Документ или планшет на столе после ухода кассира
+  description_template: В {time} с кассир покинул рабочую зону; на столе остался документ
+    или планшет.
+  title_en: Document or tablet left on the desk
+  description_template_en: At {time} s the cashier left the work area while a document
+    or tablet remained on the desk.
+- id: S-SAFE-CLOSED
+  family: Storage & desk
+  requirement: The safe is closed whenever the cashier is not using it.
+  breach_condition: Safe door open while the cashier is away from the safe zone.
+  signals: Safe door state; person tracker
+  min_duration_text: 3 s
+  min_duration_sec: 3.0
+  timecode_anchor: Cashier leaves the safe zone
+  source: Постановление № 231, п. 20 ч. 2
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%92%D1%81%D0%B5%20%D1%80%D0%B0%D0%BD%D0%B5%D0%B5%20%D0%BF%D1%80%D0%B8%D0%BD%D1%8F%D1%82%D1%8B%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5
+  strength: Direct
+  status: Confirmed
+  title: Открытый сейф без кассира рядом
+  description_template: С {time} с сейф виден открытым, а кассир находится вне зоны
+    сейфа дольше установленного интервала.
+  title_en: Open safe without the cashier nearby
+  description_template_en: From {time} s the safe appeared open and the cashier stayed
+    outside the safe zone beyond the configured rule duration.
 - id: S-CLEAN-DESK-HANDOVER
   family: Storage & desk
   requirement: When a new client enters, no cash from earlier sessions is on the desk.
@@ -138,8 +100,8 @@ rules:
   min_duration_text: '-'
   min_duration_sec: null
   timecode_anchor: Next client's entry
-  source: NBRK 231, п.20
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
+  source: Постановление № 231, п. 20 ч. 2
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE
   strength: Direct
   status: Confirmed
   title: Наличные предыдущего клиента при следующем обслуживании
@@ -156,52 +118,182 @@ rules:
   min_duration_text: '-'
   min_duration_sec: null
   timecode_anchor: Moment the stacks join
-  source: NBRK 231, п.20, п.21
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
+  source: Постановление № 231, п. 20 ч. 2; Постановление № 231, п. 21
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE
   strength: Direct
   status: Confirmed
-  title: S-NO-MERGE
+  title: Наличные нового клиента приняты, пока деньги предыдущего остаются на столе
+  description_template: В {time} с зафиксирована передача наличных нового клиента;
+    на столе остаются наличные, связанные с предыдущей наблюдаемой клиентской сессией.
+  title_en: New client cash accepted while previous-session cash remains on the desk
+  description_template_en: At {time} s a new client's cash was handed over while cash
+    tracked from a previous observed client session remained on the desk.
+- id: A-OUTSIDER-ZONE
+  family: Access
+  requirement: Only the cashier stands in the cashier zone.
+  breach_condition: A person other than the cashier stays inside the cashier zone.
+  signals: Person tracker; zones from calibration
+  min_duration_text: 2 s
+  min_duration_sec: 2.0
+  timecode_anchor: First frame in the zone
+  source: Постановление № 14, п. 16 пп. 1); Постановление № 14, п. 8 ч. 1
+  source_url: https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9
+  strength: Indirect
+  status: Confirmed
+  title: Другой человек в рабочей зоне кассира
+  description_template: С {time} с человек, не назначенный кассиром по положению и
+    поведению, находится в рабочей зоне дольше установленного интервала. Его личность
+    и допуск не определяются.
+  title_en: Another person in the cashier work zone
+  description_template_en: From {time} s a person not assigned the cashier role by
+    position and behaviour stayed in the cashier zone beyond the rule duration. Identity
+    and permission are not determined.
+- id: A-DOOR-LOCK
+  family: Access
+  requirement: Door is closed and locked within ~5 s after anyone enters.
+  breach_condition: ENTER(person) and no door-close / hand-on-door event within 5
+    s while the person walks to the desk.
+  signals: Person tracker; door zone; door state; hand pose
+  min_duration_text: 5 s
+  min_duration_sec: 5.0
+  timecode_anchor: Person passes the door
+  source: Постановление № 14, п. 16 пп. 1); Постановление № 14, п. 8 ч. 1
+  source_url: https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9
+  strength: Indirect
+  status: Confirmed
+  title: Закрытие двери после входа не зафиксировано
+  description_template: В {time} с зафиксирован вход; в последующем наблюдаемом интервале
+    не обнаружены закрытая дверь или контакт руки с дверью. Фактическое запирание
+    замка по видео не определяется.
+  title_en: Door closure after entry not observed
+  description_template_en: An entry was observed at {time} s. No closed-door state
+    or hand contact with the door was detected in the subsequent observed window.
+    The physical lock cannot be verified.
+- id: A-SECOND-PERSON
+  family: Access
+  requirement: One client at a time.
+  breach_condition: Client session open and a second non-staff person hands an item
+    to the cashier.
+  signals: Sessions; handover detection
+  min_duration_text: '-'
+  min_duration_sec: null
+  timecode_anchor: Second person's handover
+  source: Постановление № 231, п. 20 ч. 2; Постановление № 231, п. 21
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE
+  strength: Indirect
+  status: Confirmed
+  title: Передача предмета вторым посетителем
+  description_template: В {time} с во время открытой клиентской сессии другой посетитель
+    передал предмет кассиру или на стол.
+  title_en: Item passed by a second visitor
+  description_template_en: At {time} s another visitor passed an item to the cashier
+    or desk during an open client session.
+- id: C-COUNT-BEFORE-EXIT
+  family: Client checks
+  requirement: Client's cash is counted while the client is present.
+  breach_condition: EXIT(client) before COUNT_END for that client's cash.
+  signals: Counting machine running state; hand count; exit
+  min_duration_text: '-'
+  min_duration_sec: null
+  timecode_anchor: Client exit
+  source: Постановление № 231, п. 20 ч. 1
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z111:~:text=%D0%9D%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5%20%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D1%8E%D1%82%D1%81%D1%8F%20%D0%B8
+  strength: Direct
+  status: Confirmed
+  title: Уход клиента без зафиксированного пересчета
+  description_template: В {time} с клиент вышел после наблюдаемой передачи наличных;
+    для этих наличных до выхода не зафиксировано завершение пересчета.
+  title_en: Client exit without observed count completion
+  description_template_en: At {time} s a client exited after a visible cash transfer;
+    completion of counting for this cash was not observed before the exit.
+- id: C-ID-BEFORE-CASH
+  family: Client checks
+  requirement: Client shows an ID document before cash is accepted or issued.
+  breach_condition: First HANDOVER(client to cashier, cash) of a session with no ID_SHOWN
+    before it.
+  signals: ID card / document detector; handover
+  min_duration_text: whole session
+  min_duration_sec: null
+  timecode_anchor: First cash handover
+  source: Постановление № 231, п. 19 пп. 1); Постановление № 231, п. 7
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C
+  strength: Direct
+  status: Confirmed
+  title: Передача наличных без ранее показанного документа
+  description_template: В {time} с зафиксирована первая передача наличных в полностью
+    наблюдаемой клиентской сессии; до нее показ документа не зафиксирован.
+  title_en: Cash transfer without an earlier document display
+  description_template_en: At {time} s the first cash transfer occurred in a session
+    with a visible entry; no document display was observed earlier in that session.
+- id: C-DETECTOR-CHECK
+  family: Client checks
+  requirement: Notes rejected by the counter are checked on the detector before re-stacking.
+  breach_condition: Rejected note re-stacked with no detector use in between.
+  signals: Detector device state; hand pose
+  min_duration_text: '-'
+  min_duration_sec: null
+  timecode_anchor: Re-stack moment
+  source: Постановление № 231, п. 19 пп. 2)
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z445:~:text=%D1%81%20%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%BE%D0%B9%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B8%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D1%8C
+  strength: Direct
+  status: Candidate
+  title: C-DETECTOR-CHECK
   description_template: ''
   title_en: ''
   description_template_en: ''
-- id: S-SAFE-CLOSED
-  family: Storage & desk
-  requirement: The safe is closed whenever the cashier is not using it.
-  breach_condition: Safe door open while the cashier is away from the safe zone.
-  signals: Safe door state; person tracker
+- id: W-NO-PERSONAL-ITEMS
+  family: Workplace conduct
+  requirement: No personal items in the cash unit.
+  breach_condition: Coat, handbag or similar item on the cash desk.
+  signals: Object detector (coat, handbag)
   min_duration_text: 3 s
   min_duration_sec: 3.0
-  timecode_anchor: Cashier leaves the safe zone
-  source: NBRK 231, п.20
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Indirect
-  status: Confirmed
-  title: Открытый сейф без кассира рядом
-  description_template: С {time} с сейф виден открытым, а кассир находится вне зоны
-    сейфа дольше установленного интервала.
-  title_en: Open safe without the cashier nearby
-  description_template_en: From {time} s the safe appeared open and the cashier stayed
-    outside the safe zone beyond the configured rule duration.
-- id: K-COLLECTOR-DOC
-  family: Cash collection
-  requirement: The collector's accompanying document / ID is checked before the bag
-    is accepted.
-  breach_condition: HANDOVER(collector to cashier, bag) with no document shown during
-    the collector's visit.
-  signals: Document detector; role = enters carrying a bag
-  min_duration_text: '-'
-  min_duration_sec: null
-  timecode_anchor: Bag handover
-  source: NBRK 231, п.24 пп.1-2 (п.106-107 to read)
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
+  timecode_anchor: Item placed on the desk
+  source: Постановление № 231, п. 12 ч. 1
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z81:~:text=%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85%20%D0%B2%D0%B5%D1%89%D0%B5%D0%B9%2C%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85
   strength: Direct
   status: Confirmed
-  title: Быстрая передача сумки без показанного документа
-  description_template: В {time} с посетитель, вошедший с сумкой, передал ее и вскоре
-    вышел; в наблюдаемом интервале документ не обнаружен.
-  title_en: Quick bag delivery without a visible document
-  description_template_en: At {time} s a visitor who entered carrying a bag passed
-    it and soon exited. No document was detected during the observed interval.
+  title: Личная вещь на кассовом столе
+  description_template: С {time} с на поверхности кассового стола обнаружена верхняя
+    одежда или личная сумка дольше установленного интервала.
+  title_en: Personal item on the cash desk
+  description_template_en: From {time} s a coat or handbag was detected on the desk
+    surface beyond the rule duration.
+- id: W-NO-FOOD
+  family: Workplace conduct
+  requirement: No eating or drinking at the cash desk.
+  breach_condition: Food or a cup raised to the mouth at the cash desk.
+  signals: Object detector (cup, food); hand pose to face
+  min_duration_text: 1 s
+  min_duration_sec: 1.0
+  timecode_anchor: First bite or sip
+  source: Постановление № 231, п. 12 ч. 2
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0
+  strength: Weak
+  status: Confirmed
+  title: Еда или чашка поднята к голове у кассового стола
+  description_template: В {time} с рука с обнаруженной едой или чашкой поднята к области
+    головы человека у кассового стола. Фактическое употребление содержимого не определяется.
+  title_en: Food or cup raised to the head near the cash desk
+  description_template_en: At {time} s a hand holding detected food or a cup was raised
+    to the head region near the desk. Actual consumption is not determined.
+- id: W-NO-CAMERA-PHONE
+  family: Workplace conduct
+  requirement: Only communication devices without photo/video capture in the cash
+    unit.
+  breach_condition: A phone visible in the cashier's hand or on the desk.
+  signals: Object detector (phone)
+  min_duration_text: 2 s
+  min_duration_sec: 2.0
+  timecode_anchor: Phone first visible
+  source: Постановление № 231, п. 12 ч. 2
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85
+  strength: Direct
+  status: Candidate
+  title: W-NO-CAMERA-PHONE
+  description_template: ''
+  title_en: ''
+  description_template_en: ''
 - id: K-SEAL-CHECK
   family: Cash collection
   requirement: Bag and seal are inspected while the collector is present.
@@ -211,8 +303,8 @@ rules:
   min_duration_text: 5 s
   min_duration_sec: 5.0
   timecode_anchor: Collector exit
-  source: NBRK 231, п.24 пп.3-4, п.25, п.94
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
+  source: Постановление № 231, п. 24 пп. 3); Постановление № 231, п. 24 пп. 4)
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z121
   strength: Direct
   status: Confirmed
   title: Осмотр переданной сумки не зафиксирован
@@ -232,9 +324,9 @@ rules:
   min_duration_text: '-'
   min_duration_sec: null
   timecode_anchor: Bundles go into the safe
-  source: NBRK 231, п.42, п.74
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Indirect
+  source: Постановление № 231, п. 74; Постановление № 231, п. 42
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680#z220:~:text=%D0%91%D0%B0%D0%BD%D0%BA%D0%B8%20%D0%BE%D0%B1%D0%B5%D1%81%D0%BF%D0%B5%D1%87%D0%B8%D0%B2%D0%B0%D1%8E%D1%82%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85
+  strength: Weak
   status: Confirmed
   title: Перемещение пачки из открытой сумки к сейфу без пересчета
   description_template: В {time} с отслеженная пачка переместилась из области открытой
@@ -242,24 +334,6 @@ rules:
   title_en: Bundle moved from an open bag to the safe without an observed count
   description_template_en: At {time} s a tracked bundle moved from an open-bag region
     to the safe region. No count completion was observed between these actions.
-- id: L-NO-CASH-ON-LEAVE
-  family: Leaving
-  requirement: No cash is on the desk when the cashier leaves.
-  breach_condition: EXIT(cashier) while cash is on the desk.
-  signals: Money detector; person tracker
-  min_duration_text: '-'
-  min_duration_sec: null
-  timecode_anchor: Cashier leaves the desk zone
-  source: NBRK 231, п.20, п.22
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Direct
-  status: Confirmed
-  title: Наличные на столе после ухода кассира
-  description_template: В {time} с кассир покинул рабочую зону; после этого на поверхности
-    стола видны наличные.
-  title_en: Cash left on the desk after the cashier leaves
-  description_template_en: At {time} s the cashier left the work area while detected
-    cash remained on the desk.
 - id: L-NO-BAG-ON-LEAVE
   family: Leaving
   requirement: No cash bag is on the desk when the cashier leaves.
@@ -268,7 +342,7 @@ rules:
   min_duration_text: '-'
   min_duration_sec: null
   timecode_anchor: Cashier leaves the desk zone
-  source: NBRK 231, п.20, п.80
+  source: 'не проверено: NBRK 231, п.20, п.80'
   source_url: https://adilet.zan.kz/rus/docs/V1900019680
   strength: Direct
   status: Confirmed
@@ -278,368 +352,39 @@ rules:
   title_en: Cash bag left on the desk
   description_template_en: At {time} s the cashier left the work area while a detected
     collection bag remained on the desk.
-- id: L-NO-DOCS-ON-LEAVE
-  family: Leaving
-  requirement: No documents or work devices are on the desk when the cashier leaves.
-  breach_condition: EXIT(cashier) while a document or tablet is on the desk.
-  signals: Document / tablet detector; person tracker
+- id: C-REJECT-NOT-RETURNED
+  family: Client checks
+  requirement: A doubtful note is kept and an act drawn up; it is not returned.
+  breach_condition: Note from the machine's reject pocket handed to the client.
+  signals: Counter reject event; handover
   min_duration_text: '-'
   min_duration_sec: null
-  timecode_anchor: Cashier leaves the desk zone
-  source: NBRK 231, п.80
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Indirect
-  status: Confirmed
-  title: Документ или планшет на столе после ухода кассира
-  description_template: В {time} с кассир покинул рабочую зону; на столе остался документ
-    или планшет.
-  title_en: Document or tablet left on the desk
-  description_template_en: At {time} s the cashier left the work area while a document
-    or tablet remained on the desk.
-- id: L-PC-LOCKED
-  family: Leaving
-  requirement: The computer is locked when the cashier leaves.
-  breach_condition: EXIT(cashier) while the laptop shows a working (not lock) screen.
-  signals: Screen state classifier on the laptop crop
-  min_duration_text: '-'
-  min_duration_sec: null
-  timecode_anchor: Cashier leaves the desk zone
-  source: NBRK 48, п.71 пп.9 (repealed; successor to confirm)
-  source_url: https://adilet.zan.kz/rus/docs/V1800016772
-  strength: Indirect
-  status: Confirmed
-  title: Рабочий экран ноутбука при уходе кассира
-  description_template: В {time} с кассир покинул рабочую зону; видимый экран ноутбука
-    классифицирован как рабочее приложение. Блокировку системы по видео подтвердить
-    нельзя.
-  title_en: Working laptop screen when the cashier leaves
-  description_template_en: At {time} s the cashier left and the visible laptop screen
-    was classified as a working application. The actual system lock cannot be verified
-    from video.
-- id: L-SAFE-LOCKED-ON-LEAVE
-  family: Leaving
-  requirement: The safe is locked before the cashier leaves.
-  breach_condition: EXIT(cashier) with no safe-locking motion after the last safe
-    use.
-  signals: Safe state; hand pose at the lock
-  min_duration_text: '-'
-  min_duration_sec: null
-  timecode_anchor: Cashier leaves
-  source: NBRK 231, п.20, п.78
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Indirect
-  status: Candidate
-  title: L-SAFE-LOCKED-ON-LEAVE
-  description_template: ''
-  title_en: ''
-  description_template_en: ''
-- id: W-NO-PERSONAL-ITEMS
-  family: Workplace conduct
-  requirement: No personal items in the cash unit.
-  breach_condition: Coat, handbag or similar item on the cash desk.
-  signals: Object detector (coat, handbag)
-  min_duration_text: 3 s
-  min_duration_sec: 3.0
-  timecode_anchor: Item placed on the desk
-  source: NBRK 231, п.12
+  timecode_anchor: Handover to client
+  source: 'не проверено: NBRK 231, п.59-61'
   source_url: https://adilet.zan.kz/rus/docs/V1900019680
   strength: Direct
   status: Confirmed
-  title: Личная вещь на кассовом столе
-  description_template: С {time} с на поверхности кассового стола обнаружена верхняя
-    одежда или личная сумка дольше установленного интервала.
-  title_en: Personal item on the cash desk
-  description_template_en: From {time} s a coat or handbag was detected on the desk
-    surface beyond the rule duration.
-- id: W-NO-FOOD
-  family: Workplace conduct
-  requirement: No eating or drinking at the cash desk.
-  breach_condition: Food or a cup raised to the mouth at the cash desk.
-  signals: Object detector (cup, food); hand pose to face
-  min_duration_text: 1 s
-  min_duration_sec: 1.0
-  timecode_anchor: First bite or sip
-  source: No explicit clause found; nearest NBRK 231, п.12
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Weak
-  status: Confirmed
-  title: Еда или чашка поднята к голове у кассового стола
-  description_template: В {time} с рука с обнаруженной едой или чашкой поднята к области
-    головы человека у кассового стола. Фактическое употребление содержимого не определяется.
-  title_en: Food or cup raised to the head near the cash desk
-  description_template_en: At {time} s a hand holding detected food or a cup was raised
-    to the head region near the desk. Actual consumption is not determined.
-- id: W-NO-CAMERA-PHONE
-  family: Workplace conduct
-  requirement: Only communication devices without photo/video capture in the cash
-    unit.
-  breach_condition: A phone visible in the cashier's hand or on the desk.
-  signals: Object detector (phone)
-  min_duration_text: 2 s
-  min_duration_sec: 2.0
-  timecode_anchor: Phone first visible
-  source: NBRK 231, п.12
-  source_url: https://adilet.zan.kz/rus/docs/V1900019680
-  strength: Direct
-  status: Candidate
-  title: W-NO-CAMERA-PHONE
+  title: C-REJECT-NOT-RETURNED
   description_template: ''
   title_en: ''
   description_template_en: ''
-clips:
-- id: X-1
-  camera_layout: Client-facing desk
-  rule_ids:
-  - C-REJECT-NOT-RETURNED
-  case_id: C-06
-  duplicate_of: null
-- id: X-2
-  camera_layout: Client-facing desk
-  rule_ids:
-  - C-ID-BEFORE-CASH
-  case_id: C-04
-  duplicate_of: null
-- id: X-3
-  camera_layout: Client-facing desk
-  rule_ids:
-  - C-ID-BEFORE-CASH
-  case_id: C-04
-  duplicate_of: null
-- id: X-4
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-CLEAN-DESK-HANDOVER
-  case_id: C-07
-  duplicate_of: null
-- id: X-5
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-CLEAN-DESK-HANDOVER
-  case_id: C-07
-  duplicate_of: null
-- id: X-8
-  camera_layout: Back-office desk
-  rule_ids:
-  - S-SAFE-CLOSED
-  case_id: C-09
-  duplicate_of: null
-- id: X-10
-  camera_layout: Back-office desk
-  rule_ids:
-  - W-NO-FOOD
-  case_id: C-18
-  duplicate_of: null
-- id: X-11
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-PC-LOCKED
-  case_id: C-15
-  duplicate_of: null
-- id: X-12
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-PC-LOCKED
-  case_id: C-15
-  duplicate_of: null
-- id: X-13
-  camera_layout: Back-office desk
-  rule_ids:
-  - K-RECOUNT-BEFORE-SAFE
-  case_id: C-11
-  duplicate_of: null
-- id: X-14
-  camera_layout: Back-office desk
-  rule_ids:
-  - K-RECOUNT-BEFORE-SAFE
-  case_id: C-11
-  duplicate_of: null
-- id: X-15
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-NO-BAG-ON-LEAVE
-  case_id: C-13
-  duplicate_of: null
-- id: X-16
-  camera_layout: Client-facing desk
-  rule_ids:
-  - K-COLLECTOR-DOC
-  - K-SEAL-CHECK
-  case_id: C-10
-  duplicate_of: null
-- id: X-17
-  camera_layout: Client-facing desk
-  rule_ids:
-  - K-COLLECTOR-DOC
-  - K-SEAL-CHECK
-  case_id: C-10
-  duplicate_of: null
-- id: X-18
-  camera_layout: Client-facing desk
-  rule_ids:
-  - A-SECOND-PERSON
-  case_id: C-03
-  duplicate_of: null
-- id: X-19
-  camera_layout: Client-facing desk
-  rule_ids:
-  - A-SECOND-PERSON
-  case_id: C-03
-  duplicate_of: null
-- id: X-20
-  camera_layout: Back-office desk
-  rule_ids:
-  - S-SAFE-CLOSED
-  case_id: C-09
-  duplicate_of: null
-- id: X-21
-  camera_layout: Back-office desk
-  rule_ids:
-  - S-SAFE-CLOSED
-  case_id: C-09
-  duplicate_of: null
-- id: X-22
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-SAFE-LOCKED-ON-LEAVE
-  case_id: C-16
-  duplicate_of: null
-- id: X-23
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-PC-LOCKED
-  case_id: C-15
-  duplicate_of: null
-- id: X-24
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-NO-DOCS-ON-LEAVE
-  - W-NO-FOOD
-  case_id: C-14
-  duplicate_of: null
-- id: X-25
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-NO-DOCS-ON-LEAVE
-  - W-NO-FOOD
-  case_id: C-14
-  duplicate_of: null
-- id: X-26
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-NO-CASH-ON-LEAVE
-  case_id: C-12
-  duplicate_of: null
-- id: X-27
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-NO-CASH-ON-LEAVE
-  case_id: C-12
-  duplicate_of: null
-- id: X-28
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-PC-LOCKED
-  case_id: C-15
-  duplicate_of: null
-- id: X-29
-  camera_layout: Back-office desk
-  rule_ids:
-  - L-PC-LOCKED
-  case_id: C-15
-  duplicate_of: null
-- id: X-30
-  camera_layout: Desk near the door
-  rule_ids:
-  - A-OUTSIDER-ZONE
-  case_id: C-02
-  duplicate_of: null
-- id: X-31
-  camera_layout: Desk near the door
-  rule_ids:
-  - A-DOOR-LOCK
-  case_id: C-01
-  duplicate_of: null
-- id: X-32
-  camera_layout: Desk near the door
-  rule_ids:
-  - A-DOOR-LOCK
-  case_id: C-01
-  duplicate_of: null
-- id: X-33
-  camera_layout: Desk near the door
-  rule_ids:
-  - A-DOOR-LOCK
-  case_id: C-01
-  duplicate_of: null
-- id: X-34
-  camera_layout: Client-facing desk
-  rule_ids:
-  - C-COUNT-BEFORE-EXIT
-  case_id: C-05
-  duplicate_of: null
-- id: X-35
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-CLEAN-DESK-HANDOVER
-  case_id: C-07
-  duplicate_of: null
-- id: X-37
-  camera_layout: Client-facing desk
-  rule_ids:
-  - C-COUNT-BEFORE-EXIT
-  case_id: C-05
-  duplicate_of: null
-- id: X-38
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-CLEAN-DESK-HANDOVER
-  case_id: C-07
-  duplicate_of: null
-- id: X-39
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-CLEAN-DESK-HANDOVER
-  case_id: C-07
-  duplicate_of: null
-- id: X-40
-  camera_layout: Desk near the door
-  rule_ids:
-  - W-NO-PERSONAL-ITEMS
-  case_id: C-17
-  duplicate_of: null
-- id: X-43
-  camera_layout: Desk near the door
-  rule_ids:
-  - W-NO-FOOD
-  case_id: C-18
-  duplicate_of: null
-- id: X-44
-  camera_layout: Desk near the door
-  rule_ids:
-  - C-DETECTOR-CHECK
-  case_id: C-19
-  duplicate_of: null
-- id: X-45
-  camera_layout: Desk near the door
-  rule_ids:
-  - C-DETECTOR-CHECK
-  case_id: C-19
-  duplicate_of: null
-- id: X-46
-  camera_layout: Desk near the door
-  rule_ids:
-  - W-NO-FOOD
-  case_id: C-18
-  duplicate_of: null
-- id: X-47
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-NO-MERGE
-  case_id: C-08
-  duplicate_of: X-4
-- id: X-48
-  camera_layout: Client-facing desk
-  rule_ids:
-  - S-CLEAN-DESK-HANDOVER
-  case_id: C-07
-  duplicate_of: X-5
+- id: K-COLLECTOR-DOC
+  family: Cash collection
+  requirement: The collector's accompanying document / ID is checked before the bag
+    is accepted.
+  breach_condition: HANDOVER(collector to cashier, bag) with no document shown during
+    the collector's visit.
+  signals: Document detector; role = enters carrying a bag
+  min_duration_text: '-'
+  min_duration_sec: null
+  timecode_anchor: Bag handover
+  source: 'не проверено: NBRK 231, п.24 пп.1-2 (п.106-107 to read)'
+  source_url: https://adilet.zan.kz/rus/docs/V1900019680
+  strength: Direct
+  status: Confirmed
+  title: Быстрая передача сумки без показанного документа
+  description_template: В {time} с посетитель, вошедший с сумкой, передал ее и вскоре
+    вышел; в наблюдаемом интервале документ не обнаружен.
+  title_en: Quick bag delivery without a visible document
+  description_template_en: At {time} s a visitor who entered carrying a bag passed
+    it and soon exited. No document was detected during the observed interval.

@@ -3,6 +3,23 @@
 Known problems that are not fixed yet. Add new ones at the top; when one is
 fixed, delete it here and say where in the commit message.
 
+## 3. F1 misses or mislabels dev violations that enabled rules cover
+
+- **Found:** 2026-10-18, GPU run of commit 0b269aa on a separate instance (port 8002,
+  `RULE_SCOPE=detector`), checked with `python -m eval.check_outputs`. The live version
+  (7ae5873) gives identical verdicts, rules and times on the same clips, so this predates it.
+- **Missed (FN):** X-17 (annotated clause points to `K-SEAL-CHECK`) and X-34
+  (`C-COUNT-BEFORE-EXIT`). Both rules are enabled and have F1 evaluators; neither fired.
+- **Right verdict, wrong type and time:** X-15 reported `W-NO-PERSONAL-ITEMS` 5 s from the
+  organizer second, X-20 `L-NO-DOCS-ON-LEAVE` 4 s from it; their annotated clause (п. 20 ч. 2)
+  points to the cash/desk rules. Verdict scores, classification and localization do not.
+- **Fine:** clean counterparts X-16, X-21, X-37 gave no violation; every response matched the
+  jury schema with JPEG evidence and filled templates; 14-37 s per clip uncached.
+- **Next:** read the per-job traces (`GET /api/v1/jobs/{id}/trace` on the test instance) to see
+  whether perception never produced the events (L2) or the rules rejected them (L3).
+- **Not run:** X-4/X-47 (lockbox, needs the human gate) and an unseen, other-angle video
+  (none exists yet; see `robustness/README.md`).
+
 ## 2. Docs whose content has not been checked against the code
 
 - **Found:** 2026-10-17, during the repo split into current and `archive/`.
@@ -33,14 +50,14 @@ fixed, delete it here and say where in the commit message.
 - **Where:** `eval/run_eval.py:47` (`to_pred_entry`), read by
   `validation/validation-evidence/harness/score.py` through `code_match()` in
   `score_utils.py`.
-- **Affects:** the "mechanism" line of the scorer report (does a predicted
+- **Affects:** the "legal-citation match" line of the scorer report (called "mechanism" before 2026-10-18) (does a predicted
   event cite the same norm as the team annotation, within ±3 s). Verdict and
   timecode metrics are not affected.
 
 **What happens.** `to_pred_entry` passes each violation's `rule_id` (for example
 `A-OUTSIDER-ZONE`) as the event `code`. `code_match()` compares norm numbers it
 extracts from both codes, and `code_key("A-OUTSIDER-ZONE")` is `None`, so no
-event ever matches. The service's mechanism score is 0/N even when it finds
+event ever matches. The service's legal-citation match is 0/N even when it finds
 the right rule at the right time.
 
 Passing the violation's `source` field instead does not work either for every
@@ -59,7 +76,7 @@ act: `code_key("14, п. 16 пп. 1)")` gives `14-16` while the annotation
 (the first entry of `norm_ids` in `knowledge/rules.yaml`, e.g. `14-16-1`) and
 pass that as `code`. Add a test in `tests/test_eval_run_eval.py` that a
 `DoneJob` with `A-DOOR-LOCK` produces a code that `code_match()` accepts
-against `п. 16 пп. 1)`. Fix this before scoring A12, otherwise its mechanism
+against `п. 16 пп. 1)`. Fix this before scoring A12, otherwise its legal-citation match
 number will read 0 and look like a real result.
 
 Caveat: the screen-lock rule cites `53-71-9` in `knowledge/rules.yaml`, and

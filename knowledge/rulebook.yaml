@@ -1,0 +1,957 @@
+# The rulebook: the one source for every rule the service may report and its legal basis.
+# Law first: Act -> Norm (verbatim clause) -> Requirement -> Visible breach -> Rule -> Violation type.
+#
+# Generated from this file (never edit those by hand; run `.venv/bin/python scripts/build_knowledge.py`):
+#   knowledge/rules.yaml, knowledge/norms.json   runtime Knowledge Pack (titles, citations, templates)
+#   config/f1_codex.yaml (`rules` only)          F1 detector thresholds and templates
+# tests/test_rulebook.py fails when any of them is stale.
+#
+# acts.<n>.in_force / norms.<id>.citation_status: set only from a human check on adilet.zan.kz
+#   (who and when in verified_by / verified_at). `--freeze` refuses enabled rules whose norms are not
+#   verified or whose act is not confirmed in force.
+# rules.<id>.norms: norm id -> strength (direct | indirect | weak); the first entry is the primary citation.
+# rules.<id>.unverified_reference: where the team thinks a basis might be; never shown as a citation.
+version: 1
+acts:
+  '231':
+    document_title: Об утверждении Правил осуществления кассовых операций и операций по инкассации банкнот,
+      монет и ценностей в банках второго уровня, филиалах банков-нерезидентов Республики Казахстан, Национальном
+      операторе почты и юридических лицах, исключительной деятельностью которых является инкассация банкнот,
+      монет и ценностей
+    issuing_authority: Правление Национального Банка Республики Казахстан
+    adopted_on: '2019-11-29'
+    jurisdiction: KZ
+    in_force: unverified
+  '14':
+    document_title: Об утверждении Правил организации охраны и устройства помещений банков второго уровня,
+      филиалов банков-нерезидентов Республики Казахстан, Национального оператора почты, юридических лиц,
+      исключительной деятельностью которых является инкассация банкнот, монет и ценностей, и юридических
+      лиц, осуществляющих деятельность исключительно через обменные пункты на основании лицензии Национального
+      Банка Республики Казахстан на обменные операции с наличной иностранной валютой
+    issuing_authority: Правление Национального Банка Республики Казахстан
+    adopted_on: '2020-02-24'
+    jurisdiction: KZ
+    in_force: unverified
+  '53':
+    document_title: Об утверждении Требований к обеспечению информационной безопасности банков, филиалов
+      банков-нерезидентов Республики Казахстан и организаций, осуществляющих отдельные виды банковских
+      операций
+    issuing_authority: Правление Агентства Республики Казахстан по регулированию и развитию финансового
+      рынка
+    adopted_on: '2026-04-03'
+    jurisdiction: KZ
+    in_force: unverified
+norms:
+  231-20-2:
+    act: '231'
+    punkt: п. 20 ч. 2
+    quote: На рабочем месте кассового работника находятся наличные деньги клиента.
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-22:
+    act: '231'
+    punkt: п. 22
+    quote: Кассовому работнику не допускается покидать рабочее место до окончания обслуживания клиента.
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z114:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%BC%D1%83%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D1%83%20%D0%BD%D0%B5%20%D0%B4%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-80-1:
+    act: '231'
+    punkt: п. 80
+    quote: ключей от специальных устройств, находящихся на рабочем месте кассового работника, предназначенных
+      для хранения наличных денег (металлический шкаф, сейф, тележка, ящики стола), определяется внутренними
+      документами банка, обеспечивающими исключение их несанкционированного использования
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%B9%20%D0%BE%D1%82%20%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%2C
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  53-71-9:
+    act: '53'
+    punkt: п. 71 пп. 9)
+    quote: при неактивности пользователя более 30 (тридцати) минут информационная система автоматически
+      завершает сеанс работы пользователя либо блокирует рабочую станцию или ноутбук с возможностью разблокировки
+      только при вводе аутентификационных данных пользователя
+    url: https://adilet.zan.kz/rus/docs/V2600038336#z239:~:text=%D0%BF%D1%80%D0%B8%20%D0%BD%D0%B5%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F%20%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-80-3:
+    act: '231'
+    punkt: п. 80
+    quote: Порядок хранения, выдачи и передачи ценностей, печатей, ключей и кодов от электронных и механических
+      замков кладовой и (или) сейфовой комнаты
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B8%20%D0%B8
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-20-2b:
+    act: '231'
+    punkt: п. 20 ч. 2
+    quote: Все ранее принятые наличные деньги хранятся в специальных устройствах, находящихся на рабочем
+      месте кассового работника, закрывающихся на ключ, предназначенных для хранения наличных денег (металлический
+      шкаф, сейф, тележка, ящики стола, тумба).
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%92%D1%81%D0%B5%20%D1%80%D0%B0%D0%BD%D0%B5%D0%B5%20%D0%BF%D1%80%D0%B8%D0%BD%D1%8F%D1%82%D1%8B%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-21:
+    act: '231'
+    punkt: п. 21
+    quote: кассовый работник принимает наличные деньги по каждому приходному кассовому документу отдельно
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z113:~:text=%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D0%B5%D1%82%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  14-16-1:
+    act: '14'
+    punkt: п. 16 пп. 1)
+    quote: каждая касса имеет отдельный вход с закрывающейся на замок дверью
+    url: https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  14-8-1:
+    act: '14'
+    punkt: п. 8 ч. 1
+    quote: 8. Кассовый узел подлежит изолированию от других производственных, подсобных, подвальных и
+      служебных помещений одним закрывающимся служебным входом.
+    url: https://adilet.zan.kz/rus/docs/V2000020075#z49:~:text=8.%20%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%83%D0%B7%D0%B5%D0%BB%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B5%D0%B6%D0%B8%D1%82
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-20-1:
+    act: '231'
+    punkt: п. 20 ч. 1
+    quote: Наличные деньги принимаются и пересчитываются кассовым работником в присутствии клиента.
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z111:~:text=%D0%9D%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5%20%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D1%8E%D1%82%D1%81%D1%8F%20%D0%B8
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-19-1:
+    act: '231'
+    punkt: п. 19 пп. 1)
+    quote: проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим
+      его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством
+      сервиса цифровых документов
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-7:
+    act: '231'
+    punkt: п. 7
+    quote: Кассовые операции по приему и выдаче наличных денег банк осуществляет после принятия мер по
+      надлежащей проверке
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z76:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%D1%83%20%D0%B8
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-19-2b:
+    act: '231'
+    punkt: п. 19 пп. 2)
+    quote: с проверкой на подлинность и платежность наличных денег в соответствии с пунктами 57 и 58 Правил
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z445:~:text=%D1%81%20%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%BE%D0%B9%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B8%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D1%8C
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-12-1:
+    act: '231'
+    punkt: п. 12 ч. 1
+    quote: Хранение личных вещей, наличных денег и ценностей работников банка осуществляется вне кассового
+      узла в порядке, установленном внутренними документами банка.
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z81:~:text=%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85%20%D0%B2%D0%B5%D1%89%D0%B5%D0%B9%2C%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-12-2:
+    act: '231'
+    punkt: п. 12 ч. 2
+    quote: Допускается внос работниками банка в кассовый узел лекарственных средств, медицинских изделий
+      и средств связи
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-12-2b:
+    act: '231'
+    punkt: п. 12 ч. 2
+    quote: средств связи, не имеющих функции фото и видео фиксации
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D1%81%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B2%20%D1%81%D0%B2%D1%8F%D0%B7%D0%B8%2C%20%D0%BD%D0%B5%20%D0%B8%D0%BC%D0%B5%D1%8E%D1%89%D0%B8%D1%85
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-24-3:
+    act: '231'
+    punkt: п. 24 пп. 3)
+    quote: проверяет целостность сумки
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z121
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-24-4:
+    act: '231'
+    punkt: п. 24 пп. 4)
+    quote: проверяет правильность пломбирования сумки
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z122:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D1%8F%D0%B5%D1%82%20%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D1%8C%20%D0%BF%D0%BB%D0%BE%D0%BC%D0%B1%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D1%81%D1%83%D0%BC%D0%BA%D0%B8.
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-74-1:
+    act: '231'
+    punkt: п. 74
+    quote: Банки обеспечивают хранение наличных денег в кладовых и (или) сейфовой комнате после их учета
+      в автоматизированной цифровой системе в соответствии с внутренними документами банка.
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z220:~:text=%D0%91%D0%B0%D0%BD%D0%BA%D0%B8%20%D0%BE%D0%B1%D0%B5%D1%81%D0%BF%D0%B5%D1%87%D0%B8%D0%B2%D0%B0%D1%8E%D1%82%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+  231-42:
+    act: '231'
+    punkt: п. 42
+    quote: Кассовые операции по пересчету, сортировке и упаковке наличных денег осуществляются кассовым
+      работником в присутствии контролирующего работника, за исключением случаев совершения кассовых операций
+      по приему и выдаче наличных денег клиенту.
+    url: https://adilet.zan.kz/rus/docs/V1900019680#z163:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%BF%D0%B5%D1%80%D0%B5%D1%81%D1%87%D0%B5%D1%82%D1%83%2C
+    citation_status: pending
+    verified_by: null
+    verified_at: null
+rules:
+  L-NO-CASH-ON-LEAVE:
+    type_ru: 'Наличные/ценности оставлены без присмотра: кассир покинул рабочее место'
+    type_en: 'Cash left unattended: the cashier left the desk'
+    requirement: No cash is on the desk when the cashier leaves.
+    visible_breach: EXIT(cashier) while cash is on the desk.
+    not_visible: Видео не показывает номинал и принадлежность купюр, только их визуальное присутствие
+      на столе.
+    norms:
+      231-20-2: direct
+      231-22: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: The cashier is away from the desk for at least min_away_s; within the first check_window_s
+      of the absence, cash or a cash bag is visible on the desk at least cash_frac_threshold of the time.
+    states_used:
+    - cashier_at_desk
+    - desk_cash
+    - desk_bag
+    params:
+      min_away_s: 3.0
+      min_samples: 2.0
+      check_window_s: 6.0
+      cash_frac_threshold: 0.5
+    description_template: С {t_start} по {t_end} с кассир отсутствует на рабочем месте; на столе видны
+      {object}.
+    f1:
+      family: Leaving
+      signals: Money detector; person tracker
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Cashier leaves the desk zone
+      title: Наличные на столе после ухода кассира
+      description_template: В {time} с кассир покинул рабочую зону; после этого на поверхности стола видны
+        наличные.
+      title_en: Cash left on the desk after the cashier leaves
+      description_template_en: At {time} s the cashier left the work area while detected cash remained
+        on the desk.
+  L-SAFE-LOCKED-ON-LEAVE:
+    type_ru: Ключ оставлен в замке сейфа
+    type_en: Key left in the safe lock
+    requirement: The safe is locked before the cashier leaves.
+    visible_breach: EXIT(cashier) with no safe-locking motion after the last safe use.
+    not_visible: По видео не подтверждается, заперт ли сейф механически, только положение ключа в замке.
+    norms:
+      231-80-1: indirect
+    business_status: candidate
+    implementation_status: unimplemented
+    enabled: false
+    disabled_reason: No evaluator is wired for this rule.
+    condition: After the cashier exits the room (within the away run), a key is visible sticking out of
+      the safe lock for at least key_frac_threshold of the post-exit exit_window_s.
+    states_used:
+    - cashier_at_desk
+    - cashier_in_room
+    - key_in_safe_lock
+    - cashier_action
+    params:
+      min_away_s: 3.0
+      min_samples: 2.0
+      exit_window_s: 3.0
+      key_frac_threshold: 0.5
+      key_lookback_s: 5.0
+    description_template: С {t_start} по {t_end} с, после выхода кассира из комнаты, ключ виден в замке
+      сейфа.
+    f1:
+      family: Leaving
+      signals: Safe state; hand pose at the lock
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Cashier leaves
+      title: L-SAFE-LOCKED-ON-LEAVE
+      description_template: ''
+      title_en: ''
+      description_template_en: ''
+  L-PC-LOCKED:
+    type_ru: Рабочее место (ноутбук) оставлено незаблокированным
+    type_en: Workstation (laptop) left unlocked
+    requirement: The computer is locked when the cashier leaves.
+    visible_breach: EXIT(cashier) while the laptop shows a working (not lock) screen.
+    not_visible: Фактическая блокировка операционной системы (пароль/сессия) по видео не подтверждается,
+      только визуальное состояние экрана.
+    norms:
+      53-71-9: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: After the cashier exits the room, the laptop screen is classified 'unlocked' for at least
+      unlocked_frac_threshold of the remaining away run.
+    states_used:
+    - cashier_at_desk
+    - cashier_in_room
+    - laptop_screen
+    params:
+      min_away_s: 3.0
+      min_samples: 2.0
+      unlocked_frac_threshold: 0.6
+    description_template: С {t_start} по {t_end} с, после выхода кассира из комнаты, экран ноутбука остаётся
+      разблокированным (рабочий экран, не заставка блокировки).
+    f1:
+      family: Leaving
+      signals: Screen state classifier on the laptop crop
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Cashier leaves the desk zone
+      title: Рабочий экран ноутбука при уходе кассира
+      description_template: В {time} с кассир покинул рабочую зону; видимый экран ноутбука классифицирован
+        как рабочее приложение. Блокировку системы по видео подтвердить нельзя.
+      title_en: Working laptop screen when the cashier leaves
+      description_template_en: At {time} s the cashier left and the visible laptop screen was classified
+        as a working application. The actual system lock cannot be verified from video.
+  L-NO-DOCS-ON-LEAVE:
+    type_ru: Документы/носители оставлены на столе при уходе
+    type_en: Documents/media left on the desk on exit
+    requirement: No documents or work devices are on the desk when the cashier leaves.
+    visible_breach: EXIT(cashier) while a document or tablet is on the desk.
+    not_visible: Содержимое документов и факт их конфиденциальности по видео не определяются.
+    norms:
+      231-80-3: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: After the cashier exits the room, documents are visible on the desk for at least docs_frac_threshold
+      of the same post-exit window used by L-SAFE-LOCKED-ON-LEAVE.
+    states_used:
+    - cashier_at_desk
+    - cashier_in_room
+    - desk_documents
+    params:
+      min_away_s: 3.0
+      min_samples: 2.0
+      docs_frac_threshold: 0.5
+      exit_window_s: 3.0
+    description_template: С {t_start} по {t_end} с, после выхода кассира из комнаты, на столе видны документы
+      или носители.
+    f1:
+      family: Leaving
+      signals: Document / tablet detector; person tracker
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Cashier leaves the desk zone
+      title: Документ или планшет на столе после ухода кассира
+      description_template: В {time} с кассир покинул рабочую зону; на столе остался документ или планшет.
+      title_en: Document or tablet left on the desk
+      description_template_en: At {time} s the cashier left the work area while a document or tablet remained
+        on the desk.
+  S-SAFE-CLOSED:
+    type_ru: Сейф (хранилище) оставлен открытым
+    type_en: Safe/vault left open
+    requirement: The safe is closed whenever the cashier is not using it.
+    visible_breach: Safe door open while the cashier is away from the safe zone.
+    not_visible: Физический статус замка сейфа по видео не определяется, только положение дверцы.
+    norms:
+      231-20-2b: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: The safe door is visible open, and the cashier's action is not 'at_safe', for at least
+      safe_open_s continuously.
+    states_used:
+    - safe_door
+    - cashier_action
+    params:
+      safe_open_s: 4.0
+    description_template: С {t_start} по {t_end} с сейф открыт, а кассир находится не у сейфа.
+    f1:
+      family: Storage & desk
+      signals: Safe door state; person tracker
+      min_duration_text: 3 s
+      min_duration_sec: 3.0
+      timecode_anchor: Cashier leaves the safe zone
+      title: Открытый сейф без кассира рядом
+      description_template: С {time} с сейф виден открытым, а кассир находится вне зоны сейфа дольше установленного
+        интервала.
+      title_en: Open safe without the cashier nearby
+      description_template_en: From {time} s the safe appeared open and the cashier stayed outside the
+        safe zone beyond the configured rule duration.
+  S-CLEAN-DESK-HANDOVER:
+    type_ru: Деньги предыдущего клиента не убраны при обслуживании следующего
+    type_en: Previous client's cash not cleared before the next one
+    requirement: When a new client enters, no cash from earlier sessions is on the desk.
+    visible_breach: ENTER(client N+1) while cash tagged with session N is on the desk.
+    not_visible: Принадлежность конкретных купюр предыдущему клиенту не подтверждается, только непрерывное
+      визуальное присутствие наличных на столе между сессиями.
+    norms:
+      231-20-2: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: A new client session starts (clients_at_desk >= 1, merged across gaps <= session_gap_s)
+      while cash was visible on the desk for at least cash_frac_threshold of the cash_lookback_s before
+      the session's entry moment.
+    states_used:
+    - clients_at_desk
+    - desk_cash
+    - person_at_door
+    params:
+      session_gap_s: 2.5
+      min_samples: 2.0
+      entry_lookback_s: 4.0
+      cash_lookback_s: 3.0
+      cash_frac_threshold: 0.6
+    description_template: В {t_end} с начинается обслуживание следующего клиента; наличные предыдущей
+      операции ещё видны на столе.
+    f1:
+      family: Storage & desk
+      signals: Money detector; money-flow tracker; sessions
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Next client's entry
+      title: Наличные предыдущего клиента при следующем обслуживании
+      description_template: В {time} с началась следующая наблюдаемая клиентская сессия; на столе видны
+        наличные, отслеженные из предыдущей сессии.
+      title_en: Previous-session cash visible at the next session
+      description_template_en: At {time} s a new observed client session began while cash tracked from
+        a previous session remained visible on the desk.
+  S-NO-MERGE:
+    type_ru: Наличные разных клиентов смешаны на рабочем месте
+    type_en: Different clients' cash merged on the desk
+    requirement: Cash of different sessions is never stacked together.
+    visible_breach: Cash tagged N joins a stack tagged N+1.
+    not_visible: Принадлежность купюр конкретной сессии не прослеживается покадрово по видео.
+    norms:
+      231-20-2: direct
+      231-21: weak
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: Within a session flagged by S-CLEAN-DESK-HANDOVER, the cashier receives or counts cash
+      from the new client at least merge_min_gap_s after that session started, while the previous client's
+      cash was still visible.
+    states_used:
+    - clients_at_desk
+    - cash_in_hands_of
+    - cashier_action
+    params:
+      merge_min_gap_s: 3.0
+    description_template: В {t} с кассир работает с наличными нового клиента, пока на столе остаются наличные
+      предыдущей операции.
+    f1:
+      family: Storage & desk
+      signals: Money-flow tracker
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Moment the stacks join
+      title: Наличные нового клиента приняты, пока деньги предыдущего остаются на столе
+      description_template: В {time} с зафиксирована передача наличных нового клиента; на столе остаются
+        наличные, связанные с предыдущей наблюдаемой клиентской сессией.
+      title_en: New client cash accepted while previous-session cash remains on the desk
+      description_template_en: At {time} s a new client's cash was handed over while cash tracked from
+        a previous observed client session remained on the desk.
+  A-OUTSIDER-ZONE:
+    type_ru: Посторонний в кассовой кабине
+    type_en: An outsider in the cashier booth
+    requirement: Only the cashier stands in the cashier zone.
+    visible_breach: A person other than the cashier stays inside the cashier zone.
+    not_visible: Роль каждого человека (сотрудник/посторонний) определяется по положению в кадре, не по
+      документам или должности.
+    norms:
+      14-16-1: indirect
+      14-8-1: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: Two or more people are on the cashier's side of the desk at once, with no collector present,
+      for at least min_samples consecutive samples.
+    states_used:
+    - people_cashier_side
+    - collector_present
+    params:
+      min_samples: 2.0
+    description_template: С {t_start} по {t_end} с на стороне кассира находится {people_count} человек(а)
+      одновременно.
+    f1:
+      family: Access
+      signals: Person tracker; zones from calibration
+      min_duration_text: 2 s
+      min_duration_sec: 2.0
+      timecode_anchor: First frame in the zone
+      title: Другой человек в рабочей зоне кассира
+      description_template: С {time} с человек, не назначенный кассиром по положению и поведению, находится
+        в рабочей зоне дольше установленного интервала. Его личность и допуск не определяются.
+      title_en: Another person in the cashier work zone
+      description_template_en: From {time} s a person not assigned the cashier role by position and behaviour
+        stayed in the cashier zone beyond the rule duration. Identity and permission are not determined.
+  A-DOOR-LOCK:
+    type_ru: Дверь кассы не закрыта
+    type_en: Cash-room door not closed
+    requirement: Door is closed and locked within ~5 s after anyone enters.
+    visible_breach: ENTER(person) and no door-close / hand-on-door event within 5 s while the person walks
+      to the desk.
+    not_visible: Фактическое запирание двери на замок по видео не подтверждается, только открытое/закрытое
+      положение.
+    norms:
+      14-16-1: indirect
+      14-8-1: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: The room door is open for at least door_open_s, and the cashier is at the desk for at least
+      presence_frac_threshold of that time.
+    states_used:
+    - room_door
+    - cashier_at_desk
+    params:
+      door_open_s: 4.0
+      presence_frac_threshold: 0.5
+    description_template: С {t_start} по {t_end} с дверь кассового помещения открыта, пока кассир работает
+      за столом.
+    f1:
+      family: Access
+      signals: Person tracker; door zone; door state; hand pose
+      min_duration_text: 5 s
+      min_duration_sec: 5.0
+      timecode_anchor: Person passes the door
+      title: Закрытие двери после входа не зафиксировано
+      description_template: В {time} с зафиксирован вход; в последующем наблюдаемом интервале не обнаружены
+        закрытая дверь или контакт руки с дверью. Фактическое запирание замка по видео не определяется.
+      title_en: Door closure after entry not observed
+      description_template_en: An entry was observed at {time} s. No closed-door state or hand contact
+        with the door was detected in the subsequent observed window. The physical lock cannot be verified.
+  A-SECOND-PERSON:
+    type_ru: Одновременное обслуживание нескольких клиентов
+    type_en: Two clients served at once
+    requirement: One client at a time.
+    visible_breach: Client session open and a second non-staff person hands an item to the cashier.
+    not_visible: Число и личности клиентов определяются визуально, не по документам.
+    norms:
+      231-20-2: indirect
+      231-21: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: Two or more clients are at the client side of the desk at once, with no collector present,
+      for at least min_samples consecutive samples.
+    states_used:
+    - clients_at_desk
+    - collector_present
+    params:
+      min_samples: 2.0
+    description_template: С {t_start} по {t_end} с одновременно несколько клиентов обслуживаются за столом.
+    f1:
+      family: Access
+      signals: Sessions; handover detection
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Second person's handover
+      title: Передача предмета вторым посетителем
+      description_template: В {time} с во время открытой клиентской сессии другой посетитель передал предмет
+        кассиру или на стол.
+      title_en: Item passed by a second visitor
+      description_template_en: At {time} s another visitor passed an item to the cashier or desk during
+        an open client session.
+  C-COUNT-BEFORE-EXIT:
+    type_ru: Пересчёт денег не в присутствии клиента (клиент ушёл)
+    type_en: Cash counted without the client present (client left)
+    requirement: Client's cash is counted while the client is present.
+    visible_breach: EXIT(client) before COUNT_END for that client's cash.
+    not_visible: Завершение пересчёта определяется по действию кассира/машине, а не по итоговой сумме.
+    norms:
+      231-20-1: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: A client session ends and, in the window around the end (count_window_before_s before,
+      count_window_after_s after), counting is active for at least count_frac_threshold of that window.
+    states_used:
+    - clients_at_desk
+    - counting_machine_in_use
+    - cashier_action
+    params:
+      session_gap_s: 2.5
+      min_samples: 2.0
+      entry_lookback_s: 4.0
+      count_window_before_s: 3.0
+      count_window_after_s: 2.0
+      count_frac_threshold: 0.5
+    description_template: В {t} с клиент покидает стол, пока наличные ещё пересчитываются или проверяются
+      на машине.
+    f1:
+      family: Client checks
+      signals: Counting machine running state; hand count; exit
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Client exit
+      title: Уход клиента без зафиксированного пересчета
+      description_template: В {time} с клиент вышел после наблюдаемой передачи наличных; для этих наличных
+        до выхода не зафиксировано завершение пересчета.
+      title_en: Client exit without observed count completion
+      description_template_en: At {time} s a client exited after a visible cash transfer; completion of
+        counting for this cash was not observed before the exit.
+  C-ID-BEFORE-CASH:
+    type_ru: Приём наличных без предъявления документа клиентом
+    type_en: Cash accepted without an ID document shown
+    requirement: Client shows an ID document before cash is accepted or issued.
+    visible_breach: First HANDOVER(client to cashier, cash) of a session with no ID_SHOWN before it.
+    not_visible: Подлинность и тип документа по видео не определяются, только факт его предъявления в
+      кадре.
+    norms:
+      231-19-1: direct
+      231-7: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: The first cash handover of a client session happens with no document shown (id_document_visible
+      / checking_id_document) in the id_lookback_s before it or earlier in the session.
+    states_used:
+    - clients_at_desk
+    - cash_in_hands_of
+    - cashier_action
+    - id_document_visible
+    params:
+      session_gap_s: 2.5
+      min_samples: 2.0
+      entry_lookback_s: 4.0
+      id_lookback_s: 2.0
+    description_template: В {t} с зафиксирована первая передача наличных клиентом; показ документа ранее
+      в сессии не зафиксирован.
+    f1:
+      family: Client checks
+      signals: ID card / document detector; handover
+      min_duration_text: whole session
+      min_duration_sec: null
+      timecode_anchor: First cash handover
+      title: Передача наличных без ранее показанного документа
+      description_template: В {time} с зафиксирована первая передача наличных в полностью наблюдаемой
+        клиентской сессии; до нее показ документа не зафиксирован.
+      title_en: Cash transfer without an earlier document display
+      description_template_en: At {time} s the first cash transfer occurred in a session with a visible
+        entry; no document display was observed earlier in that session.
+  C-DETECTOR-CHECK:
+    type_ru: Пересчёт без проверки подлинности на детекторе (эксперимент)
+    type_en: Counting without a detector check (experimental)
+    requirement: Notes rejected by the counter are checked on the detector before re-stacking.
+    visible_breach: Rejected note re-stacked with no detector use in between.
+    not_visible: 'Экспериментальное правило: отсутствие детектора оценивается по всему наблюдаемому видео,
+      что не покрывает интервалы между сэмплами и части кадра вне обзора.'
+    norms:
+      231-19-2b: direct
+    business_status: candidate
+    implementation_status: unimplemented
+    enabled: false
+    disabled_reason: Experimental rule has no F1 evaluator.
+    condition: 'Experimental, whole-video check: the cashier is seen counting by hand at some point, and
+      the detector is never seen in use anywhere in the observed timeline.'
+    states_used:
+    - cashier_action
+    - detector_in_use
+    params: {}
+    description_template: В {t} с кассир пересчитывает наличные вручную; использование детектора подлинности
+      не зафиксировано ни в одном наблюдаемом кадре.
+    f1:
+      family: Client checks
+      signals: Detector device state; hand pose
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Re-stack moment
+      title: C-DETECTOR-CHECK
+      description_template: ''
+      title_en: ''
+      description_template_en: ''
+  W-NO-PERSONAL-ITEMS:
+    type_ru: Личные вещи на рабочем месте кассира
+    type_en: Personal items at the cashier's workplace
+    requirement: No personal items in the cash unit.
+    visible_breach: Coat, handbag or similar item on the cash desk.
+    not_visible: Принадлежность вещи кассиру, а не клиенту, не всегда достоверна по видео.
+    norms:
+      231-12-1: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: Personal items (coat, bag, backpack) are visible on the desk for at least min_samples consecutive
+      samples.
+    states_used:
+    - desk_personal_items
+    params:
+      min_samples: 2.0
+    description_template: С {t_start} по {t_end} с на рабочем столе кассира находятся личные вещи.
+    f1:
+      family: Workplace conduct
+      signals: Object detector (coat, handbag)
+      min_duration_text: 3 s
+      min_duration_sec: 3.0
+      timecode_anchor: Item placed on the desk
+      title: Личная вещь на кассовом столе
+      description_template: С {time} с на поверхности кассового стола обнаружена верхняя одежда или личная
+        сумка дольше установленного интервала.
+      title_en: Personal item on the cash desk
+      description_template_en: From {time} s a coat or handbag was detected on the desk surface beyond
+        the rule duration.
+  W-NO-FOOD:
+    type_ru: Еда/напитки на рабочем месте кассира
+    type_en: Food/drink at the cashier's workplace
+    requirement: No eating or drinking at the cash desk.
+    visible_breach: Food or a cup raised to the mouth at the cash desk.
+    not_visible: Факт употребления пищи не подтверждается, только присутствие еды/напитка в кадре.
+    norms:
+      231-12-2: weak
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: Food or drink is visible on the desk, or the cashier's action is 'eating_drinking', for
+      at least min_samples consecutive samples.
+    states_used:
+    - desk_food_drink
+    - cashier_action
+    params:
+      min_samples: 2.0
+    description_template: С {t_start} по {t_end} с на рабочем месте кассира видны еда или напитки.
+    f1:
+      family: Workplace conduct
+      signals: Object detector (cup, food); hand pose to face
+      min_duration_text: 1 s
+      min_duration_sec: 1.0
+      timecode_anchor: First bite or sip
+      title: Еда или чашка поднята к голове у кассового стола
+      description_template: В {time} с рука с обнаруженной едой или чашкой поднята к области головы человека
+        у кассового стола. Фактическое употребление содержимого не определяется.
+      title_en: Food or cup raised to the head near the cash desk
+      description_template_en: At {time} s a hand holding detected food or a cup was raised to the head
+        region near the desk. Actual consumption is not determined.
+  W-NO-CAMERA-PHONE:
+    type_ru: Телефон в руках кассира в кассовом узле
+    type_en: Phone in the cashier's hands in the cash unit
+    requirement: Only communication devices without photo/video capture in the cash unit.
+    visible_breach: A phone visible in the cashier's hand or on the desk.
+    not_visible: Содержание звонка или переписки не определяется, только факт удержания телефона.
+    norms:
+      231-12-2b: direct
+    business_status: candidate
+    implementation_status: unimplemented
+    enabled: false
+    disabled_reason: No evaluator is wired for this rule.
+    condition: The phone is visible in the cashier's hand, or the cashier's action is 'using_phone', for
+      at least min_samples consecutive samples.
+    states_used:
+    - phone_in_cashier_hand
+    - cashier_action
+    params:
+      min_samples: 2.0
+    description_template: С {t_start} по {t_end} с у кассира в руках телефон на рабочем месте.
+    f1:
+      family: Workplace conduct
+      signals: Object detector (phone)
+      min_duration_text: 2 s
+      min_duration_sec: 2.0
+      timecode_anchor: Phone first visible
+      title: W-NO-CAMERA-PHONE
+      description_template: ''
+      title_en: ''
+      description_template_en: ''
+  K-SEAL-CHECK:
+    type_ru: Сумка от инкассатора принята без проверки (инкассатор сразу ушёл)
+    type_en: Collector's bag accepted without inspection (collector left right away)
+    requirement: Bag and seal are inspected while the collector is present.
+    visible_breach: Collector exits within ~5 s of the bag handover with no inspection of the bag.
+    not_visible: Содержимое сумки и целостность пломбы по видео не проверяются, только присутствие сумки
+      и людей.
+    norms:
+      231-24-3: direct
+      231-24-4: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: A collector is present; a bag appears on the desk; the collector leaves within collector_quick_s
+      of the bag appearing.
+    states_used:
+    - collector_present
+    - desk_bag
+    params:
+      collector_quick_s: 6.0
+    description_template: В {t_end} с инкассатор покидает помещение в пределах {collector_quick_s:.0f}
+      с после появления сумки на столе; совместный осмотр сумки не зафиксирован.
+    f1:
+      family: Cash collection
+      signals: Person tracker; hand pose on the bag
+      min_duration_text: 5 s
+      min_duration_sec: 5.0
+      timecode_anchor: Collector exit
+      title: Осмотр переданной сумки не зафиксирован
+      description_template: В {time} с посетитель передал сумку и вскоре вышел; контакт рук кассира с
+        областью сумки, достаточный для видимого осмотра, не зафиксирован. Проверка пломбы вне кадра не
+        оценивается.
+      title_en: Inspection contact with the delivered bag not observed
+      description_template_en: At {time} s a visitor passed a bag and soon exited. Sustained cashier hand
+        contact with the bag was not observed. Inspection outside the image cannot be assessed.
+  K-RECOUNT-BEFORE-SAFE:
+    type_ru: Деньги из вскрытой сумки убраны в сейф без пересчёта
+    type_en: Cash from an opened bag moved to the safe without a recount
+    requirement: Bundles from an opened bag are recounted before storage.
+    visible_breach: Bundles move from the bag to the safe without passing the counter or a hand count.
+    not_visible: Факт пересчёта подтверждается по видимому действию или работе машины, а не по итоговой
+      сумме.
+    norms:
+      231-74-1: weak
+      231-42: indirect
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: true
+    disabled_reason: null
+    condition: After the cashier opens a bag (cashier_action='packing_or_opening_bag'), the safe is used
+      (open, or cashier_action='at_safe') before any counting is observed in between.
+    states_used:
+    - cashier_action
+    - safe_door
+    - counting_machine_in_use
+    params: {}
+    description_template: В {t} с кассир использует сейф после вскрытия сумки; пересчёт содержимого между
+      этими моментами не зафиксирован.
+    f1:
+      family: Cash collection
+      signals: Money-flow tracker; counter state
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Bundles go into the safe
+      title: Перемещение пачки из открытой сумки к сейфу без пересчета
+      description_template: В {time} с отслеженная пачка переместилась из области открытой сумки в область
+        сейфа; между этими действиями пересчет этой пачки не зафиксирован.
+      title_en: Bundle moved from an open bag to the safe without an observed count
+      description_template_en: At {time} s a tracked bundle moved from an open-bag region to the safe
+        region. No count completion was observed between these actions.
+  L-NO-BAG-ON-LEAVE:
+    type_ru: 'Сумка оставлена без присмотра: кассир покинул рабочее место'
+    type_en: 'Collection bag left unattended: cashier left the desk'
+    requirement: No cash bag is on the desk when the cashier leaves.
+    visible_breach: EXIT(cashier) while a collection bag is on the desk.
+    not_visible: Видео не устанавливает принадлежность сумки и её содержимое.
+    norms: {}
+    unverified_reference:
+      text: NBRK 231, п.20, п.80
+      url: https://adilet.zan.kz/rus/docs/V1900019680
+      strength: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: false
+    disabled_reason: Legal basis for treating a collection bag as unattended valuables needs review.
+    condition: A collection bag remains visible on the desk after the cashier leaves.
+    states_used:
+    - cashier_at_desk
+    - desk_bag
+    params: {}
+    description_template: После ухода кассира на столе видна сумка.
+    f1:
+      family: Leaving
+      signals: Bag detector; person tracker
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Cashier leaves the desk zone
+      title: Инкассаторская сумка на столе после ухода кассира
+      description_template: В {time} с кассир покинул рабочую зону; на столе осталась обнаруженная сумка
+        для наличных.
+      title_en: Cash bag left on the desk
+      description_template_en: At {time} s the cashier left the work area while a detected collection
+        bag remained on the desk.
+  C-REJECT-NOT-RETURNED:
+    type_ru: Сомнительная банкнота возвращена клиенту без оформления
+    type_en: Doubtful banknote returned to client without required handling
+    requirement: A doubtful note is kept and an act drawn up; it is not returned.
+    visible_breach: Note from the machine's reject pocket handed to the client.
+    not_visible: Видео не подтверждает, что именно счётчик отбросил купюру и был ли составлен акт.
+    norms: {}
+    unverified_reference:
+      text: NBRK 231, п.59-61
+      url: https://adilet.zan.kz/rus/docs/V1900019680
+      strength: direct
+    business_status: confirmed
+    implementation_status: unimplemented
+    enabled: false
+    disabled_reason: No evaluator is wired for this rule.
+    condition: A banknote rejected by a counter is returned to the client without the required procedure.
+    states_used:
+    - cashier_action
+    - counting_machine_in_use
+    params: {}
+    description_template: ''
+    f1:
+      family: Client checks
+      signals: Counter reject event; handover
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Handover to client
+      title: C-REJECT-NOT-RETURNED
+      description_template: ''
+      title_en: ''
+      description_template_en: ''
+  K-COLLECTOR-DOC:
+    type_ru: Приём сумки инкассатора без видимого сопроводительного документа
+    type_en: Collector bag accepted without a visible accompanying document
+    requirement: The collector's accompanying document / ID is checked before the bag is accepted.
+    visible_breach: HANDOVER(collector to cashier, bag) with no document shown during the collector's
+      visit.
+    not_visible: Отсутствие документа в кадре не доказывает отсутствие документа вне поля зрения.
+    norms: {}
+    unverified_reference:
+      text: NBRK 231, п.24 пп.1-2 (п.106-107 to read)
+      url: https://adilet.zan.kz/rus/docs/V1900019680
+      strength: direct
+    business_status: confirmed
+    implementation_status: implemented
+    enabled: false
+    disabled_reason: The video cannot establish that no accompanying document exists outside the camera
+      view; legal and visibility basis needs review.
+    condition: A collector hands over a bag and no accompanying document is visible during the visit.
+    states_used:
+    - collector_present
+    - desk_bag
+    - id_document_visible
+    params: {}
+    description_template: При передаче сумки инкассатором сопроводительный документ в кадре не виден.
+    f1:
+      family: Cash collection
+      signals: Document detector; role = enters carrying a bag
+      min_duration_text: '-'
+      min_duration_sec: null
+      timecode_anchor: Bag handover
+      title: Быстрая передача сумки без показанного документа
+      description_template: В {time} с посетитель, вошедший с сумкой, передал ее и вскоре вышел; в наблюдаемом
+        интервале документ не обнаружен.
+      title_en: Quick bag delivery without a visible document
+      description_template_en: At {time} s a visitor who entered carrying a bag passed it and soon exited.
+        No document was detected during the observed interval.
