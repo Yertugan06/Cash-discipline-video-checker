@@ -3,6 +3,23 @@
 Known problems that are not fixed yet. Add new ones at the top; when one is
 fixed, delete it here and say where in the commit message.
 
+## 3. F1 misses or mislabels dev violations that enabled rules cover
+
+- **Found:** 2026-10-18, GPU run of commit 0b269aa on a separate instance (port 8002,
+  `RULE_SCOPE=detector`), checked with `python -m eval.check_outputs`. The live version
+  (7ae5873) gives identical verdicts, rules and times on the same clips, so this predates it.
+- **Missed (FN):** X-17 (annotated clause points to `K-SEAL-CHECK`) and X-34
+  (`C-COUNT-BEFORE-EXIT`). Both rules are enabled and have F1 evaluators; neither fired.
+- **Right verdict, wrong type and time:** X-15 reported `W-NO-PERSONAL-ITEMS` 5 s from the
+  organizer second, X-20 `L-NO-DOCS-ON-LEAVE` 4 s from it; their annotated clause (п. 20 ч. 2)
+  points to the cash/desk rules. Verdict scores, classification and localization do not.
+- **Fine:** clean counterparts X-16, X-21, X-37 gave no violation; every response matched the
+  jury schema with JPEG evidence and filled templates; 14-37 s per clip uncached.
+- **Next:** read the per-job traces (`GET /api/v1/jobs/{id}/trace` on the test instance) to see
+  whether perception never produced the events (L2) or the rules rejected them (L3).
+- **Not run:** X-4/X-47 (lockbox, needs the human gate) and an unseen, other-angle video
+  (none exists yet; see `robustness/README.md`).
+
 ## 2. Docs whose content has not been checked against the code
 
 - **Found:** 2026-10-17, during the repo split into current and `archive/`.
