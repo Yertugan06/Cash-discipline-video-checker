@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A27 Box Review</title>
+<style>
+  :root { --bg: #111418; --panel: #1b2027; --text: #e6e9ee; --muted: #8b95a3; --line: #2c333d;
+          --cand: #4aa3ff; --cur: #ffd23f; --cash: #2ecc71; --not: #ff5c5c; --unclear: #b28dff; --drawn: #ff9f1a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, sans-serif; }
+  header { display: flex; gap: 16px; align-items: center; padding: 8px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  header b { font-size: 15px; }
+  #progress { color: var(--muted); }
+  #strip { display: flex; gap: 4px; flex-wrap: wrap; }
+  #strip button { width: 26px; height: 22px; border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+                  border-radius: 4px; cursor: pointer; font-size: 11px; padding: 0; }
+  #strip button.done { background: #1f3a2a; color: var(--cash); }
+  #strip button.cur { outline: 2px solid var(--cur); }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; padding: 12px 16px; }
+  #stage { position: relative; }
+  canvas#frame { display: block; max-width: 100%; cursor: crosshair; border: 1px solid var(--line); }
+  aside { display: flex; flex-direction: column; gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  canvas#zoom { width: 100%; image-rendering: pixelated; background: #000; border-radius: 4px; }
+  .keys { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; color: var(--muted); }
+  kbd { background: #2a313b; border: 1px solid #3a424e; border-radius: 4px; padding: 0 6px; color: var(--text); font: 12px ui-monospace, monospace; }
+  .verdicts { display: flex; gap: 6px; }
+  .verdicts button { flex: 1; padding: 8px 0; border-radius: 6px; border: 1px solid var(--line); background: #232a33; color: var(--text); cursor: pointer; }
+  .verdicts button[data-v=cash] { border-color: var(--cash); }
+  .verdicts button[data-v=not_cash] { border-color: var(--not); }
+  .verdicts button[data-v=unclear] { border-color: var(--unclear); }
+  #meta { color: var(--muted); white-space: pre-line; }
+  #status { color: var(--muted); font-size: 12px; }
+  #status.err { color: var(--not); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <b>A27 box review</b>
+  <span id="progress"></span>
+  <div id="strip"></div>
+  <span id="status"></span>
+</header>
+<main>
+  <div id="stage"><canvas id="frame"></canvas></div>
+  <aside>
+    <div class="card">
+      <div id="candTitle" style="margin-bottom:6px"></div>
+      <canvas id="zoom" width="320" height="240"></canvas>
+      <div class="verdicts" style="margin-top:8px">
+        <button data-v="cash">1 cash</button>
+        <button data-v="not_cash">2 not cash</button>
+        <button data-v="unclear">3 unclear</button>
+      </div>
+    </div>
+    <div class="card" id="meta"></div>
+    <div class="card keys">
+      <kbd>1 2 3</kbd><span>mark highlighted box, jump to next</span>
+      <kbd>Tab</kbd><span>next box in this frame</span>
+      <kbd>← →</kbd><span>previous / next frame</span>
+      <kbd>drag</kbd><span>draw cash the models missed (orange)</span>
+      <kbd>Backspace</kbd><span>remove last drawn box</span>
+      <kbd>I</kbd><span>show / hide model names, scores, frame label</span>
+    </div>
+  </aside>
+</main>
+<script>
+"use strict";
+const COLORS = { cash: "--cash", not_cash: "--not", unclear: "--unclear" };
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const frameCanvas = document.getElementById("frame");
+const zoomCanvas = document.getElementById("zoom");
+const ctx = frameCanvas.getContext("2d");
+const zctx = zoomCanvas.getContext("2d");
+let items = [], labels = {}, fi = 0, ci = 0, showInfo = false, img = new Image(), scale = 1, drag = null;
+
+function entry(key) { return labels[key] || (labels[key] = { marks: {}, drawn: [] }); }
+function verdictOf(item, id) { const m = entry(item.key).marks[id]; return m ? (m.verdict || m) : null; }
+function frameDone(item) { return item.candidates.every((c) => verdictOf(item, c.id)); }
+
+function setStatus(text, err = false) {
+  const s = document.getElementById("status");
+  s.textContent = text; s.className = err ? "err" : "";
+}
+
+// Frames whose last save failed; every save retries them, so a server hiccup never drops marks.
+const unsaved = new Set();
+
+async function post(item) {
+  const e = entry(item.key);
+  const marks = Object.fromEntries(Object.entries(e.marks).map(([k, v]) => [k, v.verdict || v]));
+  try {
+    const res = await fetch(`/api/label/${encodeURIComponent(item.key)}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ marks, drawn: e.drawn }),
+    });
+    const body = await res.json();
+    if (!res.ok) return `${item.key}: ${body.error || res.status}`;
+    labels[item.key] = body;
+    unsaved.delete(item.key);
+    return null;
+  } catch (err) {
+    return `${item.key}: ${err.message}`;
+  }
+}
+
+async function save(item) {
+  unsaved.add(item.key);
+  let lastError = null;
+  for (const it of items.filter((x) => unsaved.has(x.key))) lastError = (await post(it)) || lastError;
+  if (unsaved.size) setStatus(`NOT SAVED (${unsaved.size} frame(s), retried on next mark, do not reload): ${lastError}`, true);
+  else setStatus(`saved ${item.key} ${labels[item.key].updated}`);
+}
+
+window.addEventListener("beforeunload", (ev) => { if (unsaved.size) { ev.preventDefault(); ev.returnValue = ""; } });
+
+function renderStrip() {
+  const strip = document.getElementById("strip");
+  strip.replaceChildren(...items.map((it, i) => {
+    const b = document.createElement("button");
+    b.textContent = i + 1;
+    b.title = it.key;
+    b.className = (frameDone(it) ? "done " : "") + (i === fi ? "cur" : "");
+    b.onclick = () => goFrame(i);
+    return b;
+  }));
+  const total = items.reduce((n, it) => n + it.candidates.length, 0);
+  const marked = items.reduce((n, it) => n + it.candidates.filter((c) => verdictOf(it, c.id)).length, 0);
+  document.getElementById("progress").textContent = `${marked}/${total} boxes marked`;
+}
+
+function drawBox(c, box, color, width, dash = []) {
+  c.save();
+  c.strokeStyle = color; c.lineWidth = width; c.setLineDash(dash);
+  c.strokeRect(box[0] * scale, box[1] * scale, (box[2] - box[0]) * scale, (box[3] - box[1]) * scale);
+  c.restore();
+}
+
+function render() {
+  const item = items[fi];
+  if (!item || !img.complete) return;
+  const maxH = window.innerHeight - 90;
+  const maxW = document.getElementById("stage").clientWidth;
+  scale = Math.min(maxW / item.width, maxH / item.height, 3);
+  frameCanvas.width = Math.round(item.width * scale);
+  frameCanvas.height = Math.round(item.height * scale);
+  ctx.drawImage(img, 0, 0, frameCanvas.width, frameCanvas.height);
+  item.candidates.forEach((c, i) => {
+    const v = verdictOf(item, c.id);
+    const color = v ? css(COLORS[v]) : css("--cand");
+    drawBox(ctx, c.box, i === ci ? css("--cur") : color, i === ci ? 3 : 2, v ? [] : [6, 4]);
+    ctx.fillStyle = i === ci ? css("--cur") : color;
+    ctx.font = "bold 13px system-ui";
+    ctx.fillText(String(i + 1), c.box[0] * scale + 3, c.box[1] * scale - 4);
+  });
+  entry(item.key).drawn.forEach((b) => drawBox(ctx, b, css("--drawn"), 2));
+  if (drag && drag.box) drawBox(ctx, drag.box, css("--drawn"), 2, [3, 3]);
+  renderZoom(item);
+  renderMeta(item);
+  renderStrip();
+}
+
+function renderZoom(item) {
+  zctx.fillStyle = "#000"; zctx.fillRect(0, 0, zoomCanvas.width, zoomCanvas.height);
+  const c = item.candidates[ci];
+  const title = document.getElementById("candTitle");
+  if (!c) { title.textContent = "no detector boxes in this frame"; return; }
+  const v = verdictOf(item, c.id);
+  title.textContent = `box ${ci + 1}/${item.candidates.length}` + (v ? ` - marked ${v.replace("_", " ")}` : " - unmarked");
+  const [x0, y0, x1, y1] = c.box;
+  const pad = Math.max(24, 0.6 * Math.max(x1 - x0, y1 - y0));
+  const sx = Math.max(0, x0 - pad), sy = Math.max(0, y0 - pad);
+  const sw = Math.min(item.width, x1 + pad) - sx, sh = Math.min(item.height, y1 + pad) - sy;
+  const z = Math.min(zoomCanvas.width / sw, zoomCanvas.height / sh);
+  const ox = (zoomCanvas.width - sw * z) / 2, oy = (zoomCanvas.height - sh * z) / 2;
+  zctx.imageSmoothingEnabled = false;
+  zctx.drawImage(img, sx, sy, sw, sh, ox, oy, sw * z, sh * z);
+  zctx.strokeStyle = css("--cur"); zctx.lineWidth = 2;
+  zctx.strokeRect(ox + (x0 - sx) * z, oy + (y0 - sy) * z, (x1 - x0) * z, (y1 - y0) * z);
+}
+
+function renderMeta(item) {
+  const meta = document.getElementById("meta");
+  const lines = [`${item.key}  (frame ${fi + 1}/${items.length})`];
+  const drawn = entry(item.key).drawn.length;
+  if (drawn) lines.push(`${drawn} missed-cash box(es) drawn`);
+  if (showInfo) {
+    lines.push(`frame label: cash ${item.cash_visible ? "visible" : "not visible"}`);
+    const c = item.candidates[ci];
+    if (c) c.proposals.forEach((p) => lines.push(`${p.model}: ${p.score} "${p.prompt}" (${p.view})`));
+  } else {
+    lines.push("press I to show models and scores (hidden to keep marks blind)");
+  }
+  meta.textContent = lines.join("\n");
+}
+
+function goFrame(i) {
+  fi = (i + items.length) % items.length;
+  const item = items[fi];
+  const firstOpen = item.candidates.findIndex((c) => !verdictOf(item, c.id));
+  ci = firstOpen === -1 ? 0 : firstOpen;
+  img = new Image();
+  img.onload = render;
+  img.src = `/frame/${item.index}.jpg`;
+}
+
+async function mark(v) {
+  const item = items[fi];
+  const c = item.candidates[ci];
+  if (!c) return;
+  entry(item.key).marks[c.id] = v;
+  await save(item);
+  const next = item.candidates.findIndex((x, i) => i > ci && !verdictOf(item, x.id));
+  const nextAny = item.candidates.findIndex((x) => !verdictOf(item, x.id));
+  if (next !== -1) { ci = next; render(); }
+  else if (nextAny !== -1) { ci = nextAny; render(); }
+  else {
+    const open = items.findIndex((it, i) => i > fi && !frameDone(it));
+    const openAny = items.findIndex((it) => !frameDone(it));
+    if (open !== -1) goFrame(open);
+    else if (openAny !== -1) goFrame(openAny);
+    else { render(); setStatus("all boxes marked - draw any missed cash, then you are done"); }
+  }
+}
+
+function toFrame(ev) {
+  const r = frameCanvas.getBoundingClientRect();
+  const k = frameCanvas.width / r.width;
+  const item = items[fi];
+  return [Math.min(item.width, Math.max(0, (ev.clientX - r.left) * k / scale)),
+          Math.min(item.height, Math.max(0, (ev.clientY - r.top) * k / scale))];
+}
+
+frameCanvas.addEventListener("mousedown", (ev) => { drag = { start: toFrame(ev), box: null }; });
+window.addEventListener("mousemove", (ev) => {
+  if (!drag) return;
+  const [x, y] = toFrame(ev), [sx, sy] = drag.start;
+  drag.box = [Math.min(sx, x), Math.min(sy, y), Math.max(sx, x), Math.max(sy, y)];
+  render();
+});
+window.addEventListener("mouseup", async () => {
+  if (!drag) return;
+  const box = drag.box;
+  drag = null;
+  if (box && box[2] - box[0] >= 3 && box[3] - box[1] >= 3) {
+    entry(items[fi].key).drawn.push(box);
+    await save(items[fi]);
+  }
+  render();
+});
+
+window.addEventListener("keydown", async (ev) => {
+  const item = items[fi];
+  if (!item) return;
+  if (ev.key === "1") await mark("cash");
+  else if (ev.key === "2") await mark("not_cash");
+  else if (ev.key === "3") await mark("unclear");
+  else if (ev.key === "ArrowRight") goFrame(fi + 1);
+  else if (ev.key === "ArrowLeft") goFrame(fi - 1);
+  else if (ev.key === "Tab") { ev.preventDefault(); if (item.candidates.length) { ci = (ci + 1) % item.candidates.length; render(); } }
+  else if (ev.key === "Backspace") { ev.preventDefault(); if (entry(item.key).drawn.pop()) { await save(item); render(); } }
+  else if (ev.key.toLowerCase() === "i") { showInfo = !showInfo; render(); }
+});
+document.querySelectorAll(".verdicts button").forEach((b) => b.addEventListener("click", () => mark(b.dataset.v)));
+window.addEventListener("resize", render);
+
+(async () => {
+  const res = await fetch("/api/items");
+  if (!res.ok) { setStatus(`cannot load items: HTTP ${res.status}`, true); return; }
+  const body = await res.json();
+  items = body.items; labels = body.labels;
+  const open = items.findIndex((it) => !frameDone(it));
+  goFrame(open === -1 ? 0 : open);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+{
+  "a13_queries": [
+    {
+      "frame": "X-4@56.0",
+      "cash_score": 0.072,
+      "argmax_label": "id card",
+      "argmax_score": 0.136
+    },
+    {
+      "frame": "X-38@30.0",
+      "cash_score": 0.374,
+      "argmax_label": "id card",
+      "argmax_score": 0.511
+    },
+    {
+      "frame": "X-26@15.0",
+      "cash_score": 0.388,
+      "argmax_label": "plastic card",
+      "argmax_score": 0.425
+    },
+    {
+      "frame": "X-10@8.0",
+      "cash_score": 0.256,
+      "argmax_label": "id card",
+      "argmax_score": 0.27
+    },
+    {
+      "frame": "X-2@9.8",
+      "cash_score": 0.217,
+      "argmax_label": "id card",
+      "argmax_score": 0.465
+    },
+    {
+      "frame": "X-13@30.0",
+      "cash_score": 0.246,
+      "argmax_label": "id card",
+      "argmax_score": 0.375
+    },
+    {
+      "frame": "X-14@60.0",
+      "cash_score": 0.268,
+      "argmax_label": "id card",
+      "argmax_score": 0.453
+    }
+  ],
+  "runtime_full_frame": [
+    {
+      "frame": "X-4@56.0",
+      "runtime_labels_on_cash_box": []
+    },
+    {
+      "frame": "X-38@30.0",
+      "runtime_labels_on_cash_box": [
+        [
+          "id_card",
+          0.365
+        ]
+      ]
+    },
+    {
+      "frame": "X-26@15.0",
+      "runtime_labels_on_cash_box": []
+    },
+    {
+      "frame": "X-10@8.0",
+      "runtime_labels_on_cash_box": [
+        [
+          "cash",
+          0.357
+        ]
+      ]
+    },
+    {
+      "frame": "X-2@9.8",
+      "runtime_labels_on_cash_box": [
+        [
+          "id_card",
+          0.374
+        ]
+      ]
+    },
+    {
+      "frame": "X-13@30.0",
+      "runtime_labels_on_cash_box": [
+        [
+          "id_card",
+          0.232
+        ]
+      ]
+    },
+    {
+      "frame": "X-14@60.0",
+      "runtime_labels_on_cash_box": [
+        [
+          "id_card",
+          0.345
+        ],
+        [
+          "id_card",
+          0.3
+        ]
+      ]
+    }
+  ]
+}

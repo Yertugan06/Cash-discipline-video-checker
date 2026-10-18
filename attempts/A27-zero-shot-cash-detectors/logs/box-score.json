@@ -1,0 +1,228 @@
+{
+  "models": {
+    "owl-base": {
+      "top_box_on_cash_frames": {
+        "cash": 7
+      },
+      "top_box_on_empty_frames": {
+        "not_cash": 5
+      },
+      "localized_hits_at_threshold": 7,
+      "wrong_box_above_threshold": 1,
+      "threshold": 0.15,
+      "cash_frames": 7,
+      "per_frame": [
+        {
+          "frame": "X-4@56.0",
+          "score": 0.164,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-38@30.0",
+          "score": 0.383,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-26@15.0",
+          "score": 0.41,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-10@8.0",
+          "score": 0.318,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-2@9.8",
+          "score": 0.307,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-13@30.0",
+          "score": 0.315,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-14@60.0",
+          "score": 0.317,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-23@16.0",
+          "score": 0.073,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-29@16.0",
+          "score": 0.102,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-32@2.0",
+          "score": 0.058,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-33@2.0",
+          "score": 0.095,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-40@18",
+          "score": 0.152,
+          "verdict": "not_cash"
+        }
+      ]
+    },
+    "owl-large": {
+      "top_box_on_cash_frames": {
+        "cash": 7
+      },
+      "top_box_on_empty_frames": {
+        "not_cash": 5
+      },
+      "localized_hits_at_threshold": 7,
+      "wrong_box_above_threshold": 0,
+      "threshold": 0.15,
+      "cash_frames": 7,
+      "per_frame": [
+        {
+          "frame": "X-4@56.0",
+          "score": 0.276,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-38@30.0",
+          "score": 0.395,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-26@15.0",
+          "score": 0.524,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-10@8.0",
+          "score": 0.339,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-2@9.8",
+          "score": 0.312,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-13@30.0",
+          "score": 0.41,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-14@60.0",
+          "score": 0.421,
+          "verdict": "cash"
+        },
+        {
+          "frame": "X-23@16.0",
+          "score": 0.047,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-29@16.0",
+          "score": 0.082,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-32@2.0",
+          "score": 0.057,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-33@2.0",
+          "score": 0.044,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-40@18",
+          "score": 0.058,
+          "verdict": "not_cash"
+        }
+      ]
+    },
+    "mmgdino-large": {
+      "top_box_on_cash_frames": {
+        "not_cash": 6,
+        "unclear": 1
+      },
+      "top_box_on_empty_frames": {
+        "not_cash": 5
+      },
+      "localized_hits_at_threshold": 0,
+      "wrong_box_above_threshold": 12,
+      "threshold": 0.3,
+      "cash_frames": 7,
+      "per_frame": [
+        {
+          "frame": "X-4@56.0",
+          "score": 0.477,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-38@30.0",
+          "score": 0.386,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-26@15.0",
+          "score": 0.478,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-10@8.0",
+          "score": 0.468,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-2@9.8",
+          "score": 0.469,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-13@30.0",
+          "score": 0.417,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-14@60.0",
+          "score": 0.496,
+          "verdict": "unclear"
+        },
+        {
+          "frame": "X-23@16.0",
+          "score": 0.475,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-29@16.0",
+          "score": 0.611,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-32@2.0",
+          "score": 0.501,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-33@2.0",
+          "score": 0.469,
+          "verdict": "not_cash"
+        },
+        {
+          "frame": "X-40@18",
+          "score": 0.464,
+          "verdict": "not_cash"
+        }
+      ]
+    }
+  },
+  "missed_cash_boxes_drawn": {}
+}

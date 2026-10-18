@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "device": "cuda",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.20.1",
+    "failures": {
+      "sam3": "OSError: You are trying to access a gated repo."
+    }
+  },
+  "models": {
+    "owl-base": {
+      "checkpoint": "google/owlv2-base-patch16-ensemble",
+      "variants": {
+        "full": {
+          "auroc": 0.9429,
+          "margin": -0.0361,
+          "threshold": 0.15,
+          "tp": 6,
+          "fn": 1,
+          "tn": 5,
+          "fp": 0
+        },
+        "full+tiles": {
+          "auroc": 1.0,
+          "margin": 0.0119,
+          "threshold": 0.15,
+          "tp": 7,
+          "fn": 0,
+          "tn": 4,
+          "fp": 1
+        }
+      },
+      "mean_seconds_per_frame_all_views": 2.729
+    },
+    "owl-large": {
+      "checkpoint": "google/owlv2-large-patch14-ensemble",
+      "variants": {
+        "full": {
+          "auroc": 1.0,
+          "margin": 0.0655,
+          "threshold": 0.15,
+          "tp": 6,
+          "fn": 1,
+          "tn": 5,
+          "fp": 0
+        },
+        "full+tiles": {
+          "auroc": 1.0,
+          "margin": 0.1949,
+          "threshold": 0.15,
+          "tp": 7,
+          "fn": 0,
+          "tn": 5,
+          "fp": 0
+        }
+      },
+      "mean_seconds_per_frame_all_views": 12.567
+    },
+    "mmgdino-large": {
+      "checkpoint": "openmmlab-community/mm_grounding_dino_large_all",
+      "variants": {
+        "full": {
+          "auroc": 0.7429,
+          "margin": -0.0649,
+          "threshold": 0.3,
+          "tp": 5,
+          "fn": 2,
+          "tn": 3,
+          "fp": 2
+        },
+        "full+tiles": {
+          "auroc": 0.3143,
+          "margin": -0.2251,
+          "threshold": 0.3,
+          "tp": 7,
+          "fn": 0,
+          "tn": 0,
+          "fp": 5
+        }
+      },
+      "mean_seconds_per_frame_all_views": 22.019
+    }
+  }
+}

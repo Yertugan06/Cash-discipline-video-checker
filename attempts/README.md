@@ -41,6 +41,7 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A20](A20-night-orchestration/) | orchestrator + Codex agents (offline replay, API check on datathon) | Verified rule fixes on F1 (door entry, personal-item gaps and equipment, client sessions, leave evidence, desk-relative scale, collector visit, timecode ranking) + robustness probes; merged with fix-dataset | as A14 | **32/40** (replay) | 13/21 | **0/19** | ±1/3/5 s: 7/11/13 of 13 caught | - | merged to main; zoom/mirror/drop stable |
 | [A21](A21-deadline/) | orchestrator + four remote workers | Evidence guards, observed doorway-hand exit correction, independent explanation audit; local state verifier enabled at user request after measurement | existing local F1 stack; Qwen3-VL-4B diagnostic | **30/40** (real API) | 11/21 | **0/19** | compatible human timing mostly unannotated | median 2.0675 s mostly cached; X20 cold 50.669 s | one-VM VLM-enabled release; 9 compatible / 0 contradicted / 3 unknown findings; [results](A21-deadline/RESULTS.md) |
 | [A22](A22-left-during-service-replay/) | agent (offline replay on datathon) | New rule L-LEFT-DURING-SERVICE (231 п. 22) from the legal review, baseline vs + rule on the same code; re-run after merging A21 | (cached F1 perception) | 32 / 32 before A21, 30 / 30 after | 13/21, then 11/21, unchanged by the rule | 0/19 | unchanged | 3.3 s replay | measured, 0 findings (no cashier exit during a client session in the open clips); rule stays disabled |
+| [A27](A27-zero-shot-cash-detectors/) | agent (datathon) + user box review | Zero-shot cash detectors with commercial licenses on the 12 A24 presence frames, one prompt per pass, full frame + tiles; user marked each top box | OWLv2-base, OWLv2-large, MM-Grounding-DINO-large (SAM 3 gated, not run) | n/a | top box on cash: OWLv2-base 7/7, OWLv2-large 7/7, MM-GDINO 0/7 | wrong box above thr: 1 / 0 / 12 of 12 | - | 2.7 / 12.6 / 22 s per frame (15 passes) | measured; A13's 0/7 was label competition ("id card" wins); runtime labels cash `id_card` in 4/7 |
 
 ## Current conclusions
 
@@ -51,6 +52,9 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
   added no correct detections. Door checks failed a clean control and remain diagnostic.
 - A13's historical 4/11 cash accuracy came mainly from negatives. The re-score records
   OWLv2/Qwen2.5-VL-7B cash TP 0, FN 7, TN 4; Grounding DINO TP 1, FN 6, TN 3, FP 1.
+- A27 qualifies that: asked about banknotes alone, OWLv2-base puts its top box on cash in 7/7
+  (user-checked). Running all prompts in one pass lets "id card" win on the cash box; the
+  runtime's `objects()` labels the cash `id_card` in 4/7 frames. Fix label competition first.
 - A21's native-tile object probe adds no cash detections beyond the existing full+desk
   inputs. The 4B temporal probe leaves most cash cases unknown and adds one false ID.
 - A08 already tested 4B/8B generic violation-window prompts without useful clean-twin
