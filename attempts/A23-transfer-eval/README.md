@@ -46,3 +46,11 @@ source pins, manifests, scorer code and decisions are retained in the repository
 The teammate's later before/moment/after evidence change (`d0d7f0a`) was merged
 after these tests; all four focused evidence tests passed. It did not change the
 recorded A23 verdicts or their source revision.
+
+Final deployment: application revision `bc67950` includes that evidence feature
+for future jobs. The checker restarted only after confirming zero active jobs;
+health and readiness both returned200. Existing saved results were retained.
+The local4B safe checks and automatic/default camera configuration are unchanged.
+See `application-deployment.json`. A26 completed the identity diagnosis and
+retained its rule safeguard as an unapplied candidate; see
+[the review decision](../A26-person-context/DECISION.md).

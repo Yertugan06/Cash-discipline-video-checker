@@ -1,0 +1,92 @@
+--- a/backend/f1/calibration.py
++++ b/backend/f1/calibration.py
+@@ -101,8 +101,9 @@
+             label=label, score=float(np.mean([d.score for d in cluster])), box=box
+         )
+     data = yaml.safe_load(overrides_path.read_text(encoding="utf-8"))
+-    if not isinstance(data, dict) or set(data) - {"videos"}:
+-        raise ValueError("Override file must contain a videos mapping")
++    if not isinstance(data, dict) or set(data) - {"videos", "camera"}:
++        raise ValueError("Override file accepts camera geometry and a videos mapping")
++    camera = Override.model_validate(data.get("camera", {}))
+     entries = data.get("videos", {})
+     if not isinstance(entries, dict):
+         raise ValueError("Override videos must be a mapping keyed by SHA-256")
+@@ -110,11 +111,24 @@
+         raise ValueError("Override keys must be complete SHA-256 hashes, not clip names")
+     entries = {key.lower(): value for key, value in entries.items()}
+     override = Override.model_validate(entries.get(checksum, {}))
+-    for label, box in override.objects.items():
++    sources = {label: "open_vocabulary_scene_consensus" for label in objects}
++    for label, box in (camera.objects | override.objects).items():
+         if label not in {"desk", "safe", "door", "laptop", "counter"}:
+             raise ValueError(f"Unknown static object override: {label}")
+         objects[label] = Detection(label=label, score=1, box=box)
+-    scene = Scene(objects=objects, zones=override.zones, candidates=candidates)
++        sources[label] = "manual_video" if label in override.objects else "manual_camera"
++    scene = Scene(
++        objects=objects,
++        object_sources=sources,
++        zones=camera.zones | override.zones,
++        candidates=candidates,
++    )
++    if camera.objects:
++        scene.warnings.append(
++            "Fixed-camera geometry is manually configured: "
++            + ", ".join(sorted(camera.objects))
++            + ". Its score marks configuration, not model probability."
++        )
+     for name, detection in objects.items():
+         x1, y1, x2, y2 = detection.box
+         scene.zones.setdefault(name, [(x1, y1), (x2, y1), (x2, y2), (x1, y2)])
+--- a/backend/f1/vision_types.py
++++ b/backend/f1/vision_types.py
+@@ -130,6 +130,7 @@
+ 
+ class Scene(BaseModel):
+     objects: dict[str, Detection]
++    object_sources: dict[str, str] = Field(default_factory=dict)
+     zones: dict[str, list[Point]] = Field(default_factory=dict)
+     cashier_direction: Point | None = None
+     cashier_position: Point | None = None
+--- /dev/null
++++ b/config/cameras/cash-room.yaml
+@@ -0,0 +1,6 @@
++# Optional geometry for the original fixed camera, confirmed by the operator.
++# Select with OVERRIDES_PATH; do not apply to mirrored or other-camera videos.
++camera:
++  objects:
++    door: [0.0, 0.025630159198113206, 0.33512931034482757, 0.5801886792452831]
++videos: {}
+--- /dev/null
++++ b/tests/test_camera_geometry.py
+@@ -0,0 +1,29 @@
++import pytest
++import yaml
++
++from backend.f1.calibration import calibrate
++from backend.f1.vision_types import Detection
++
++
++def test_camera_geometry_is_shared_with_explicit_video_override_preserved(tmp_path):
++    path = tmp_path / "geometry.yaml"
++    camera = (0.0, 0.02, 0.34, 0.58)
++    specific = (0.6, 0.1, 0.8, 0.6)
++    path.write_text(yaml.safe_dump({"camera": {"objects": {"door": camera}},
++                                   "videos": {"a" * 64: {"objects": {"door": specific}}}}))
++    neural = Detection(label="door", score=0.6, box=(0.2, 0.0, 0.6, 0.5))
++    for checksum in ("b" * 64, "c" * 64):
++        scene = calibrate([neural], path, checksum)
++        assert scene.objects["door"].box == camera
++        assert scene.object_sources["door"] == "manual_camera"
++        assert scene.candidates == [neural]
++    scene = calibrate([neural], path, "a" * 64)
++    assert scene.objects["door"].box == specific
++    assert scene.object_sources["door"] == "manual_video"
++
++
++def test_camera_geometry_rejects_invalid_coordinates(tmp_path):
++    path = tmp_path / "geometry.yaml"
++    path.write_text("camera: {objects: {door: [0, 0, 2, 1]}}\nvideos: {}\n")
++    with pytest.raises(ValueError):
++        calibrate([], path, "b" * 64)

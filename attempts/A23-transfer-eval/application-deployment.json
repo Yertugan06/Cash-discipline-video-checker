@@ -1,0 +1,11 @@
+{
+  "application_source_commit": "bc67950",
+  "pid": 408603,
+  "changed_runtime_module": "backend/evidence.py",
+  "evidence_sha256": "6d945c562c3af0a267b52df73d8e11772903621d14dd00618756e36fde57c4bb",
+  "healthz": 200,
+  "readyz": 200,
+  "active_jobs_before_restart": 0,
+  "inference_config": "unchanged: local4B safe only, default camera",
+  "prior_measured_runs_source": "4a3b9ea; retained unchanged"
+}

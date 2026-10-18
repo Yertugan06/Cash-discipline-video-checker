@@ -1,0 +1,10 @@
+{
+  "base_commit": "4a3b9ea",
+  "candidate_sha256": {
+    "backend/f1/calibration.py": "63aa5a68470b88994a22653b7a1fba7bccfd777b1e5ef5adb2afaa210be22800",
+    "backend/f1/vision_types.py": "a312875c047916c726743bb9d576ff17ef4548a77620af714b49fc4337b1ae04",
+    "config/cameras/cash-room.yaml": "c348739efe8fa74105efd13df4ff04605d79438d6a972f159041be6327702cf4",
+    "tests/test_camera_geometry.py": "29784b580e1e2e3127d01a7b89ee1ebfbf9e9e7e98153f509c13ed5110448e33"
+  },
+  "promotion": "not applied"
+}
