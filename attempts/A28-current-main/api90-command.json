@@ -1,0 +1,15 @@
+[
+  "python3",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/run_api.py",
+  "--inputs",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/inputs.json",
+  "--videos",
+  "/home/ubuntu/data/open/videos",
+  "--key-file",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/base/runtime/service-key",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/api-run2",
+  "--source-dir",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/base",
+  "--allow-perception-cache"
+]

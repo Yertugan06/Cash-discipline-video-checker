@@ -1,0 +1,11 @@
+{
+  "source_commit": "653b09c",
+  "files": {
+    "backend/contracts.py": "5651927165270c7d4bf6ae7affabd5bd219d318052f274b84ed8b56a9ede5bd9",
+    "backend/knowledge.py": "f756b1eccdb2036de50aa0a4250da8f16dbafe1aebd16fdd05df3a9713d9060f",
+    "backend/serialize.py": "480904bc5cd6f12e7c7b6ed11be92bf29654e537e7ed2ea7b24b70b203e567be",
+    "knowledge/rules.yaml": "95f3cf345b3671658da6ba62a15096c9334828a06ed6ecca5f26ae3517b640e2",
+    "knowledge/rulebook.yaml": "791c87bfcab4c2a7e31deae896a99b3881e186b1e3a124c197f3fb57de0b93e3",
+    "frontend/dist/index.html": "7c0603e910600036787a712f41d24d6d2ca4482341e33c4f77a544b5a74aa2e3"
+  }
+}

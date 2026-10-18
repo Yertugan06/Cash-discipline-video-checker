@@ -1,0 +1,44 @@
+{
+  "source_pins": {
+    "source_commit": "653b09c",
+    "manifest_sha256": "f06d464cb6973f7d029607d46beaa05f766701976449e0b4f00ac5cee6f0fc37",
+    "runner_sha256": "a3eee68bfaa6d1cbfc550a8757a13ae86ed865e64b47460739e1f6cb43f3ad73",
+    "server_source_commit": "not_exposed_by_API",
+    "files": [
+      {
+        "path": "backend/main.py",
+        "sha256": "3845d19581d857eb1850233185ae4d4e58c7b4bf164c049a3c24e98c85c85729"
+      },
+      {
+        "path": "backend/contracts.py",
+        "sha256": "5651927165270c7d4bf6ae7affabd5bd219d318052f274b84ed8b56a9ede5bd9"
+      },
+      {
+        "path": "backend/f1/detector.py",
+        "sha256": "2957bc43eddccf62d2a3d7f2dc2932271ec4d924e1dde2de0599aec1a9ad116c"
+      },
+      {
+        "path": "backend/f1/perception.py",
+        "sha256": "6f5e67f564db7a0fd99ca9e51ba427d6f32987f678134aae1c963901148aa266"
+      },
+      {
+        "path": "backend/f1/events.py",
+        "sha256": "d13e9fca69dd9c460d9872578eb21b07adfe66fe8bc0fb3ccbd8aaa5ae81f437"
+      },
+      {
+        "path": "backend/f1/rules.py",
+        "sha256": "58c19c185c62ee054f5edf392629812458b363277f88c75c59f94868955a4324"
+      },
+      {
+        "path": "config/perception.yaml",
+        "sha256": "9201da3982e88a0d69b78ab2e9c746f665acf25e5307db2e6196e2abf092e75f"
+      },
+      {
+        "path": "knowledge/rules.yaml",
+        "sha256": "95f3cf345b3671658da6ba62a15096c9334828a06ed6ecca5f26ae3517b640e2"
+      }
+    ]
+  },
+  "input_count": 1,
+  "fresh_perception_required": true
+}

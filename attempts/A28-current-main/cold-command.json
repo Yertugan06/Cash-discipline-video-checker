@@ -1,0 +1,14 @@
+[
+  "python3",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/run_api.py",
+  "--inputs",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/cold-inputs.json",
+  "--videos",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/base/runtime/realtime/uploads",
+  "--key-file",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/base/runtime/service-key",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/cold-run1",
+  "--source-dir",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a28/base"
+]

@@ -1,0 +1,14 @@
+{
+  "source_commit": "653b09c",
+  "checker_pid": 427777,
+  "source_root": "/home/ubuntu/workspaces/datathon26-workers/shared/a28/base",
+  "healthz": 200,
+  "readyz": 200,
+  "frontend_status": 200,
+  "prior_active_jobs": 0,
+  "inference_config": "local4B safe only, default camera, one VM",
+  "runtime_preserved": "/home/ubuntu/workspaces/datathon26-workers/shared/a21/candidate/runtime",
+  "visual_request_timeout_s": 90,
+  "visual_budget_s": 90,
+  "reason": "First cold local VLM request exceeded45s; same total90s verification budget"
+}

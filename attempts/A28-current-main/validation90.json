@@ -1,0 +1,17 @@
+{
+  "source_commit": "653b09c",
+  "request_timeout_s": 90,
+  "samples": 40,
+  "successful_api_jobs": 40,
+  "confusion": {
+    "TP": 11,
+    "TN": 19,
+    "FP": 0,
+    "FN": 10
+  },
+  "correct": 30,
+  "perception_cache_hits": 40,
+  "runtime_median_s": 2.0741769064989057,
+  "runtime_total_s": 83.80504114902214,
+  "scope": "Actual API rerun; known development videos and cached detections, not held-out or cold40 accuracy"
+}

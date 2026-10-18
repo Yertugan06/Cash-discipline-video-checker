@@ -1,0 +1,22 @@
+{
+  "source_commit": "653b09c",
+  "samples": 40,
+  "successful_api_jobs": 40,
+  "confusion": {
+    "TP": 11,
+    "TN": 19,
+    "FP": 0,
+    "FN": 10
+  },
+  "correct": 30,
+  "perception_cache_hits": 40,
+  "findings": 12,
+  "evidence_images_validated_on_VM": 36,
+  "structured_legal_fields_validated": true,
+  "all_planned_samples_completed": true,
+  "verdict_or_finding_deltas_vs_A21": [],
+  "runtime_total_s": 84.74981174700588,
+  "runtime_median_s": 2.070632059001582,
+  "runtime_max_s": 6.324316631998954,
+  "scope": "Known40 development clips; unchanged detections reused, actual current-main API/serialization/evidence rerun, not fresh NN accuracy or legal validation"
+}

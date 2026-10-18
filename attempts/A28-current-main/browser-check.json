@@ -1,0 +1,13 @@
+{
+  "source_commit": "653b09c",
+  "url": "http://localhost:8105/",
+  "mode": "Explicitly labeled built-in demo; no video upload or API key",
+  "languages_checked": ["ru", "en"],
+  "production_asset_hashes_match": true,
+  "timecodes_checked": ["0:44", "1:18"],
+  "structured_legal_basis_rendered": true,
+  "observation_and_visibility_caveat_rendered": true,
+  "console_errors": 0,
+  "console_warnings": 0,
+  "screenshots_taken": false
+}

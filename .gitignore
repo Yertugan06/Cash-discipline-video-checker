@@ -11,6 +11,7 @@ node_modules/
 frontend/dist/
 .pytest_cache/
 .ruff_cache/
+.playwright-cli/
 
 # Runtime state (jobs, uploads, frames) - never committed
 backend/work/

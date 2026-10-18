@@ -1,0 +1,5 @@
+privateRaw/
+*-numeric-trace.json
+*.tar.gz
+__pycache__/
+*.stderr.log
