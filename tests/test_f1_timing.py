@@ -38,7 +38,7 @@ def test_seal_check_does_not_reuse_handover_geometry_at_exit(visible_on_exit):
 def test_inferred_bag_delivery_uses_visible_evidence_and_keeps_the_actual_exit_time(tmp_path):
     ctx = bag_visit_context()
     finding = RULES["K-SEAL-CHECK"](ctx)[0]
-    rules = Knowledge.load(Settings(api_key="x").knowledge_dir).enabled_rules()
+    rules = Knowledge.load(Settings(api_key="x").knowledge_dir).rules
     detector = F1Detector(Settings(api_key="x", work_dir=tmp_path), rules)
     adapted = detector._to_finding(finding, ctx.duration)
     assert adapted.t_anchor == adapted.t_start == 6
@@ -61,7 +61,7 @@ def test_confirmed_exit_breaks_a_tie_between_the_same_leave_rule(tmp_path):
     findings = RULES["L-NO-CASH-ON-LEAVE"](ctx)
     assert [f.timestamp_sec for f in findings] == [2, 8]
     assert [f.facts["confirmed_exit"] for f in findings] == [False, True]
-    rules = Knowledge.load(Settings(api_key="x").knowledge_dir).enabled_rules()
+    rules = Knowledge.load(Settings(api_key="x").knowledge_dir).rules
     detector = F1Detector(Settings(api_key="x", work_dir=tmp_path), rules)
     ranked = rank([detector._to_finding(f, ctx.duration) for f in findings], rules)
     assert [f.t_anchor for f in ranked] == [8, 2]

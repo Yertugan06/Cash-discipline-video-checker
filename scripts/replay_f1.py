@@ -141,7 +141,8 @@ def run(
     codex = load_codex(ROOT / "config" / "f1_codex.yaml")
     rules = yaml.safe_load((ROOT / "knowledge" / "rules.yaml").read_text(encoding="utf-8"))
     enabled = {rule["rule_id"] for rule in rules if rule.get("enabled")}
-    rule_entries = [RuleEntry.model_validate(rule) for rule in rules if rule.get("enabled")]
+    # The whole Knowledge Pack, as backend/main.py passes it; F1Detector checks it against the codex.
+    rule_entries = [RuleEntry.model_validate(rule) for rule in rules]
     adapter = F1Detector(Settings.from_env(), rule_entries)
     videos = {}
     if videos_dir:
