@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { getJob, uploadVideo } from './api.ts';
 import { words, type Language } from './messages.ts';
-import type { Job } from './contract.ts';
+import { VIDEO_SUFFIXES, type Job } from './contract.ts';
 import { sampleDoneJobViolation } from './fixtures/sampleDoneJob.ts';
 import ViolationCard from './components/ViolationCard.tsx';
 import CoverageWarning from './components/CoverageWarning.tsx';
@@ -51,7 +51,8 @@ export default function App() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
-    if (!file || !file.size || !file.name.toLowerCase().endsWith('.mov')) {
+    const name = file?.name.toLowerCase() ?? '';
+    if (!file || !file.size || !VIDEO_SUFFIXES.some((suffix) => name.endsWith(suffix))) {
       setError(text.wrongFile);
       return;
     }
@@ -109,7 +110,7 @@ export default function App() {
               <input
                 id="video"
                 type="file"
-                accept=".mov,video/quicktime"
+                accept={VIDEO_SUFFIXES.join(',')}
                 required
                 disabled={busy}
                 onChange={(event) => setFile(event.target.files?.[0])}

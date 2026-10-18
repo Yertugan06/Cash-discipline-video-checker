@@ -10,7 +10,8 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-from realtime.gateway import GatewaySettings, clip_key, create_app, load_labels
+from backend.media import VIDEO_SUFFIXES
+from realtime.gateway import MEDIA_TYPES, GatewaySettings, clip_key, create_app, load_labels
 
 DONE = {
     "status": "done",
@@ -127,10 +128,29 @@ def test_upload_streams_status_changes_and_final_verdict_over_websocket(tmp_path
     assert content_type.startswith("multipart/form-data") and api_key == "secret"
 
 
-def test_upload_rejects_non_mov(tmp_path):
+def test_upload_rejects_non_video(tmp_path):
     with make_client(tmp_path, FakeChecker()) as client:
-        response = client.post("/api/upload", files=[("files", ("a.mp4", b"x", "video/mp4"))])
+        response = client.post("/api/upload", files=[("files", ("a.avi", b"x", "video/avi"))])
     assert response.status_code == 415
+
+
+def test_every_accepted_suffix_has_a_media_type():
+    assert set(MEDIA_TYPES) == set(VIDEO_SUFFIXES)
+
+
+@pytest.mark.parametrize(
+    ("name", "media_type"), [("X-1.MP4", "video/mp4"), ("X-1.mkv", "video/x-matroska")]
+)
+def test_mp4_and_mkv_uploads_are_checked_and_replayable(tmp_path, name, media_type):
+    with make_client(tmp_path, FakeChecker()) as client, client.websocket_connect("/ws") as ws:
+        ws.receive_json()
+        response = client.post("/api/upload", files=[("files", (name, b"0123", media_type))])
+        assert response.status_code == 202
+        item = receive_until_finished(ws, 1)[name]
+        video = client.get(f"/api/items/{item['id']}/video")
+    assert item["status"] == "done"
+    assert video.status_code == 200 and video.content == b"0123"
+    assert video.headers["content-type"] == media_type
 
 
 @pytest.mark.parametrize(
@@ -152,7 +172,7 @@ def test_checker_failures_are_reported_not_swallowed(tmp_path, fake, error):
 def test_run_folder_submits_clips_one_at_a_time_in_numeric_order(tmp_path):
     videos = tmp_path / "videos"
     videos.mkdir()
-    for name in ("X-10.mov", "Х-2.mov", "X-1.mov", "notes.txt"):
+    for name in ("X-10.mov", "Х-2.mp4", "X-1.mkv", "notes.txt"):
         (videos / name).write_bytes(b"x")
     fake = FakeChecker()
     client = make_client(tmp_path, fake, video_dir=videos)
@@ -161,7 +181,7 @@ def test_run_folder_submits_clips_one_at_a_time_in_numeric_order(tmp_path):
         assert client.post("/api/run-folder").json() == {"queued": 3}
         finished = receive_until_finished(ws, 3)
         state = client.get("/api/state").json()["items"]
-    assert [i["name"] for i in state] == ["X-1.mov", "Х-2.mov", "X-10.mov"]
+    assert [i["name"] for i in state] == ["X-1.mkv", "Х-2.mp4", "X-10.mov"]
     assert all(i["status"] == "done" for i in finished.values())
     # sequential: each job was polled to completion before the next upload
     assert fake.log == ["upload", "finished"] * 3

@@ -1,7 +1,7 @@
 # Forte cash-discipline video checker
 
 A fully local AI service for Datathon 26: upload a short cashier-desk video
-(`.mov`), get back a verdict - **«Нарушение не обнаружено»** (no violation)
+(`.mov`, `.mp4` or `.mkv`), get back a verdict - **«Нарушение не обнаружено»** (no violation)
 or **«Обнаружены признаки возможных нарушений»** (signs of possible
 violations) - with, for each finding, a timecode, 1–3 evidence frames, a
 plain-language description and a link to the normative source.

@@ -11,6 +11,7 @@ import logging
 import re
 import secrets
 from contextlib import asynccontextmanager
+from pathlib import PurePath
 from typing import Annotated
 from uuid import uuid4
 
@@ -21,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.config import Settings
 from backend.contracts import AcceptedJob, DoneJob, FailedJob, JobResult, ProcessingJob
+from backend.media import VIDEO_SUFFIXES
 from backend.pipeline import Pipeline
 from backend.store import JobStore
 from backend.worker import Worker
@@ -110,12 +112,15 @@ def create_app(settings: Settings | None = None, *, pipeline: Pipeline | None = 
 
     @router.post("/analyze", response_model=AcceptedJob, status_code=202)
     def analyze(request: Request, file: UploadFile) -> AcceptedJob:
-        if not file.filename or not file.filename.lower().endswith(".mov"):
-            raise HTTPException(status_code=415, detail="Only .mov files are accepted")
+        suffix = PurePath(file.filename or "").suffix.lower()
+        if suffix not in VIDEO_SUFFIXES:
+            raise HTTPException(
+                status_code=415, detail=f"Only {', '.join(VIDEO_SUFFIXES)} files are accepted"
+            )
         job_id = uuid4().hex
         uploads = config.work_dir / "uploads"
         uploads.mkdir(parents=True, exist_ok=True)
-        destination = uploads / f"{job_id}.mov"
+        destination = uploads / f"{job_id}{suffix}"
         size = 0
         try:
             with destination.open("xb") as output:

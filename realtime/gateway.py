@@ -34,6 +34,7 @@ from fastapi import FastAPI, HTTPException, UploadFile, WebSocket, WebSocketDisc
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
+from backend.media import VIDEO_SUFFIXES
 from realtime.annotations import (
     Annotation,
     AnnotationStore,
@@ -48,6 +49,8 @@ from realtime.annotations import (
 logger = logging.getLogger(__name__)
 
 STATIC = Path(__file__).resolve().parent / "static"
+# The clips are H.264 in a QuickTime container; browsers play it as mp4.
+MEDIA_TYPES = {".mov": "video/mp4", ".mp4": "video/mp4", ".mkv": "video/x-matroska"}
 ItemStatus = Literal["queued", "submitting", "processing", "done", "failed"]
 
 
@@ -78,6 +81,12 @@ class GatewaySettings:
             poll_s=float(os.environ.get("POLL_S", "1.0")),
             job_timeout_s=float(os.environ.get("JOB_TIMEOUT_S", "400")),
         )
+
+
+def video_suffix(name: str) -> str | None:
+    """Lower-cased extension if `name` is a video the checker accepts, else None."""
+    suffix = Path(name).suffix.lower()
+    return suffix if suffix in VIDEO_SUFFIXES else None
 
 
 def clip_key(name: str) -> str | None:
@@ -208,7 +217,7 @@ class Runner:
         await self.hub.publish(item)
         body = await asyncio.to_thread(path.read_bytes)
         response = await self.client.post(
-            "/api/v1/analyze", files={"file": (item.name, body, "video/quicktime")}
+            "/api/v1/analyze", files={"file": (item.name, body, MEDIA_TYPES[path.suffix.lower()])}
         )
         if response.status_code != 202:
             await self.finish(item, error=f"checker {response.status_code}: {response.text}")
@@ -332,13 +341,16 @@ def create_app(
     @app.post("/api/upload", status_code=202)
     async def upload(files: list[UploadFile]) -> dict:
         names = [f.filename or "" for f in files]
-        bad = [n for n in names if not n.lower().endswith(".mov")]
+        bad = [n for n in names if video_suffix(n) is None]
         if not files or bad:
-            raise HTTPException(status_code=415, detail=f"Only .mov files are accepted: {bad}")
+            raise HTTPException(
+                status_code=415,
+                detail=f"Only {', '.join(VIDEO_SUFFIXES)} files are accepted: {bad}",
+            )
         ids = []
         for upload_file in files:
             item = new_item(upload_file.filename or "", "upload")
-            path = upload_dir / f"{item.id}.mov"
+            path = uploaded_path(item)
             with path.open("xb") as output:
                 while chunk := await upload_file.read(1024 * 1024):
                     output.write(chunk)
@@ -353,12 +365,15 @@ def create_app(
         if config.video_dir is None or not config.video_dir.is_dir():
             raise HTTPException(status_code=409, detail="VIDEO_DIR is not set on the gateway")
         paths = sorted(
-            (p for p in config.video_dir.iterdir() if p.suffix.lower() == ".mov"),
+            (p for p in config.video_dir.iterdir() if video_suffix(p.name)),
             key=lambda p: (int(k[2:]) if (k := clip_key(p.name)) else 10**6, p.name),
         )
         for path in paths:
             await app.state.runner.enqueue(new_item(path.name, "folder"), path, delete_after=False)
         return {"queued": len(paths)}
+
+    def uploaded_path(item: Item) -> Path:
+        return upload_dir / f"{item.id}{video_suffix(item.name)}"
 
     def known_item(item_id: str) -> Item:
         item = hub.items.get(item_id)
@@ -372,11 +387,10 @@ def create_app(
         if item.source == "folder" and config.video_dir is not None:
             path = config.video_dir / Path(item.name).name
         else:
-            path = upload_dir / f"{item.id}.mov"
+            path = uploaded_path(item)
         if not path.is_file():
             raise HTTPException(status_code=404, detail="Video file is no longer available")
-        # The clips are H.264 in a QuickTime container; browsers play it as mp4.
-        return FileResponse(path, media_type="video/mp4")
+        return FileResponse(path, media_type=MEDIA_TYPES[path.suffix.lower()])
 
     @app.get("/api/items/{item_id}/trace")
     async def item_trace(item_id: str) -> Response:
@@ -396,13 +410,13 @@ def create_app(
         return AnnotationStore(config.state_file.parent / "annotations")
 
     def folder_clips() -> dict[str, Path]:
-        """Clip key -> video file, for every .mov in VIDEO_DIR (the only clips one can annotate)."""
+        """Clip key -> video file, for every video in VIDEO_DIR (the only annotatable clips)."""
         if config.video_dir is None or not config.video_dir.is_dir():
             return {}
         clips: dict[str, Path] = {}
         for path in sorted(config.video_dir.iterdir()):
             key = clip_key(path.name)
-            if path.suffix.lower() == ".mov" and key:
+            if video_suffix(path.name) and key:
                 clips.setdefault(key, path)
         return dict(sorted(clips.items(), key=lambda kv: int(kv[0][2:])))
 
@@ -439,7 +453,8 @@ def create_app(
 
     @app.get("/api/clips/{key}/video")
     def clip_video(key: str) -> FileResponse:
-        return FileResponse(known_clip(key), media_type="video/mp4")
+        path = known_clip(key)
+        return FileResponse(path, media_type=MEDIA_TYPES[path.suffix.lower()])
 
     @app.get("/api/annotations/{key}")
     def get_annotation(key: str) -> Stored:

@@ -90,9 +90,19 @@ def test_health_and_ready_need_no_key(settings):
 # --- upload validation -------------------------------------------------------
 
 
-def test_non_mov_upload_is_rejected_415(settings):
+def test_non_video_upload_is_rejected_415(settings):
     with TestClient(create_app(settings, pipeline=FakePipeline(result=done_job()))) as client:
-        assert upload(client, "x.mp4").status_code == 415
+        for name in ("x.avi", "x.txt", "mov", "x"):
+            assert upload(client, name).status_code == 415
+
+
+@pytest.mark.parametrize("name", ["x.mov", "x.mp4", "x.mkv", "X.MP4"])
+def test_mov_mp4_mkv_uploads_are_accepted(settings, name):
+    with TestClient(create_app(settings, pipeline=FakePipeline(result=done_job()))) as client:
+        response = upload(client, name)
+        assert response.status_code == 202
+        stored = list((settings.work_dir / "uploads").iterdir())
+        assert [p.suffix for p in stored] == [name[1:].lower()]
 
 
 def test_empty_upload_is_rejected_422(settings):

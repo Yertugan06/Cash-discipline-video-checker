@@ -8,7 +8,7 @@ as soon as it changes.
 browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-API-Key--> checker :8000
 ```
 
-- Videos (browser uploads or every `.mov` in `VIDEO_DIR`) go into one FIFO. The gateway
+- Videos (browser uploads or every `.mov`/`.mp4`/`.mkv` in `VIDEO_DIR`) go into one FIFO. The gateway
   submits them **one at a time**. The checker's per-job budget (270 s) starts at upload
   time, so submitting 40 at once would time out the tail of the queue.
 - The checker's `API_KEY` stays in the gateway; the browser never sees it.
@@ -31,8 +31,8 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
 |---|---|---|
 | GET | `/` | the live page (`static/index.html`) |
 | WS | `/ws` | `{"type":"snapshot","items":[...]}` on connect, then `{"type":"item","item":{...}}` per change |
-| POST | `/api/upload` | multipart, field `files` (one or more `.mov`) |
-| POST | `/api/run-folder` | queues every `.mov` in `VIDEO_DIR`, in clip-number order |
+| POST | `/api/upload` | multipart, field `files` (one or more `.mov`/`.mp4`/`.mkv`) |
+| POST | `/api/run-folder` | queues every `.mov`/`.mp4`/`.mkv` in `VIDEO_DIR`, in clip-number order |
 | GET | `/api/state` | same as the snapshot |
 | GET | `/api/config` | `{folder, labels}` |
 | GET | `/api/items/{id}/video` | the item's source video (Range requests, for the replay player) |

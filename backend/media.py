@@ -15,6 +15,8 @@ from pathlib import Path
 from backend.contracts import VideoInfo
 
 MAX_DURATION_SEC = 180.0
+# Upload containers the API accepts; ffprobe/ffmpeg read all of them.
+VIDEO_SUFFIXES = (".mov", ".mp4", ".mkv")
 
 logger = logging.getLogger(__name__)
 

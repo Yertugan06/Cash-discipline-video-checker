@@ -7,6 +7,9 @@
 // API (jury contract unchanged; extras optional) — contracts.py bottom section
 // ---------------------------------------------------------------------------
 
+// Upload containers POST /api/v1/analyze accepts; mirrors backend/media.py VIDEO_SUFFIXES.
+export const VIDEO_SUFFIXES = ['.mov', '.mp4', '.mkv'];
+
 export type Coverage = {
   step_s: number;
   planned: number;
