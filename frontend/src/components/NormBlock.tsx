@@ -1,5 +1,6 @@
 import type { Violation } from '../contract.ts';
 import { citationBadge, words, type Language } from '../messages.ts';
+import Icon from './Icon.tsx';
 
 /**
  * The norm block (implementation-plan.md WP4 UI requirements): source
@@ -17,10 +18,10 @@ export default function NormBlock({ violation, language }: { violation: Violatio
   return (
     <div className="norm-block">
       <p className="norm-source">
-        <span className="norm-label">{text.source}:</span>{' '}
+        <span className="norm-label"><Icon name="book" size={15} />{text.source}</span>{' '}
         {violation.source_url ? (
           <a href={violation.source_url} rel="noreferrer" target="_blank">
-            {violation.source ?? text.openSource}
+            {violation.source ?? text.openSource}<Icon name="arrowUpRight" size={13} />
           </a>
         ) : (
           <span>{violation.source}</span>
@@ -35,7 +36,7 @@ export default function NormBlock({ violation, language }: { violation: Violatio
       </p>
       {violation.source_quote ? (
         <blockquote className="norm-quote">
-          <span className="norm-label">{text.quote}:</span> «{violation.source_quote}»
+          <span className="norm-label">{text.quote}</span> «{violation.source_quote}»
         </blockquote>
       ) : null}
     </div>
