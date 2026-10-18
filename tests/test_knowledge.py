@@ -10,7 +10,7 @@ import pytest
 import yaml
 
 from backend.contracts import Finding
-from backend.knowledge import Knowledge, KnowledgeError
+from backend.knowledge import Knowledge, KnowledgeError, clock
 
 ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_ROOT = ROOT / "knowledge"
@@ -28,6 +28,7 @@ def _norm(norm_id: str, citation_status: str = "pending") -> dict:
         "norm_id": norm_id,
         "jurisdiction": "KZ",
         "document_title": "Test regulation",
+        "act_short_title": "Test rules",
         "issuing_authority": "Test authority",
         "act": "1",
         "act_number": "1",
@@ -199,34 +200,45 @@ def test_enabled_rule_rejects_invalid_citation_at_load(tmp_path):
 # ---------------------------------------------------------------------------------------------
 
 
-def test_describe_contains_observation_and_claim(tmp_path):
-    template = "С {t_start} по {t_end} с кассир отсутствует; на столе видны {object}."
+def test_describe_reads_what_is_seen_then_the_claim_then_the_norm(tmp_path):
+    template = "{interval} кассир отсутствует; на столе видны {object}."
     pack = _write_pack(tmp_path, [_rule("R1", ["n1"], template=template)], [_norm("n1")])
     k = Knowledge.load(pack)
     finding = Finding(
         rule_id="R1",
-        t_anchor=5.0,
-        t_start=5.0,
-        t_end=9.0,
-        support_t=[5.0, 6.0, 7.0],
-        facts={"t_start": 5.0, "t_end": 9.0, "object": "наличные"},
+        t_anchor=65.0,
+        t_start=65.0,
+        t_end=69.9,
+        support_t=[65.0, 66.0, 67.0],
+        facts={"t_start": 65.0, "t_end": 69.9, "object": "наличные"},
         rank_score=3.0,
     )
     g = k.ground([finding])[0]
-    text = k.describe(g)
-    assert "с 5" in text.lower() or "5.0" in text  # the observation's time slots were filled
-    assert "наличные" in text  # a fact slot was filled
-    assert "Признаки возможного нарушения: R1-ru." in text  # the claim
-    assert text.endswith("Основание: Test regulation, п. 1.")
+    assert g.observation == "С 1:05 по 1:09 кассир отсутствует; на столе видны наличные."
+    assert k.describe(g) == (
+        f"Что видно: {g.observation} Возможное нарушение: R1-ru. "
+        "Норма: Test rules, п. 1 (Test authority, № 1 от 01.01.2026)."
+    )
+
+
+def test_a_single_moment_reads_as_one_time_not_a_zero_length_range(tmp_path):
+    pack = _write_pack(tmp_path, [_rule("R1", ["n1"], template="{interval} x")], [_norm("n1")])
+    finding = _simple_finding("R1").model_copy(update={"t_start": 12.4, "t_end": 12.9})
+    assert Knowledge.load(pack).ground([finding])[0].observation == "В 0:12 x"
+
+
+@pytest.mark.parametrize(
+    ("seconds", "text"), [(0.0, "0:00"), (9.99, "0:09"), (60.0, "1:00"), (68.9, "1:08")]
+)
+def test_clock_truncates_like_a_video_player(seconds, text):
+    assert clock(seconds) == text
 
 
 def test_describe_raises_knowledge_error_on_missing_fact(tmp_path):
     pack = _write_pack(tmp_path, [_rule("R1", ["n1"], template="{missing_fact}")], [_norm("n1")])
     k = Knowledge.load(pack)
-    finding = _simple_finding("R1")
-    g = k.ground([finding])[0]
     with pytest.raises(KnowledgeError):
-        k.describe(g)
+        k.ground([_simple_finding("R1")])
 
 
 # ---------------------------------------------------------------------------------------------

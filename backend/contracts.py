@@ -154,6 +154,7 @@ class NormRef(BaseModel):
     norm_id: str
     jurisdiction: Literal["KZ"]
     document_title: str
+    act_short_title: str  # nominative name for citations, e.g. "Правила ..."
     issuing_authority: str
     act: str
     act_number: str
@@ -194,6 +195,7 @@ class GroundedFinding(BaseModel):
     rule: RuleEntry
     norms: list[NormRef]
     citation_status: Literal["verified", "pending", "invalid"]
+    observation: str  # rule.description_template filled with the finding's facts
 
 
 # ---------------------------------------------------------------------------
@@ -204,6 +206,24 @@ class GroundedFinding(BaseModel):
 class EvidenceFrame(BaseModel):
     timestamp_sec: float
     image_base64: str  # JPEG only
+
+
+class LegalBasis(BaseModel):
+    """One norm a violation cites, ready for display; the first in `Violation.legal_basis` is the
+    primary citation."""
+
+    norm_id: str
+    citation: str  # human-readable reference: act short title, punkt, authority, number, date
+    act_short_title: str
+    punkt: str
+    quote: str
+    url: str
+    strength: Literal["direct", "indirect", "weak"]
+    citation_status: Literal["verified", "pending", "invalid"]
+    document_title: str
+    issuing_authority: str
+    act_number: str
+    adopted_on: date
 
 
 class Violation(BaseModel):
@@ -227,6 +247,12 @@ class Violation(BaseModel):
     detection_confidence: float | None = Field(default=None, ge=0, le=1)
     business_status: Literal["confirmed", "candidate"] | None = None
     implementation_status: Literal["implemented", "unimplemented"] | None = None
+    # structured explanation, so the UI need not parse `description`
+    observation: str | None = None  # what the video shows
+    t_start_sec: float | None = None  # supporting interval
+    t_end_sec: float | None = None
+    visibility_caveat: str | None = None  # what the video cannot establish
+    legal_basis: list[LegalBasis] | None = None  # every cited norm, primary first
 
 
 class DoneJob(BaseModel):

@@ -36,10 +36,10 @@ export function getJob(jobId: string, key: string, signal?: AbortSignal): Promis
   return request(`/api/v1/jobs/${encodeURIComponent(jobId)}`, key, { signal });
 }
 
-/** mm:ss.t, e.g. 68.2 -> "1:08.2". */
+/** m:ss, truncated like a player's clock and like backend/knowledge.py clock(): 68.9 -> "1:08". */
 export function timecode(seconds: number): string {
-  const tenths = Math.round(seconds * 10);
-  return `${Math.floor(tenths / 600)}:${((tenths % 600) / 10).toFixed(1).padStart(4, '0')}`;
+  const whole = Math.floor(seconds);
+  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
 }
 
 /** Raw seconds, one decimal place, e.g. 68.2 -> "68.2 s". */

@@ -135,15 +135,21 @@ no evaluator yet. Disabled rules carry a reason and are skipped by the evaluator
 
 ## Three distinct statements (architecture.md §3)
 
-`Knowledge.describe()` produces exactly two of the three statements (the third, citation, is
-carried as separate `GroundedFinding`/`Violation` fields, not inlined into the description text):
+`Knowledge.describe()` joins the three statements into the jury `description`, each behind a
+label, e.g. "Что видно: С 0:09 по 0:19 кассир отсутствует на рабочем месте; на столе видны
+наличные. Возможное нарушение: <title_ru>. Норма: Правила осуществления кассовых операций ...,
+п. 20 ч. 2 (Правление Национального Банка Республики Казахстан, № 231 от 29.11.2019)."
+The same pieces also travel as separate `Violation` fields, so the UI never parses the text:
 
-1. **observation** -- `rule.description_template` filled from `Finding.facts` (+ `t` =
-   `round(t_anchor, 1)`), e.g. "С 9.0 по 19.0 с кассир отсутствует на рабочем месте; на столе
-   видны наличные.";
-2. **claim** -- always the fixed sentence "Признаки возможного нарушения: `<title_ru>`.";
+1. **observation** (`GroundedFinding.observation`, `Violation.observation`) --
+   `rule.description_template` filled by `Knowledge.ground()` from `Finding.facts`. Times are
+   `m:ss` (`knowledge.clock()`): `{t}`, `{t_start}`, `{t_end}`, and `{interval}`, which reads
+   "С 0:09 по 0:19", or "В 0:09" when the interval is a single moment;
+2. **claim** -- "Возможное нарушение: `<title_ru>`.";
 3. **citation** -- `rule.norm_ids[0]` resolves to a `NormRef` with structured KZ jurisdiction,
-   document title, issuing authority, number, adoption date, clause, quote, URL, and citation status.
+   document title, short title (`acts.<n>.short_title`), issuing authority, number, adoption date,
+   clause, quote, URL, and citation status; `knowledge.citation()` turns it into the readable
+   reference above. `Violation.legal_basis` lists every cited norm, primary first.
    Rule-to-clause strength (`direct`, `indirect`, or `weak`) lives on the rule because the same
    clause can support different rules with different strength.
 

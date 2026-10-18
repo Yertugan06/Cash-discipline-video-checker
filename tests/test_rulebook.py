@@ -39,6 +39,15 @@ def test_generated_files_pass_the_service_loaders():
     validate_outputs(render(load_rulebook(), _current_f1()))
 
 
+def test_every_acts_short_title_is_cut_from_its_official_title():
+    # "Правила осуществления ..." is the nominative of "Об утверждении Правил осуществления ...";
+    # past the first word, the short title must be the official wording, not a paraphrase.
+    for number, act in load_rulebook().acts.items():
+        first, _, rest = act.short_title.partition(" ")
+        assert rest and rest in " ".join(act.document_title.split()), number
+        assert act.document_title.split()[2].startswith(first[:-1]), number
+
+
 def test_f1_codex_keeps_everything_but_rules_and_clip_labels():
     current = _current_f1()
     generated = yaml.safe_load(

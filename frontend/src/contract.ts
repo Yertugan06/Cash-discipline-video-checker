@@ -27,6 +27,25 @@ export type EvidenceFrame = {
 
 export type CitationStatus = 'verified' | 'pending' | 'invalid';
 
+export type CitationStrength = 'direct' | 'indirect' | 'weak';
+
+/** One cited norm, ready for display (contracts.py LegalBasis). */
+export type LegalBasis = {
+  norm_id: string;
+  /** Human-readable reference: act short title, punkt, authority, number, date. */
+  citation: string;
+  act_short_title: string;
+  punkt: string;
+  quote: string;
+  url: string;
+  strength: CitationStrength;
+  citation_status: CitationStatus;
+  document_title: string;
+  issuing_authority: string;
+  act_number: string;
+  adopted_on: string;
+};
+
 export type Violation = {
   // jury-required fields (task.md §10) -- never rename, never add a required one
   type: string;
@@ -49,6 +68,16 @@ export type Violation = {
   detection_confidence?: number | null;
   business_status?: 'confirmed' | 'candidate' | null;
   implementation_status?: 'implemented' | 'unimplemented' | null;
+  // structured explanation, so the UI need not parse `description`
+  /** What the video shows. */
+  observation?: string | null;
+  /** Supporting interval. */
+  t_start_sec?: number | null;
+  t_end_sec?: number | null;
+  /** What the video cannot establish. */
+  visibility_caveat?: string | null;
+  /** Every cited norm, primary first. */
+  legal_basis?: LegalBasis[] | null;
 };
 
 export type DoneJob = {

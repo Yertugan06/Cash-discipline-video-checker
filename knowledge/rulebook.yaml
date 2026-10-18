@@ -9,11 +9,13 @@
 # acts.<n>.in_force / norms.<id>.citation_status: set only from a human check on adilet.zan.kz
 #   (who and when in verified_by / verified_at). `--freeze` refuses enabled rules whose norms are not
 #   verified or whose act is not confirmed in force.
+# acts.<n>.short_title: the act's name in the nominative, cut from document_title, for citations.
 # rules.<id>.norms: norm id -> strength (direct | indirect | weak); the first entry is the primary citation.
 # rules.<id>.unverified_reference: where the team thinks a basis might be; never shown as a citation.
 version: 1
 acts:
   '231':
+    short_title: Правила осуществления кассовых операций и операций по инкассации банкнот, монет и ценностей
     document_title: Об утверждении Правил осуществления кассовых операций и операций по инкассации банкнот,
       монет и ценностей в банках второго уровня, филиалах банков-нерезидентов Республики Казахстан, Национальном
       операторе почты и юридических лицах, исключительной деятельностью которых является инкассация банкнот,
@@ -23,6 +25,7 @@ acts:
     jurisdiction: KZ
     in_force: unverified
   '14':
+    short_title: Правила организации охраны и устройства помещений банков второго уровня
     document_title: Об утверждении Правил организации охраны и устройства помещений банков второго уровня,
       филиалов банков-нерезидентов Республики Казахстан, Национального оператора почты, юридических лиц,
       исключительной деятельностью которых является инкассация банкнот, монет и ценностей, и юридических
@@ -33,6 +36,7 @@ acts:
     jurisdiction: KZ
     in_force: unverified
   '53':
+    short_title: Требования к обеспечению информационной безопасности банков
     document_title: Об утверждении Требований к обеспечению информационной безопасности банков, филиалов
       банков-нерезидентов Республики Казахстан и организаций, осуществляющих отдельные виды банковских
       операций
@@ -244,8 +248,7 @@ rules:
       min_samples: 2.0
       check_window_s: 6.0
       cash_frac_threshold: 0.5
-    description_template: С {t_start} по {t_end} с кассир отсутствует на рабочем месте; на столе видны
-      {object}.
+    description_template: '{interval} кассир отсутствует на рабочем месте; на столе видны {object}.'
     f1:
       family: Leaving
       signals: Money detector; person tracker
@@ -283,8 +286,7 @@ rules:
       exit_window_s: 3.0
       key_frac_threshold: 0.5
       key_lookback_s: 5.0
-    description_template: С {t_start} по {t_end} с, после выхода кассира из комнаты, ключ виден в замке
-      сейфа.
+    description_template: '{interval}, после выхода кассира из комнаты, ключ виден в замке сейфа.'
     f1:
       family: Leaving
       signals: Safe state; hand pose at the lock
@@ -318,8 +320,7 @@ rules:
       min_away_s: 3.0
       min_samples: 2.0
       unlocked_frac_threshold: 0.6
-    description_template: С {t_start} по {t_end} с, после выхода кассира из комнаты, экран ноутбука остаётся
-      разблокированным (рабочий экран, не заставка блокировки).
+    description_template: '{interval}, после выхода кассира из комнаты, экран ноутбука остаётся разблокированным (рабочий экран, не заставка блокировки).'
     f1:
       family: Leaving
       signals: Screen state classifier on the laptop crop
@@ -356,8 +357,7 @@ rules:
     - cashier_in_room
     - clients_at_desk
     params: {}
-    description_template: С {t_start} по {t_end} с кассир вне рабочего места, а клиент ещё у кассы
-      (обслуживание не завершено).
+    description_template: '{interval} кассир вне рабочего места, а клиент ещё у кассы (обслуживание не завершено).'
     f1:
       family: Leaving
       signals: Person tracker (cashier EXIT); client session
@@ -392,8 +392,7 @@ rules:
       min_samples: 2.0
       docs_frac_threshold: 0.5
       exit_window_s: 3.0
-    description_template: С {t_start} по {t_end} с, после выхода кассира из комнаты, на столе видны документы
-      или носители.
+    description_template: '{interval}, после выхода кассира из комнаты, на столе видны документы или носители.'
     f1:
       family: Leaving
       signals: Document / tablet detector; person tracker
@@ -424,7 +423,7 @@ rules:
     - cashier_action
     params:
       safe_open_s: 4.0
-    description_template: С {t_start} по {t_end} с сейф открыт, а кассир находится не у сейфа.
+    description_template: '{interval} сейф открыт, а кассир находится не у сейфа.'
     f1:
       family: Storage & desk
       signals: Safe door state; person tracker
@@ -463,8 +462,7 @@ rules:
       entry_lookback_s: 4.0
       cash_lookback_s: 3.0
       cash_frac_threshold: 0.6
-    description_template: В {t_end} с начинается обслуживание следующего клиента; наличные предыдущей
-      операции ещё видны на столе.
+    description_template: 'В {t_end} начинается обслуживание следующего клиента; наличные предыдущей операции ещё видны на столе.'
     f1:
       family: Storage & desk
       signals: Money detector; money-flow tracker; sessions
@@ -499,8 +497,7 @@ rules:
     - cashier_action
     params:
       merge_min_gap_s: 3.0
-    description_template: В {t} с кассир работает с наличными нового клиента, пока на столе остаются наличные
-      предыдущей операции.
+    description_template: 'В {t} кассир работает с наличными нового клиента, пока на столе остаются наличные предыдущей операции.'
     f1:
       family: Storage & desk
       signals: Money-flow tracker
@@ -534,8 +531,7 @@ rules:
     - collector_present
     params:
       min_samples: 2.0
-    description_template: С {t_start} по {t_end} с на стороне кассира находится {people_count} человек(а)
-      одновременно.
+    description_template: '{interval} на стороне кассира находится {people_count} человек(а) одновременно.'
     f1:
       family: Access
       signals: Person tracker; zones from calibration
@@ -571,8 +567,7 @@ rules:
     params:
       door_open_s: 4.0
       presence_frac_threshold: 0.5
-    description_template: С {t_start} по {t_end} с дверь кассового помещения открыта, пока кассир работает
-      за столом.
+    description_template: '{interval} дверь кассового помещения открыта, пока кассир работает за столом.'
     f1:
       family: Access
       signals: Person tracker; door zone; door state; hand pose
@@ -605,7 +600,7 @@ rules:
     - collector_present
     params:
       min_samples: 2.0
-    description_template: С {t_start} по {t_end} с одновременно несколько клиентов обслуживаются за столом.
+    description_template: '{interval} одновременно несколько клиентов обслуживаются за столом.'
     f1:
       family: Access
       signals: Sessions; handover detection
@@ -643,8 +638,7 @@ rules:
       count_window_before_s: 3.0
       count_window_after_s: 2.0
       count_frac_threshold: 0.5
-    description_template: В {t} с клиент покидает стол, пока наличные ещё пересчитываются или проверяются
-      на машине.
+    description_template: 'В {t} клиент покидает стол, пока наличные ещё пересчитываются или проверяются на машине.'
     f1:
       family: Client checks
       signals: Counting machine running state; hand count; exit
@@ -683,8 +677,7 @@ rules:
       min_samples: 2.0
       entry_lookback_s: 4.0
       id_lookback_s: 2.0
-    description_template: В {t} с зафиксирована первая передача наличных клиентом; показ документа ранее
-      в сессии не зафиксирован.
+    description_template: 'В {t} зафиксирована первая передача наличных клиентом; показ документа ранее в сессии не зафиксирован.'
     f1:
       family: Client checks
       signals: ID card / document detector; handover
@@ -716,8 +709,7 @@ rules:
     - cashier_action
     - detector_in_use
     params: {}
-    description_template: В {t} с кассир пересчитывает наличные вручную; использование детектора подлинности
-      не зафиксировано ни в одном наблюдаемом кадре.
+    description_template: 'В {t} кассир пересчитывает наличные вручную; использование детектора подлинности не зафиксировано ни в одном наблюдаемом кадре.'
     f1:
       family: Client checks
       signals: Detector device state; hand pose
@@ -746,7 +738,7 @@ rules:
     - desk_personal_items
     params:
       min_samples: 2.0
-    description_template: С {t_start} по {t_end} с на рабочем столе кассира находятся личные вещи.
+    description_template: '{interval} на рабочем столе кассира находятся личные вещи.'
     f1:
       family: Workplace conduct
       signals: Object detector (coat, handbag)
@@ -778,7 +770,7 @@ rules:
     - cashier_action
     params:
       min_samples: 2.0
-    description_template: С {t_start} по {t_end} с на рабочем месте кассира видны еда или напитки.
+    description_template: '{interval} на рабочем месте кассира видны еда или напитки.'
     f1:
       family: Workplace conduct
       signals: Object detector (cup, food); hand pose to face
@@ -810,7 +802,7 @@ rules:
     - cashier_action
     params:
       min_samples: 2.0
-    description_template: С {t_start} по {t_end} с у кассира в руках телефон на рабочем месте.
+    description_template: '{interval} у кассира в руках телефон на рабочем месте.'
     f1:
       family: Workplace conduct
       signals: Object detector (phone)
@@ -842,8 +834,7 @@ rules:
     - desk_bag
     params:
       collector_quick_s: 6.0
-    description_template: В {t_end} с инкассатор покидает помещение в пределах {collector_quick_s:.0f}
-      с после появления сумки на столе; совместный осмотр сумки не зафиксирован.
+    description_template: 'В {t_end} инкассатор покидает помещение в пределах {collector_quick_s:.0f} с после появления сумки на столе; совместный осмотр сумки не зафиксирован.'
     f1:
       family: Cash collection
       signals: Person tracker; hand pose on the bag
@@ -878,8 +869,7 @@ rules:
     - safe_door
     - counting_machine_in_use
     params: {}
-    description_template: В {t} с кассир использует сейф после вскрытия сумки; пересчёт содержимого между
-      этими моментами не зафиксирован.
+    description_template: 'В {t} кассир использует сейф после вскрытия сумки; пересчёт содержимого между этими моментами не зафиксирован.'
     f1:
       family: Cash collection
       signals: Money-flow tracker; counter state

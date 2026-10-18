@@ -67,7 +67,7 @@ optional extras used by the UI:
     {
       "type": "Наличные/ценности оставлены без присмотра: кассир покинул рабочее место",
       "timecode_sec": 44.2,
-      "description": "Что видно на видео. Признаки возможного нарушения: ...",
+      "description": "Что видно: С 0:44 по 0:49 ... Возможное нарушение: ... Норма: Правила ..., п. 20 ч. 2 (Правление ..., № 231 от 29.11.2019).",
       "evidence_frames": [
         { "timestamp_sec": 44.2, "image_base64": "/9j/4AAQ..." }
       ],
@@ -84,7 +84,27 @@ optional extras used by the UI:
       "adopted_on": "2019-11-29",
       "business_status": "confirmed",
       "implementation_status": "implemented",
-      "detection_confidence": 0.82
+      "detection_confidence": 0.82,
+      "observation": "С 0:44 по 0:49 кассир отсутствует на рабочем месте; на столе видны наличные.",
+      "t_start_sec": 44.2,
+      "t_end_sec": 49.6,
+      "visibility_caveat": "Видео не показывает номинал и принадлежность купюр ...",
+      "legal_basis": [
+        {
+          "norm_id": "231-20-2",
+          "citation": "Правила осуществления кассовых операций ..., п. 20 ч. 2 (Правление ..., № 231 от 29.11.2019)",
+          "act_short_title": "Правила осуществления кассовых операций и операций по инкассации банкнот, монет и ценностей",
+          "punkt": "п. 20 ч. 2",
+          "quote": "...",
+          "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112",
+          "strength": "direct",
+          "citation_status": "pending",
+          "document_title": "Об утверждении Правил ...",
+          "issuing_authority": "Правление Национального Банка Республики Казахстан",
+          "act_number": "231",
+          "adopted_on": "2019-11-29"
+        }
+      ]
     }
   ],
   "warnings": [],
@@ -95,7 +115,9 @@ optional extras used by the UI:
 `verdict` is `"violation"` («Обнаружены признаки возможных нарушений») when
 at least one finding survives, otherwise `"no_violation"` («Нарушение не
 обнаружено») with an empty `violations` list. At most 3 findings are returned
-per video. `type` is always one of the names in
+per video. `observation`, `t_start_sec`/`t_end_sec`, `visibility_caveat`, and
+`legal_basis` (every cited norm, primary first) are optional extras the UI uses
+instead of parsing `description`. `type` is always one of the names in
 [`VIOLATION_TYPES.md`](VIOLATION_TYPES.md), never free text.
 
 A `failed` response always carries a human-readable `error` and is never

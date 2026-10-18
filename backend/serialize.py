@@ -10,6 +10,10 @@ Mapping (SHARED_BRIEF.md "WP1 serializer mapping"):
   source_quote          = primary norm's verbatim quote
   strength              = primary norm's strength
   citation_status       = g.citation_status
+  observation           = g.observation (the filled template, also the start of description)
+  t_start_sec/t_end_sec = finding's supporting interval
+  visibility_caveat     = rule.visibility_caveat
+  legal_basis           = every cited norm, primary first, with knowledge.citation() as its label
   verdict               = "violation" iff violations is non-empty
   coverage, warnings    copied from DetectionResult
 """
@@ -18,7 +22,15 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from backend.contracts import DetectionResult, DoneJob, EvidenceFrame, GroundedFinding, Violation
+from backend.contracts import (
+    DetectionResult,
+    DoneJob,
+    EvidenceFrame,
+    GroundedFinding,
+    LegalBasis,
+    Violation,
+)
+from backend.knowledge import citation
 
 Describe = Callable[[GroundedFinding], str]
 
@@ -73,4 +85,25 @@ def _to_violation(g: GroundedFinding, frames: list[EvidenceFrame], describe: Des
         detection_confidence=g.finding.detection_confidence,
         business_status=g.rule.business_status,
         implementation_status=g.rule.implementation_status,
+        observation=g.observation,
+        t_start_sec=g.finding.t_start,
+        t_end_sec=g.finding.t_end,
+        visibility_caveat=g.rule.visibility_caveat,
+        legal_basis=[
+            LegalBasis(
+                norm_id=norm.norm_id,
+                citation=citation(norm),
+                act_short_title=norm.act_short_title,
+                punkt=norm.punkt,
+                quote=norm.quote,
+                url=str(norm.url),
+                strength=g.rule.citation_strengths[norm.norm_id],
+                citation_status=norm.citation_status,
+                document_title=norm.document_title,
+                issuing_authority=norm.issuing_authority,
+                act_number=norm.act_number,
+                adopted_on=norm.adopted_on,
+            )
+            for norm in sorted(g.norms, key=lambda n: n.norm_id != primary_id)
+        ],
     )

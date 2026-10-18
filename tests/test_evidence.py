@@ -36,7 +36,11 @@ def test_draw_boxes_outlines_the_normalized_box_and_keeps_the_frame_size():
 
 def _grounded(finding):
     return GroundedFinding(
-        finding=finding, rule=make_rule(), norms=[make_norm()], citation_status="verified"
+        finding=finding,
+        rule=make_rule(),
+        norms=[make_norm()],
+        citation_status="verified",
+        observation="observation",
     )
 
 

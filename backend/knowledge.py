@@ -2,7 +2,7 @@
 findings and jury-facing descriptions.
 
 This module never reads ``codex_verified.json`` or ``config/f1_codex.yaml`` -- those are build-time
-inputs consumed only by ``scripts/build_knowledge.py``. ``describe()`` is the single place template
+inputs consumed only by ``scripts/build_knowledge.py``. ``ground()`` is the single place template
 slots get filled in; nothing else in the codebase formats a ``RuleEntry.description_template``.
 """
 
@@ -17,6 +17,21 @@ from pydantic import ValidationError
 from backend.contracts import Finding, GroundedFinding, NormRef, RuleEntry, RuleScope
 
 NOT_JURY_ELIGIBLE = "Not jury-eligible: its legal basis is not human-verified yet."
+
+
+def clock(seconds: float) -> str:
+    """Video time as m:ss, truncated like a player's clock: 68.9 -> "1:08"."""
+    whole = int(seconds)
+    return f"{whole // 60}:{whole % 60:02d}"
+
+
+def citation(norm: NormRef) -> str:
+    """The reference a reader can look up: short act name, punkt, then who adopted it, when, and
+    its number, e.g. "Правила ..., п. 22 (Правление ..., № 231 от 29.11.2019)"."""
+    return (
+        f"{norm.act_short_title}, {norm.punkt} ({norm.issuing_authority}, "
+        f"№ {norm.act_number} от {norm.adopted_on:%d.%m.%Y})"
+    )
 
 
 class KnowledgeError(ValueError):
@@ -154,24 +169,41 @@ class Knowledge:
                 citation_status = "pending"
             grounded.append(
                 GroundedFinding(
-                    finding=finding, rule=rule, norms=norms, citation_status=citation_status
+                    finding=finding,
+                    rule=rule,
+                    norms=norms,
+                    citation_status=citation_status,
+                    observation=self._observe(rule, finding),
                 )
             )
         return grounded
 
-    def describe(self, g: GroundedFinding) -> str:
-        """The jury ``description``: the observation (facts filled into the template), then the
-        claim, and the primary citation's document and punkt."""
-        facts = dict(g.finding.facts)
-        facts.setdefault("t", round(g.finding.t_anchor, 1))
+    @staticmethod
+    def _observe(rule: RuleEntry, finding: Finding) -> str:
+        """Fill the rule's template. Times become m:ss; `{interval}` reads "С 0:12 по 0:19", or
+        "В 0:12" when the supporting interval is a single moment."""
+        facts: dict[str, object] = dict(finding.facts)
+        facts["t"] = clock(finding.t_anchor)
+        facts["t_start"] = clock(finding.t_start)
+        facts["t_end"] = clock(finding.t_end)
+        facts["interval"] = (
+            f"С {facts['t_start']} по {facts['t_end']}"
+            if facts["t_start"] != facts["t_end"]
+            else f"В {facts['t_start']}"
+        )
         try:
-            observation = g.rule.description_template.format(**facts)
+            return rule.description_template.format(**facts)
         except (KeyError, IndexError) as exc:
             raise KnowledgeError(
-                f"description_template for {g.rule.rule_id!r} needs a fact missing from "
+                f"description_template for {rule.rule_id!r} needs a fact missing from "
                 f"Finding.facts: {exc}"
             ) from exc
-        claim = f"Признаки возможного нарушения: {g.rule.title_ru}."
-        primary = g.norms[0]
-        basis = f"Основание: {primary.document_title}, {primary.punkt}."
-        return f"{observation} {claim} {basis}"
+
+    def describe(self, g: GroundedFinding) -> str:
+        """The jury ``description``: what the video shows, why it may be a violation, and the
+        primary norm as a reference a reader can look up."""
+        return (
+            f"Что видно: {g.observation} "
+            f"Возможное нарушение: {g.rule.title_ru}. "
+            f"Норма: {citation(g.norms[0])}."
+        )

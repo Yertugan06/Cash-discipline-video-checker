@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { citationBadge, coverageMessages, verdictText, words } from './messages.ts';
+import {
+  actNumberText,
+  citationBadge,
+  coverageMessages,
+  framePosition,
+  strengthText,
+  verdictText,
+  words,
+} from './messages.ts';
 
 test('verdict texts are verbatim from task.md §4', () => {
   assert.equal(verdictText('no_violation', 'ru'), 'Нарушение не обнаружено');
@@ -44,4 +52,18 @@ test('extra pipeline warnings are always surfaced regardless of coverage', () =>
 test('coverage warning absent when mode is full and no warnings', () => {
   assert.deepEqual(coverageMessages(null, [], 'ru'), []);
   assert.deepEqual(coverageMessages(undefined, [], 'en'), []);
+});
+
+test('legal-basis labels are plain language, not raw contract values', () => {
+  assert.equal(strengthText('indirect', 'ru'), 'косвенное основание');
+  assert.equal(strengthText('direct', 'en'), 'direct basis');
+  assert.equal(actNumberText('231', '2019-11-29', 'ru'), '№ 231 от 29.11.2019');
+  assert.equal(actNumberText('231', '2019-11-29', 'en'), 'No. 231 of 29.11.2019');
+});
+
+test('evidence frames are labelled before / moment / after the reported timecode', () => {
+  assert.deepEqual(
+    [42.2, 44.2, 46.2].map((t) => framePosition(t, 44.2, 'ru')),
+    ['до', 'момент', 'после'],
+  );
 });

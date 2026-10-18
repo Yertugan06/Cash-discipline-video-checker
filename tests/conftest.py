@@ -67,6 +67,7 @@ def make_norm(norm_id: str = "N-1", *, citation_status: str = "verified") -> Nor
         norm_id=norm_id,
         jurisdiction="KZ",
         document_title="Test regulation",
+        act_short_title="Test rules",
         issuing_authority="Test authority",
         act="Test act",
         act_number="1",
@@ -90,7 +91,7 @@ def make_rule(rule_id: str = "T-RULE", *, norm_ids: list[str] | None = None) -> 
         mechanism="test",
         states_used=[],
         params={},
-        description_template="С {t_start} по {t_end} с: тест.",
+        description_template="{interval}: тест.",
         visibility_caveat="",
         norm_ids=norm_ids if norm_ids is not None else ["N-1"],
         citation_strengths={
@@ -164,14 +165,18 @@ class FakeKnowledge:
                 else "pending"
             )
             grounded.append(
-                GroundedFinding(finding=finding, rule=rule, norms=norms, citation_status=status)
+                GroundedFinding(
+                    finding=finding,
+                    rule=rule,
+                    norms=norms,
+                    citation_status=status,
+                    observation=f"observation for {rule.rule_id}",
+                )
             )
         return grounded
 
     def describe(self, g: GroundedFinding) -> str:
-        facts = dict(g.finding.facts)
-        facts.setdefault("t", round(g.finding.t_anchor, 1))
-        return g.rule.description_template.format(**facts) + f" {g.rule.title_ru}."
+        return f"{g.observation} {g.rule.title_ru}."
 
 
 def identity_rank(findings: list[Finding], rules: list[RuleEntry], cap: int = 3) -> list[Finding]:

@@ -33,8 +33,8 @@ test('uses the jury endpoints and API key; preserves multipart field and HTTP er
 });
 
 test('formats timecodes with minute rollover and raw seconds', () => {
-  assert.equal(timecode(0), '0:00.0');
-  assert.equal(timecode(68.2), '1:08.2');
-  assert.equal(timecode(59.99), '1:00.0');
+  assert.equal(timecode(0), '0:00');
+  assert.equal(timecode(68.2), '1:08');
+  assert.equal(timecode(59.99), '0:59');
   assert.equal(seconds(44.2), '44.2 s');
 });

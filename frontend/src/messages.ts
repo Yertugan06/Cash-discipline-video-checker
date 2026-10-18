@@ -1,4 +1,4 @@
-import type { Coverage } from './contract.ts';
+import type { CitationStrength, Coverage } from './contract.ts';
 
 export type Language = 'ru' | 'en';
 
@@ -44,6 +44,17 @@ export const words = {
     coveragePartial: 'обработано кадров: {done}/{planned} (пропущено {failed}); дедлайн достигнут.',
     coverageCoarse: 'использован только грубый шаг разметки, часть событий короче шага могла быть пропущена.',
     demo: 'Пример (демо-данные)',
+    seen: 'Что видно на видео',
+    cannotConfirm: 'Что видео не подтверждает',
+    norm: 'Норма',
+    legalBasis: 'Правовое основание',
+    primaryNorm: 'Основная норма',
+    extraNorm: 'Дополнительная норма',
+    fragment: 'Фрагмент',
+    actNumber: '№ {number} от {date}',
+    openAdilet: 'Открыть текст на adilet.zan.kz',
+    strength: { direct: 'прямое основание', indirect: 'косвенное основание', weak: 'слабое основание' },
+    framePosition: { before: 'до', moment: 'момент', after: 'после' },
   },
   en: {
     title: 'Cash-discipline video checker',
@@ -81,6 +92,17 @@ export const words = {
     coveragePartial: 'frames processed: {done}/{planned} (failed {failed}); the deadline was reached.',
     coverageCoarse: 'only the coarse sampling step was used; events shorter than the step may have been missed.',
     demo: 'Sample (demo data)',
+    seen: 'What the video shows',
+    cannotConfirm: 'What the video cannot confirm',
+    norm: 'Norm',
+    legalBasis: 'Legal basis',
+    primaryNorm: 'Primary norm',
+    extraNorm: 'Additional norm',
+    fragment: 'Fragment',
+    actNumber: 'No. {number} of {date}',
+    openAdilet: 'Open the text on adilet.zan.kz',
+    strength: { direct: 'direct basis', indirect: 'indirect basis', weak: 'weak basis' },
+    framePosition: { before: 'before', moment: 'moment', after: 'after' },
   },
 } as const;
 
@@ -108,6 +130,23 @@ export function citationBadge(
       ? words[language].invalid
       : words[language].pending;
   return { label, verified, invalid };
+}
+
+/** Plain-language label for a citation strength. */
+export function strengthText(strength: CitationStrength, language: Language): string {
+  return words[language].strength[strength];
+}
+
+/** Where an evidence frame sits relative to the reported timecode (backend/evidence.py). */
+export function framePosition(frameSec: number, timecodeSec: number, language: Language): string {
+  const position = frameSec < timecodeSec ? 'before' : frameSec > timecodeSec ? 'after' : 'moment';
+  return words[language].framePosition[position];
+}
+
+/** "№ 231 от 29.11.2019" from an act number and an ISO date. */
+export function actNumberText(number: string, isoDate: string, language: Language): string {
+  const [year, month, day] = isoDate.split('-');
+  return words[language].actNumber.replace('{number}', number).replace('{date}', `${day}.${month}.${year}`);
 }
 
 /**

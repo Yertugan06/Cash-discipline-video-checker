@@ -46,6 +46,7 @@ class _Strict(BaseModel):
 
 
 class Act(_Strict):
+    short_title: str
     document_title: str
     issuing_authority: str
     adopted_on: date
@@ -169,6 +170,7 @@ def knowledge_pack(rb: Rulebook) -> tuple[list[dict], list[dict]]:
                 "norm_id": norm_id,
                 "jurisdiction": act.jurisdiction,
                 "document_title": act.document_title,
+                "act_short_title": act.short_title,
                 "issuing_authority": act.issuing_authority,
                 "adopted_on": act.adopted_on.isoformat(),
                 "act": norm.act,

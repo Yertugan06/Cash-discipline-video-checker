@@ -39,7 +39,11 @@ def test_one_grounded_finding_maps_to_a_violation_with_the_primary_norm():
     secondary = make_norm("N-secondary")
     finding = make_finding("T-RULE", t_anchor=12.5)
     grounded = GroundedFinding(
-        finding=finding, rule=rule, norms=[primary, secondary], citation_status="verified"
+        finding=finding,
+        rule=rule,
+        norms=[primary, secondary],
+        citation_status="verified",
+        observation="obs",
     )
     result = DetectionResult(findings=[finding], coverage=coverage(), warnings=["partial"])
     job = to_done_job("job-2", [grounded], result, [[frame(12.5)]], describe)
@@ -64,12 +68,39 @@ def test_one_grounded_finding_maps_to_a_violation_with_the_primary_norm():
     assert violation.business_status == "confirmed"
     assert violation.implementation_status == "implemented"
     assert len(violation.evidence_frames) == 1
+    assert violation.observation == "obs"
+    assert (violation.t_start_sec, violation.t_end_sec) == (finding.t_start, finding.t_end)
+    assert violation.visibility_caveat == rule.visibility_caveat
+
+
+def test_legal_basis_lists_every_norm_primary_first_with_a_readable_citation():
+    rule = make_rule("T-RULE", norm_ids=["N-primary", "N-secondary"])
+    rule.citation_strengths["N-secondary"] = "indirect"
+    finding = make_finding("T-RULE")
+    # ground() keeps rule order, but the serializer must not rely on it
+    grounded = GroundedFinding(
+        finding=finding,
+        rule=rule,
+        norms=[make_norm("N-secondary"), make_norm("N-primary")],
+        citation_status="verified",
+        observation="obs",
+    )
+    result = DetectionResult(findings=[finding], coverage=coverage(), warnings=[])
+    basis = (
+        to_done_job("job-5", [grounded], result, [[frame()]], describe).violations[0].legal_basis
+    )
+    assert [b.norm_id for b in basis] == ["N-primary", "N-secondary"]
+    assert [b.strength for b in basis] == ["direct", "indirect"]
+    assert basis[0].citation == "Test rules, п. 1 (Test authority, № 1 от 01.01.2026)"
+    assert basis[0].quote == "Verbatim quote."
 
 
 def test_rule_without_norms_is_rejected_rather_than_silently_dropped():
     rule = make_rule("T-RULE", norm_ids=[])
     finding = make_finding("T-RULE")
-    grounded = GroundedFinding(finding=finding, rule=rule, norms=[], citation_status="pending")
+    grounded = GroundedFinding(
+        finding=finding, rule=rule, norms=[], citation_status="pending", observation="obs"
+    )
     result = DetectionResult(findings=[finding], coverage=coverage(), warnings=[])
     with pytest.raises(SerializeError):
         to_done_job("job-3", [grounded], result, [[frame()]], describe)
@@ -79,7 +110,11 @@ def test_evidence_list_must_line_up_with_grounded_findings():
     rule = make_rule()
     finding = make_finding()
     grounded = GroundedFinding(
-        finding=finding, rule=rule, norms=[make_norm()], citation_status="verified"
+        finding=finding,
+        rule=rule,
+        norms=[make_norm()],
+        citation_status="verified",
+        observation="obs",
     )
     result = DetectionResult(findings=[finding], coverage=coverage(), warnings=[])
     with pytest.raises(SerializeError):
@@ -92,15 +127,17 @@ def test_two_findings_from_one_clip_survive_in_the_same_json_result():
     grounded = [
         GroundedFinding(
             finding=first,
-            rule=make_rule("S-CLEAN-DESK-HANDOVER"),
+            rule=make_rule("S-CLEAN-DESK-HANDOVER", norm_ids=["N-first"]),
             norms=[make_norm("N-first")],
             citation_status="pending",
+            observation="obs",
         ),
         GroundedFinding(
             finding=second,
-            rule=make_rule("S-NO-MERGE"),
+            rule=make_rule("S-NO-MERGE", norm_ids=["N-second"]),
             norms=[make_norm("N-second")],
             citation_status="pending",
+            observation="obs",
         ),
     ]
     result = DetectionResult(findings=[first, second], coverage=coverage(), warnings=[])

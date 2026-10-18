@@ -1,21 +1,52 @@
 import type { Violation } from '../contract.ts';
 import { timecode, seconds } from '../api.ts';
-import { words, type Language } from '../messages.ts';
-import NormBlock from './NormBlock.tsx';
+import { framePosition, words, type Language } from '../messages.ts';
+import NormBlock, { CitationBadge } from './NormBlock.tsx';
 
-/** One violation: type, timecode (mm:ss and seconds), description, 1-3
- * evidence frames, and the norm block (implementation-plan.md WP4). */
+/** One violation, read top to bottom: when and what, which norm, what the
+ * video shows (and cannot show), the evidence frames, then the full legal
+ * basis (implementation-plan.md WP4). Results without the structured
+ * `observation` fall back to the jury `description` string. */
 export default function ViolationCard({ violation, language }: { violation: Violation; language: Language }) {
   const text = words[language];
+  const primary = violation.legal_basis?.[0];
+  const start = violation.t_start_sec;
+  const end = violation.t_end_sec;
+  const hasFragment = typeof start === 'number' && typeof end === 'number' && timecode(start) !== timecode(end);
   return (
     <article>
       <h3>
         <span className="timecode">
           {timecode(violation.timecode_sec)} <small>({seconds(violation.timecode_sec)})</small>
+          {hasFragment ? (
+            <small className="fragment">
+              {' · '}
+              {text.fragment} {timecode(start)}–{timecode(end)}
+            </small>
+          ) : null}
         </span>
         {violation.type}
       </h3>
-      <p>{violation.description}</p>
+      {primary ? (
+        <p className="norm-summary">
+          <span className="norm-label">{text.norm}:</span> {primary.act_short_title}, {primary.punkt}
+          <CitationBadge status={primary.citation_status} language={language} />
+        </p>
+      ) : null}
+      {violation.observation ? (
+        <section className="explanation">
+          <h4>{text.seen}</h4>
+          <p>{violation.observation}</p>
+          {violation.visibility_caveat ? (
+            <>
+              <h4>{text.cannotConfirm}</h4>
+              <p className="caveat">{violation.visibility_caveat}</p>
+            </>
+          ) : null}
+        </section>
+      ) : (
+        <p>{violation.description}</p>
+      )}
       {typeof violation.detection_confidence === 'number' ? (
         <p className="detection-confidence">
           {text.confidence}: {Math.round(violation.detection_confidence * 100)}% ({text.confidenceNote})
@@ -29,7 +60,7 @@ export default function ViolationCard({ violation, language }: { violation: Viol
               alt={`${text.frames} ${timecode(frame.timestamp_sec)}`}
             />
             <figcaption>
-              {timecode(frame.timestamp_sec)} ({seconds(frame.timestamp_sec)})
+              {timecode(frame.timestamp_sec)} · {framePosition(frame.timestamp_sec, violation.timecode_sec, language)}
             </figcaption>
           </figure>
         ))}
