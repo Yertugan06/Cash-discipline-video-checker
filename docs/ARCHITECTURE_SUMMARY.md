@@ -57,6 +57,23 @@ Client --POST .mov--> API --> Worker (1 GPU job at a time, FIFO)
                            GET /jobs/{id}
 ```
 
+## What the rules rely on
+
+The event builder and rules were reworked on 2026-10-18 (attempt A20,
+`attempts/A20-night-orchestration/`). Each behaviour below is a mechanism with a unit test, not a
+threshold fitted to one clip:
+
+| Area | Behaviour |
+| --- | --- |
+| Scene scale | Distances (hand reach, laptop reach, glass and service margins) are multiples of the calibrated desk length, not fixed fractions of the image, so a camera nearer or farther gives the same events |
+| Workstation presence | The cashier counts as at the workstation while a confident hand is inside the laptop or money-counter box, even when the hips are farther away |
+| Leaving | An item counts as left behind only if it is seen in at least 2 frames of each short evidence window and the cashier stays away through the confirmation delay. A cash bag counts for `L-NO-CASH-ON-LEAVE` |
+| Entries | Someone already in the doorway in the first frame has not entered; the door rule needs an observed entry |
+| Client sessions | A client whose track is lost and reappears in place within the exit gap is the same client; a client exit needs visible movement away from the desk; two clients with hands on the desk at once, held, is a second client; the counter still running when the client leaves is counting without the client |
+| Personal items | Brief detection gaps don't split one item; boxes that match the laptop or the money counter are equipment, not personal items; a small coat box above the person's hip line is worn clothing |
+| Cash collection | `K-SEAL-CHECK` fires when a visitor with an observed entry delivers a bag that appears on the desk and leaves quickly, without staying for the check |
+| Ranking | Among equal findings, the one with a confirmed exit ranks first, so the top timecode is the moment the cashier is really gone |
+
 ## Components
 
 | Component | Role |
@@ -103,6 +120,19 @@ code and tests are kept, but it is not what runs on `datathon`; see
 
 ## Measured results
 
-See `attempts/README.md`. The F1 stack was measured as A01 (20/40 correct
-verdicts, 13/19 clean videos falsely flagged). The deployed service (A12)
-has not been scored on all 40 videos yet.
+Offline replay on the cached perception of the 40 unique open videos, scored against the
+organizer labels (`attempts/A20-night-orchestration/`):
+
+| Version | Correct /40 | Clean videos flagged /19 | Violations missed /21 |
+| --- | --- | --- | --- |
+| A01, the F1 stack before it was ported into this service | 20 | 13 | 7 |
+| A17, deployed on `datathon` before A20 | 25 | 5 | 10 |
+| **A20, this version** | **32** | **0** | **8** |
+
+- **Timecodes:** 13 caught violations; mean distance to the organizer second 1.54 s; within
+  ±1 / ±3 / ±5 s: 7 / 11 / 13.
+- **Robustness probes** (`scripts/replay_f1.py run --zoom/--mirror/--drop`, the clips replayed
+  as another camera distance, a mirrored camera or a weaker detector): zoom 0.7-1.3 and mirror
+  give exactly 32/0/8; losing 20% of object detections gives 31-32 / 0 / 8-9.
+- All 40 videos were also used while building A20, so expect less on new videos. The 8 misses
+  are listed in `docs/LIMITATIONS.md`.

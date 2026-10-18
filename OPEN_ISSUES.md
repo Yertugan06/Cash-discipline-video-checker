@@ -3,22 +3,20 @@
 Known problems that are not fixed yet. Add new ones at the top; when one is
 fixed, delete it here and say where in the commit message.
 
-## 3. F1 misses or mislabels dev violations that enabled rules cover
+## 3. F1 reports two violations under the wrong rule
 
-- **Found:** 2026-10-18, GPU run of commit 0b269aa on a separate instance (port 8002,
-  `RULE_SCOPE=detector`), checked with `python -m eval.check_outputs`. The live version
-  (7ae5873) gives identical verdicts, rules and times on the same clips, so this predates it.
-- **Missed (FN):** X-17 (annotated clause points to `K-SEAL-CHECK`) and X-34
-  (`C-COUNT-BEFORE-EXIT`). Both rules are enabled and have F1 evaluators; neither fired.
-- **Right verdict, wrong type and time:** X-15 reported `W-NO-PERSONAL-ITEMS` 5 s from the
-  organizer second, X-20 `L-NO-DOCS-ON-LEAVE` 4 s from it; their annotated clause (п. 20 ч. 2)
-  points to the cash/desk rules. Verdict scores, classification and localization do not.
-- **Fine:** clean counterparts X-16, X-21, X-37 gave no violation; every response matched the
-  jury schema with JPEG evidence and filled templates; 14-37 s per clip uncached.
-- **Next:** read the per-job traces (`GET /api/v1/jobs/{id}/trace` on the test instance) to see
-  whether perception never produced the events (L2) or the rules rejected them (L3).
-- **Not run:** X-4/X-47 (lockbox, needs the human gate) and an unseen, other-angle video
-  (none exists yet; see `robustness/README.md`).
+- **Found:** 2026-10-18, GPU run of commit 0b269aa (`RULE_SCOPE=detector`, `eval.check_outputs`),
+  updated after A20. A20 fixed the rest of the original finding: X-17 (`K-SEAL-CHECK` at 9.5 s)
+  and X-34 (`C-COUNT-BEFORE-EXIT` at 15 s) are caught, X-15 is reported as `L-NO-CASH-ON-LEAVE`
+  at the organizer's second.
+- **Still wrong:** X-20 is caught as `L-NO-DOCS-ON-LEAVE` at 1 s; its violation is the safe left
+  open at 5 s (CLIP reads the safe as closed in every frame). X-4/X-47 is caught as
+  `C-ID-BEFORE-CASH` at 66 s, but both clients show their ID card
+  (`attempts/A20-night-orchestration/clip-descriptions.md`); its violation is the first client's
+  cash left on the desk and mixed with the second client's. The verdict is right in both;
+  the type, the description and the time are not.
+- **Next:** the VLM checks (`attempts/README.md`, "Next to run") give the safe state and make
+  "cash without ID" depend on a VLM-confirmed absence of the ID card.
 
 ## 2. Docs whose content has not been checked against the code
 

@@ -32,7 +32,7 @@ datathon26/
 ├── data/                - team workbooks, gateway label index
 ├── eval/                - scores API outputs with the validation scorer
 ├── validation/          - validation harness, scorer, private gt
-├── attempts/            - every experiment: result, logs (A00-A13)
+├── attempts/            - every experiment: result, logs (A00-A20)
 ├── robustness/          - other-angle filming protocol
 └── archive/             - history: research, VM copies, old docs
 ```

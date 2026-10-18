@@ -1,6 +1,6 @@
 # What is current and what is history
 
-Updated 2026-10-17. Everything in the repo root except `archive/` is part of
+Updated 2026-10-18. Everything in the repo root except `archive/` is part of
 the current system or its evaluation. `archive/` holds history: research
 notes, superseded designs and raw copies of experiment workspaces. Nothing was
 deleted when the repo was split; files were moved with `git mv`.
@@ -15,12 +15,12 @@ deleted when the repo was split; files were moved with `git mv`.
 | `config/` | `f1_codex.yaml` (rule thresholds), `perception.yaml` (prompts, thresholds), `overrides.yaml` (manual zones per video hash). `f1_codex.yaml`'s `rules` are generated from `knowledge/rulebook.yaml` | yes |
 | `knowledge/` | `rulebook.yaml` (the one source for rules and their legal basis) and the Knowledge Pack generated from it: `rules.yaml`, `norms.json` | yes, except `rulebook.yaml` |
 | `models.lock.json`, `Dockerfile`, `compose*.yaml`, `requirements*.txt`, `pyproject.toml` | Build and model pins | yes |
-| `scripts/` | Build tools (`build_knowledge.py`: rulebook -> knowledge pack + F1 rules; `render_rules_doc.py`; `convert_codex.py` is a retired stub), weights download, jury client, F1 replay | no (run by hand) |
+| `scripts/` | Build tools (`build_knowledge.py`: rulebook -> knowledge pack + F1 rules; `render_rules_doc.py`; `convert_codex.py` is a retired stub), weights download, jury client, F1 replay (`replay_f1.py`: rerun the rules on cached perception, robustness probes `--zoom` / `--mirror` / `--drop`, `timing` against the organizer seconds) | no (run by hand) |
 | `deploy/` | Deployment runbook, Caddy, systemd units, vLLM setup for the alternative detector | no |
 | `docs/` | Submission docs (task.md §8): usage, architecture, models, rules, limitations | no |
 | `tests/` | pytest suite, `tests/e2e/` acceptance suite | no |
 | `data/` | Team workbooks and the label index for the gateway, see `data/README.md` | no |
-| `eval/` | Scores API outputs with the validation scorer | no |
+| `eval/` | Scores API outputs with the validation scorer; `check_outputs.py` checks API results against the jury contract and the labels; `ground_truth.py`, `sync_data.py` build and check the label data | no |
 | `validation/` | Pre-registered validation harness and the scorer's private ground truth, see below | no |
 | `attempts/` | Every experiment with its result and logs. Start at `attempts/README.md` | no |
 | `robustness/` | Other-angle filming protocol | no |

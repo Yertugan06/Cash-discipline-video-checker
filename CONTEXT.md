@@ -21,6 +21,19 @@ Working notes for coding agents on this project. Read before starting work.
 - Every approach tried, with its result and logs: `attempts/README.md` (the map). Add a row
   and a folder (copy `attempts/_template/`) for every new attempt, including failed ones.
 
+## Experiments
+
+- Rerun the rules on cached perception without the GPU: `scripts/replay_f1.py run`, then
+  `score` and `timing` against `data/prepared/videos.jsonl`. Robustness without new videos:
+  `run --zoom 0.8`, `--mirror`, `--drop 0.2 --seed N`. A change should leave these stable.
+- Copy a perception cache with `tar` or `cp -a`, never `cp -r`: each clip folder holds several
+  versions and the replay takes the newest by file time.
+- Services and replays need `RULE_SCOPE=detector` until the norms in `knowledge/rulebook.yaml`
+  are human-verified.
+- The night orchestration of 2026-10-18 (A20) kept its working file, the team's description of
+  every clip and the agents' reports in `attempts/A20-night-orchestration/` (`LAB.md`,
+  `clip-descriptions.md`). The next step it left is the VLM checks (`attempts/README.md`).
+
 ## Machines
 
 - `datathon` (Brev, L4): live service in `~/datathon26`, compose project `datathon26`,
@@ -42,4 +55,10 @@ Working notes for coding agents on this project. Read before starting work.
   stage. To rerun the rules on cached perception without the GPU, see `scripts/replay_f1.py`.
   Team data root: `~/data` (`open/` organizer data, `team/` team workbooks and reviews); the
   canonical copy for `python -m eval.sync_data`. Add files there, never overwrite.
+  To test a branch without touching the live service, run a second container from the same
+  image on another loopback port (A20 used `night-checker` on 8001 with its own copy of the
+  perception cache) and drive it with `attempts/A20-night-orchestration/spikes/api_run.py`,
+  or with a second gateway from the `datathon26-realtime` image on another port. The gateway
+  finds its checker through `CHECKER_URL` (default `http://127.0.0.1:8000`, the live service),
+  not `API_HOST`/`API_PORT`; with the wrong URL every job fails with 401.
 - `datathon2` (Brev, L4): stopped; its home is copied to `datathon:~/from-datathon2/`.

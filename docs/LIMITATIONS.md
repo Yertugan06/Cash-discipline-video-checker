@@ -14,7 +14,7 @@ alarm (task.md FAQ 16: "ложных срабатываний должно бы�
 пропуск нарушения недопустим"). The pipeline is tuned accordingly: a finding
 is reported whenever an enabled rule's conditions are met on the observed
 timeline, even when its citation is still `pending` (see "Citation
-status" below) — the alternative, suppressing a real finding until a human
+status" below) - the alternative, suppressing a real finding until a human
 has verified its law citation, would turn a detection miss into a legal
 one. This means **false positives are possible and expected to be more
 common than silent misses**; task.md FAQ 15 also warns that invoking
@@ -32,21 +32,30 @@ samples. So **a violation whose visible signature lasts less than about a
 second can be missed**. If the 270 s budget runs out before perception finishes,
 `coverage.deadline_hit` is `true` and the rules run on what was observed.
 
-## Weak perception
+## Weak perception: what the 8 misses have in common
 
-- **Small objects.** On 20 hand-labelled frames, OWLv2, Grounding DINO and a
-  VLM each answered only 4 of the 11 cash checks correctly (A13 in
-  `attempts/README.md`). Rules that depend on cash, keys, documents or the
-  laptop screen inherit that error.
-- **Static objects read as new ones.** On X-1 the only finding came from
-  OWLv2 matching a fixed object as "a handbag" (A12 trace in
-  `attempts/A12-adr002-service-f1/README.md`).
-- **False alarms concentrate in a few rules.** On the full 40-video run of the
-  same stack (A01), the worst rules were `A-OUTSIDER-ZONE` (71 false events),
-  `A-SECOND-PERSON` (31) and `L-NO-DOCS-ON-LEAVE` (13).
-- **Door rule never fired correctly.** `A-DOOR-LOCK` scored 0 of 2 on the
-  door clips (A01). It needs an observed `ENTER` event and a CLIP "open"
-  state 5 s later; missing either means no finding.
+Every violation A20 misses on the 40 open videos comes from something the detectors don't see
+(`attempts/A20-night-orchestration/LAB.md`, sections 3 and 5):
+
+| Clip | Violation | Why it's missed |
+| --- | --- | --- |
+| X-1 | Manual recount after the machine | No cash and no counter signal at that moment |
+| X-2 | Cash accepted without an ID check | Cash and ID cards are seen in 0 of 34 frames |
+| X-13 | Cash from an opened bag put in the safe without a recount | No bundles and no cash-to-safe event |
+| X-22 | Key left in the safe lock | A key is never detected |
+| X-44 | Rejected notes merged back without the banknote detector | The detector device is not a calibrated object |
+| X-11 | Laptop left unlocked | CLIP reads the laptop as closed in all 51 frames |
+| X-32, X-33 | Door left open | CLIP reads the door as closed while it is open |
+
+- **States CLIP can't read:** the door, the laptop screen and the safe door. A spike (A20,
+  `spikes/states_spike.py`) found that new CLIP prompts and Qwen2.5-VL-7B on the same crops
+  don't read them either.
+- **Small objects:** on 20 hand-labelled frames, OWLv2, Grounding DINO and a VLM each answered
+  only 4 of 11 cash checks correctly (A13).
+- **Right verdict, wrong type:** X-20 is reported as documents left on the desk, but its
+  violation is the safe left open; X-4/X-47 is reported as cash accepted without ID, but both
+  clients showed their ID and the violation is the first client's cash left and mixed with the
+  second's (`OPEN_ISSUES.md` #3).
 
 ## Upload concurrency
 
@@ -69,7 +78,7 @@ human has checked it against adilet.zan.kz and recorded that in
 still needs review and `"invalid"` means a known citation conflict. The UI
 shows each state separately.
 **An AI-produced result never marks a citation `verified` on its own**
-— the violation is still reported (recall-first policy above), but its legal
+- the violation is still reported (recall-first policy above), but its legal
 grounding is never presented as confirmed until a person has done that check.
 As of this writing every norm in `knowledge/norms.json` still has
 `citation_status: "pending"`. The screen-lock citation is still an open conflict:
@@ -82,26 +91,24 @@ per rule because one clause can support different rules with different strength.
 
 ## Camera angle
 
-The open dataset and all development runs use one fixed over-the-shoulder
-angle (task.md FAQ 3). F1 calibrates zones automatically from the first 2 s
-of each video (`backend/f1/calibration.py`): desk, laptop, safe and door
-boxes, and cashier/client half-planes around the desk. **The half-plane
-split assumes the camera looks over the cashier's shoulder**; a camera that
-faces the cashier needs manual zones in `config/overrides.yaml`, keyed by the
-video's SHA-256. If calibration is not confident, the result carries a
-warning. The jury's final video is filmed from a different angle (task.md
-FAQ 4), and the self-filmed clips in `robustness/` are this team's only
-other-angle signal before submission:
+The open dataset uses a few fixed angles (over the cashier's shoulder, facing the cashier, from
+the side). F1 calibrates zones from the first 2 s of each video (`backend/f1/calibration.py`) and
+puts the cashier on the side where a lone person works at the laptop, so it does not assume one
+camera direction. Distances are measured relative to the calibrated desk, so a nearer or farther
+camera gives the same events. If calibration is not confident, the result carries a warning, and
+manual zones can be set in `config/overrides.yaml` by the video's SHA-256.
 
-- TODO(team): fill in from `robustness/README.md`'s results table -
-  "tested on N self-filmed clips, X/Y", or "untested on other angles" if the
-  robustness run did not complete before the freeze.
+What has been checked without new videos: replaying the 40 clips mirrored, zoomed 0.7-1.3 or with
+20-30% of object detections dropped changes at most one verdict (A20). What has not: a real
+video from a new room or angle.
+
+- TODO(team): fill in from `robustness/README.md`'s results table once self-filmed clips exist.
 
 ## Data handling and deletion
 
 Uploaded videos and their sampled frames are deleted when a job ends. The
 result JSON (including its embedded evidence JPEGs) is kept for 24 hours
-and then purged. Everything — uploads, results, caches — is deleted after
+and then purged. Everything - uploads, results, caches - is deleted after
 the hackathon window closes, per the organizer's data-use restriction
 (task.md FAQ 6: "данные должны использоваться только в рамках хакатона").
 No face recognition or identification is performed (task.md FAQ 29); no
@@ -127,8 +134,9 @@ audio is used (task.md FAQ 28, videos are silent regardless).
 
 Measured on the 40 unique open videos (`attempts/README.md`):
 
-- A01, the same F1 stack at 5 fps before it was ported into this service:
-  20/40 correct verdicts, recall 14/21, 13/19 clean videos falsely flagged,
-  worst runtime 294.6 s.
-- A12, the deployed service: TODO(team) - not scored on all 40 videos yet.
-  Record its numbers here once `eval/run_eval.py` has run; never estimate them.
+- A01, the F1 stack at 5 fps before it was ported into this service: 20/40 correct verdicts,
+  recall 14/21, 13/19 clean videos flagged, worst runtime 294.6 s.
+- A17, deployed before A20: 25/40, 5/19 clean videos flagged, 10/21 missed.
+- A20, this version: 32/40, 0/19 clean videos flagged, 8/21 missed (offline replay on the
+  cached perception, `attempts/A20-night-orchestration/`). These clips were used while building
+  it.

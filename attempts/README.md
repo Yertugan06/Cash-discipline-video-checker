@@ -37,8 +37,16 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A17](A17-leave-rule-fixes/) | agent (datathon) | A16 + leave rules: laptop not a tablet, away = out of laptop reach, item still on desk 2 s later | as A14 | 26/42 (files) | 12/22 | 6/20 | - | 144.4 s | live; replay = live on all 42 files |
 | [A18](A18-desk-object-history/) | agent (offline replay) | Desk objects by history: items found by desk change (emptiest moment of the clip as background), named only when 2 clues agree (origin zone, counter ran, detector label) | as A14 + OpenCV | 22/40 (replay; A17 25) | - | 6/19 (A17 5) | - | 74 s for 40 clips (CPU) | rejected: failed the agreed bar; "any item left" cuts misses 10 -> 7 but clean FP 5 -> 9 |
 | [A19](A19-desk-objects-strict-origin/) | agent (offline replay) | A18 + strict origin (hand inside the open safe / on the counter) + blob shape filter; pre-registered, one run | as A18 | 22/40 (replay) | - | 5/19 | - | ~75 s for 40 clips (CPU) | rejected: 13 missed; naming items from history doesn't beat the detector without new labels |
+| [A20](A20-night-orchestration/) | orchestrator + Codex agents (offline replay, API check on datathon) | Verified rule fixes on F1 (door entry, personal-item gaps and equipment, client sessions, leave evidence, desk-relative scale, collector visit, timecode ranking) + robustness probes; merged with fix-dataset | as A14 | **32/40** (replay) | 13/21 | **0/19** | ±1/3/5 s: 7/11/13 of 13 caught | - | merged to main; zoom/mirror/drop stable |
 
 ## Takeaways so far
+
+- A20 is the first clear win over the floor: 32/40 with no clean video flagged, from rule-level
+  mechanisms on the same perception, stable under the replay's zoom, mirror and detection-loss
+  probes. All 40 clips were used while building it, so expect less on new videos.
+- What's left is perception: the door, laptop screen and safe states (CLIP can't read them) and
+  small objects (cash, ID, key, seal, banknote detector). The teammate's Qwen3-VL 4B crop
+  questions read the door and screen on these clips (`local-vlm-prototype`, 32/1/7 on its own).
 
 - Nothing has clearly beaten "always violation" (21/40). Best is A04 F3-whole at 23/40,
   inside the ±2-video tie band from the pre-registration.
@@ -54,5 +62,8 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 
 ## Next to run
 
-- A12 on all 40 videos through the API (`eval/run_eval.py`); this is the number the
-  detector decision needs.
+- VLM checks at F1's own event moments (door after an entry, laptop screen and safe at a leave,
+  desk cash at a new client, ID card in a session), measured with the real model on `datathon`
+  (branch `orch/vlmchecks`, see `attempts/A20-night-orchestration/LAB.md`).
+- Human verification of the norms in `knowledge/rulebook.yaml`, so the service can run with the
+  default `RULE_SCOPE=jury`.

@@ -1,13 +1,13 @@
 # Forte cash-discipline video checker
 
 A fully local AI service for Datathon 26: upload a short cashier-desk video
-(`.mov`), get back a verdict — **«Нарушение не обнаружено»** (no violation)
+(`.mov`), get back a verdict - **«Нарушение не обнаружено»** (no violation)
 or **«Обнаружены признаки возможных нарушений»** (signs of possible
-violations) — with, for each finding, a timecode, 1–3 evidence frames, a
+violations) - with, for each finding, a timecode, 1–3 evidence frames, a
 plain-language description and a link to the normative source.
 
 No cloud AI is used anywhere in the processing path (task.md §7). Everything
-— perception, rules, evidence extraction, serving — runs on the team's own
+- perception, rules, evidence extraction, serving - runs on the team's own
 GPU host.
 
 ## Submission (jury)
@@ -18,6 +18,15 @@ GPU host.
 | API base URL | TODO(team): same host, `/api/v1` |
 | API key | TODO(team): handed to the jury out of band (not in this repo) |
 | Jury `curl` | See `docs/USAGE.md` |
+
+## Current state
+
+- Detector: F1 (`DETECTOR=f1`, `docs/ARCHITECTURE_SUMMARY.md`).
+- On the 40 open videos (offline replay, attempt A20): 32/40 correct verdicts, 0/19 clean
+  videos flagged, 8/21 violations missed; the misses are listed in `docs/LIMITATIONS.md`.
+- Until the norms in `knowledge/rulebook.yaml` are human-verified, run with
+  `RULE_SCOPE=detector` (the default `jury` refuses to start with no verified citation,
+  `docs/USAGE.md`).
 
 ## Documentation
 
