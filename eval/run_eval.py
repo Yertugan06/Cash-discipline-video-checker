@@ -3,10 +3,12 @@
 Adapts `DoneJob` shapes to the harness's expected prediction format
 (`validation/validation-evidence/harness/score.py`):
 ``{clip_id: {"verdict": ..., "events": [{"t": ..., "code": ..., "conf": ...}], "runtime_s": ...,
-"error": ...}}``, writes it to ``<root>/validation-private/preds/<name>.json``, then runs the
-harness's own `score.py` as a subprocess so this module never re-implements its aggregation. The
-harness only ever prints aggregate numbers; this module never reads or prints an individual
-label.
+"error": ...}}``. An event's ``code`` is the primary norm id of the violation's rule in
+`knowledge/rules.yaml` (e.g. ``A-DOOR-LOCK`` -> ``14-16-1``), the form the scorer's
+`code_match()` compares with the human annotation's norm. It writes the map to
+``<root>/validation-private/preds/<name>.json``, then runs the harness's own `score.py` as a
+subprocess so this module never re-implements its aggregation. The harness only ever prints
+aggregate numbers; this module never reads or prints an individual label.
 
 Usage:
     .venv/bin/python -m eval.run_eval <done_jobs_dir> [--root validation] [--name NAME]
@@ -26,9 +28,11 @@ import sys
 from pathlib import Path
 
 from backend.clip_id import parse_clip_id
+from backend.knowledge import Knowledge
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HARNESS_SCORE = REPO_ROOT / "validation" / "validation-evidence" / "harness" / "score.py"
+KNOWLEDGE_ROOT = REPO_ROOT / "knowledge"
 
 
 def clip_id_from_filename(name: str) -> str:
@@ -36,13 +40,21 @@ def clip_id_from_filename(name: str) -> str:
     return parse_clip_id(Path(name).stem)
 
 
-def to_pred_entry(done_job: dict) -> dict:
+def primary_norm_id(rule_id: str | None, knowledge: Knowledge) -> str:
+    """A violation's rule -> the first of its `norm_ids`. A violation without a known rule is an
+    error: scoring it with no code would read as a real citation miss."""
+    if not rule_id:
+        raise ValueError("violation has no rule_id; cannot score its legal citation")
+    return knowledge.rule(rule_id).norm_ids[0]
+
+
+def to_pred_entry(done_job: dict, knowledge: Knowledge) -> dict:
     """One `DoneJob`-shaped dict -> one harness prediction entry."""
     verdict = done_job.get("verdict", "no_violation")
     events = [
         {
             "t": v.get("timecode_sec"),
-            "code": v.get("rule_id"),
+            "code": primary_norm_id(v.get("rule_id"), knowledge),
             "conf": None,
         }
         for v in done_job.get("violations", [])
@@ -53,15 +65,25 @@ def to_pred_entry(done_job: dict) -> dict:
     return {"verdict": verdict, "events": events, "runtime_s": None, "error": error}
 
 
-def build_pred(done_jobs_dir: Path) -> dict[str, dict]:
-    """Read every `*.json` file in `done_jobs_dir` as a `DoneJob` and build the harness pred map."""
+def build_pred(done_jobs_dir: Path, knowledge_root: Path = KNOWLEDGE_ROOT) -> dict[str, dict]:
+    """Read every `*.json` file in `done_jobs_dir` as a `DoneJob` and build the harness pred map.
+
+    An optional `<clip>.meta.json` next to a result (the layout `eval.check_outputs` reads, written
+    by `eval.export_gateway_run`) gives the upload-to-result `wall_s`, scored as `runtime_s`.
+    """
+    knowledge = Knowledge.load(knowledge_root)
     pred: dict[str, dict] = {}
     for f in sorted(done_jobs_dir.glob("*.json")):
+        if f.name.endswith(".meta.json"):
+            continue
         clip = clip_id_from_filename(f.name)
         if clip in pred:
             raise ValueError(f"two DoneJob files for {clip} in {done_jobs_dir}")
         data = json.loads(f.read_text(encoding="utf-8"))
-        pred[clip] = to_pred_entry(data)
+        pred[clip] = entry = to_pred_entry(data, knowledge)
+        meta = f.with_name(f"{f.stem}.meta.json")
+        if meta.exists():
+            entry["runtime_s"] = json.loads(meta.read_text(encoding="utf-8"))["wall_s"]
     return pred
 
 

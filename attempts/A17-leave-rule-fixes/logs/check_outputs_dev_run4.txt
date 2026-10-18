@@ -1,0 +1,32 @@
+X-8 [dev] FP schema=ok time=38s
+    L-NO-DOCS-ON-LEAVE t=9.5 Δ=- frames=1 cite=pending
+X-10 [dev] TN schema=ok time=17s
+X-15 [dev] TP schema=ok time=22s
+    W-NO-PERSONAL-ITEMS t=10.0 Δ=5.0s frames=1 cite=pending
+X-16 [dev] TN schema=ok time=26s
+X-17 [dev] FN schema=ok time=16s
+X-18 [dev] FN schema=ok time=26s
+X-20 [dev] TP schema=ok time=13s
+    L-NO-DOCS-ON-LEAVE t=1.0 Δ=4.0s frames=1 cite=pending
+X-21 [dev] TN schema=ok time=20s
+X-22 [dev] FN schema=ok time=22s
+X-23 [dev] TN schema=ok time=19s
+X-24 [dev] TP schema=ok time=15s
+    L-NO-DOCS-ON-LEAVE t=8.0 Δ=0.0s frames=1 cite=pending
+X-25 [dev] TN schema=ok time=32s
+X-28 [dev] TP schema=ok time=17s
+    L-PC-LOCKED t=8.0 Δ=1.0s frames=1 cite=pending
+X-29 [dev] FP schema=ok time=18s
+    A-DOOR-LOCK t=0.0 Δ=- frames=1 cite=pending
+X-33 [dev] FN schema=ok time=15s
+X-34 [dev] FN schema=ok time=20s
+X-35 [dev] FP schema=ok time=63s
+    W-NO-PERSONAL-ITEMS t=0.0 Δ=- frames=1 cite=pending
+X-37 [dev] TN schema=ok time=18s
+X-38 [dev] FN schema=ok time=65s
+X-39 [dev] TN schema=ok time=86s
+X-40 [dev] FN schema=ok time=26s
+X-43 [dev] TN schema=ok time=24s
+X-44 [dev] FN schema=ok time=21s
+X-45 [dev] TN schema=ok time=34s
+summary: TP=4 FN=8 FP=3 TN=9 FAILED=0 ?=0 | best finding within ±1s 2/4, ±3s 2/4 | over 300s: 0 | schema invalid: 0

@@ -53,8 +53,20 @@ videos) and `team/` (human annotations, the cases workbook, `reviews.json`). The
   .venv/bin/python -m eval.run_eval /path/to/done_jobs --split dev
   ```
 
-  Known issue: the scorer's mechanism (norm-code) line is always 0 for API outputs, because
-  `to_pred_entry` passes `rule_id` as the code. See `OPEN_ISSUES.md` #1 before scoring A12.
+  Each event's code is its rule's primary norm id from `knowledge/rules.yaml` (`A-DOOR-LOCK` ->
+  `14-16-1`), so the scorer's legal-citation line compares it with the annotated clause. A
+  `<clip>.meta.json` with `wall_s` next to a result fills the scorer's runtime line.
+- `export_gateway_run.py <state.json> <out_dir>` -- turns a saved realtime-gateway run
+  (`datathon:~/realtime-state/state.<run>.json`) into that results directory: `<clip>.json` (the
+  `DoneJob`, or a `FailedJob` with the gateway's error) and `<clip>.meta.json` (`wall_s`). Drops
+  the gateway's label; refuses a run that has not finished.
+
+  ```
+  scp datathon:realtime-state/state.run4-leavefix.json /tmp/
+  .venv/bin/python -m eval.export_gateway_run /tmp/state.run4-leavefix.json /tmp/run4
+  .venv/bin/python -m eval.run_eval /tmp/run4 --name run4 --split dev
+  .venv/bin/python -m eval.check_outputs /tmp/run4
+  ```
 
   `--split lockbox` exists for the one-time, human-gated final scoring step only -- see the
   shared brief ("Never use the lockbox split for any choice") and `knowledge/README.md`

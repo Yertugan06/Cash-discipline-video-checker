@@ -10,7 +10,15 @@ from pathlib import Path
 import pytest
 
 from backend.clip_id import InvalidClipId
-from eval.run_eval import build_pred, clip_id_from_filename, run_scorer, to_pred_entry
+from backend.knowledge import Knowledge, KnowledgeError
+from eval.coverage import _code_match
+from eval.run_eval import (
+    KNOWLEDGE_ROOT,
+    build_pred,
+    clip_id_from_filename,
+    run_scorer,
+    to_pred_entry,
+)
 
 pytestmark = pytest.mark.skipif(
     not (
@@ -22,6 +30,29 @@ pytestmark = pytest.mark.skipif(
     ).exists(),
     reason="R1 harness score.py not present in this checkout",
 )
+
+
+@pytest.fixture(scope="module")
+def knowledge() -> Knowledge:
+    return Knowledge.load(KNOWLEDGE_ROOT)
+
+
+def _done(*violations: dict) -> dict:
+    return {
+        "job_id": "j",
+        "status": "done",
+        "verdict": "violation" if violations else "no_violation",
+        "violations": [
+            {
+                "type": "t",
+                "timecode_sec": 1.0,
+                "description": "d",
+                "evidence_frames": [{"timestamp_sec": 1.0, "image_base64": "x"}],
+                **v,
+            }
+            for v in violations
+        ],
+    }
 
 
 def test_clip_id_from_filename():
@@ -43,7 +74,7 @@ def test_build_pred_rejects_two_files_for_one_clip(tmp_path: Path):
         build_pred(tmp_path)
 
 
-def test_to_pred_entry_violation():
+def test_to_pred_entry_violation(knowledge):
     done = {
         "job_id": "j1",
         "status": "done",
@@ -59,15 +90,15 @@ def test_to_pred_entry_violation():
         ],
         "warnings": [],
     }
-    entry = to_pred_entry(done)
+    entry = to_pred_entry(done, knowledge)
     assert entry["verdict"] == "violation"
-    assert entry["events"] == [{"t": 12.5, "code": "L-NO-CASH-ON-LEAVE", "conf": None}]
+    assert entry["events"] == [{"t": 12.5, "code": "231-20-2", "conf": None}]
     assert entry["error"] is None
 
 
-def test_to_pred_entry_failed_job_carries_error():
+def test_to_pred_entry_failed_job_carries_error(knowledge):
     done = {"job_id": "j2", "status": "failed", "error": "model unavailable"}
-    entry = to_pred_entry(done)
+    entry = to_pred_entry(done, knowledge)
     assert entry["verdict"] == "no_violation"
     assert entry["events"] == []
     assert entry["error"] == "model unavailable"
@@ -100,7 +131,38 @@ def test_build_pred_reads_a_directory(tmp_path):
     pred = build_pred(tmp_path)
     assert set(pred) == {"X-1", "X-2"}
     assert pred["X-1"]["verdict"] == "no_violation"
-    assert pred["X-2"]["events"][0]["code"] == "W-NO-FOOD"
+    assert pred["X-2"]["events"][0]["code"] == "231-12-2"
+
+
+def test_build_pred_takes_runtime_from_the_meta_file(tmp_path):
+    (tmp_path / "X-1.json").write_text(json.dumps(_done()), encoding="utf-8")
+    (tmp_path / "X-1.meta.json").write_text(json.dumps({"wall_s": 42.3}), encoding="utf-8")
+    (tmp_path / "X-2.json").write_text(json.dumps(_done()), encoding="utf-8")
+    pred = build_pred(tmp_path)
+    assert set(pred) == {"X-1", "X-2"}
+    assert pred["X-1"]["runtime_s"] == 42.3
+    assert pred["X-2"]["runtime_s"] is None
+
+
+@pytest.mark.parametrize(
+    ("rule_id", "annotation"),
+    [
+        ("A-DOOR-LOCK", "п. 16 пп. 1)"),  # act 14
+        ("L-NO-CASH-ON-LEAVE", "п. 20 ч. 2"),  # act 231
+        ("L-PC-LOCKED", "48-71-9"),  # cites 53-71-9; the scorer ignores the act number
+    ],
+)
+def test_scorer_matches_the_code_against_the_annotated_norm(knowledge, rule_id, annotation):
+    """With the rule id as the code (before 2026-10-18), the legal-citation match was always 0."""
+    [event] = to_pred_entry(_done({"rule_id": rule_id}), knowledge)["events"]
+    assert _code_match()(event["code"], annotation)
+
+
+def test_to_pred_entry_rejects_a_violation_without_a_known_rule(knowledge):
+    with pytest.raises(ValueError, match="no rule_id"):
+        to_pred_entry(_done({}), knowledge)
+    with pytest.raises(KnowledgeError, match="unknown rule_id"):
+        to_pred_entry(_done({"rule_id": "NOT-A-RULE"}), knowledge)
 
 
 def test_run_scorer_on_synthetic_gt_prints_aggregates_only(tmp_path, capsys):

@@ -58,9 +58,26 @@ Remaining clean false alarms after 3: `W-NO-PERSONAL-ITEMS` (Х-14, Х-35, Х-48
 already on the desk at 0 s), `A-DOOR-LOCK` at 0 s (Х-29), and one `L-NO-DOCS-ON-LEAVE`
 (Х-8: a "document" lying in the desk corner from the first frame).
 
+### R1 scorer, dev split (scored 2026-10-18)
+
+Run 4 exported with `eval.export_gateway_run` and scored with `eval.run_eval --split dev`
+(`logs/scorer_dev_run4.txt`; per-clip facts in `logs/check_outputs_dev_run4.txt`; lockbox not
+scored):
+
+| n | Recall | Clean false alarms | Correct | Top-1 ±1 s / ±3 s / ±5 s | Legal-citation match | Worst wall time |
+|---|---|---|---|---|---|---|
+| 24 | 4/12 | 3/12 | 13/24 | 2/12 / 2/12 / 4/12 | 2/11 | 85.9 s |
+
+All 4 hits are on the back-office desk; 0/4 on the client-facing desk, 0/3 on the desk near the
+door. The 7 misses' traces: `logs/trace_summary_dev_misses.txt` (cash never detected on 6,
+no cashier role on X-34/X-38, collector tracked as a client on X-17). A20 later caught X-17 and
+X-34.
+
 ## Logs
 
 - `logs/before_desk_items_at_each_leave.txt` - the diagnosis
 - `logs/replay_fix{1,2,3}.txt` / `.jsonl` - per clip findings for each step
 - `logs/live_run4.txt` - live run 4 per file
+- `logs/scorer_dev_run4.txt`, `logs/check_outputs_dev_run4.txt`, `logs/trace_summary_dev_misses.txt`
+  - dev-split score of run 4 and the misses' traces
 - `/compare` on the gateway: runs `replay-leavefix` and `run4-leavefix`
