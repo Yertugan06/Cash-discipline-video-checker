@@ -65,7 +65,9 @@ Pretrained detectors only describe each frame. Deterministic temporal rules deci
 | night + leave persistence | 31 | 3 | 6 | 29.7 |
 | night + counter is not a personal item (honest; 4 lucky catches lost) | 28 | 2 | 10 | - |
 | night + a cash bag counts for cash-on-leave | 29 | 2 | 9 | - |
-| **night + fp: hand on equipment = still at the desk; worn-coat fragments (current)** | **31** | **0** | **9** | **30.7** |
+| night + fp: hand on equipment = still at the desk; worn-coat fragments | 31 | 0 | 9 | 30.7 |
+| night + scale (desk-relative distances) + timecode ranking | 31 | 0 | 9 | 30.7 |
+| **night + collector: quick bag delivery without a seal check (current)** | **32** | **0** | **8** | **31.7** |
 
 **Teammate's `local-vlm-prototype` measured on the VM (same 40 clips, same scorer):**
 
@@ -112,6 +114,7 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | 10-18 | The two systems are complementary: the VLM reads the door (Х-30/32/33) and the screen (Х-11/28) with 5/5 precision, which CLIP can't; night catches Х-20, Х-34, Х-38 and has no clean false alarms | Per-clip comparison; the VLM's `collector_quick` is weaker (1 false alarm, 1 wrong type of 3) |
 | 10-18 | **Build the VLM combination: F1 asks Qwen3-VL 4B only at its own event moments, for the door, laptop screen and safe** (+ desk cash at a new client, + ID card) | Decided by the user; the VLM reads exactly the states CLIP can't |
 | 10-18 | **"Cash without ID" must fire only when the VLM confirms no ID card was shown;** recover Х-4 by its real violation (previous client's cash left and mixed) | Decided by the user: in Х-4 both clients showed their ID (`clip-descriptions.md`); same principle as the counter decision |
+| 10-18 | KEPT, collector: K-SEAL-CHECK fires when a visitor with an observed entry delivers a bag that appears on the desk and leaves quickly with a confirmed exit | Caught Х-17; its twin Х-16 (collector sits down) and all clean clips stay clean |
 | 10-18 | Main docs frozen during experiments | Decided by the user |
 
 ## 5. Findings (facts measured in the cache)
@@ -146,7 +149,7 @@ Earlier approaches (VLM questionnaire, video VLM, embeddings, desk-object tracki
 | Teammate's `local-vlm-prototype`: run on the VM on the same 40 clips, compare per clip | done: v3 32/1/7 (confirmed); v4's experimental `no_detector` fires on 12/17 clips; per-clip in `logs/vlm-v3.jsonl` | orchestrator |
 | Combination: VLM only for the states F1 can't read (door, laptop screen) | paper result 34/0/6 | done (paper) |
 | vlmchecks: planner + answer cache + rules using VLM door/screen/safe/desk-cash/ID answers; the orchestrator runs the real model on the VM | running | `orch/vlmchecks` |
-| collector: K-SEAL-CHECK from the visit pattern (Х-17 leaves right after the handover, Х-16 sits down) | running | `orch/collector` |
+| collector: K-SEAL-CHECK from the visit pattern (Х-17 leaves right after the handover, Х-16 sits down) | merged (Х-17 at 9.5 s; robust on all probes) | `orch/collector` |
 | timecode: timing scorer + explainable anchor fixes, no verdict change | merged (no verdict change; ranking prefers a confirmed exit) | `orch/timecode` |
 | End-to-end check: run `night` through the real API in a second container (port 8001, same perception cache), the 40 clips: runtime, evidence frames, serializer | done (before the scale fix): 42/42 done, 31/0/9 like the replay, evidence on every violation, runtime median 31 s / max 178 s with the perception cache (`logs/night-api.jsonl`) | orchestrator |
 | Perception: door and laptop-screen states are misread by CLIP (Х-32/Х-33 door, Х-11 screen) | spike done: new prompts and Qwen 7B don't fix it; "screen changed?" is a lead | orchestrator |
