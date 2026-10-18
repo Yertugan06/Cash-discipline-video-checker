@@ -1,0 +1,52 @@
+X-1: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-2: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-3: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-4: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-5: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-8 [dev] TN schema=ok time=38s
+X-10 [dev] TN schema=ok time=1s
+X-11: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-12: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-13: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-14: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-15 [dev] TP schema=ok time=2s
+    L-NO-CASH-ON-LEAVE t=15.0 Δ=0.0s frames=1 cite=pending
+X-16 [dev] TN schema=ok time=2s
+X-17 [dev] TP schema=ok time=1s
+    K-SEAL-CHECK t=9.5 Δ=2.5s frames=1 cite=pending
+X-18 [dev] TP schema=ok time=26s
+    A-SECOND-PERSON t=19.5 Δ=0.5s frames=1 cite=pending
+X-19: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-20 [dev] TP schema=ok time=13s
+    L-NO-DOCS-ON-LEAVE t=1.0 Δ=4.0s frames=1 cite=pending
+X-21 [dev] TN schema=ok time=20s
+X-22 [dev] FN schema=ok time=22s
+X-23 [dev] TN schema=ok time=19s
+X-24 [dev] TP schema=ok time=15s
+    L-NO-DOCS-ON-LEAVE t=8.0 Δ=0.0s frames=1 cite=pending
+X-25 [dev] TN schema=ok time=32s
+X-26: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-27: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-28 [dev] TP schema=ok time=17s
+    L-PC-LOCKED t=8.0 Δ=1.0s frames=1 cite=pending
+X-29 [dev] TN schema=ok time=18s
+X-30: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-31: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-32: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-33 [dev] FN schema=ok time=15s
+X-34 [dev] TP schema=ok time=20s
+    C-COUNT-BEFORE-EXIT t=15.0 Δ=2.0s frames=1 cite=pending
+X-35 [dev] TN schema=ok time=64s
+X-37 [dev] TN schema=ok time=18s
+X-38 [dev] TP schema=ok time=66s
+    S-CLEAN-DESK-HANDOVER t=32.0 Δ=1.0s frames=1 cite=pending
+X-39 [dev] TN schema=ok time=87s
+X-40 [dev] TP schema=ok time=27s
+    W-NO-PERSONAL-ITEMS t=19.5 Δ=2.5s frames=1 cite=pending
+X-43 [dev] TN schema=ok time=24s
+X-44 [dev] FN schema=ok time=21s
+X-45 [dev] TN schema=ok time=34s
+X-46: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-47: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+X-48: lockbox clip, skipped (pass --allow-lockbox for the final gated run)
+summary: TP=9 FN=3 FP=0 TN=12 FAILED=0 ?=0 | best finding within ±1s 5/9, ±3s 8/9 | over 300s: 0 | schema invalid: 0

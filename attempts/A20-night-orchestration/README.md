@@ -50,7 +50,12 @@ Offline replay, 40 unique videos, organizer labels:
 - Robustness (A20): `--zoom 0.7 / 0.8 / 1.2 / 1.3` and `--mirror` give exactly 32/0/8;
   `--drop 0.2` (3 seeds) 31-32 / 0 / 8-9.
 - Timecodes (A20): 13 caught violations, mean |offset| 1.54 s; within ±1/2/3/5 s: 7/9/11/13.
-- End-to-end through the real API: see `LAB.md` and the merge commit.
+- End-to-end through the real API (the merged code in a test container on `datathon`,
+  `RULE_SCOPE=detector`, all 42 files through a second realtime gateway): **32/40, 0/19, 8/21,
+  the same verdicts as the replay**, no failed job, wall time median 20 s and worst 89 s with the
+  perception cache (`logs/api-gateway-final.jsonl`). The team's `eval/check_outputs.py` on the 24
+  dev clips (lockbox skipped by design): TP 9, FN 3, FP 0, TN 12, every response valid against the
+  jury schema, none over 300 s, best finding within ±3 s on 8/9 (`logs/check_outputs-dev.txt`).
 
 ## Logs
 

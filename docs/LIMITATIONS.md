@@ -137,6 +137,6 @@ Measured on the 40 unique open videos (`attempts/README.md`):
 - A01, the F1 stack at 5 fps before it was ported into this service: 20/40 correct verdicts,
   recall 14/21, 13/19 clean videos flagged, worst runtime 294.6 s.
 - A17, deployed before A20: 25/40, 5/19 clean videos flagged, 10/21 missed.
-- A20, this version: 32/40, 0/19 clean videos flagged, 8/21 missed (offline replay on the
-  cached perception, `attempts/A20-night-orchestration/`). These clips were used while building
-  it.
+- A20, this version: 32/40, 0/19 clean videos flagged, 8/21 missed, the same in the offline
+  replay and through the real API (`attempts/A20-night-orchestration/`). These clips were used
+  while building it.

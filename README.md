@@ -22,8 +22,9 @@ GPU host.
 ## Current state
 
 - Detector: F1 (`DETECTOR=f1`, `docs/ARCHITECTURE_SUMMARY.md`).
-- On the 40 open videos (offline replay, attempt A20): 32/40 correct verdicts, 0/19 clean
-  videos flagged, 8/21 violations missed; the misses are listed in `docs/LIMITATIONS.md`.
+- On the 40 open videos (attempt A20): 32/40 correct verdicts, 0/19 clean videos flagged,
+  8/21 violations missed, the same in the offline replay and through the real API. The misses
+  are listed in `docs/LIMITATIONS.md`.
 - Until the norms in `knowledge/rulebook.yaml` are human-verified, run with
   `RULE_SCOPE=detector` (the default `jury` refuses to start with no verified citation,
   `docs/USAGE.md`).
