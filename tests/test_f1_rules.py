@@ -1440,3 +1440,70 @@ def test_a_cash_bag_left_on_the_desk_is_cash_left_unattended():
         frame.detections = [d for d in frame.detections if d.label == "bag"]
     findings = RULES["L-NO-CASH-ON-LEAVE"](ctx)
     assert [f.facts["track_ids"] for f in findings] == [["bag:1"]]
+
+
+OPEN_SESSION = {
+    "s1": {
+        "client_id": "person:2",
+        "client_ids": ["person:2"],
+        "start": 0,
+        "end": None,
+        "observed_entry": True,
+        "cash_ids": [],
+        "counted_cash_ids": [],
+    }
+}
+WALK_OUT = [
+    event("WORKSTATION_AWAY_START", 5, condition_id="w1", actor_id="person:1"),
+    event("EXIT", 6, actor_id="person:1", role="cashier"),
+    event("WORKSTATION_AWAY_END", 12, condition_id="w1"),
+]
+
+
+def empty_desk(ctx):
+    for frame in ctx.observations:
+        frame.detections = []
+    return ctx
+
+
+@requires_cv2
+def test_cashier_walking_out_during_a_session_left_the_service():
+    findings = RULES["L-LEFT-DURING-SERVICE"](empty_desk(context(deepcopy(WALK_OUT), OPEN_SESSION)))
+    assert [(f.timestamp_sec, f.facts["session_id"]) for f in findings] == [(6, "s1")]
+    assert findings[0].facts["duration_sec"] == 6
+
+
+@requires_cv2
+@pytest.mark.parametrize(
+    "events,sessions",
+    [
+        # the client left before the cashier did
+        (WALK_OUT, {"s1": {**OPEN_SESSION["s1"], "end": 4}}),
+        # no client session at all
+        (WALK_OUT, {}),
+        # a walk inside the room (to the safe) without an exit
+        ([WALK_OUT[0], WALK_OUT[2]], OPEN_SESSION),
+        # an exit the event builder did not confirm
+        (
+            [
+                WALK_OUT[0],
+                event("EXIT", 6, actor_id="person:1", role="cashier", confirmed_exit=False),
+                WALK_OUT[2],
+            ],
+            OPEN_SESSION,
+        ),
+        # the recording ends right after the exit
+        ([event("EXIT", 18.5, actor_id="person:1", role="cashier")], OPEN_SESSION),
+    ],
+    ids=["client-already-gone", "no-client", "no-exit", "unconfirmed-exit", "recording-ends"],
+)
+def test_leaving_without_an_open_session_or_an_exit_is_not_this_rule(events, sessions):
+    ctx = empty_desk(context(deepcopy(events), deepcopy(sessions)))
+    assert RULES["L-LEFT-DURING-SERVICE"](ctx) == []
+
+
+@requires_cv2
+def test_cash_left_behind_is_reported_once_by_the_cash_rule():
+    ctx = context(deepcopy(WALK_OUT), deepcopy(OPEN_SESSION))
+    assert RULES["L-NO-CASH-ON-LEAVE"](ctx)
+    assert RULES["L-LEFT-DURING-SERVICE"](ctx) == []

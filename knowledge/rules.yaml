@@ -77,9 +77,35 @@
   norm_ids:
   - 53-71-9
   citation_strengths:
-    53-71-9: indirect
+    53-71-9: weak
   enabled: true
   disabled_reason: null
+  jury_eligible: false
+- rule_id: L-LEFT-DURING-SERVICE
+  business_status: candidate
+  implementation_status: implemented
+  title_ru: Кассир покинул рабочее место до окончания обслуживания клиента
+  title_en: The cashier left before finishing with the client
+  mechanism: A confirmed room exit of the cashier (as for L-NO-DOCS-ON-LEAVE and L-PC-LOCKED) while a
+    client session has started and not ended; the absence lasts at least min_duration_sec and the recording
+    continues that long after the exit; skipped when L-NO-CASH-ON-LEAVE reports the same absence.
+  states_used:
+  - cashier_at_desk
+  - cashier_in_room
+  - clients_at_desk
+  params: {}
+  description_template: С {t_start} по {t_end} с кассир вне рабочего места, а клиент ещё у кассы (обслуживание
+    не завершено).
+  visibility_caveat: Видео не показывает, завершена ли операция в системе банка; признак — клиент ещё
+    у кассы, а кассир вышел из кадра.
+  norm_ids:
+  - 231-22
+  citation_strengths:
+    231-22: direct
+  enabled: false
+  disabled_reason: Found by the 2026-10-18 legal review (knowledge/legal_requirements.yaml, R-231-22-a).
+    Replays on the open clips (attempts/A22, before and after A21) gave no finding, so nothing shows how
+    it behaves; enabling it is a human decision.
   jury_eligible: false
 - rule_id: L-NO-DOCS-ON-LEAVE
   business_status: confirmed
@@ -103,7 +129,7 @@
   norm_ids:
   - 231-80-3
   citation_strengths:
-    231-80-3: indirect
+    231-80-3: weak
   enabled: true
   disabled_reason: null
   jury_eligible: false
@@ -203,8 +229,8 @@
   - 14-16-1
   - 14-8-1
   citation_strengths:
-    14-16-1: indirect
-    14-8-1: indirect
+    14-16-1: weak
+    14-8-1: weak
   enabled: true
   disabled_reason: null
   jury_eligible: false
@@ -252,8 +278,8 @@
   - 231-20-2
   - 231-21
   citation_strengths:
-    231-20-2: indirect
-    231-21: indirect
+    231-20-2: weak
+    231-21: weak
   enabled: true
   disabled_reason: null
   jury_eligible: false
@@ -445,7 +471,7 @@
   - 231-42
   citation_strengths:
     231-74-1: weak
-    231-42: indirect
+    231-42: weak
   enabled: true
   disabled_reason: null
   jury_eligible: false

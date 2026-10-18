@@ -13,6 +13,105 @@ requirement, visible breach, what the video cannot show, lifecycle, F1 threshold
 .venv/bin/python scripts/render_rules_doc.py           # regenerates docs/RULES.md
 ```
 
+## Legal sources and the catalog
+
+The texts of the three acts are stored in `sources/<act>/source.docx` (adilet.zan.kz exports of the
+current редакция, downloaded 2026-10-18; provenance in `sources/sources.yaml`). The site serves
+texts only through a JavaScript app and a keyed API, so nothing re-downloads them: to refresh an
+act, download it again and replace its `source.docx`.
+
+```
+.venv/bin/python scripts/build_legal_catalog.py          # regenerate the files below
+.venv/bin/python scripts/build_legal_catalog.py --check  # what tests/test_legal_catalog.py enforces
+```
+
+| file | what it is | edited by |
+|---|---|---|
+| `sources/<act>/text.txt` | the act as plain text, Word list numbers restored | generated |
+| `legal_catalog.json` | every punkt with its parts (`231-20-c2`) and subpunkts (`231-19-s1`), footnotes, the rules citing it and its review | generated |
+| `legal_review.yaml` | per punkt: applicability, observability, status (`linked`, `candidate`, `weak`, `excluded`) and a reason. Machine-proposed (LLM reading of the text), for a human to confirm | by hand |
+| `active_rules.json` | enabled rules with each norm's strength, `citation_status` and the source check; `status: needs_review` until every norm is human-verified | generated |
+| `event_mapping.json` | per F1 rule: the evaluator, the event kinds (`backend/f1/events.py`), detector labels (`config/perception.yaml`), roles and coverage it reads, parsed from `backend/f1/rules.py` | generated |
+| `legal_audit.md` | the checks above as tables, plus the excluded punkts by reason | generated |
+
+The source check finds each rulebook `quote` verbatim (ignoring whitespace, case, dash style) in
+the punkt, part or subpunkt its `punkt` field names. `tests/test_legal_catalog.py` fails if a quote
+is not in the act, sits in a different punkt, or cites the repealed act 48. It is a check of the
+text only; `citation_status: verified` still needs a person on adilet.zan.kz.
+
+### Integration with the backend
+
+Nothing at runtime changes: the service reads `rules.yaml`/`norms.json` (built from the rulebook)
+and never these files, and no LLM or search runs during analysis. The F1 detector emits a finding
+per rule id; that rule id is the event type, and `Knowledge.ground()` attaches the rulebook norm.
+To add or change a citation:
+
+1. Find the unit in `legal_catalog.json` and copy the clause text verbatim into a rulebook norm
+   (`act`, `punkt` as "п. N", "п. N ч. K" or "п. N пп. K)", `quote`, `url`).
+2. Run `scripts/build_knowledge.py`, `scripts/build_legal_catalog.py`, then `pytest`.
+3. A person checks the clause on adilet.zan.kz and sets `citation_status: verified` with
+   `verified_by`/`verified_at`.
+
+To turn a `candidate` punkt into a rule, the detector first has to emit the events it needs;
+`event_mapping.json` lists what the current evaluators read.
+
+### Source check (2026-10-18)
+
+- All 20 rulebook quotes are verbatim in the punkt, part or subpunkt they cite, in the редакция
+  stored here (231: latest amendment in its footnotes 30.06.2026 № 78; 14: 24.12.2024 № 88; 53 has
+  no amendments). The `#z…` anchors in the URLs were not checked: the site cannot be read offline.
+- Act 48 (`V1800016772`) is repealed by act 53 (п. 2 of the постановление; the appended list, item
+  1). It is recorded in `sources/sources.yaml` as never-cite, and the source check rejects it.
+- `L-PC-LOCKED` now cites `53-71-9` as `weak` (was `indirect`). Пп. 9 п. 71 sets how the system
+  locks a session after 30 minutes of inactivity. It does not say that a cashier must lock the
+  screen when leaving, and 30 minutes do not fit in a clip of at most 145 s. Act 53 has no
+  lock-on-leave duty (searched for блокир/покида/оставл/экран). The rule stays enabled.
+- Every punkt of the three acts has a review in `legal_review.yaml`: 231 (133 punkts plus 21
+  inserted by amendments, such as 53-1 or 109-1..11) has 10 linked, 4 candidates and 140 excluded;
+  14 has 2 linked and 22 excluded; 53 has 1 weak and 161 excluded.
+  Candidates without a rule: 231-9 (equipment to check authenticity), 231-25 (opening a damaged
+  bag in front of the collectors), 231-107/108 (the collection crew checks the bag and seal).
+- The reviews were proposed by an LLM reading the stored text and spot-checked. Two of its
+  proposals were rejected on the text (53-75 external media as a basis for `W-NO-CAMERA-PHONE`;
+  53-136 software installation as a candidate). The act 14 reasons are in English.
+- `states_used` in the rulebook is the VLM-era vocabulary. What F1 actually reads is in
+  `event_mapping.json`.
+
+### Requirements and coverage (2026-10-18, second pass)
+
+`legal_requirements.yaml` holds 77 atomic requirements derived from the acts without looking at
+the rulebook or the detector (three LLM readers, one per part of the acts). Each quote is checked
+verbatim against its unit, and each requirement has a `decision` against the rulebook and
+`backend/f1/rules.py`. `coverage_matrix.md` (generated) shows both directions: law -> rule ->
+F1 events -> tests, and rule -> requirements found for it. Its tests column greps `tests/`, so
+rebuild the catalog after editing tests.
+
+Outcome: 8 requirements implemented, 4 implemented with a weak basis, 4 need new detection logic,
+48 cannot be verified from video, 13 are not about the cash desk.
+
+Changes made from it:
+- New rule `L-LEFT-DURING-SERVICE` (231 п. 22, direct). It fires when the cashier makes a confirmed
+  exit while a client session is open, and stays silent when `L-NO-CASH-ON-LEAVE` reports the same
+  leave. Before this, п. 22 was covered only together with cash on the desk. It ships
+  `enabled: false`. The replay (`attempts/A22-left-during-service-replay/`, run with
+  `scripts/replay_f1.py run --enable L-LEFT-DURING-SERVICE`) gave no finding: in the open clips
+  every cashier leave happens when no client session is open. Verdicts, false alarms and
+  timecodes were unchanged, before and after merging A21 (32/40, then 30/40, 0 clean false
+  alarms both times). Since A21 the rule takes confirmed room exits only (`ctx.room_exits()`) and
+  ignores an exit at the very end of the recording. Enabling it is a human decision.
+- Strength lowered to `weak` where the norm does not state the behaviour the rule detects:
+  `A-OUTSIDER-ZONE` (14 п. 8, п. 16 пп. 1) are about how the room is built),
+  `A-SECOND-PERSON` (231 п. 20 ч. 2, п. 21: nothing about one client at a time),
+  `K-RECOUNT-BEFORE-SAFE` (231 п. 42: a controller's presence, not a recount before the safe),
+  `L-NO-DOCS-ON-LEAVE` (231 п. 80 refers to the bank's internal documents).
+
+Left as they are, for a person to decide: `A-SECOND-PERSON`, `W-NO-FOOD` and `L-PC-LOCKED` have no
+requirement that the independent reading found. Deferred (`new_needs_logic`):
+- `W-NO-CAMERA-PHONE` (231 п. 12 ч. 2): OWLv2 detects `phone`, but `events.py` emits no event for it.
+- Identification and recount before a payout (231 п. 31 пп. 1), 4)): payout handovers cannot yet be
+  told apart from returned documents, and п. 32 exempts intact packs.
+- Key left in the safe (231 п. 76): there is no key detector.
+
 Two separate facts per rule: `enabled` (F1 runs it) and `jury_eligible` (generated: enabled, and
 every cited norm and its act human-verified). The service reports only jury-eligible rules unless
 `RULE_SCOPE=detector` is set for an experiment, so a pending citation never reaches the jury as if
@@ -101,6 +200,10 @@ enable rules that rely on invalid citations.
 
    Until a human resolves this, `L-PC-LOCKED`'s citation remains pending review. `Knowledge.ground()`
    reports `citation_status: "pending"`.
+
+   **Update 2026-10-18 (source check above):** B is ruled out because act 53 repealed act 48. A's
+   quote is verbatim in the stored act 53, now with strength `weak`. A person still has to mark it
+   verified.
 
 2. **Kit `CODEX` list vs. F1 `codex.yaml` `source` field, per rule.** The kit's own
    `timeline_rules.py` `CODEX` dict (what this build uses) and F1's `codex.yaml` `source` strings

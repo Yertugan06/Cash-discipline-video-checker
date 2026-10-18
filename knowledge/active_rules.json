@@ -1,0 +1,800 @@
+{
+ "generated_by": "scripts/build_legal_catalog.py",
+ "rules": [
+  {
+   "rule_id": "L-NO-CASH-ON-LEAVE",
+   "type_ru": "Наличные/ценности оставлены без присмотра: кассир покинул рабочее место",
+   "requirement": "No cash is on the desk when the cashier leaves.",
+   "visible_breach": "EXIT(cashier) while cash is on the desk.",
+   "not_visible": "Видео не показывает номинал и принадлежность купюр, только их визуальное присутствие на столе.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-20-2",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 20 ч. 2",
+     "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-20-c2"
+     }
+    },
+    {
+     "norm_id": "231-22",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 22",
+     "quote": "Кассовому работнику не допускается покидать рабочее место до окончания обслуживания клиента.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z114:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%BC%D1%83%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D1%83%20%D0%BD%D0%B5%20%D0%B4%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-22"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:l_no_cash_on_leave",
+    "events": [
+     "EXIT",
+     "WORKSTATION_AWAY"
+    ],
+    "objects": [
+     "bag",
+     "bundle",
+     "cash"
+    ],
+    "roles": [
+     "cashier"
+    ],
+    "states": [],
+    "coverage": [
+     "desk",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "L-PC-LOCKED",
+   "type_ru": "Рабочее место (ноутбук) оставлено незаблокированным",
+   "requirement": "The computer is locked when the cashier leaves.",
+   "visible_breach": "EXIT(cashier) while the laptop shows a working (not lock) screen.",
+   "not_visible": "Фактическая блокировка операционной системы (пароль/сессия) по видео не подтверждается, только визуальное состояние экрана.",
+   "primary_strength": "weak",
+   "norms": [
+    {
+     "norm_id": "53-71-9",
+     "act": "53",
+     "document_id": "V2600038336",
+     "punkt": "п. 71 пп. 9)",
+     "quote": "при неактивности пользователя более 30 (тридцати) минут информационная система автоматически завершает сеанс работы пользователя либо блокирует рабочую станцию или ноутбук с возможностью разблокировки только при вводе аутентификационных данных пользователя",
+     "url": "https://adilet.zan.kz/rus/docs/V2600038336#z239:~:text=%D0%BF%D1%80%D0%B8%20%D0%BD%D0%B5%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F%20%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "53-71-s9"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:l_pc_locked",
+    "events": [
+     "ENTER",
+     "EXIT"
+    ],
+    "objects": [
+     "laptop"
+    ],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "L-NO-DOCS-ON-LEAVE",
+   "type_ru": "Документы/носители оставлены на столе при уходе",
+   "requirement": "No documents or work devices are on the desk when the cashier leaves.",
+   "visible_breach": "EXIT(cashier) while a document or tablet is on the desk.",
+   "not_visible": "Содержимое документов и факт их конфиденциальности по видео не определяются.",
+   "primary_strength": "weak",
+   "norms": [
+    {
+     "norm_id": "231-80-3",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 80",
+     "quote": "Порядок хранения, выдачи и передачи ценностей, печатей, ключей и кодов от электронных и механических замков кладовой и (или) сейфовой комнаты",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z226:~:text=%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B8%20%D0%B8",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-80"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:l_no_docs_on_leave",
+    "events": [
+     "EXIT",
+     "WORKSTATION_AWAY"
+    ],
+    "objects": [
+     "document",
+     "id_card",
+     "tablet"
+    ],
+    "roles": [
+     "cashier"
+    ],
+    "states": [],
+    "coverage": [
+     "desk",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "S-SAFE-CLOSED",
+   "type_ru": "Сейф (хранилище) оставлен открытым",
+   "requirement": "The safe is closed whenever the cashier is not using it.",
+   "visible_breach": "Safe door open while the cashier is away from the safe zone.",
+   "not_visible": "Физический статус замка сейфа по видео не определяется, только положение дверцы.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-20-2b",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 20 ч. 2",
+     "quote": "Все ранее принятые наличные деньги хранятся в специальных устройствах, находящихся на рабочем месте кассового работника, закрывающихся на ключ, предназначенных для хранения наличных денег (металлический шкаф, сейф, тележка, ящики стола, тумба).",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%92%D1%81%D0%B5%20%D1%80%D0%B0%D0%BD%D0%B5%D0%B5%20%D0%BF%D1%80%D0%B8%D0%BD%D1%8F%D1%82%D1%8B%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-20-c2"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:s_safe_closed",
+    "events": [
+     "ENTER",
+     "EXIT",
+     "SAFE_UNATTENDED"
+    ],
+    "objects": [],
+    "roles": [
+     "cashier"
+    ],
+    "states": [],
+    "coverage": [
+     "roles",
+     "safe"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "S-CLEAN-DESK-HANDOVER",
+   "type_ru": "Деньги предыдущего клиента не убраны при обслуживании следующего",
+   "requirement": "When a new client enters, no cash from earlier sessions is on the desk.",
+   "visible_breach": "ENTER(client N+1) while cash tagged with session N is on the desk.",
+   "not_visible": "Принадлежность конкретных купюр предыдущему клиенту не подтверждается, только непрерывное визуальное присутствие наличных на столе между сессиями.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-20-2",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 20 ч. 2",
+     "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-20-c2"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:s_clean_desk_handover",
+    "events": [
+     "CASH_STATE",
+     "SESSION_START"
+    ],
+    "objects": [
+     "bundle",
+     "cash"
+    ],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "desk",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "S-NO-MERGE",
+   "type_ru": "Наличные разных клиентов смешаны на рабочем месте",
+   "requirement": "Cash of different sessions is never stacked together.",
+   "visible_breach": "Cash tagged N joins a stack tagged N+1.",
+   "not_visible": "Принадлежность купюр конкретной сессии не прослеживается покадрово по видео.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-20-2",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 20 ч. 2",
+     "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-20-c2"
+     }
+    },
+    {
+     "norm_id": "231-21",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 21",
+     "quote": "кассовый работник принимает наличные деньги по каждому приходному кассовому документу отдельно",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z113:~:text=%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D0%B5%D1%82%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-21"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:s_no_merge",
+    "events": [
+     "CASH_STATE",
+     "HANDOVER"
+    ],
+    "objects": [
+     "bundle",
+     "cash",
+     "counter"
+    ],
+    "roles": [
+     "cashier",
+     "client"
+    ],
+    "states": [],
+    "coverage": [
+     "desk",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "A-OUTSIDER-ZONE",
+   "type_ru": "Посторонний в кассовой кабине",
+   "requirement": "Only the cashier stands in the cashier zone.",
+   "visible_breach": "A person other than the cashier stays inside the cashier zone.",
+   "not_visible": "Роль каждого человека (сотрудник/посторонний) определяется по положению в кадре, не по документам или должности.",
+   "primary_strength": "weak",
+   "norms": [
+    {
+     "norm_id": "14-16-1",
+     "act": "14",
+     "document_id": "V2000020075",
+     "punkt": "п. 16 пп. 1)",
+     "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+     "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "14-16-s1"
+     }
+    },
+    {
+     "norm_id": "14-8-1",
+     "act": "14",
+     "document_id": "V2000020075",
+     "punkt": "п. 8 ч. 1",
+     "quote": "8. Кассовый узел подлежит изолированию от других производственных, подсобных, подвальных и служебных помещений одним закрывающимся служебным входом.",
+     "url": "https://adilet.zan.kz/rus/docs/V2000020075#z49:~:text=8.%20%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%83%D0%B7%D0%B5%D0%BB%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B5%D0%B6%D0%B8%D1%82",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "14-8-c1"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:a_outsider_zone",
+    "events": [
+     "PERSON_IN_CASHIER_ZONE"
+    ],
+    "objects": [],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "A-DOOR-LOCK",
+   "type_ru": "Дверь кассы не закрыта",
+   "requirement": "Door is closed and locked within ~5 s after anyone enters.",
+   "visible_breach": "ENTER(person) and no door-close / hand-on-door event within 5 s while the person walks to the desk.",
+   "not_visible": "Фактическое запирание двери на замок по видео не подтверждается, только открытое/закрытое положение.",
+   "primary_strength": "indirect",
+   "norms": [
+    {
+     "norm_id": "14-16-1",
+     "act": "14",
+     "document_id": "V2000020075",
+     "punkt": "п. 16 пп. 1)",
+     "quote": "каждая касса имеет отдельный вход с закрывающейся на замок дверью",
+     "url": "https://adilet.zan.kz/rus/docs/V2000020075#z121:~:text=%D0%BA%D0%B0%D0%B6%D0%B4%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%81%D1%81%D0%B0%20%D0%B8%D0%BC%D0%B5%D0%B5%D1%82%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9",
+     "legal_link_strength": "indirect",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "14-16-s1"
+     }
+    },
+    {
+     "norm_id": "14-8-1",
+     "act": "14",
+     "document_id": "V2000020075",
+     "punkt": "п. 8 ч. 1",
+     "quote": "8. Кассовый узел подлежит изолированию от других производственных, подсобных, подвальных и служебных помещений одним закрывающимся служебным входом.",
+     "url": "https://adilet.zan.kz/rus/docs/V2000020075#z49:~:text=8.%20%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%83%D0%B7%D0%B5%D0%BB%20%D0%BF%D0%BE%D0%B4%D0%BB%D0%B5%D0%B6%D0%B8%D1%82",
+     "legal_link_strength": "indirect",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "14-8-c1"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:a_door_lock",
+    "events": [
+     "ENTER",
+     "SCREEN"
+    ],
+    "objects": [],
+    "roles": [],
+    "states": [
+     "door"
+    ],
+    "coverage": [
+     "door"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "A-SECOND-PERSON",
+   "type_ru": "Одновременное обслуживание нескольких клиентов",
+   "requirement": "One client at a time.",
+   "visible_breach": "Client session open and a second non-staff person hands an item to the cashier.",
+   "not_visible": "Число и личности клиентов определяются визуально, не по документам.",
+   "primary_strength": "weak",
+   "norms": [
+    {
+     "norm_id": "231-20-2",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 20 ч. 2",
+     "quote": "На рабочем месте кассового работника находятся наличные деньги клиента.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z112:~:text=%D0%9D%D0%B0%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B5%D0%BC%20%D0%BC%D0%B5%D1%81%D1%82%D0%B5%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-20-c2"
+     }
+    },
+    {
+     "norm_id": "231-21",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 21",
+     "quote": "кассовый работник принимает наличные деньги по каждому приходному кассовому документу отдельно",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z113:~:text=%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D0%B5%D1%82%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-21"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:a_second_person",
+    "events": [
+     "HANDOVER",
+     "SECOND_CLIENT_AT_DESK"
+    ],
+    "objects": [
+     "desk"
+    ],
+    "roles": [
+     "cashier",
+     "client",
+     "collector",
+     "outsider",
+     "visitor"
+    ],
+    "states": [],
+    "coverage": [
+     "hands",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "C-COUNT-BEFORE-EXIT",
+   "type_ru": "Пересчёт денег не в присутствии клиента (клиент ушёл)",
+   "requirement": "Client's cash is counted while the client is present.",
+   "visible_breach": "EXIT(client) before COUNT_END for that client's cash.",
+   "not_visible": "Завершение пересчёта определяется по действию кассира/машине, а не по итоговой сумме.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-20-1",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 20 ч. 1",
+     "quote": "Наличные деньги принимаются и пересчитываются кассовым работником в присутствии клиента.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z111:~:text=%D0%9D%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5%20%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%20%D0%BF%D1%80%D0%B8%D0%BD%D0%B8%D0%BC%D0%B0%D1%8E%D1%82%D1%81%D1%8F%20%D0%B8",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-20-c1"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:c_count_before_exit",
+    "events": [
+     "COUNT_END",
+     "COUNT_INTERRUPTED",
+     "COUNT_START",
+     "SESSION_END"
+    ],
+    "objects": [],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "counter",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "C-ID-BEFORE-CASH",
+   "type_ru": "Приём наличных без предъявления документа клиентом",
+   "requirement": "Client shows an ID document before cash is accepted or issued.",
+   "visible_breach": "First HANDOVER(client to cashier, cash) of a session with no ID_SHOWN before it.",
+   "not_visible": "Подлинность и тип документа по видео не определяются, только факт его предъявления в кадре.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-19-1",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 19 пп. 1)",
+     "quote": "проводит визуальную идентификацию клиента, вносящего наличные деньги, с документом, удостоверяющим его личность, либо данными, подтверждающими (идентифицирующими) личность клиента, полученными посредством сервиса цифровых документов",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z444:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%D0%B8%D0%B7%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E%20%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%2C",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-19-s1"
+     }
+    },
+    {
+     "norm_id": "231-7",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 7",
+     "quote": "Кассовые операции по приему и выдаче наличных денег банк осуществляет после принятия мер по надлежащей проверке",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z76:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%D1%83%20%D0%B8",
+     "legal_link_strength": "indirect",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-7"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:c_id_before_cash",
+    "events": [
+     "HANDOVER",
+     "ID_SHOWN"
+    ],
+    "objects": [
+     "bundle",
+     "cash",
+     "counter",
+     "desk"
+    ],
+    "roles": [
+     "cashier",
+     "client"
+    ],
+    "states": [],
+    "coverage": [
+     "hands",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "W-NO-PERSONAL-ITEMS",
+   "type_ru": "Личные вещи на рабочем месте кассира",
+   "requirement": "No personal items in the cash unit.",
+   "visible_breach": "Coat, handbag or similar item on the cash desk.",
+   "not_visible": "Принадлежность вещи кассиру, а не клиенту, не всегда достоверна по видео.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-12-1",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 12 ч. 1",
+     "quote": "Хранение личных вещей, наличных денег и ценностей работников банка осуществляется вне кассового узла в порядке, установленном внутренними документами банка.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z81:~:text=%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85%20%D0%B2%D0%B5%D1%89%D0%B5%D0%B9%2C%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-12-c1"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:w_no_personal_items",
+    "events": [
+     "PERSONAL_ON_DESK"
+    ],
+    "objects": [],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "desk"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "W-NO-FOOD",
+   "type_ru": "Еда/напитки на рабочем месте кассира",
+   "requirement": "No eating or drinking at the cash desk.",
+   "visible_breach": "Food or a cup raised to the mouth at the cash desk.",
+   "not_visible": "Факт употребления пищи не подтверждается, только присутствие еды/напитка в кадре.",
+   "primary_strength": "weak",
+   "norms": [
+    {
+     "norm_id": "231-12-2",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 12 ч. 2",
+     "quote": "Допускается внос работниками банка в кассовый узел лекарственных средств, медицинских изделий и средств связи",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z490:~:text=%D0%94%D0%BE%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D0%B5%D1%82%D1%81%D1%8F%20%D0%B2%D0%BD%D0%BE%D1%81%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-12-c2"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:w_no_food",
+    "events": [
+     "FOOD_NEAR_HEAD"
+    ],
+    "objects": [],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "desk",
+     "hands"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "K-SEAL-CHECK",
+   "type_ru": "Сумка от инкассатора принята без проверки (инкассатор сразу ушёл)",
+   "requirement": "Bag and seal are inspected while the collector is present.",
+   "visible_breach": "Collector exits within ~5 s of the bag handover with no inspection of the bag.",
+   "not_visible": "Содержимое сумки и целостность пломбы по видео не проверяются, только присутствие сумки и людей.",
+   "primary_strength": "direct",
+   "norms": [
+    {
+     "norm_id": "231-24-3",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 24 пп. 3)",
+     "quote": "проверяет целостность сумки",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z121",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-24-s3"
+     }
+    },
+    {
+     "norm_id": "231-24-4",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 24 пп. 4)",
+     "quote": "проверяет правильность пломбирования сумки",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z122:~:text=%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D1%8F%D0%B5%D1%82%20%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D1%8C%20%D0%BF%D0%BB%D0%BE%D0%BC%D0%B1%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D1%81%D1%83%D0%BC%D0%BA%D0%B8.",
+     "legal_link_strength": "direct",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-24-s4"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:k_seal_check",
+    "events": [
+     "BAG_INSPECTED",
+     "ENTER",
+     "EXIT",
+     "HANDOVER"
+    ],
+    "objects": [
+     "bag",
+     "counter",
+     "laptop"
+    ],
+    "roles": [
+     "client",
+     "collector",
+     "visitor"
+    ],
+    "states": [],
+    "coverage": [
+     "desk",
+     "hands",
+     "roles"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  },
+  {
+   "rule_id": "K-RECOUNT-BEFORE-SAFE",
+   "type_ru": "Деньги из вскрытой сумки убраны в сейф без пересчёта",
+   "requirement": "Bundles from an opened bag are recounted before storage.",
+   "visible_breach": "Bundles move from the bag to the safe without passing the counter or a hand count.",
+   "not_visible": "Факт пересчёта подтверждается по видимому действию или работе машины, а не по итоговой сумме.",
+   "primary_strength": "weak",
+   "norms": [
+    {
+     "norm_id": "231-74-1",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 74",
+     "quote": "Банки обеспечивают хранение наличных денег в кладовых и (или) сейфовой комнате после их учета в автоматизированной цифровой системе в соответствии с внутренними документами банка.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z220:~:text=%D0%91%D0%B0%D0%BD%D0%BA%D0%B8%20%D0%BE%D0%B1%D0%B5%D1%81%D0%BF%D0%B5%D1%87%D0%B8%D0%B2%D0%B0%D1%8E%D1%82%20%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-74"
+     }
+    },
+    {
+     "norm_id": "231-42",
+     "act": "231",
+     "document_id": "V1900019680",
+     "punkt": "п. 42",
+     "quote": "Кассовые операции по пересчету, сортировке и упаковке наличных денег осуществляются кассовым работником в присутствии контролирующего работника, за исключением случаев совершения кассовых операций по приему и выдаче наличных денег клиенту.",
+     "url": "https://adilet.zan.kz/rus/docs/V1900019680#z163:~:text=%D0%9A%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%BF%D0%B5%D1%80%D0%B5%D1%81%D1%87%D0%B5%D1%82%D1%83%2C",
+     "legal_link_strength": "weak",
+     "citation_status": "pending",
+     "source_check": {
+      "result": "quote_in_cited_unit",
+      "unit": "231-42"
+     }
+    }
+   ],
+   "f1": {
+    "evaluator": "backend/f1/rules.py:k_recount_before_safe",
+    "events": [
+     "CASH_STATE",
+     "COUNT_END"
+    ],
+    "objects": [
+     "bundle"
+    ],
+    "roles": [],
+    "states": [],
+    "coverage": [
+     "counter",
+     "safe"
+    ]
+   },
+   "status": "needs_review",
+   "needs_review_because": [
+    "no human has marked the citations verified on adilet.zan.kz"
+   ]
+  }
+ ]
+}

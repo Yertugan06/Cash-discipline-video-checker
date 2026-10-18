@@ -23,6 +23,9 @@ detector would report them (mirrored, filmed from farther away, 20% of object de
 A verdict that changes points at a rule tied to one camera set-up (robustness check, no GPU
 or video needed).
 
+`--enable RULE_ID` (repeatable) also reports a rule the rulebook ships disabled, to measure it
+before enabling it (e.g. `--enable L-LEFT-DURING-SERVICE`).
+
 `score` runs anywhere and joins those lines with the organizer labels:
 
     python scripts/replay_f1.py score replay.jsonl --labels data/prepared/videos.jsonl
@@ -123,6 +126,7 @@ def run(
     zoom: float = 1.0,
     drop: float = 0.0,
     seed: int = 0,
+    enable: tuple[str, ...] = (),
 ) -> None:
     import yaml
 
@@ -140,7 +144,9 @@ def run(
     config = load_perception_config(ROOT / "config" / "perception.yaml")
     codex = load_codex(ROOT / "config" / "f1_codex.yaml")
     rules = yaml.safe_load((ROOT / "knowledge" / "rules.yaml").read_text(encoding="utf-8"))
-    enabled = {rule["rule_id"] for rule in rules if rule.get("enabled")}
+    enabled = {rule["rule_id"] for rule in rules if rule.get("enabled")} | set(enable)
+    if unknown := set(enable) - {rule["rule_id"] for rule in rules}:
+        raise SystemExit(f"--enable names unknown rules: {sorted(unknown)}")
     # Pass the whole Knowledge Pack, as main.py does; F1Detector checks it against the codex.
     rule_entries = [RuleEntry.model_validate(rule) for rule in rules]
     adapter = F1Detector(Settings.from_env(), rule_entries)
@@ -379,6 +385,9 @@ def main() -> None:
     run_parser.add_argument("--zoom", type=float, default=1.0)
     run_parser.add_argument("--drop", type=float, default=0.0)
     run_parser.add_argument("--seed", type=int, default=0)
+    run_parser.add_argument(
+        "--enable", action="append", default=[], help="also report this disabled rule (repeatable)"
+    )
     score_parser = sub.add_parser("score")
     score_parser.add_argument("results", type=Path)
     score_parser.add_argument("--labels", type=Path, required=True)
@@ -393,7 +402,15 @@ def main() -> None:
     if args.mode == "run":
         if (args.mirror or args.zoom != 1.0 or args.drop) and args.videos_dir:
             parser.error("perturbations move cached boxes only; they can't go with --videos-dir")
-        run(args.cache_dir, args.videos_dir, args.mirror, args.zoom, args.drop, args.seed)
+        run(
+            args.cache_dir,
+            args.videos_dir,
+            args.mirror,
+            args.zoom,
+            args.drop,
+            args.seed,
+            tuple(args.enable),
+        )
     elif args.mode == "score":
         score(args.results, args.labels)
     elif args.mode == "timing":

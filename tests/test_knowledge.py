@@ -217,6 +217,7 @@ def test_describe_contains_observation_and_claim(tmp_path):
     assert "с 5" in text.lower() or "5.0" in text  # the observation's time slots were filled
     assert "наличные" in text  # a fact slot was filled
     assert "Признаки возможного нарушения: R1-ru." in text  # the claim
+    assert text.endswith("Основание: Test regulation, п. 1.")
 
 
 def test_describe_raises_knowledge_error_on_missing_fact(tmp_path):

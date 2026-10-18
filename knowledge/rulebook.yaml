@@ -303,7 +303,7 @@ rules:
     not_visible: Фактическая блокировка операционной системы (пароль/сессия) по видео не подтверждается,
       только визуальное состояние экрана.
     norms:
-      53-71-9: indirect
+      53-71-9: weak
     business_status: confirmed
     implementation_status: implemented
     enabled: true
@@ -332,6 +332,43 @@ rules:
       title_en: Working laptop screen when the cashier leaves
       description_template_en: At {time} s the cashier left and the visible laptop screen was classified
         as a working application. The actual system lock cannot be verified from video.
+  L-LEFT-DURING-SERVICE:
+    type_ru: 'Кассир покинул рабочее место до окончания обслуживания клиента'
+    type_en: The cashier left before finishing with the client
+    requirement: The cashier stays at the workplace until the client's service is over.
+    visible_breach: EXIT(cashier) while the client's session is open (the client has not left).
+    not_visible: Видео не показывает, завершена ли операция в системе банка; признак — клиент ещё у кассы,
+      а кассир вышел из кадра.
+    norms:
+      231-22: direct
+    business_status: candidate
+    implementation_status: implemented
+    enabled: false
+    disabled_reason: Found by the 2026-10-18 legal review (knowledge/legal_requirements.yaml,
+      R-231-22-a). Replays on the open clips (attempts/A22, before and after A21) gave no finding, so nothing
+      shows how it behaves; enabling it is a human decision.
+    condition: A confirmed room exit of the cashier (as for L-NO-DOCS-ON-LEAVE and L-PC-LOCKED) while a
+      client session has started and not ended; the absence lasts at least min_duration_sec and the
+      recording continues that long after the exit; skipped when L-NO-CASH-ON-LEAVE reports the same
+      absence.
+    states_used:
+    - cashier_at_desk
+    - cashier_in_room
+    - clients_at_desk
+    params: {}
+    description_template: С {t_start} по {t_end} с кассир вне рабочего места, а клиент ещё у кассы
+      (обслуживание не завершено).
+    f1:
+      family: Leaving
+      signals: Person tracker (cashier EXIT); client session
+      min_duration_text: 3 s
+      min_duration_sec: 3.0
+      timecode_anchor: Cashier leaves the desk zone
+      title: Кассир ушёл до окончания обслуживания клиента
+      description_template: В {time} с кассир вышел из рабочей зоны, пока клиент оставался у кассы.
+      title_en: The cashier left before finishing with the client
+      description_template_en: At {time} s the cashier walked out while the client was still at the
+        desk.
   L-NO-DOCS-ON-LEAVE:
     type_ru: Документы/носители оставлены на столе при уходе
     type_en: Documents/media left on the desk on exit
@@ -339,7 +376,7 @@ rules:
     visible_breach: EXIT(cashier) while a document or tablet is on the desk.
     not_visible: Содержимое документов и факт их конфиденциальности по видео не определяются.
     norms:
-      231-80-3: indirect
+      231-80-3: weak
     business_status: confirmed
     implementation_status: implemented
     enabled: true
@@ -484,8 +521,8 @@ rules:
     not_visible: Роль каждого человека (сотрудник/посторонний) определяется по положению в кадре, не по
       документам или должности.
     norms:
-      14-16-1: indirect
-      14-8-1: indirect
+      14-16-1: weak
+      14-8-1: weak
     business_status: confirmed
     implementation_status: implemented
     enabled: true
@@ -555,8 +592,8 @@ rules:
     visible_breach: Client session open and a second non-staff person hands an item to the cashier.
     not_visible: Число и личности клиентов определяются визуально, не по документам.
     norms:
-      231-20-2: indirect
-      231-21: indirect
+      231-20-2: weak
+      231-21: weak
     business_status: confirmed
     implementation_status: implemented
     enabled: true
@@ -829,7 +866,7 @@ rules:
       сумме.
     norms:
       231-74-1: weak
-      231-42: indirect
+      231-42: weak
     business_status: confirmed
     implementation_status: implemented
     enabled: true

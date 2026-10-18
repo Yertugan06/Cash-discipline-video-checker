@@ -306,6 +306,52 @@ def l_pc_locked(ctx: Context) -> list[Finding]:
     return output
 
 
+def l_left_during_service(ctx: Context) -> list[Finding]:
+    """The cashier walks out while a client's session is still open (231 п. 22). As for the
+    documents and laptop rules, only a confirmed room exit counts: a walk to the safe stays
+    inside the workplace. An exit too close to the end of the recording shows nothing about
+    the service. When L-NO-CASH-ON-LEAVE reports the same absence, this rule stays silent."""
+    if not ctx.log.coverage.get("roles"):
+        return []
+    minimum = ctx.rule("L-LEFT-DURING-SERVICE").min_duration_sec or 0
+    cash_reported = (
+        [f.timestamp_sec for f in l_no_cash_on_leave(ctx)] if ctx.log.coverage.get("desk") else []
+    )
+    output = []
+    for event in ctx.room_exits():
+        start = event.timestamp_sec
+        away_start, away_end = next(
+            (
+                (away.timestamp_sec, away.timestamp_sec + duration)
+                for away, duration in ctx.intervals("WORKSTATION_AWAY")
+                if away.timestamp_sec <= start <= away.timestamp_sec + duration
+            ),
+            (start, ctx.duration),
+        )
+        session_id = next(
+            (
+                identity
+                for identity, session in ctx.log.sessions.items()
+                if session["start"] <= start and (session["end"] is None or session["end"] > start)
+            ),
+            None,
+        )
+        if (
+            session_id is None
+            or away_end - start < minimum
+            or start + minimum > ctx.duration
+            or any(away_start - 4 <= t <= away_end for t in cash_reported)
+        ):
+            continue
+        facts = {
+            "actor_id": event.facts.get("actor_id", ""),
+            "session_id": session_id,
+            "duration_sec": away_end - start,
+        }
+        output.append(Finding("L-LEFT-DURING-SERVICE", start, facts))
+    return output
+
+
 def sustained(ctx: Context, rule_id: str, kind: str, *, strict: bool = True) -> list[Finding]:
     minimum = ctx.rule(rule_id).min_duration_sec or 0
     return [
@@ -870,6 +916,7 @@ RULES = {
     "L-NO-BAG-ON-LEAVE": l_no_bag_on_leave,
     "L-NO-DOCS-ON-LEAVE": l_no_docs_on_leave,
     "L-PC-LOCKED": l_pc_locked,
+    "L-LEFT-DURING-SERVICE": l_left_during_service,
     "S-SAFE-CLOSED": s_safe_closed,
     "S-CLEAN-DESK-HANDOVER": s_clean_desk_handover,
     "S-NO-MERGE": s_no_merge,

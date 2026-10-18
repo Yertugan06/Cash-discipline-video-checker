@@ -1,0 +1,1843 @@
+# Review of every punkt of the stored acts (see knowledge/README.md, "Legal sources and the catalog").
+# Machine-proposed: an LLM read each punkt of sources/<act>/text.txt on 2026-10-18 and answered three
+# questions (in force and about the cash desk? visible on video? can the detector see it?). A person
+# confirms or edits these; they are not citation_status and not legal advice.
+# Unit ids: <act>-<punkt>, a part <act>-<punkt>-c<k>, a subpunkt <act>-<punkt>-s<k>; a punkt inserted by
+# an amendment ("53-1.") is <act>-53-1.
+# applicability: cash_desk | premises | workstation | back_office | not_applicable
+# observability: direct | conditional | partial | not_observable | too_long
+# status: linked (a rule rests on it) | candidate (visible, no rule yet) | weak | excluded
+units:
+  231-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Пункт 1 - введение и область применения Правил, не касается операций на кассе.
+  231-2:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Определения терминов; не применимо к операциям на рабочем месте кассира.
+  231-3:
+    applicability: cash_desk
+    observability: not_observable
+    status: excluded
+    reason: Перечисление видов кассовых операций; не содержит требований, видимых в видеозаписи.
+  231-4:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: График работы кассы; не касается поведения на рабочем месте.
+  231-5:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Требование оборудования кассового узла; регулируется Правилами организации охраны и ссылается
+      на другие документы.
+  231-6:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Автоматические устройства (банкоматы, темпокассы); не касается ручных операций кассира.
+  231-7:
+    applicability: cash_desk
+    observability: direct
+    status: linked
+    rules:
+    - C-ID-BEFORE-CASH
+    reason: Требует надлежащей проверки при приеме/выдаче наличных денег; камера может фиксировать предъявление
+      документа.
+  231-8:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Кассовые операции с иностранной валютой; специфический случай, не видно в кадре.
+  231-9:
+    applicability: cash_desk
+    observability: direct
+    status: candidate
+    reason: Требует спецоборудования для проверки платежности/подлинности; детектор видит использование
+      счетного аппарата.
+  231-10:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Операции с платежными картами и цифровыми документами; не касается наличных денег.
+  231-10-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Отсылка к Цифровому кодексу и Закону о кибербезопасности для операций с цифровыми документами;
+      самостоятельного видимого требования нет.
+  231-11:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Специальные требования для инвалидов по зрению; административное требование.
+  231-12:
+    applicability: workstation
+    observability: direct
+    status: linked
+    rules:
+    - W-NO-PERSONAL-ITEMS
+    - W-NO-FOOD
+    - W-NO-CAMERA-PHONE
+    reason: Хранение личных вещей вне кассового узла, запрет на лекарства/средства связи без фото-видео;
+      камера видит предметы и пищу на столе.
+  231-13:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Договоры материальной ответственности; внутренние документы банка, не видны в видеозаписи.
+  231-14:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Распределение должностных обязанностей; документооборот, не видно в кадре.
+  231-15:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Документирование передачи наличных между кассирами; требует документов и данных, не видно.
+  231-16:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Общее требование о системе управления рисками; не касается конкретных действий.
+  231-17:
+    applicability: cash_desk
+    observability: not_observable
+    status: excluded
+    reason: Приходные документы (объявление, ордер); требует документов, не видно.
+  231-18:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Форма и реквизиты приходных документов; документооборот.
+  231-19:
+    applicability: cash_desk
+    observability: direct
+    status: linked
+    rules:
+    - C-ID-BEFORE-CASH
+    - C-DETECTOR-CHECK
+    reason: 'Действия кассира при приеме наличных: идентификация (видно предъявление документа), пересчет,
+      проверка подписей; детектор видит счетный аппарат.'
+  231-20:
+    applicability: cash_desk
+    observability: direct
+    status: linked
+    rules:
+    - L-NO-CASH-ON-LEAVE
+    - S-CLEAN-DESK-HANDOVER
+    - S-NO-MERGE
+    - S-SAFE-CLOSED
+    - C-COUNT-BEFORE-EXIT
+    - A-SECOND-PERSON
+    reason: Приём и пересчет в присутствии клиента, наличные на рабочем месте в закрытых устройствах,
+      одна операция с одним клиентом; все видно в кадре.
+  231-21:
+    applicability: cash_desk
+    observability: direct
+    status: linked
+    rules:
+    - A-SECOND-PERSON
+    - S-NO-MERGE
+    reason: Каждый документ обрабатывается отдельно; видно, много ли одновременно клиентов и отделены
+      ли стопки наличных.
+  231-22:
+    applicability: cash_desk
+    observability: direct
+    status: linked
+    rules:
+    - L-NO-CASH-ON-LEAVE
+    reason: Кассир не покидает рабочее место до окончания обслуживания клиента; камера видит уход и наличные
+      на столе.
+  231-23:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Передача наличных заведующему кассой; внутренний процесс, не видно в кадре короткого видео.
+  231-24:
+    applicability: cash_desk
+    observability: direct
+    status: linked
+    rules:
+    - K-SEAL-CHECK
+    reason: Приём наличных от инкассаторов; проверка целостности и пломбирования видна в кадре.
+  231-25:
+    applicability: cash_desk
+    observability: direct
+    status: candidate
+    reason: При нарушении целостности сумки вскрытие и пересчет в присутствии инкассаторов; видно в кадре.
+  231-26:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Зачисление на счета клиентов; внутренняя операция банка, не видна в видеозаписи.
+  231-27:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Приём ценностей на основе внебалансового ордера; документооборот.
+  231-28:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Выдача наличных заведующего кассой кассиру; внутренняя передача, не касается клиентских операций.
+  231-29:
+    applicability: cash_desk
+    observability: not_observable
+    status: excluded
+    reason: Расходные документы (чек, ордер); требует документов.
+  231-30:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Форма и реквизиты расходных документов; документооборот.
+  231-31:
+    applicability: cash_desk
+    observability: partial
+    status: excluded
+    reason: Действия кассира при выдаче; проверка подписей видна частично, но требует документов и образцов
+      подписей.
+  231-32:
+    applicability: cash_desk
+    observability: partial
+    status: excluded
+    reason: Порядок выдачи банкнот и монет; видно физическое действие пересчета, но критерий целостности
+      упаковки требует близкого разглядывания.
+  231-33:
+    applicability: cash_desk
+    observability: partial
+    status: excluded
+    reason: Выдача в упаковке банка; видно упаковывание, но требует проверки корректности упаковки.
+  231-34:
+    applicability: cash_desk
+    observability: not_observable
+    status: excluded
+    reason: Обмен по требованию клиента после выдачи; не кассовое нарушение, требует информации о логике
+      операции.
+  231-35:
+    applicability: cash_desk
+    observability: partial
+    status: excluded
+    reason: Пересчет клиентом; видно действие, но проверка акта недостачи требует документов.
+  231-36:
+    applicability: cash_desk
+    observability: direct
+    status: excluded
+    reason: Проверка платежности/подлинности при размене; требует контакта с детектором, видно частично.
+  231-37:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Остаток после дня; конец дня, внутренний процесс банка.
+  231-38:
+    applicability: cash_desk
+    observability: direct
+    status: excluded
+    reason: Выдача наличных инкассаторам; видно физическое передача, но требует документов.
+  231-39:
+    applicability: cash_desk
+    observability: partial
+    status: excluded
+    reason: Приём инкассаторами наличных; видно передачу, но требует препроводительного документа.
+  231-40:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Выдача ценностей внебалансовым ордером; документооборот.
+  231-41:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Требование оборудования для пересчета; касается технических характеристик оборудования, не
+      видно.
+  231-42:
+    applicability: back_office
+    observability: partial
+    status: linked
+    rules:
+    - K-RECOUNT-BEFORE-SAFE
+    reason: Пересчет в присутствии контролирующего работника; видно присутствие второго лица и счетный
+      аппарат, но это back_office операция.
+  231-43:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Сортировка по номиналам и износу; внутренний процесс, требует близкого разглядывания денег.
+  231-44:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Обнаружение недостачи при сортировке; требует документов и внутренних процессов.
+  231-45:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Упаковка отдельно; внутренний процесс банка.
+  231-46:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Укладка 100 листов в корешки; технические требования упаковки.
+  231-47:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Укладка 10 корешков в пачку; технические требования упаковки.
+  231-48:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Обвязка и пломбирование пачки; видно действие, но требует проверки правильности техники.
+  231-49:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Объединение неполных корешков; внутренний процесс.
+  231-50:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Упаковка в неполные пачки; технические требования.
+  231-51:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Упаковка монет в мешки и пакеты; технические требования.
+  231-52:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Прошивка мешка и завязывание; видно действие, но требует проверки техники.
+  231-53:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ярлыки на мешках и пакет-саше; технические требования документирования.
+  231-53-1:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Упаковка монет в пакеты-саше и количество монет в пакете; номинал и счёт монет по видео не
+      установить.
+  231-54:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Упаковка при контрольном пересчете; внутренний процесс.
+  231-55:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Загрузка в автоматические устройства; внутренний процесс.
+  231-56:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Сверка сумм в конце дня; требует документов.
+  231-57:
+    applicability: cash_desk
+    observability: direct
+    status: excluded
+    reason: Проверка платежности банкнот и монет; видно использование детектора, но не содержит специфического
+      требования.
+  231-58:
+    applicability: cash_desk
+    observability: not_observable
+    status: excluded
+    reason: Проверка иностранной валюты; требует справочных материалов.
+  231-59:
+    applicability: cash_desk
+    observability: direct
+    status: excluded
+    reason: Сомнительные банкноты и монеты; видно составление акта, но требует документов и экспертизы.
+  231-60:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Сообщение о поддельных банкнотах в правоохранительные органы; административное действие.
+  231-61:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Поддельные банкноты не возвращаются; следствие из пункта 60.
+  231-62:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Уведомление Национального Банка о подделках; административное действие.
+  231-63:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Возврат подлинных или остаток поддельных; процедура после экспертизы.
+  231-63-1:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Спецконтейнеры со специальной краской, согласование краски с Национальным Банком, приём и
+      экспертиза окрашенных банкнот; документы и экспертиза вне кадра.
+  231-63-2:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Спецконтейнеры со специальной краской, согласование краски с Национальным Банком, приём и
+      экспертиза окрашенных банкнот; документы и экспертиза вне кадра.
+  231-63-3:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Спецконтейнеры со специальной краской, согласование краски с Национальным Банком, приём и
+      экспертиза окрашенных банкнот; документы и экспертиза вне кадра.
+  231-63-4:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Спецконтейнеры со специальной краской, согласование краски с Национальным Банком, приём и
+      экспертиза окрашенных банкнот; документы и экспертиза вне кадра.
+  231-63-5:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Спецконтейнеры со специальной краской, согласование краски с Национальным Банком, приём и
+      экспертиза окрашенных банкнот; документы и экспертиза вне кадра.
+  231-63-6:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Спецконтейнеры со специальной краской, согласование краски с Национальным Банком, приём и
+      экспертиза окрашенных банкнот; документы и экспертиза вне кадра.
+  231-64:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Формирование сводного документа о кассовых оборотах; документооборот конца дня.
+  231-65:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проверка сумм и составление акта; требует доступа к данным учета.
+  231-66:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Формирование кассовых документов в папки; документооборот.
+  231-67:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Документооборот и учет - внутренние операции банка, не видны на видео.
+  231-68:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Уголовно-процессуальное право; не имеет отношения к операциям на кассе.
+  231-69:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Загрузка устройств - внутренняя операция, требует знания внутренних процедур и системных записей.
+  231-70:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Операции подразделения инкассации и документирования - вне видеокадра.
+  231-71:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проверка качества и подлинности денег требует осмотра купюр, недоступна на видео.
+  231-72:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Техническое требование к устройству; внутренняя функция счетной машины, не видна извне.
+  231-73:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Учет операций в системе; требует доступа к электронным записям и документам.
+  231-74:
+    applicability: cash_desk
+    observability: conditional
+    status: linked
+    rules:
+    - K-RECOUNT-BEFORE-SAFE
+    reason: 'Требует перепроверки комплектов перед положением в сейф. Видно: передача денег в сейф.'
+  231-75:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Процедура допуска в хранилище; требует знания списков ответственных лиц и распоряжений.
+  231-76:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Хранение ключей и кодов - внутренняя организационная мера, не видна на видео.
+  231-77:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Организация хранения в хранилище по валютам и номиналам - не видна на кассовом видео.
+  231-78:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проверка и сверка в хранилище при закрытии - внутренняя операция вне видео.
+  231-79:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Оформление акта и внутренние расследования - документооборот, не видны на видео.
+  231-80:
+    applicability: workstation
+    observability: conditional
+    status: linked
+    rules:
+    - L-NO-DOCS-ON-LEAVE
+    - L-SAFE-LOCKED-ON-LEAVE
+    reason: 'Хранение печатей и ключей на рабочем месте кассира должно быть безопасным. Видно: оставленные
+      на столе предметы, открытый сейф.'
+  231-81:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Определение цели ревизии - административное указание, не имеет отношения к операциям на кассе.
+  231-82:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: График ревизий - административный документ, не видно на видео кассовых операций.
+  231-83:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Состав ревизионной комиссии - административное назначение, не видно на видео.
+  231-84:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Процедура проведения ревизии - административное требование, не наблюдается на кассовом видео.
+  231-85:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Содержание акта ревизии - внутренний документ, не видно на видео.
+  231-86:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Договор об инкассации - внешнее соглашение, не видно на видео кассы.
+  231-87:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Передача денег Национальному Банку - вне пределов кассовой операции при обслуживании клиента.
+  231-87-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Отсылка к Цифровому кодексу для инкассации с цифровыми документами.
+  231-88:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Трудовой договор и материальная ответственность - кадровый документ, не видно на видео.
+  231-89:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Распределение должностных обязанностей - внутренний регламент, не видно на видео кассовых
+      операций.
+  231-90:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Уведомление о филиале и регистрационные документы - административная процедура, не видны на
+      видео.
+  231-90-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Уведомление о приостановлении деятельности инкассаторской организации; административное требование.
+  231-91:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Реестр клиентов инкассации - внутренний документ, не видно на видео кассовых операций.
+  231-92:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Явочная карточка и ежемесячный учет - документооборот, не видны на видео.
+  231-93:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Нумерация сумок для инкассации - техническая процедура упаковки, не наблюдается на кассовом
+      видео.
+  231-94:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Образцы пломб и их регистрация - документооборот, не видны на видео.
+  231-95:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Исключен постановлением от 10.11.2025.
+  231-96:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Состав бригады для перевозки денег - вне кассовой операции при обслуживании клиента на месте.
+  231-97:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Исключен постановлением от 16.03.2026.
+  231-98:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Роли членов бригады при перевозке - вне кассовой операции при обслуживании клиента.
+  231-99:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Условия формирования двухчеловечной бригады - вне кассовой операции.
+  231-100:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Маршрут и график инкассации - вне кассовой операции при обслуживании клиента.
+  231-101:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Инструктаж и выдача документов бригаде инкассаторов - вне видеокадра кассовой операции.
+  231-102:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Учетный журнал выданных документов - документооборот, не видны на видео.
+  231-103:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Оснащение бригады экипировкой и защитой - вне кассовой операции при обслуживании клиента.
+  231-104:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Разрешение на ношение оружия - вне кассовой операции; документооборот, не видны на видео.
+  231-105:
+    applicability: back_office
+    observability: partial
+    status: excluded
+    reason: Упаковка денег в сумки клиентом - видна упаковка, но подтверждение препроводительным документом
+      не видно на видео.
+  231-106:
+    applicability: back_office
+    observability: partial
+    status: excluded
+    reason: Форма препроводительного документа - требует проверки содержимого документа, что не полностью
+      видно на видео.
+  231-107:
+    applicability: cash_desk
+    observability: direct
+    status: candidate
+    reason: 'Инкассатор проверяет целостность сумки и пломб. Видно: осмотр сумки, проверка пломбы, целостность
+      шпагата. Может быть включено в правила контроля.'
+  231-108:
+    applicability: cash_desk
+    observability: direct
+    status: candidate
+    reason: 'Старший бригады проверяет сумку по пункту 107. Видно: осмотр и передача сумки между членами
+      бригады инкассаторов.'
+  231-109:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Доставка денег по маршруту и сдача клиентам - вне кассовой операции банка при приеме от клиента.
+  231-109-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-2:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-3:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-4:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-5:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-6:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-7:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-8:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-9:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-10:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-109-11:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Автомобильные инкассаторские перевозки (транспорт, путевой лист, выезд бригады, остановка,
+      ДТП); вне кассы.
+  231-110:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Перевозка денег между административными единицами - вне кассовой операции при обслуживании
+      клиента.
+  231-111:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Доверенность на перевозку - внутренний документ, не видны на видео кассовых операций.
+  231-112:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Прием денег бригадой для перевозки - вне кассовой операции при обслуживании клиента на месте.
+  231-113:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Упаковка денег бригадой для перевозки - вне кассовой операции при обслуживании клиента.
+  231-114:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Опись денег для перевозки - документооборот, не видны на видео.
+  231-115:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Выбор вида транспорта для доставки - вне кассовой операции при обслуживании клиента.
+  231-116:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Доставка денег бригадой по маршруту - вне кассовой операции при обслуживании клиента.
+  231-117:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Состав бригады определяется по сумме перевозимых денег - вне кассовой операции.
+  231-118:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Условия перевозки воздушным транспортом - вне кассовой операции при обслуживании клиента.
+  231-119:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Движение бригады к месту отправления - вне кассовой операции.
+  231-120:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Акт о недостаче при доставке - документооборот, не видны на видео.
+  231-121:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Учет и хранение денег в подразделении инкассации - внутренняя операция, не видны на кассовом
+      видео.
+  231-122:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Хранение в кладовой или сейфовой комнате - вне кассовой операции, требует доступа в хранилище.
+  231-123:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Размещение явочных карточек в сейфе - внутренняя операция, не видны на видео.
+  231-124:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Порядок хранения определяется внутренними документами - не видны на видео кассовых операций.
+  231-125:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Договор сопровождения клиента - административное соглашение, не видны на видео.
+  231-126:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Назначение маршрута и состава бригады для сопровождения - вне кассовой операции при приеме.
+  231-127:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Состав бригады сопровождения клиента - вне кассовой операции при приеме денег.
+  231-128:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Явочная карточка при сопровождении - документооборот, не видны на видео.
+  231-129:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Обязанности бригады при сопровождении - вне кассовой операции при приеме денег от клиента.
+  231-130:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Требования к помещениям инкассаторской организации - архитектурные и технические требования,
+      не видны на видео кассовой операции.
+  231-131:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Пересчет, сортировка и упаковка денег в инкассаторской организации - вне кассовой операции,
+      требует доступа во внутренние помещения.
+  231-132:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Хранение денег в инкассаторской организации - вне кассовой операции, требует доступа в хранилище.
+  231-133:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Выдача денег инкассаторской организацией - вне кассовой операции при приеме денег от клиента.
+  14-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Scope and purpose of the Rules; procedural/administrative text, not a substantive requirement.
+  14-2:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Definitions of banking/security terms; not a requirement observable in cash-desk operations.
+  14-3:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Security organizational arrangements (private guards, alarm centers); requires off-camera
+      contracts and coordination.
+  14-4:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Requirements for security contracts; not observable from video, requires external documentation.
+  14-5:
+    applicability: premises
+    observability: partial
+    status: excluded
+    reason: Fire safety equipment (extinguishers, automatic systems); installation is observable, operation
+      under emergency only.
+  14-6:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: General requirement that banks equip a cash unit; procedural statement, not a specific observable
+      requirement.
+  14-7:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Definition of cash unit composition (which rooms must be included); structural prerequisite,
+      not an operational requirement.
+  14-8:
+    applicability: premises
+    observability: direct
+    status: linked
+    rules:
+    - A-DOOR-LOCK
+    - A-OUTSIDER-ZONE
+    reason: Cash unit must be isolated with one closing service entrance. Supports A-DOOR-LOCK (entrance
+      must close) and A-OUTSIDER-ZONE (isolation implies controlled access).
+  14-9:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Exemption from storage room requirement if daily collection implemented; requires off-camera
+      system records.
+  14-10:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Mobile cash unit authorization during events; institutional decision, not observable from
+      desk video.
+  14-11:
+    applicability: premises
+    observability: direct
+    status: excluded
+    reason: Window protection requirements (bars, shutters); structural feature, not an operational violation
+      observable during normal work.
+  14-12:
+    applicability: back_office
+    observability: partial
+    status: excluded
+    reason: Storage room construction specs (walls, doors, locks, ventilation); installation visible but
+      not operational behavior at the cash desk.
+  14-13:
+    applicability: back_office
+    observability: partial
+    status: excluded
+    reason: Safe room construction specs (walls, mesh, doors); installation visible but not operational
+      behavior at the cash desk.
+  14-14:
+    applicability: back_office
+    observability: partial
+    status: excluded
+    reason: Prohibition on communications/utilities in storage/safe rooms; would be visible if present,
+      but detector is aimed at cash-desk operations.
+  14-15:
+    applicability: back_office
+    observability: direct
+    status: excluded
+    reason: Pre-storage room layout requirements (single entrance, no windows); structural feature not
+      observable during normal cash-desk operations.
+  14-16:
+    applicability: workstation
+    observability: direct
+    status: linked
+    rules:
+    - A-DOOR-LOCK
+    - A-OUTSIDER-ZONE
+    reason: 'Cash desk specifications: separate entrance with lockable door (supports A-DOOR-LOCK); partitions
+      and protective means imply restricted access (supports A-OUTSIDER-ZONE).'
+  14-17:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Explicitly excluded by regulatory amendment (valid until 01.01.2027).
+  14-18:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Exemption for automated cash operations; applies to ATM/machine-based work, not human cash-desk
+      operations.
+  14-19:
+    applicability: back_office
+    observability: direct
+    status: excluded
+    reason: Recount room specifications (entrance, soundproofing); structural/facility feature, not observable
+      operational requirement at the customer-facing desk.
+  14-20:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Required rooms for collection operations (weapon storage, storage, pre-storage, box); structural
+      prerequisite, not observable from cash-desk video.
+  14-21:
+    applicability: premises
+    observability: direct
+    status: excluded
+    reason: Collection box or loading area design (lockable door, limited visibility); structural feature,
+      not an operational requirement during normal cash-desk work.
+  14-22:
+    applicability: premises
+    observability: not_observable
+    status: excluded
+    reason: Exchange organization premises layout (separate entrance, cash desk, service hall); organizational
+      structure, not a cash-desk operational requirement.
+  14-23:
+    applicability: workstation
+    observability: direct
+    status: excluded
+    reason: Exchange org cash desk must comply with point 16; already covered by 14-16 (linked status),
+      this is a cross-reference, not a new requirement.
+  14-24:
+    applicability: premises
+    observability: direct
+    status: excluded
+    reason: Exchange org entrance door specifications (metal, protective options); architectural feature,
+      not an operational requirement at the cash desk.
+  53-1:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Область применения и порядок разработки документа; организационные вопросы.
+  53-2:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Определения понятий информационной безопасности; относится к общим определениям.
+  53-3:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Общие требования к управлению информационной безопасностью; организационный уровень.
+  53-4:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Требования к системе управления ИБ; организационная структура высшего руководства.
+  53-5:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Задачи системы управления ИБ; уровень политик и стратегии.
+  53-6:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Требования к уровню развития системы управления ИБ; уровень руководства.
+  53-7:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Участники системы управления ИБ; организационная структура отделов.
+  53-8:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Независимость подразделения по ИБ от ИТ; организационная независимость.
+  53-9:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Политика информационной безопасности; документирование требований.
+  53-10:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Бюджетирование ресурсов на ИБ; управленческое решение.
+  53-11:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Перечень защищаемой информации; внутренний документ.
+  53-12:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Внутренние документы по управлению ИБ; уровень политик.
+  53-13:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Коллегиальный орган по ИБ; организационная структура.
+  53-14:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции подразделения по информационной безопасности; организационный уровень.
+  53-15:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Возложение функций физической безопасности на подразделение ИБ.
+  53-16:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции подразделения по информационным технологиям; организационный уровень.
+  53-17:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Делегирование функций подразделениям; организационный вопрос.
+  53-18:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции подразделения по безопасности; физическая и техническая безопасность на уровне организации.
+  53-19:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции отдела работы с персоналом; обучение и документирование.
+  53-20:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции юридического подразделения; правовая экспертиза.
+  53-21:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции подразделения комплаенс-контроля; определение защищаемой информации.
+  53-22:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции внутреннего аудита; проверки состояния ИБ.
+  53-23:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Функции подразделения управления рисками ИБ; организационный уровень.
+  53-24:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ответственность руководителей подразделений; организационные требования.
+  53-25:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ответственность бизнес-владельцев информационных систем; матрицы доступа.
+  53-26:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Ответственность работников за ИБ; общие требования, не наблюдаемы в видео.
+  53-27:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ответственность при передаче функций ИБ сторонним организациям.
+  53-28:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Отчётность об ИБ в уполномоченный орган; управленческая процедура.
+  53-29:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Форма и порядок отчётности об ИБ; техническая процедура передачи.
+  53-30:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Содержание отчётности об ИБ; информационная полнота документа.
+  53-31:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проверка соответствия требованиям; контрольная функция.
+  53-32:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Внешняя проверка системы управления ИБ; стандартизация и сертификация.
+  53-33:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Формирование перечня критичных информационных активов; управленческое решение.
+  53-34:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Обеспечение безопасности критичных активов; уровень политик.
+  53-35:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Защита некритичных активов; самостоятельное определение банком.
+  53-36:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Предоставление доступа на уровне функциональных обязанностей; система контроля доступа.
+  53-37:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Формирование ролей доступа; матрицы доступа к системам.
+  53-38:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Процесс создания матриц доступа; техническая процедура.
+  53-39:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Идентификация и аутентификация в системах; требуется доступ к логам.
+  53-40:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Персонализированные учётные записи; требуется проверка внутренних систем.
+  53-41:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Технологические учётные записи; требуется проверка перечня и ответственных лиц.
+  53-42:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Управление учётными записями и паролями; система-уровневые требования.
+  53-43:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Процессы формирования схемы инфраструктуры; организационно-техническая документация.
+  53-44:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Контроль целостности конфигурации; аудиторский след в системах.
+  53-45:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Меры по защите от неавторизованных устройств; требуется проверка устройств.
+  53-46:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Определение владельцев и менеджеров информационных активов; организационная роль.
+  53-47:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Учёт требований ИБ в техзадании; процесс разработки.
+  53-48:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Резервное копирование данных; процедура восстановления.
+  53-49:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Антивирусная защита инфраструктуры; общий уровень.
+  53-50:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Физическая безопасность центров обработки данных; требуется проверка процедур.
+  53-51:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Установка ПО на рабочие станции; требуется проверка конфигурации.
+  53-52:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Формирование перечня разрешённого ПО; требуется проверка реестра.
+  53-53:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Организационные и технические меры защиты рабочих станций; разнообразные требования.
+  53-54:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Процесс внедрения криптографической защиты; согласование между отделами.
+  53-55:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Порядок использования криптографической защиты; процедура управления ключами.
+  53-56:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Информационная безопасность при доступе третьих лиц; требуется проверка договоров.
+  53-57:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Предоставление доступа третьим лицам; требуется проверка соглашений и условий.
+  53-58:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проверка полномочий представителей органов; требуется проверка документов.
+  53-59:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Контроль деятельности третьих лиц; требуется проверка логов и процедур.
+  53-60:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Передача активов третьим лицам и облачные сервисы; требуется проверка контрактов.
+  53-61:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проведение внутренних проверок ИБ; управленческая функция.
+  53-62:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Результаты проверок ИБ; составление отчётов.
+  53-63:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Процесс создания матрицы доступа; многоэтапная техническая процедура.
+  53-64:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Внесение изменений в матрицу доступа; управление изменениями.
+  53-65:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Механизм управления доступом; система-уровневые функции.
+  53-66:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Механизм управления доступом к данным; система-уровневые функции.
+  53-67:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Изменение и отключение прав доступа при смене функций; требуется проверка логов.
+  53-68:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Проверка корректности прав доступа; аудиторская функция.
+  53-69:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Пересмотр ролей и прав доступа; периодический процесс.
+  53-70:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Применение компенсирующих мер при невозможности реализации требований; специальные случаи.
+  53-71:
+    applicability: workstation
+    observability: too_long
+    status: weak
+    rules:
+    - L-PC-LOCKED
+    reason: 'Пп. 9: информационная система автоматически завершает сеанс или блокирует рабочую станцию
+      при неактивности пользователя более 30 минут. Это требование к настройке системы, а не обязанность
+      кассира блокировать экран при уходе; 30 минут не помещаются в ролик до 145 с. Для L-PC-LOCKED связь
+      слабая. Нормы «блокировать при уходе» в акте 53 нет (проверено поиском по тексту).'
+  53-72:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Исключения из требований п.71 при интеграции систем аутентификации.
+  53-73:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Процесс управления паролями и учётными записями; организационные процедуры.
+  53-74:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Защита информации при использовании Интернета и электронной почты; требуется проверка конфигурации.
+  53-75:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: 'Методы защиты информации при записи на внешние носители (организационные и программно-технические).
+      Не касается телефона с камерой на кассе: запись на носитель по видео не установить. Связь с W-NO-CAMERA-PHONE,
+      предложенная при первом чтении, отклонена при сверке.'
+  53-76:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Защита информации на бумажных носителях; требуется проверка процедур обработки документов.
+  53-77:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Защита при утрате штатных носителей информации; шифрование и уничтожение данных.
+  53-78:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Уничтожение защищаемой информации; требуется проверка методов уничтожения.
+  53-79:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Определение периметра защиты информационной инфраструктуры; организационно-техническое решение.
+  53-80:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Шифрование телекоммуникационных соединений; требуется проверка конфигурации сети.
+  53-81:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Методы шифрования соединений; требуется проверка согласования с подразделением ИБ.
+  53-82:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Шифрование передаваемой информации наравне с шифрованием соединений; техническая конфигурация.
+  53-83:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Установка межсетевых экранов; инфраструктурное требование.
+  53-84:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Настройка правил доступа на межсетевых экранах; техническая конфигурация.
+  53-85:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Меры предотвращения атак типа отказ в обслуживании; инфраструктурная защита.
+  53-86:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Доступ пользователей к активам из-за периметра защиты; требуется проверка каналов доступа.
+  53-87:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Шлюзы для безопасности доступа в Интернет и электронную почту; инфраструктурная конфигурация.
+  53-88:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Конфигурация средств безопасности периметра и изменение предустановленных паролей; техническая
+      процедура.
+  53-89:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Тестирование на проникновение в инфраструктуру; периодическая проверка независимыми экспертами.
+  53-90:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Синхронизация системного времени; техническая конфигурация.
+  53-91:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Разделение сетевой инфраструктуры на сегменты; архитектурное решение.
+  53-92:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Настройка правил доступа между сегментами сети; техническая конфигурация.
+  53-93:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Выявление аномальной активности в инфраструктуре; требуется проверка логов и систем мониторинга.
+  53-94:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Создание и применение групповых политик безопасности; требуется проверка конфигурации операционной
+      системы.
+  53-95:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Защита на уровне максимально критичного актива на одном сервере; инфраструктурное решение.
+  53-96:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Разработка и доработка информационных систем не в промышленной среде; требуется проверка процесса
+      разработки.
+  53-97:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Отделение сред разработки, тестирования и промышленной эксплуатации; архитектурное решение.
+  53-98:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Защита информации в среде разработки и тестирования; требуется проверка мер защиты.
+  53-99:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ограничение полномочий разработчиков на перенос изменений в промышленную среду; требуется
+      проверка процедур.
+  53-100:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Изменение параметров безопасности перед вводом системы в эксплуатацию; техническая процедура.
+  53-101:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Контроль использования привилегированных учётных записей; требуется проверка двойного контроля
+      и логов.
+  53-102:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Техническая поддержка и обновления безопасности информационных систем; требуется проверка
+      обновлений.
+  53-103:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Подписание обязательств о неразглашении при приёме на работу; требуется проверка документов.
+  53-104:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Вводный инструктаж о требованиях ИБ; требуется проверка журналов инструктажа.
+  53-105:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Предоставление доступа только к некритичным активам до инструктажа; требуется проверка матрицы
+      доступа.
+  53-106:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Включение требований ИБ в трудовой договор; требуется проверка договора.
+  53-107:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Программа повышения осведомленности работников; требуется проверка методов обучения.
+  53-108:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Содержание инструктажа по информационной безопасности; требуется проверка материалов инструктажа.
+  53-109:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Повышение квалификации работников ИБ; требуется проверка программ обучения.
+  53-110:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Мероприятия при увольнении работника; требуется проверка процедур блокировки доступа.
+  53-111:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ведение аудиторского следа; требуется проверка логов системы.
+  53-112:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: События для отражения в аудиторском следе; требуется проверка логов системы.
+  53-113:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Формат аудиторского следа; требуется проверка структуры логов.
+  53-114:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Сроки хранения аудиторского следа; требуется проверка политики хранения.
+  53-115:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Использование лицензионного антивирусного ПО; требуется проверка установленного ПО.
+  53-116:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Требования к антивирусному ПО; требуется проверка функциональности и конфигурации.
+  53-117:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Требования к системам обеспечения целостности программной среды; требуется проверка конфигурации.
+  53-118:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Выбор антивирусного ПО; требуется проверка процесса выбора.
+  53-119:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Обновление и сканирование антивирусным ПО; требуется проверка логов сканирования.
+  53-120:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Своевременная установка обновлений безопасности; требуется проверка истории обновлений.
+  53-121:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Установка критичных обновлений в течение одного месяца; требуется проверка логов обновлений.
+  53-122:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Испытание обновлений в тестовой среде перед внедрением; требуется проверка процесса.
+  53-123:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Реализация компенсирующих мер при невозможности установки обновлений; требуется проверка согласования.
+  53-124:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Сканирование на уязвимости не реже одного раза в 6 месяцев; требуется проверка результатов
+      сканирования.
+  53-125:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Реализация корректирующих мер по устранению уязвимостей; требуется проверка подтверждений.
+  53-126:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Определение процесса использования криптографической защиты; требуется проверка документации.
+  53-127:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Оснащение центра обработки данных системами технической безопасности; требуется проверка инфраструктуры.
+  53-128:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Предоставление доступа в центр обработки данных; требуется проверка списка доступа.
+  53-129:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Ведение журнала контроля доступа в центр обработки данных; требуется проверка журналов.
+  53-130:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Автоматическое пожаротушение в центре обработки данных; требуется проверка технического обеспечения.
+  53-131:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Видеонаблюдение в центре обработки данных; требуется проверка системы видеонаблюдения.
+  53-132:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Непрерывная запись событий видеонаблюдением центра обработки данных; требуется проверка режима
+      записи.
+  53-133:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Хранение архива видеонаблюдения не менее 3 месяцев; требуется проверка политики хранения.
+  53-134:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Предотвращение несанкционированного физического доступа к серверам вне центра обработки данных.
+  53-135:
+    applicability: back_office
+    observability: not_observable
+    status: excluded
+    reason: Определение и реализация мер физического доступа к информационным активам; требуется проверка
+      процедур.
+  53-136:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Запрет самостоятельной установки и настройки ПО пользователями; конфигурацию рабочей станции
+      по видео установить нельзя.
+  53-137:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Отсутствие прав локального администратора для обычных пользователей; требуется проверка конфигурации.
+  53-138:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Предоставление прав администратора при необходимости; требуется проверка списка пользователей
+      с правами.
+  53-139:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Формирование и актуализация перечня пользователей с правами администратора; требуется проверка
+      перечня.
+  53-140:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Учёт рабочих станций и мобильных устройств в корпоративной сети; требуется проверка конфигурации
+      сети и идентификации устройств.
+  53-141:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Установка специального ПО на мобильные устройства при подключении из-за периметра защиты;
+      требуется проверка конфигурации.
+  53-142:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Разделение сред обработки при использовании личных устройств работников; требуется проверка
+      конфигурации.
+  53-143:
+    applicability: workstation
+    observability: not_observable
+    status: excluded
+    reason: Шифрование информации банка на ноутбуках и мобильных устройствах; требуется проверка конфигурации
+      шифрования.
+  53-144:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Определение компонентов ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-145:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Разработка ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-146:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Передача разработки ПО дистанционного оказания услуг сторонним организациям; не относится
+      к кассовым операциям.
+  53-147:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Хранение исходных кодов ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-148:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Тестирование безопасности ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-149:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Статический анализ исходного кода ПО дистанционного оказания услуг; не относится к кассовым
+      операциям.
+  53-150:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Анализ компонентов и сторонних библиотек ПО дистанционного оказания услуг; не относится к
+      кассовым операциям.
+  53-151:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Устранение уязвимостей в ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-152:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Согласование ввода в эксплуатацию ПО дистанционного оказания услуг; не относится к кассовым
+      операциям.
+  53-153:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Хранение версий и результатов тестирования ПО дистанционного оказания услуг; не относится
+      к кассовым операциям.
+  53-154:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Шифрование обмена данными в ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-155:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Биометрическая идентификация при регистрации в мобильном приложении; не относится к кассовым
+      операциям.
+  53-156:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Изменение пароля в мобильном приложении; не относится к кассовым операциям.
+  53-157:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Аутентификация на новом устройстве; не относится к кассовым операциям.
+  53-158:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Двухфакторная аутентификация клиента в ПО дистанционного оказания услуг; не относится к кассовым
+      операциям.
+  53-159:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Кроссдоменная аутентификация в ПО дистанционного оказания услуг; не относится к кассовым операциям.
+  53-160:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Требования к веб-приложению дистанционного оказания услуг; не относится к кассовым операциям.
+  53-161:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Требования к мобильному приложению дистанционного оказания услуг; не относится к кассовым
+      операциям.
+  53-162:
+    applicability: not_applicable
+    observability: not_observable
+    status: excluded
+    reason: Требования на стороне сервера ПО дистанционного оказания услуг; не относится к кассовым операциям.

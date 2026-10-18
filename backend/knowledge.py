@@ -161,8 +161,7 @@ class Knowledge:
 
     def describe(self, g: GroundedFinding) -> str:
         """The jury ``description``: the observation (facts filled into the template), then the
-        claim. Citation (act/punkt/quote/URL/status) is reported separately via ``GroundedFinding``
-        and never inlined here."""
+        claim, and the primary citation's document and punkt."""
         facts = dict(g.finding.facts)
         facts.setdefault("t", round(g.finding.t_anchor, 1))
         try:
@@ -173,4 +172,6 @@ class Knowledge:
                 f"Finding.facts: {exc}"
             ) from exc
         claim = f"Признаки возможного нарушения: {g.rule.title_ru}."
-        return f"{observation} {claim}"
+        primary = g.norms[0]
+        basis = f"Основание: {primary.document_title}, {primary.punkt}."
+        return f"{observation} {claim} {basis}"

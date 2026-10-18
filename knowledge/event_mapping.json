@@ -1,0 +1,627 @@
+{
+ "generated_by": "scripts/build_legal_catalog.py (read from backend/f1/rules.py)",
+ "note": "event kinds are what backend/f1/events.py emits; a rule's finding is the event_type the service reports. rulebook states_used are the older VLM-era vocabulary.",
+ "rules": {
+  "L-NO-CASH-ON-LEAVE": {
+   "evaluator": "backend/f1/rules.py:l_no_cash_on_leave",
+   "events": [
+    "EXIT",
+    "WORKSTATION_AWAY"
+   ],
+   "objects": [
+    "bag",
+    "bundle",
+    "cash"
+   ],
+   "roles": [
+    "cashier"
+   ],
+   "states": [],
+   "coverage": [
+    "desk",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-20-2",
+    "231-22"
+   ],
+   "catalog_units": [
+    "231-20-c2",
+    "231-22"
+   ],
+   "rulebook_states_used": [
+    "cashier_at_desk",
+    "desk_cash",
+    "desk_bag"
+   ]
+  },
+  "L-NO-BAG-ON-LEAVE": {
+   "evaluator": "backend/f1/rules.py:l_no_bag_on_leave",
+   "events": [
+    "EXIT",
+    "WORKSTATION_AWAY"
+   ],
+   "objects": [
+    "bag"
+   ],
+   "roles": [
+    "cashier"
+   ],
+   "states": [],
+   "coverage": [
+    "desk",
+    "roles"
+   ],
+   "enabled": false,
+   "norms": [],
+   "catalog_units": [],
+   "rulebook_states_used": [
+    "cashier_at_desk",
+    "desk_bag"
+   ]
+  },
+  "L-NO-DOCS-ON-LEAVE": {
+   "evaluator": "backend/f1/rules.py:l_no_docs_on_leave",
+   "events": [
+    "EXIT",
+    "WORKSTATION_AWAY"
+   ],
+   "objects": [
+    "document",
+    "id_card",
+    "tablet"
+   ],
+   "roles": [
+    "cashier"
+   ],
+   "states": [],
+   "coverage": [
+    "desk",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-80-3"
+   ],
+   "catalog_units": [
+    "231-80"
+   ],
+   "rulebook_states_used": [
+    "cashier_at_desk",
+    "cashier_in_room",
+    "desk_documents"
+   ]
+  },
+  "L-PC-LOCKED": {
+   "evaluator": "backend/f1/rules.py:l_pc_locked",
+   "events": [
+    "ENTER",
+    "EXIT"
+   ],
+   "objects": [
+    "laptop"
+   ],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "53-71-9"
+   ],
+   "catalog_units": [
+    "53-71-s9"
+   ],
+   "rulebook_states_used": [
+    "cashier_at_desk",
+    "cashier_in_room",
+    "laptop_screen"
+   ]
+  },
+  "L-LEFT-DURING-SERVICE": {
+   "evaluator": "backend/f1/rules.py:l_left_during_service",
+   "events": [
+    "EXIT",
+    "WORKSTATION_AWAY"
+   ],
+   "objects": [
+    "bag",
+    "bundle",
+    "cash"
+   ],
+   "roles": [
+    "cashier"
+   ],
+   "states": [],
+   "coverage": [
+    "desk",
+    "roles"
+   ],
+   "enabled": false,
+   "norms": [
+    "231-22"
+   ],
+   "catalog_units": [
+    "231-22"
+   ],
+   "rulebook_states_used": [
+    "cashier_at_desk",
+    "cashier_in_room",
+    "clients_at_desk"
+   ]
+  },
+  "S-SAFE-CLOSED": {
+   "evaluator": "backend/f1/rules.py:s_safe_closed",
+   "events": [
+    "ENTER",
+    "EXIT",
+    "SAFE_UNATTENDED"
+   ],
+   "objects": [],
+   "roles": [
+    "cashier"
+   ],
+   "states": [],
+   "coverage": [
+    "roles",
+    "safe"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-20-2b"
+   ],
+   "catalog_units": [
+    "231-20-c2"
+   ],
+   "rulebook_states_used": [
+    "safe_door",
+    "cashier_action"
+   ]
+  },
+  "S-CLEAN-DESK-HANDOVER": {
+   "evaluator": "backend/f1/rules.py:s_clean_desk_handover",
+   "events": [
+    "CASH_STATE",
+    "SESSION_START"
+   ],
+   "objects": [
+    "bundle",
+    "cash"
+   ],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "desk",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-20-2"
+   ],
+   "catalog_units": [
+    "231-20-c2"
+   ],
+   "rulebook_states_used": [
+    "clients_at_desk",
+    "desk_cash",
+    "person_at_door"
+   ]
+  },
+  "S-NO-MERGE": {
+   "evaluator": "backend/f1/rules.py:s_no_merge",
+   "events": [
+    "CASH_STATE",
+    "HANDOVER"
+   ],
+   "objects": [
+    "bundle",
+    "cash",
+    "counter"
+   ],
+   "roles": [
+    "cashier",
+    "client"
+   ],
+   "states": [],
+   "coverage": [
+    "desk",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-20-2",
+    "231-21"
+   ],
+   "catalog_units": [
+    "231-20-c2",
+    "231-21"
+   ],
+   "rulebook_states_used": [
+    "clients_at_desk",
+    "cash_in_hands_of",
+    "cashier_action"
+   ]
+  },
+  "A-DOOR-LOCK": {
+   "evaluator": "backend/f1/rules.py:a_door_lock",
+   "events": [
+    "ENTER",
+    "SCREEN"
+   ],
+   "objects": [],
+   "roles": [],
+   "states": [
+    "door"
+   ],
+   "coverage": [
+    "door"
+   ],
+   "enabled": true,
+   "norms": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "catalog_units": [
+    "14-16-s1",
+    "14-8-c1"
+   ],
+   "rulebook_states_used": [
+    "room_door",
+    "cashier_at_desk"
+   ]
+  },
+  "A-OUTSIDER-ZONE": {
+   "evaluator": "backend/f1/rules.py:a_outsider_zone",
+   "events": [
+    "PERSON_IN_CASHIER_ZONE"
+   ],
+   "objects": [],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "14-16-1",
+    "14-8-1"
+   ],
+   "catalog_units": [
+    "14-16-s1",
+    "14-8-c1"
+   ],
+   "rulebook_states_used": [
+    "people_cashier_side",
+    "collector_present"
+   ]
+  },
+  "A-SECOND-PERSON": {
+   "evaluator": "backend/f1/rules.py:a_second_person",
+   "events": [
+    "HANDOVER",
+    "SECOND_CLIENT_AT_DESK"
+   ],
+   "objects": [
+    "desk"
+   ],
+   "roles": [
+    "cashier",
+    "client",
+    "collector",
+    "outsider",
+    "visitor"
+   ],
+   "states": [],
+   "coverage": [
+    "hands",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-20-2",
+    "231-21"
+   ],
+   "catalog_units": [
+    "231-20-c2",
+    "231-21"
+   ],
+   "rulebook_states_used": [
+    "clients_at_desk",
+    "collector_present"
+   ]
+  },
+  "C-COUNT-BEFORE-EXIT": {
+   "evaluator": "backend/f1/rules.py:c_count_before_exit",
+   "events": [
+    "COUNT_END",
+    "COUNT_INTERRUPTED",
+    "COUNT_START",
+    "SESSION_END"
+   ],
+   "objects": [],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "counter",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-20-1"
+   ],
+   "catalog_units": [
+    "231-20-c1"
+   ],
+   "rulebook_states_used": [
+    "clients_at_desk",
+    "counting_machine_in_use",
+    "cashier_action"
+   ]
+  },
+  "C-ID-BEFORE-CASH": {
+   "evaluator": "backend/f1/rules.py:c_id_before_cash",
+   "events": [
+    "HANDOVER",
+    "ID_SHOWN"
+   ],
+   "objects": [
+    "bundle",
+    "cash",
+    "counter",
+    "desk"
+   ],
+   "roles": [
+    "cashier",
+    "client"
+   ],
+   "states": [],
+   "coverage": [
+    "hands",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-19-1",
+    "231-7"
+   ],
+   "catalog_units": [
+    "231-19-s1",
+    "231-7"
+   ],
+   "rulebook_states_used": [
+    "clients_at_desk",
+    "cash_in_hands_of",
+    "cashier_action",
+    "id_document_visible"
+   ]
+  },
+  "K-COLLECTOR-DOC": {
+   "evaluator": "backend/f1/rules.py:k_collector_doc",
+   "events": [
+    "ENTER",
+    "EXIT",
+    "HANDOVER",
+    "ID_SHOWN"
+   ],
+   "objects": [
+    "bag"
+   ],
+   "roles": [
+    "collector"
+   ],
+   "states": [],
+   "coverage": [
+    "hands",
+    "roles"
+   ],
+   "enabled": false,
+   "norms": [],
+   "catalog_units": [],
+   "rulebook_states_used": [
+    "collector_present",
+    "desk_bag",
+    "id_document_visible"
+   ]
+  },
+  "K-SEAL-CHECK": {
+   "evaluator": "backend/f1/rules.py:k_seal_check",
+   "events": [
+    "BAG_INSPECTED",
+    "ENTER",
+    "EXIT",
+    "HANDOVER"
+   ],
+   "objects": [
+    "bag",
+    "counter",
+    "laptop"
+   ],
+   "roles": [
+    "client",
+    "collector",
+    "visitor"
+   ],
+   "states": [],
+   "coverage": [
+    "desk",
+    "hands",
+    "roles"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-24-3",
+    "231-24-4"
+   ],
+   "catalog_units": [
+    "231-24-s3",
+    "231-24-s4"
+   ],
+   "rulebook_states_used": [
+    "collector_present",
+    "desk_bag"
+   ]
+  },
+  "K-RECOUNT-BEFORE-SAFE": {
+   "evaluator": "backend/f1/rules.py:k_recount_before_safe",
+   "events": [
+    "CASH_STATE",
+    "COUNT_END"
+   ],
+   "objects": [
+    "bundle"
+   ],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "counter",
+    "safe"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-74-1",
+    "231-42"
+   ],
+   "catalog_units": [
+    "231-42",
+    "231-74"
+   ],
+   "rulebook_states_used": [
+    "cashier_action",
+    "safe_door",
+    "counting_machine_in_use"
+   ]
+  },
+  "W-NO-PERSONAL-ITEMS": {
+   "evaluator": "backend/f1/rules.py:w_no_personal_items",
+   "events": [
+    "PERSONAL_ON_DESK"
+   ],
+   "objects": [],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "desk"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-12-1"
+   ],
+   "catalog_units": [
+    "231-12-c1"
+   ],
+   "rulebook_states_used": [
+    "desk_personal_items"
+   ]
+  },
+  "W-NO-FOOD": {
+   "evaluator": "backend/f1/rules.py:w_no_food",
+   "events": [
+    "FOOD_NEAR_HEAD"
+   ],
+   "objects": [],
+   "roles": [],
+   "states": [],
+   "coverage": [
+    "desk",
+    "hands"
+   ],
+   "enabled": true,
+   "norms": [
+    "231-12-2"
+   ],
+   "catalog_units": [
+    "231-12-c2"
+   ],
+   "rulebook_states_used": [
+    "desk_food_drink",
+    "cashier_action"
+   ]
+  }
+ },
+ "events": {
+  "BAG_INSPECTED": [
+   "K-SEAL-CHECK"
+  ],
+  "CASH_STATE": [
+   "K-RECOUNT-BEFORE-SAFE",
+   "S-CLEAN-DESK-HANDOVER",
+   "S-NO-MERGE"
+  ],
+  "COUNT_END": [
+   "C-COUNT-BEFORE-EXIT",
+   "K-RECOUNT-BEFORE-SAFE"
+  ],
+  "COUNT_INTERRUPTED": [
+   "C-COUNT-BEFORE-EXIT"
+  ],
+  "COUNT_START": [
+   "C-COUNT-BEFORE-EXIT"
+  ],
+  "ENTER": [
+   "A-DOOR-LOCK",
+   "K-COLLECTOR-DOC",
+   "K-SEAL-CHECK",
+   "L-PC-LOCKED",
+   "S-SAFE-CLOSED"
+  ],
+  "EXIT": [
+   "K-COLLECTOR-DOC",
+   "K-SEAL-CHECK",
+   "L-LEFT-DURING-SERVICE",
+   "L-NO-BAG-ON-LEAVE",
+   "L-NO-CASH-ON-LEAVE",
+   "L-NO-DOCS-ON-LEAVE",
+   "L-PC-LOCKED",
+   "S-SAFE-CLOSED"
+  ],
+  "FOOD_NEAR_HEAD": [
+   "W-NO-FOOD"
+  ],
+  "HANDOVER": [
+   "A-SECOND-PERSON",
+   "C-ID-BEFORE-CASH",
+   "K-COLLECTOR-DOC",
+   "K-SEAL-CHECK",
+   "S-NO-MERGE"
+  ],
+  "ID_SHOWN": [
+   "C-ID-BEFORE-CASH",
+   "K-COLLECTOR-DOC"
+  ],
+  "PERSONAL_ON_DESK": [
+   "W-NO-PERSONAL-ITEMS"
+  ],
+  "PERSON_IN_CASHIER_ZONE": [
+   "A-OUTSIDER-ZONE"
+  ],
+  "SAFE_UNATTENDED": [
+   "S-SAFE-CLOSED"
+  ],
+  "SCREEN": [
+   "A-DOOR-LOCK"
+  ],
+  "SECOND_CLIENT_AT_DESK": [
+   "A-SECOND-PERSON"
+  ],
+  "SESSION_END": [
+   "C-COUNT-BEFORE-EXIT"
+  ],
+  "SESSION_START": [
+   "S-CLEAN-DESK-HANDOVER"
+  ],
+  "WORKSTATION_AWAY": [
+   "L-LEFT-DURING-SERVICE",
+   "L-NO-BAG-ON-LEAVE",
+   "L-NO-CASH-ON-LEAVE",
+   "L-NO-DOCS-ON-LEAVE"
+  ]
+ },
+ "rules_without_evaluator": [
+  "C-DETECTOR-CHECK",
+  "C-REJECT-NOT-RETURNED",
+  "L-SAFE-LOCKED-ON-LEAVE",
+  "W-NO-CAMERA-PHONE"
+ ]
+}
