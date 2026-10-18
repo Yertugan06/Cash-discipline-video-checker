@@ -2,11 +2,12 @@
 
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from math import isfinite
 from typing import TYPE_CHECKING
 
 from backend.f1.calibration import in_zone
 from backend.f1.codex import Codex, Rule
-from backend.f1.events import EventLog, session_client_ids
+from backend.f1.events import EventLog, safe_attended, session_client_ids
 from backend.f1.vision_types import (
     Detection,
     Event,
@@ -22,6 +23,7 @@ if TYPE_CHECKING:  # desk_objects needs cv2 at import time
     from backend.f1.desk_objects import DeskObject
 
 LEFT_BEHIND_SEC = 2.0
+STATE_SAMPLE_GAP_SEC = 0.6
 
 
 @dataclass
@@ -42,6 +44,9 @@ class Context:
     # A18: items found by desk change and named by their history (backend/f1/desk_objects.py);
     # None keeps the detector's labels as the source of items for the leave rules.
     desk_objects: "list[DeskObject] | None" = None
+    # Still-frame verifier records. Unknown/failure is not evidence of absence, and
+    # even successful negative stills cannot establish a whole interval's absence.
+    visual_checks: list[dict] | None = None
 
     def rule(self, identity: str) -> Rule:
         return next(rule for rule in self.codex.rules if rule.id == identity)
@@ -66,6 +71,60 @@ class Context:
         ]
         return str(matches[-1].facts["state"]) if matches else "unknown"
 
+    def verified_checks(
+        self, family: str, trigger: Event, timestamp: float | None = None
+    ) -> list[dict]:
+        states = {
+            "door": {"open", "closed", "unknown"},
+            "laptop": {"working", "locked", "closed", "unknown"},
+            "safe": {"open", "closed", "unknown"},
+        }
+        output = []
+        for check in self.visual_checks or []:
+            if not isinstance(check, dict):
+                continue
+            t, trigger_t, box = check.get("t"), check.get("trigger_t"), check.get("box")
+            trigger_name = (
+                check.get("parent_trigger")
+                if check.get("trigger") == "safe_open_window"
+                else check.get("trigger")
+            )
+            trigger_type = {
+                "observed_entry": "ENTER",
+                "safe_unattended": "SAFE_UNATTENDED_START",
+            }.get(trigger_name, str(trigger_name).upper())
+            if (
+                check.get("family") != family
+                or check.get("diagnostic_only") is True
+                or check.get("ok") is not True
+                or not isinstance(check.get("answer"), str)
+                or check.get("answer") not in states[family]
+                or not all(
+                    isinstance(check.get(k), str) and check[k].strip()
+                    for k in ("source", "question_id", "trigger", "actor_id")
+                )
+                or trigger_type != trigger.type
+                or check["actor_id"] != trigger.facts.get("actor_id")
+                or (trigger.type == "ENTER" and check.get("observed_entry") is not True)
+                or type(t) not in {int, float}
+                or not isfinite(t)
+                or not 0 <= t <= self.duration
+                or type(trigger_t) not in {int, float}
+                or not isfinite(trigger_t)
+                or abs(trigger_t - trigger.timestamp_sec) > 1e-6
+                or (timestamp is not None and abs(t - timestamp) > STATE_SAMPLE_GAP_SEC)
+                or not isinstance(box, (list, tuple))
+                or len(box) != 4
+                or not all(type(v) in {int, float} and isfinite(v) and 0 <= v <= 1 for v in box)
+                or not (box[0] < box[2] and box[1] < box[3])
+            ):
+                continue
+            output.append(check)
+        return sorted(
+            output,
+            key=lambda check: abs(check["t"] - timestamp) if timestamp is not None else check["t"],
+        )
+
     def intervals(self, kind: str):
         starts = {}
         for event in self.log.events:
@@ -89,8 +148,20 @@ class Context:
                 output.append(event)
         return output
 
+    def room_exits(self) -> list[Event]:
+        return [
+            event
+            for event in self.events("EXIT")
+            if event.facts.get("role") == "cashier"
+            and event.facts.get("confirmed_exit", True) is True
+        ]
+
     def on_desk(self, timestamp: float, labels: set[str]) -> list[Detection]:
+        if not self.observations:
+            return []
         frame = self.nearby(min(timestamp + 0.2, self.duration))
+        if abs(frame.timestamp_sec - timestamp) > 0.6:
+            return []
         return self.items_on_desk(frame, labels)
 
     def items_on_desk(self, frame: Observation, labels: set[str]) -> list[Detection]:
@@ -138,15 +209,22 @@ class Context:
         )
 
 
-def left_with(ctx: Context, rule_id: str, labels: set[str]) -> list[Finding]:
+def left_with(
+    ctx: Context, rule_id: str, labels: set[str], *, room_exit: bool = False
+) -> list[Finding]:
     if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("desk"):
         return []
     result = []
-    for leave in ctx.leaves(minimum_away=LEFT_BEHIND_SEC):
+    # Documents and laptop checks require leaving the room. Cash/bag checks use
+    # workstation departure; walking to equipment must not widen the other rules.
+    leaves = ctx.room_exits() if room_exit else ctx.leaves(minimum_away=LEFT_BEHIND_SEC)
+    for leave in leaves:
         # Left behind = still on the desk a moment after the cashier walked off; a cashier
         # standing up usually picks the item up on the way. A shorter absence cannot
         # confirm this: the later sample would show the item after the cashier returned.
         start, later = leave.timestamp_sec, leave.timestamp_sec + LEFT_BEHIND_SEC
+        if later > ctx.duration:
+            continue
         facts: dict = {"actor_id": leave.facts.get("actor_id", "")}
         if ctx.desk_objects is None:
             visible = ctx.persistent_on_desk(
@@ -195,17 +273,37 @@ def l_no_bag_on_leave(ctx: Context) -> list[Finding]:
 
 
 def l_no_docs_on_leave(ctx: Context) -> list[Finding]:
-    return left_with(ctx, "L-NO-DOCS-ON-LEAVE", {"document", "id_card", "tablet"})
+    return left_with(ctx, "L-NO-DOCS-ON-LEAVE", {"document", "id_card", "tablet"}, room_exit=True)
 
 
 def l_pc_locked(ctx: Context) -> list[Finding]:
-    if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("laptop"):
+    if not ctx.log.coverage.get("roles"):
         return []
-    return [
-        Finding("L-PC-LOCKED", event.timestamp_sec, {**event.facts, "static_objects": ["laptop"]})
-        for event in ctx.leaves()
-        if ctx.state_at("laptop", event.timestamp_sec) == "working"
-    ]
+    output = []
+    for event in ctx.room_exits():
+        checks = ctx.verified_checks("laptop", event, event.timestamp_sec)
+        facts = {**event.facts, "static_objects": ["laptop"]}
+        if checks:
+            state = checks[0]["answer"]
+            facts.update(
+                state_source=checks[0]["source"],
+                state_t=checks[0]["t"],
+                question_id=checks[0]["question_id"],
+                box=checks[0]["box"],
+            )
+        elif ctx.observations:
+            frame = ctx.nearby(event.timestamp_sec)
+            state = frame.states.get("laptop")
+            state = (
+                state.value
+                if state and abs(frame.timestamp_sec - event.timestamp_sec) <= STATE_SAMPLE_GAP_SEC
+                else "unknown"
+            )
+        else:
+            state = "unknown"
+        if state == "working":
+            output.append(Finding("L-PC-LOCKED", event.timestamp_sec, facts))
+    return output
 
 
 def sustained(ctx: Context, rule_id: str, kind: str, *, strict: bool = True) -> list[Finding]:
@@ -218,9 +316,66 @@ def sustained(ctx: Context, rule_id: str, kind: str, *, strict: bool = True) -> 
 
 
 def s_safe_closed(ctx: Context) -> list[Finding]:
-    if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("safe"):
+    if not ctx.log.coverage.get("roles"):
         return []
-    return sustained(ctx, "S-SAFE-CLOSED", "SAFE_UNATTENDED")
+    triggers = [
+        event
+        for event in ctx.log.events
+        if event.type in {"HAND_ON_SAFE", "SAFE_UNATTENDED_START", "WORKSTATION_AWAY_START", "EXIT"}
+    ]
+    # Planner-only departures must be backed by the same visible actor's near-to-away transition.
+    was_near = {}
+    for frame in sorted(ctx.observations, key=lambda frame: frame.timestamp_sec):
+        for person in frame.detections:
+            if person.label != "person" or person.role != "cashier":
+                continue
+            near = safe_attended(ctx.scene, person)
+            if was_near.get(person.track_id) and not near:
+                triggers.append(
+                    Event(
+                        type="SAFE_DEPARTURE",
+                        timestamp_sec=frame.timestamp_sec,
+                        facts={"actor_id": person.track_id},
+                    )
+                )
+            was_near[person.track_id] = near
+    checks = [check for trigger in triggers for check in ctx.verified_checks("safe", trigger)]
+    if not checks:
+        return (
+            sustained(ctx, "S-SAFE-CLOSED", "SAFE_UNATTENDED")
+            if ctx.log.coverage.get("safe")
+            else []
+        )
+    if "safe" not in ctx.scene.objects:
+        return []
+    sampled_times = {frame.timestamp_sec for frame in ctx.observations}
+    checked = {check["t"]: check for check in checks if check["t"] in sampled_times}
+    output, run = [], []
+    exits = ctx.room_exits()
+    last_cashier_seen = -1.0
+    minimum = ctx.rule("S-SAFE-CLOSED").min_duration_sec or 0
+    for frame in sorted(ctx.observations, key=lambda frame: frame.timestamp_sec):
+        check = checked.get(frame.timestamp_sec)
+        raw = frame.states.get("safe")
+        state = check["answer"] if check else raw.value if raw else "unknown"
+        cashier = next((p for p in frame.detections if p.role == "cashier"), None)
+        if cashier is not None:
+            last_cashier_seen = frame.timestamp_sec
+        exited = any(last_cashier_seen < e.timestamp_sec <= frame.timestamp_sec for e in exits)
+        active = state == "open" and (
+            (cashier is not None and not safe_attended(ctx.scene, cashier)) or exited
+        )
+        if not active or (run and frame.timestamp_sec - run[-1] > STATE_SAMPLE_GAP_SEC):
+            run = []
+        if active and (not run or frame.timestamp_sec > run[-1]):
+            run.append(frame.timestamp_sec)
+            if frame.timestamp_sec - run[0] > minimum:
+                if not output or output[-1].timestamp_sec != run[0]:
+                    output.append(Finding("S-SAFE-CLOSED", run[0], {"static_objects": ["safe"]}))
+                output[-1].facts.update(
+                    duration_sec=frame.timestamp_sec - run[0], window_end=frame.timestamp_sec
+                )
+    return output
 
 
 def s_clean_desk_handover(ctx: Context) -> list[Finding]:
@@ -240,6 +395,7 @@ def s_clean_desk_handover(ctx: Context) -> list[Finding]:
             if event.facts.get("session_id")
             and event.facts["session_id"] != session.facts["session_id"]
             and event.facts.get("location") == "desk"
+            and event.facts.get("track_id")
             and event.facts.get("track_id") in visible
         ]
         if previous:
@@ -272,7 +428,11 @@ def s_no_merge(ctx: Context) -> list[Finding]:
         if (
             not session
             or event.facts.get("from_role") != "client"
-            or event.facts.get("from_id") != session.get("client_id")
+            or event.facts.get("from_id") not in session_client_ids(session)
+            or not (
+                event.facts.get("to_role") == "cashier"
+                or event.facts.get("to_id") in {"desk", "counter"}
+            )
         ):
             continue
         candidates = [
@@ -281,6 +441,9 @@ def s_no_merge(ctx: Context) -> list[Finding]:
             if state.facts.get("session_id")
             and state.facts.get("session_id") != session_id
             and state.facts.get("location") == "desk"
+            and state.facts.get("track_id")
+            and state.facts.get("cash_id") != event.facts.get("cash_id")
+            and state.facts.get("track_id") != event.facts.get("track_id")
         ]
         if not candidates:
             continue
@@ -297,6 +460,8 @@ def s_no_merge(ctx: Context) -> list[Finding]:
                         "session_id": session_id,
                         "actor_id": event.facts.get("from_id", ""),
                         "track_ids": [str(state.facts["track_id"]) for state in previous],
+                        "mechanism": "handover_with_previous_session_cash_visible",
+                        "physical_stacking": "unknown",
                     },
                 )
             )
@@ -304,7 +469,7 @@ def s_no_merge(ctx: Context) -> list[Finding]:
 
 
 def a_door_lock(ctx: Context) -> list[Finding]:
-    if not ctx.log.coverage.get("door"):
+    if not ctx.observations:
         return []
     window = ctx.rule("A-DOOR-LOCK").min_duration_sec
     if window is None:
@@ -319,15 +484,34 @@ def a_door_lock(ctx: Context) -> list[Finding]:
             or end > ctx.duration
         ):
             continue
-        closed = ctx.has_event("DOOR_CLOSED", entry.timestamp_sec, end)
-        touched = ctx.has_event("HAND_ON_DOOR", entry.timestamp_sec, end)
-        state = ctx.state_at("door", end)
-        if not closed and not touched and state == "open":
+        checks = ctx.verified_checks("door", entry, end)
+        state = (
+            checks[0]["answer"]
+            if checks
+            else ctx.state_at("door", end)
+            if ctx.log.coverage.get("door")
+            else "unknown"
+        )
+        if not checks and (
+            ctx.has_event("DOOR_CLOSED", entry.timestamp_sec, end)
+            or ctx.has_event("HAND_ON_DOOR", entry.timestamp_sec, end)
+        ):
+            # A possible closing action conflicts with raw state; only a deadline check resolves it.
+            state = "unknown"
+        if state == "open":
+            facts = {**entry.facts, "static_objects": ["door"], "window_end": end}
+            if checks:
+                facts.update(
+                    state_source=checks[0]["source"],
+                    state_t=checks[0]["t"],
+                    question_id=checks[0]["question_id"],
+                    box=checks[0]["box"],
+                )
             output.append(
                 Finding(
                     "A-DOOR-LOCK",
                     entry.timestamp_sec,
-                    {**entry.facts, "static_objects": ["door"], "window_end": end},
+                    facts,
                 )
             )
     return output
@@ -392,6 +576,42 @@ def c_count_before_exit(ctx: Context) -> list[Finding]:
     return output
 
 
+def id_absence_evidence(
+    ctx: Context, session_id: str, session: dict, handover: Event
+) -> Event | None:
+    """Accept an attributed interval observation, never detector misses or negative stills.
+
+    No current still-frame model produces this event. A future interval observer
+    must explicitly report ID_NOT_PRESENTED with ok=True, visibility='continuous',
+    source, session_id, actor_id and observed_start_sec/observed_end_sec covering
+    entry through the first cash handover. Sparse checks cannot be promoted to it.
+    """
+    start, end = session["start"], handover.timestamp_sec
+    for evidence in ctx.events("ID_NOT_PRESENTED"):
+        facts = evidence.facts
+        observed_start = facts.get("observed_start_sec")
+        observed_end = facts.get("observed_end_sec")
+        if (
+            facts.get("ok") is not True
+            or facts.get("visibility") != "continuous"
+            or not isinstance(facts.get("source"), str)
+            or not facts["source"].strip()
+            or facts.get("session_id") != session_id
+            or facts.get("actor_id") not in session_client_ids(session)
+            or type(observed_start) not in {int, float}
+            or type(observed_end) not in {int, float}
+            or not isfinite(observed_start)
+            or not isfinite(observed_end)
+        ):
+            continue
+        if (
+            0 <= observed_start <= start < end <= observed_end
+            and observed_end <= evidence.timestamp_sec <= ctx.duration
+        ):
+            return evidence
+    return None
+
+
 def c_id_before_cash(ctx: Context) -> list[Finding]:
     if not ctx.log.coverage.get("roles") or not ctx.log.coverage.get("hands"):
         return []
@@ -402,13 +622,36 @@ def c_id_before_cash(ctx: Context) -> list[Finding]:
         session = ctx.log.sessions.get(str(identity))
         if not session or identity in seen or event.facts.get("object") not in {"cash", "bundle"}:
             continue
-        if event.facts.get("from_id") not in session_client_ids(session):
+        if (
+            event.facts.get("from_role") != "client"
+            or event.facts.get("from_id") not in session_client_ids(session)
+            or not (
+                event.facts.get("to_role") == "cashier"
+                or event.facts.get("to_id") in {"desk", "counter"}
+            )
+        ):
             continue
         seen.add(identity)
-        if session["observed_entry"] and not ctx.has_event(
-            "ID_SHOWN", session["start"], event.timestamp_sec, session_id=identity
-        ):
-            output.append(Finding("C-ID-BEFORE-CASH", event.timestamp_sec, event.facts))
+        shown = any(
+            session["start"] <= shown.timestamp_sec <= event.timestamp_sec
+            and shown.facts.get("session_id") == identity
+            and shown.facts.get("actor_id") in session_client_ids(session)
+            for shown in ctx.events("ID_SHOWN")
+        )
+        evidence = id_absence_evidence(ctx, str(identity), session, event)
+        if session["observed_entry"] and not shown and evidence is not None:
+            output.append(
+                Finding(
+                    "C-ID-BEFORE-CASH",
+                    event.timestamp_sec,
+                    {
+                        **event.facts,
+                        "id_observation_source": evidence.facts["source"],
+                        "observed_start_sec": evidence.facts["observed_start_sec"],
+                        "observed_end_sec": evidence.facts["observed_end_sec"],
+                    },
+                )
+            )
     return output
 
 

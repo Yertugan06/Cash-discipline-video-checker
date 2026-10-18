@@ -1,4 +1,6 @@
 version: 1
+# A18 is experimental; enable only for comparison runs.
+desk_objects: false
 calibration_sec: 2.0
 object_interval_sec: 0.4
 state_interval_sec: 0.6

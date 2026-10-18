@@ -1,4 +1,4 @@
-"""Regression from the X-4/X-47 event timeline to the jury JSON response."""
+"""Synthetic cash-session evidence through the jury JSON response, without inference."""
 
 from backend.config import ROOT, Settings
 from backend.contracts import Coverage, DetectionResult, EvidenceFrame
@@ -11,7 +11,7 @@ from backend.serialize import to_done_job
 from tests.test_f1_rules import context
 
 
-def test_x4_and_x47_both_survive_from_one_timeline_to_jury_json(monkeypatch):
+def test_cash_session_findings_survive_to_jury_json(monkeypatch):
     rules = Knowledge.load(ROOT / "knowledge")
     settings = Settings(api_key="test-key", knowledge_dir=ROOT / "knowledge")
     detector = F1Detector(settings, rules.rules)
@@ -39,6 +39,7 @@ def test_x4_and_x47_both_survive_from_one_timeline_to_jury_json(monkeypatch):
                 "session_id": "client-2",
                 "from_id": "person:2",
                 "from_role": "client",
+                "to_id": "desk",
                 "object": "cash",
             },
         ),

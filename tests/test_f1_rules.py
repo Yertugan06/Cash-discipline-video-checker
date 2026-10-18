@@ -8,7 +8,7 @@ from backend.f1.codex import load_codex
 from backend.f1.events import EventLog, MoneyFlow, StableState, build_events
 from backend.f1.perception import load_perception_config
 from backend.f1.rules import RULES, Context, evaluate_rules
-from backend.f1.vision_types import Detection, Event, Observation, Scene
+from backend.f1.vision_types import Detection, Event, Observation, Scene, State
 
 HAS_CV2 = importlib.util.find_spec("cv2") is not None
 requires_cv2 = pytest.mark.skipif(
@@ -116,6 +116,7 @@ CASES = [
                 5,
                 from_id="person:2",
                 from_role="client",
+                to_id="desk",
                 object="cash",
                 session_id="new",
             ),
@@ -159,7 +160,26 @@ CASES = [
     ("C-COUNT-BEFORE-EXIT", [event("SESSION_END", session_id="s1", confirmed_exit=True)], SESSION),
     (
         "C-ID-BEFORE-CASH",
-        [event("HANDOVER", from_id="person:2", from_role="client", object="cash", session_id="s1")],
+        [
+            event(
+                "HANDOVER",
+                from_id="person:2",
+                from_role="client",
+                to_id="desk",
+                object="cash",
+                session_id="s1",
+            ),
+            event(
+                "ID_NOT_PRESENTED",
+                session_id="s1",
+                actor_id="person:2",
+                ok=True,
+                visibility="continuous",
+                source="test:interval-observer",
+                observed_start_sec=0,
+                observed_end_sec=5,
+            ),
+        ],
         SESSION,
     ),
     ("K-COLLECTOR-DOC", COLLECT, {}),
@@ -208,6 +228,8 @@ def test_each_priority_one_rule_has_a_positive_and_clean_control(identity, event
     if identity in _NEEDS_CV2 and not HAS_CV2:
         pytest.skip("evaluate_rules() calls on_desk()/in_zone(), which needs cv2; see requires_cv2")
     ctx = context(deepcopy(events), deepcopy(sessions))
+    if identity == "L-PC-LOCKED":
+        ctx.observations[10].states["laptop"] = State(value="working", score=0.9, margin=0.8)
     assert len(RULES[identity](ctx)) == 1
     assert RULES[identity](context()) == []
     findings = evaluate_rules(ctx)
@@ -218,15 +240,20 @@ def test_thresholds_and_required_counterevidence():
     assert RULES["S-SAFE-CLOSED"](context(interval("SAFE_UNATTENDED", 3))) == []
     assert RULES["A-OUTSIDER-ZONE"](context(interval("PERSON_IN_CASHIER_ZONE", 2))) == []
     assert RULES["W-NO-PERSONAL-ITEMS"](context(interval("PERSONAL_ON_DESK", 3))) == []
-    door = context(CASES[6][1] + [event("HAND_ON_DOOR", 3, actor_id="person:1")])
+    door_case = next(case for case in CASES if case[0] == "A-DOOR-LOCK")
+    door = context(door_case[1] + [event("HAND_ON_DOOR", 3, actor_id="person:1")])
+    assert RULES["A-DOOR-LOCK"](door) == []  # Raw conflict is unknown, not proven closure.
+    door.log.events.append(event("DOOR_CLOSED", 5, state="closed"))
     assert RULES["A-DOOR-LOCK"](door) == []
+    id_case = next(case for case in CASES if case[0] == "C-ID-BEFORE-CASH")
     missing_document = context(
-        CASES[10][1] + [event("ID_SHOWN", 1, session_id="s1")], deepcopy(SESSION)
+        id_case[1] + [event("ID_SHOWN", 1, session_id="s1", actor_id="person:2")],
+        deepcopy(SESSION),
     )
     assert RULES["C-ID-BEFORE-CASH"](missing_document) == []
     bootstrap = deepcopy(SESSION)
     bootstrap["s1"]["observed_entry"] = False
-    assert RULES["C-ID-BEFORE-CASH"](context(CASES[10][1], bootstrap)) == []
+    assert RULES["C-ID-BEFORE-CASH"](context(id_case[1], bootstrap)) == []
     count_before_exit = next(case for case in CASES if case[0] == "C-COUNT-BEFORE-EXIT")
     unfinished = context(
         count_before_exit[1] + [event("COUNT_START", 2, session_id="s1")], deepcopy(SESSION)
@@ -424,6 +451,8 @@ def test_door_requires_an_entry_after_the_first_observation(
     )
     ctx.observations[0].timestamp_sec = recording_start
     assert len(RULES["A-DOOR-LOCK"](ctx)) == expected_findings
+
+
 def test_runtime_rule_allowlist_skips_disabled_evaluators_before_evaluation():
     findings = evaluate_rules(context(LEAVE), {"S-SAFE-CLOSED"})
     assert findings == []
@@ -444,6 +473,7 @@ def test_s_no_merge_finds_prior_session_cash_without_opencv(monkeypatch):
             5,
             from_id="person:2",
             from_role="client",
+            to_id="desk",
             object="cash",
             session_id="new",
         ),
@@ -1185,10 +1215,10 @@ def test_sitting_client_track_change_preserves_session_and_cash_provenance():
     session = ctx.log.sessions["session-1"]
     assert session["client_id"] == "person:3"
     assert session["client_ids"] == ["person:2", "person:3"]
-    assert session["cash_ids"] == ["cash-1"]
+    assert session["cash_ids"] == []  # No handover is observed across the 3.5 s cash gap.
     assert not any(e.type == "SESSION_END" for e in ctx.log.events)
     assert RULES["C-COUNT-BEFORE-EXIT"](ctx) == []
-    assert [f.timestamp_sec for f in RULES["C-ID-BEFORE-CASH"](ctx)] == [7]
+    assert RULES["C-ID-BEFORE-CASH"](ctx) == []  # Missing ID detections are unknown.
     assert RULES["A-SECOND-PERSON"](ctx) == []
 
 
@@ -1351,7 +1381,7 @@ def test_item_leave_requires_the_cashier_to_remain_away_for_the_confirmation_del
 
 
 @requires_cv2
-def test_a_short_away_interval_does_not_hide_a_following_sustained_departure():
+def test_a_short_away_interval_does_not_hide_a_following_sustained_cash_departure():
     ctx = context(
         [
             event("WORKSTATION_AWAY_START", 5, condition_id="away", actor_id="person:1"),
@@ -1360,7 +1390,8 @@ def test_a_short_away_interval_does_not_hide_a_following_sustained_departure():
             event("WORKSTATION_AWAY_END", 10.5, condition_id="away"),
         ]
     )
-    assert [f.timestamp_sec for f in RULES["L-NO-DOCS-ON-LEAVE"](ctx)] == [6.5]
+    assert [f.timestamp_sec for f in RULES["L-NO-CASH-ON-LEAVE"](ctx)] == [6.5]
+    assert RULES["L-NO-DOCS-ON-LEAVE"](ctx) == []
 
 
 @requires_cv2

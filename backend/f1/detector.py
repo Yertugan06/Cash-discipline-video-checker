@@ -21,6 +21,8 @@ import shutil
 import subprocess
 import tempfile
 import time
+from collections.abc import Iterator
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -136,12 +138,87 @@ class F1Detector:
                 logger.warning("F1 perception failed: %s", exc)
                 raise F1DetectorError("F1 perception failed on this video") from exc
             log = build_events(scene, observations, config, FPS, info.duration_sec)
-            context = Context(self._codex, log, observations, scene, info.duration_sec)
+            checks = None
+            visual_warnings: list[str] = []
+            if settings.visual_checks.enabled:
+                from backend.f1.visual_checks import (
+                    add_verified_state_events,
+                    apply_checks,
+                    verify_video,
+                )
+
+                check_options = settings.visual_checks
+                if check_options.cache_dir is None:
+                    check_options = check_options.model_copy(
+                        update={"cache_dir": settings.work_dir / "visual_checks_cache"}
+                    )
+                checks = verify_video(
+                    video,
+                    scene,
+                    log,
+                    observations,
+                    options=check_options,
+                    deadline_monotonic=deadline,
+                    duration=info.duration_sec,
+                    video_sha256=checksum,
+                    frames=frames,
+                    fps=FPS,
+                )
+                observations = apply_checks(observations, checks)
+                log = build_events(scene, observations, config, FPS, info.duration_sec)
+                log = add_verified_state_events(log, checks)
+                unknown = sum(check["answer"] == "unknown" for check in checks)
+                errors = sorted({check["error"] for check in checks if check.get("error")})
+                if unknown:
+                    visual_warnings.append(
+                        f"Visual verification: {unknown}/{len(checks)} checks unknown"
+                        + (f" ({', '.join(errors)})" if errors else " (model uncertain)")
+                        + "; unknown does not establish an object state."
+                    )
+                for warning in visual_warnings:
+                    logger.warning("%s", warning)
+            desk_objects = None
+            if config.get("desk_objects", False):
+                from backend.f1.desk_objects import build_desk_objects
+
+                if len(frames) != len(observations):
+                    raise F1DetectorError(
+                        "Desk history frames do not match perception observations"
+                    )
+                try:
+                    desk_objects = build_desk_objects(
+                        _desk_images(frames, deadline), observations, scene, log
+                    )
+                except F1DetectorError:
+                    raise
+                except (ValueError, OSError, RuntimeError) as exc:
+                    logger.warning("Desk object history failed: %s", exc)
+                    raise F1DetectorError("Desk object history failed on this video") from exc
+                if time.monotonic() > deadline:
+                    raise F1DetectorError("Processing exceeded the configured time limit")
+            context = Context(
+                self._codex,
+                log,
+                observations,
+                scene,
+                info.duration_sec,
+                desk_objects,
+                visual_checks=checks,
+            )
             enabled_ids = {rule_id for rule_id, rule in self._rules_by_id.items() if rule.enabled}
             legacy_findings = evaluate_rules(context, enabled_ids)
             findings = [self._to_finding(f, info.duration_sec) for f in legacy_findings]
             trace = build_trace(checksum, config, info.duration_sec, scene, observations, log)
+            if checks is not None:
+                trace["visual_checks"] = checks
+                trace["warnings"].extend(visual_warnings)
             trace["findings"] = [{**vars(f), "kept": True} for f in legacy_findings]
+            trace["desk_objects_enabled"] = config.get("desk_objects", False)
+            trace["desk_objects"] = (
+                [{**asdict(obj), "track_id": obj.track_id} for obj in desk_objects]
+                if desk_objects is not None
+                else None
+            )
             write_trace(settings.traces_dir / f"{video.stem}.json", trace)
             planned = len(frames)
             coverage = Coverage(
@@ -153,7 +230,9 @@ class F1Detector:
                 mode="full",
             )
             return DetectionResult(
-                findings=findings, coverage=coverage, warnings=list(scene.warnings)
+                findings=findings,
+                coverage=coverage,
+                warnings=[*scene.warnings, *visual_warnings],
             )
         finally:
             shutil.rmtree(frames_dir, ignore_errors=True)
@@ -240,6 +319,18 @@ class F1Detector:
             ),
             boxes=_evidence_boxes(legacy.facts),
         )
+
+
+def _desk_images(frames: list[Path], deadline: float) -> Iterator[Any]:
+    import cv2
+
+    for frame in frames:
+        if time.monotonic() > deadline:
+            raise F1DetectorError("Processing exceeded the configured time limit")
+        image = cv2.imread(str(frame))
+        if image is None:
+            raise F1DetectorError("A video frame could not be decoded for desk object history")
+        yield image
 
 
 def build_trace(

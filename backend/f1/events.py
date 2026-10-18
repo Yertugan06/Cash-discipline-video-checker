@@ -37,6 +37,7 @@ class PersonHistory:
     observed_entry: bool = False
     moved: float = 0
     closest_desk: float = float("inf")
+    confirmed_exit: bool = False
 
 
 @dataclass
@@ -62,6 +63,20 @@ class EventLog:
 
 def session_client_ids(session: dict) -> list[str]:
     return session.get("client_ids", [session["client_id"]])
+
+
+def safe_attended(scene: Scene, cashier: Detection | None) -> bool:
+    safe = scene.objects.get("safe")
+    return bool(
+        cashier
+        and safe
+        and (
+            contains(safe.box, center(cashier.box), scene.scaled_distance(0.08))
+            or any(
+                contains(safe.box, hand, scene.scaled_distance(0.05)) for hand in cashier.wrists()
+            )
+        )
+    )
 
 
 class StableState:
@@ -99,15 +114,27 @@ class MoneyFlow:
         self.next_id = 0
 
     def record(
-        self, detection: Detection, timestamp: float, session_id: str
+        self,
+        detection: Detection,
+        timestamp: float,
+        session_id: str,
+        visible_track_ids: set[str] | None = None,
     ) -> tuple[CashRecord, bool]:
-        known = self.aliases.get(detection.track_id)
+        known = self.aliases.get(detection.track_id) if detection.track_id else None
         if known:
-            return self.cash[known], False
+            result = self.cash[known]
+            if result.track_id == detection.track_id:
+                return result, False
+            if result.track_id not in (visible_track_ids or set()):
+                result.track_id = detection.track_id
+                return result, True
         candidates = [
             cash
             for cash in self.cash.values()
-            if 0 < timestamp - cash.last <= 1.2
+            if detection.track_id
+            and 0 < timestamp - cash.last <= 1.2
+            and cash.track_id not in (visible_track_ids or set())
+            and not (cash.session_id != session_id and cash.location.startswith("hand:"))
             and distance(center(cash.detection.box), center(detection.box))
             < self.reassociation_distance
         ]
@@ -128,7 +155,8 @@ class MoneyFlow:
             first=timestamp,
         )
         self.cash[identity] = result
-        self.aliases[detection.track_id] = identity
+        if detection.track_id:
+            self.aliases[detection.track_id] = identity
         return result, False
 
 
@@ -176,7 +204,16 @@ class EventBuilder:
     def emit(self, event_type: str, timestamp: float, **facts) -> None:
         self.events.append(Event(timestamp_sec=max(0, timestamp), type=event_type, facts=facts))
 
-    def condition(self, key: str, kind: str, active: bool, timestamp: float, **facts) -> None:
+    def condition(
+        self,
+        key: str,
+        kind: str,
+        active: bool,
+        timestamp: float,
+        *,
+        end_reason: str = "observed",
+        **facts,
+    ) -> None:
         if active and key not in self.conditions:
             self.conditions[key] = (kind, timestamp, facts)
             self.emit(kind + "_START", timestamp, condition_id=key, **facts)
@@ -187,6 +224,7 @@ class EventBuilder:
                 timestamp,
                 condition_id=key,
                 duration_sec=timestamp - start,
+                end_reason=end_reason,
                 **old_facts,
             )
 
@@ -278,6 +316,7 @@ class EventBuilder:
             history.moved = max(history.moved, distance(history.origin, point))
             history.closest_desk = min(history.closest_desk, self.desk_distance(point))
             history.exited = False
+            history.confirmed_exit = False
         if self.scene.confidence >= 0.3:
             current = self.people.get(self.cashier)
             candidates = []
@@ -404,6 +443,35 @@ class EventBuilder:
             door = in_zone(self.scene, "door", last_point, 0.05)
             border = min(last_point[0], last_point[1], 1 - last_point[0], 1 - last_point[1]) < 0.18
             confirmed = door or (border and history.moved > self.scene.scaled_distance(0.04))
+            if history.role == "cashier":
+                doorway = self.scene.objects.get("door")
+                # Door contact can locate a departure when hips miss its projected zone.
+                approaching_door = bool(
+                    doorway
+                    and any(
+                        in_zone(self.scene, "door", hand, 0.025)
+                        for hand in history.detection.wrists()
+                    )
+                    and distance(last_point, center(doorway.box))
+                    < distance(history.origin, center(doorway.box))
+                    - self.scene.scaled_distance(0.04)
+                    and not any(
+                        person.track_id != identity
+                        and history.last
+                        < self.people[person.track_id].first
+                        <= history.last + self.config["exit_gap_sec"] + 1 / self.fps
+                        and overlap(history.detection.box, person.box) > 0
+                        for person in people
+                    )
+                )
+                # Losing a seated cashier behind a door or equipment is not a room
+                # exit. Require an observed departure toward the calibrated doorway.
+                confirmed = (
+                    (door or approaching_door)
+                    and history.moved > self.scene.scaled_distance(0.04)
+                    and self.desk_distance(last_point)
+                    > history.closest_desk + self.scene.scaled_distance(0.04)
+                )
             if history.role == "client" and "desk" in self.scene.objects:
                 # The door overlaps seated/approaching clients in the image. Disappearance
                 # there is an exit only after visible movement away from the service desk.
@@ -411,6 +479,7 @@ class EventBuilder:
                     last_point
                 ) > history.closest_desk + self.scene.scaled_distance(0.04)
             history.exited = True
+            history.confirmed_exit = bool(confirmed)
             kind = "EXIT" if confirmed else "TRACK_LOST"
             anchor = history.last + 1 / self.fps
             self.emit(
@@ -483,18 +552,29 @@ class EventBuilder:
 
     def update_objects(self, observation: Observation, people: list[Detection]) -> None:
         timestamp = observation.timestamp_sec
+        visible_cash = {
+            item.track_id for item in observation.detections if item.label in {"cash", "bundle"}
+        }
         for item in observation.detections:
             if item.label == "person":
                 continue
             location, owner = self.object_location(item, people)
             previous = self.last_object_location.get(item.track_id)
             if item.label in {"cash", "bundle"}:
-                record, reassociated = self.money.record(item, timestamp, self.active_session)
+                record, reassociated = self.money.record(
+                    item, timestamp, self.active_session, visible_cash
+                )
                 if reassociated:
                     self.emit(
                         "CASH_REASSOCIATED", timestamp, cash_id=record.id, track_id=item.track_id
                     )
                 old_location = record.location
+                if timestamp - record.last > self.config["exit_gap_sec"]:
+                    # A returning tracker ID after unobserved time cannot establish
+                    # a handover or preserve an earlier client's cash provenance.
+                    old_location = "unknown"
+                    record.session_id = ""
+                    record.bag_open_seen = False
                 for bag in self.current_bags:
                     bag_state = observation.states.get(bag.track_id)
                     if (
@@ -547,7 +627,12 @@ class EventBuilder:
                 record.location = location if location != "unknown" else record.location
                 record.last = timestamp
                 record.detection = item
-            if previous and previous[0].startswith("hand:") and previous[0] != location:
+            if (
+                previous
+                and timestamp - previous[1] <= self.config["exit_gap_sec"]
+                and previous[0].startswith("hand:")
+                and previous[0] != location
+            ):
                 sender = previous[0][5:]
                 if item.label not in {"cash", "bundle"} and location != "unknown":
                     self.emit(
@@ -563,29 +648,32 @@ class EventBuilder:
                         box=list(item.box),
                     )
             self.last_object_location[item.track_id] = (location, timestamp)
+            shown_type = "ID_SHOWN" if item.label == "id_card" else "DOCUMENT_SHOWN"
             if item.label in {"id_card", "document"} and owner and self.active_session:
                 session = self.sessions[self.active_session]
-                if self.role(owner) in {"client", "collector"} or owner == session["client_id"]:
-                    key = (self.active_session, item.track_id)
+                if owner in session_client_ids(session):
+                    key = (shown_type, self.active_session, owner, item.track_id)
                     if key not in self.id_shown:
                         self.emit(
-                            "ID_SHOWN",
+                            shown_type,
                             timestamp,
                             actor_id=owner,
                             session_id=self.active_session,
                             track_id=item.track_id,
+                            object=item.label,
                             box=list(item.box),
                         )
                         self.id_shown.add(key)
             if item.label in {"id_card", "document"} and owner and self.role(owner) == "collector":
-                key = (owner, item.track_id)
+                key = (shown_type, owner, item.track_id)
                 if key not in self.id_shown:
                     self.emit(
-                        "ID_SHOWN",
+                        shown_type,
                         timestamp,
                         actor_id=owner,
                         session_id="",
                         track_id=item.track_id,
+                        object=item.label,
                         box=list(item.box),
                     )
                     self.id_shown.add(key)
@@ -668,7 +756,7 @@ class EventBuilder:
         cashier = next((p for p in people if p.track_id == self.cashier), None)
         history = self.people.get(self.cashier)
         cashier_known = bool(self.cashier)
-        cashier_away = bool(history and history.exited)
+        cashier_away = bool(history and history.confirmed_exit)
         if cashier and "laptop" in self.scene.objects:
             # A laptop at the end of the desk can be far from a seated cashier's hips.
             # Use the working position learned during calibration in that layout.
@@ -695,21 +783,12 @@ class EventBuilder:
             "WORKSTATION_AWAY",
             cashier_known and cashier_away,
             timestamp,
+            end_reason="observed" if cashier is not None or cashier_away else "observation_gap",
             actor_id=self.cashier,
             role="cashier",
         )
         safe = self.scene.objects.get("safe")
-        attended = bool(
-            cashier
-            and safe
-            and (
-                contains(safe.box, center(cashier.box), self.scene.scaled_distance(0.08))
-                or any(
-                    contains(safe.box, hand, self.scene.scaled_distance(0.05))
-                    for hand in cashier.wrists()
-                )
-            )
-        )
+        attended = safe_attended(self.scene, cashier)
         away_confirmed = cashier is not None or cashier_away
         self.condition(
             "safe_unattended",
@@ -722,6 +801,11 @@ class EventBuilder:
                 and not attended
             ),
             timestamp,
+            end_reason=(
+                "observed"
+                if away_confirmed and self.state_filters["safe"].current != "unknown"
+                else "observation_gap"
+            ),
             actor_id=self.cashier,
             box=list(safe.box) if safe else [],
         )
@@ -764,7 +848,13 @@ class EventBuilder:
         # and end at the last observed sample so trailing uncertainty adds no desk time.
         for key, last in list(self.last_personal_presence.items()):
             if timestamp - last > self.config["exit_gap_sec"]:
-                self.condition(key, "", False, min(timestamp, last + 1 / self.fps))
+                self.condition(
+                    key,
+                    "",
+                    False,
+                    min(timestamp, last + 1 / self.fps),
+                    end_reason="observation_gap",
+                )
                 self.last_personal_presence.pop(key)
         for item in observation.detections:
             if (
@@ -833,11 +923,16 @@ class EventBuilder:
                 self.condition(key, "", False, end)
 
     def finish(self, duration: float) -> EventLog:
+        observed_end = (
+            min(duration, self.last_observation.timestamp_sec + 1 / self.fps)
+            if self.last_observation is not None
+            else 0
+        )
         for key in list(self.conditions):
-            end = duration
+            end = observed_end
             if key in self.last_personal_presence:
                 end = min(end, self.last_personal_presence[key] + 1 / self.fps)
-            self.condition(key, "", False, end)
+            self.condition(key, "", False, end, end_reason="clip_end")
         counts = {
             name: self.state_known[name] / max(self.frame_count, 1)
             for name in ("safe", "door", "laptop", "counter")

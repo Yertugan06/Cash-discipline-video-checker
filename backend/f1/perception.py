@@ -43,8 +43,10 @@ def load_perception_config(path: Path) -> dict:
         "state_prompts",
         "version",
     }
-    if not isinstance(config, dict) or set(config) != required:
+    if not isinstance(config, dict) or set(config) - {"desk_objects"} != required:
         raise ValueError("Invalid perception configuration keys")
+    if not isinstance(config.setdefault("desk_objects", False), bool):
+        raise ValueError("Invalid perception setting: desk_objects")
     for key in required - {"scene_prompts", "object_prompts", "state_prompts"}:
         if (
             not isinstance(config[key], (int, float))

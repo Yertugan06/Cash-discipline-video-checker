@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Literal
 
 from backend.contracts import RuleScope
+from backend.f1.visual_checks import VisualCheckSettings
 
 try:
     from backend.vlm.config import VlmSettings
@@ -62,6 +63,8 @@ class Settings:
     # lands, so this is built explicitly in __post_init__ rather than via a
     # dataclass default_factory.
     vlm: VlmSettings | None = None
+    # Initial integration is opt-in until the local model has been measured.
+    visual_checks: VisualCheckSettings = field(default_factory=VisualCheckSettings)
 
     @property
     def traces_dir(self) -> Path:
@@ -126,5 +129,19 @@ class Settings:
                 stop_margin_s=float(os.environ.get("VLM_STOP_MARGIN_S", "15")),
                 max_failed_frac=float(os.environ.get("VLM_MAX_FAILED_FRAC", "0.30")),
                 fill_step_s=float(os.environ.get("VLM_FILL_STEP_S", "2.0")),
+            ),
+            visual_checks=VisualCheckSettings(
+                enabled=os.environ.get("F1_VISUAL_CHECKS", "0"),
+                model_path=os.environ.get("F1_VISUAL_MODEL_PATH") or None,
+                worker_python=os.environ.get("F1_VISUAL_WORKER_PYTHON") or None,
+                cache_dir=os.environ.get("F1_VISUAL_CACHE_DIR") or None,
+                families=tuple(os.environ.get("F1_VISUAL_FAMILIES", "safe").split(",")),
+                max_checks=int(os.environ.get("F1_VISUAL_MAX_CHECKS", "24")),
+                max_video_s=float(os.environ.get("F1_VISUAL_BUDGET_S", "60")),
+                request_timeout_s=float(os.environ.get("F1_VISUAL_REQUEST_TIMEOUT_S", "45")),
+                stop_margin_s=float(os.environ.get("F1_VISUAL_STOP_MARGIN_S", "5")),
+                crop_margin=float(os.environ.get("F1_VISUAL_CROP_MARGIN", "0.25")),
+                max_side=int(os.environ.get("F1_VISUAL_MAX_SIDE", "896")),
+                cpu_threads=int(os.environ.get("CPU_THREADS", "4")),
             ),
         )
