@@ -1,0 +1,91 @@
+{
+  "validated_Item_and_DoneJob": 3,
+  "flag_exists": true,
+  "null_labels": 3,
+  "preserved": {
+    "state.a20-baseline-cached-replay.json": {
+      "sha256": "4abb15f282e9718a0bb825c3e85340d9f6218d51ae3bbb8618622233626ccf24",
+      "items": 42
+    },
+    "state.live.json": {
+      "sha256": "7faa10ff4ba9ea8df9bb8128e0846886cb6ce28c37d9e15619af72a109bb1489",
+      "items": 42
+    },
+    "state.live.meta.json": {
+      "sha256": "f2321a65eb94bd57676dd06b3037566696de0d76d9e414c36531a7270138c772",
+      "items": null
+    },
+    "state.no-vlm-validated.json": {
+      "sha256": "57ebb86c1fb5b22c60e52a91dd6118ea78435ab14e627c12945a44dea6f6caa2",
+      "items": 42
+    },
+    "state.visual-verifier-v1.json": {
+      "sha256": "f92fa75dbab10f452a554bb0fe1747650f989df68b349739b9c04c32b44c4236",
+      "items": 42
+    }
+  },
+  "timings": [
+    {
+      "id": "a23-synthetic-01",
+      "name": "t1.mp4",
+      "sha256": "a77cc548dadd356b5ea7decefc15df2d24a8b49a93ee71d019990a880b8659ec",
+      "runtime_wall_s": 32.950840113000595,
+      "artifact_processing_s": 32.86694407463074,
+      "queued_at": 1792300263.516118,
+      "started_at": 1792300263.5902426,
+      "finished_at": 1792300296.4571867,
+      "warnings": [
+        "Не локализованы объекты сцены: safe",
+        "Visual verification: 3/3 checks unknown (missing_calibration); unknown does not establish an object state."
+      ],
+      "cache_provenance": {
+        "video_sha256": "a77cc548dadd356b5ea7decefc15df2d24a8b49a93ee71d019990a880b8659ec",
+        "perception_cache_hit": false,
+        "visual_checks_count": 3,
+        "visual_cache_hits": 0
+      }
+    },
+    {
+      "id": "a23-synthetic-02",
+      "name": "t2.mp4",
+      "sha256": "94bbcae0ff8e4fdccc01523ded28ffdb96f8931f59d99c6f367223bf0883c0a2",
+      "runtime_wall_s": 14.155873891999363,
+      "artifact_processing_s": 14.083261489868164,
+      "queued_at": 1792300296.4670556,
+      "started_at": 1792300296.5321934,
+      "finished_at": 1792300310.615455,
+      "warnings": [
+        "Рабочая и клиентская зоны не откалиброваны уверенно; задайте ручные зоны.",
+        "Не локализованы объекты сцены: desk, safe",
+        "Visual verification: 3/3 checks unknown (missing_calibration); unknown does not establish an object state."
+      ],
+      "cache_provenance": {
+        "video_sha256": "94bbcae0ff8e4fdccc01523ded28ffdb96f8931f59d99c6f367223bf0883c0a2",
+        "perception_cache_hit": false,
+        "visual_checks_count": 3,
+        "visual_cache_hits": 0
+      }
+    },
+    {
+      "id": "a23-synthetic-03",
+      "name": "t3.mp4",
+      "sha256": "71aab2b0198872ad0160cafdaea4042a02e4cbab05a9519da7729357ec3ec0e7",
+      "runtime_wall_s": 18.177326888002426,
+      "artifact_processing_s": 18.11662268638611,
+      "queued_at": 1792300310.6225297,
+      "started_at": 1792300310.6764603,
+      "finished_at": 1792300328.793083,
+      "warnings": [
+        "Не локализованы объекты сцены: safe",
+        "Visual verification: 3/3 checks unknown (missing_calibration); unknown does not establish an object state."
+      ],
+      "cache_provenance": {
+        "video_sha256": "71aab2b0198872ad0160cafdaea4042a02e4cbab05a9519da7729357ec3ec0e7",
+        "perception_cache_hit": false,
+        "visual_checks_count": 3,
+        "visual_cache_hits": 0
+      }
+    }
+  ],
+  "timestamp_note": "queued inferred from accepted-file mtime minus upload_s; started is accepted response artifact mtime, not measured server start; finished is real result-file mtime."
+}

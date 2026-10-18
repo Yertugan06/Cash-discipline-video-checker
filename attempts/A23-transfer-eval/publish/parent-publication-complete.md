@@ -1,0 +1,1 @@
+Parent ran publication outside sandbox after correcting uploads path to STATE/uploads. All3 videos Range206 and all3 traces200. Actual saved run visible /?run=a23-synthetic. Preserve these artifacts and finish REPORT.md; do not rerun state writes.

@@ -1,0 +1,1 @@
+Parent integration corrected upload destination to STATE/uploads to match new gateway source. Running authorized publication outside worker sandbox. Existing live state and annotations must stay byte-identical.

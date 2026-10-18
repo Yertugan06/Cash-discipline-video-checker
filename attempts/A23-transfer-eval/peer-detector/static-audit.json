@@ -1,0 +1,130 @@
+{
+  "peer_pin": "15d60a51fc5eebd6b91fff2b43866dd75dff13d7",
+  "tracked_weight_files": [],
+  "tracked_license_files": [],
+  "model_directory_files": [
+    "models/README.md"
+  ],
+  "intended_class_map": {
+    "0": "cash",
+    "1": "id_card",
+    "2": "phone",
+    "3": "banknote_counter",
+    "4": "laptop",
+    "5": "safe_closed",
+    "6": "safe_open",
+    "7": "door_closed",
+    "8": "door_open",
+    "9": "collector_bag",
+    "10": "personal_item",
+    "11": "food_drink",
+    "12": "key_in_lock",
+    "13": "documents",
+    "14": "screen_on",
+    "15": "screen_locked",
+    "16": "cash_in_counter"
+  },
+  "training_metric_rows": 77,
+  "stage_counts": {
+    "1": 4,
+    "2": 23,
+    "3": 32,
+    "4": 18
+  },
+  "stage_last": {
+    "1": {
+      "epoch_total": "4",
+      "stage": "1",
+      "loss": "7.255",
+      "val_mAP50": "0.749"
+    },
+    "2": {
+      "epoch_total": "27",
+      "stage": "2",
+      "loss": "4.303",
+      "val_mAP50": "0.782"
+    },
+    "3": {
+      "epoch_total": "59",
+      "stage": "3",
+      "loss": "4.365",
+      "val_mAP50": "0.841"
+    },
+    "4": {
+      "epoch_total": "77",
+      "stage": "4",
+      "loss": "5.042",
+      "val_mAP50": "0.851"
+    }
+  },
+  "per_class_metric_artifact": "not present: CSV contains aggregate val_mAP50 only",
+  "frozen_a13_frames": 20,
+  "historical_a13_numeric_baseline": {
+    "owl": {
+      "cash": {
+        "tp": 0,
+        "fn": 7,
+        "tn": 4,
+        "fp": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0
+      },
+      "id_card": {
+        "tp": 1,
+        "fn": 0,
+        "tn": 0,
+        "fp": 1,
+        "unknown_positive": 0,
+        "unknown_negative": 0
+      }
+    },
+    "gdino": {
+      "cash": {
+        "tp": 1,
+        "fn": 6,
+        "tn": 3,
+        "fp": 1,
+        "unknown_positive": 0,
+        "unknown_negative": 0
+      },
+      "id_card": {
+        "tp": 0,
+        "fn": 1,
+        "tn": 0,
+        "fp": 1,
+        "unknown_positive": 0,
+        "unknown_negative": 0
+      }
+    },
+    "vlm": {
+      "cash": {
+        "tp": 0,
+        "fn": 7,
+        "tn": 4,
+        "fp": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0
+      },
+      "id_card": {
+        "tp": 0,
+        "fn": 1,
+        "tn": 0,
+        "fp": 1,
+        "unknown_positive": 0,
+        "unknown_negative": 0
+      }
+    }
+  },
+  "a13_sources": [
+    {
+      "path": "attempts/A13-detection-spike/logs/spike_out/results.json",
+      "sha256": "62876973313020c9929192cac5a82ad8672862d0fc3c5e2cf403722a3b120467"
+    },
+    {
+      "path": "attempts/A13-detection-spike/logs/spike_out_vlm/results.json",
+      "sha256": "d94b8f8efb1a92d205f14d82e41bb728dbdc704b78dd6e6a3ce7e92a39138999"
+    }
+  ],
+  "measured_model_inference": false,
+  "checks": "positive/negative confusion counts and unknown-is-not-negative assertions passed"
+}

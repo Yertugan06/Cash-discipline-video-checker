@@ -1,0 +1,24 @@
+{
+  "gateway_url": "http://127.0.0.1:8103",
+  "saved_run_listed": true,
+  "done": 3,
+  "no_violation": 3,
+  "null_labels": 3,
+  "media_free_checks": [
+    {
+      "id": "a23-synthetic-01",
+      "video_status": 206,
+      "trace_status": 200
+    },
+    {
+      "id": "a23-synthetic-02",
+      "video_status": 206,
+      "trace_status": 200
+    },
+    {
+      "id": "a23-synthetic-03",
+      "video_status": 206,
+      "trace_status": 200
+    }
+  ]
+}

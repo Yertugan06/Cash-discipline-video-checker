@@ -1,0 +1,63 @@
+{
+  "X-4_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 150.93587970800218,
+    "unknown_count": 36,
+    "violations": []
+  },
+  "X-5_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 117.72099388399874,
+    "unknown_count": 6,
+    "violations": []
+  },
+  "X-11_mirror.mov": {
+    "status": "done",
+    "verdict": "violation",
+    "runtime_s": 31.2190895370004,
+    "unknown_count": 0,
+    "violations": [
+      {
+        "rule_id": "A-OUTSIDER-ZONE",
+        "timecode_sec": 21.0
+      }
+    ]
+  },
+  "X-12_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 53.73793321899939,
+    "unknown_count": 2,
+    "violations": []
+  },
+  "X-13_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 72.4890549289994,
+    "unknown_count": 0,
+    "violations": []
+  },
+  "X-14_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 147.0604791930018,
+    "unknown_count": 0,
+    "violations": []
+  },
+  "X-20_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 20.1674892719966,
+    "unknown_count": 0,
+    "violations": []
+  },
+  "X-21_mirror.mov": {
+    "status": "done",
+    "verdict": "no_violation",
+    "runtime_s": 27.18914625999969,
+    "unknown_count": 0,
+    "violations": []
+  }
+}

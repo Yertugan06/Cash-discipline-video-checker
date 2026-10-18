@@ -1,0 +1,15 @@
+{
+  "base": "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base",
+  "declared_main": "4a3b9ea",
+  "base_has_git_metadata": false,
+  "source_sha256": {
+    "backend/f1/perception.py": "6f5e67f564db7a0fd99ca9e51ba427d6f32987f678134aae1c963901148aa266",
+    "backend/f1/vision_types.py": "013c013d01e4e842c310cc48bb21ba02cd02f77abdb544a7a1cacd3d00b5c809",
+    "backend/media.py": "0712032b9257a87e5c202c5157673a5585305654f46d7bf7278407fe357c312a",
+    "config/perception.yaml": "9201da3982e88a0d69b78ab2e9c746f665acf25e5307db2e6196e2abf092e75f",
+    "models.lock.json": "2f4a4b92ff8935282f98cf375b5c2c8941f51d414acadc0b028d675672e3d4a9"
+  },
+  "changed_production_files": [],
+  "gpu_executed": false,
+  "third_party_peer_code_executed": false
+}

@@ -1,0 +1,151 @@
+{
+  "csv_sha256": "d79dd23d31b6dbeaeae77afc10e62da84bd584ff675c5c7b3724ee61bd60cdc1",
+  "unique_clips": 8,
+  "csv_rows_for_selected_inputs": 9,
+  "norm_and_reason_status": "expected/unverified; no automatic reason correctness from CSV",
+  "cases": [
+    {
+      "file": "X-4_mirror.mov",
+      "original_id": "X-4",
+      "expected_verdict": "violation",
+      "csv_rows": 2,
+      "expected_events": [
+        {
+          "time_sec": 57.0,
+          "expected_codex_ids_unverified": [
+            "231-20-2",
+            "231-20-2b"
+          ],
+          "expected_description_unverified": "Деньги предыдущего клиента не убраны при обслуживании следующего"
+        },
+        {
+          "time_sec": 68.0,
+          "expected_codex_ids_unverified": [
+            "231-20-2",
+            "231-21"
+          ],
+          "expected_description_unverified": "Смешение наличных двух клиентов (метка из дубликата X-47)"
+        }
+      ],
+      "human_mechanism_checks": {
+        "S-CLEAN-DESK-HANDOVER": {
+          "status": "mechanism_compatible",
+          "observation": "User confirmed previous-client cash remains at next actual entry; finding timing and detection validity still need review."
+        },
+        "S-NO-MERGE": {
+          "status": "mechanism_compatible",
+          "observation": "User confirmed new cash placed on previous-client cash; exact combination time unknown; no timing or physical stack inferred from finding alone."
+        },
+        "C-ID-BEFORE-CASH": {
+          "status": "contradicted",
+          "observation": "User confirmed second client showed ID before paying; non-presentation is unsupported."
+        }
+      }
+    },
+    {
+      "file": "X-5_mirror.mov",
+      "original_id": "X-5",
+      "expected_verdict": "no_violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": null,
+          "expected_codex_ids_unverified": [],
+          "expected_description_unverified": ""
+        }
+      ]
+    },
+    {
+      "file": "X-11_mirror.mov",
+      "original_id": "X-11",
+      "expected_verdict": "violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": 18.0,
+          "expected_codex_ids_unverified": [
+            "53-71-9"
+          ],
+          "expected_description_unverified": "Рабочее место (ноутбук) оставлено незаблокированным"
+        }
+      ]
+    },
+    {
+      "file": "X-12_mirror.mov",
+      "original_id": "X-12",
+      "expected_verdict": "no_violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": null,
+          "expected_codex_ids_unverified": [],
+          "expected_description_unverified": ""
+        }
+      ]
+    },
+    {
+      "file": "X-13_mirror.mov",
+      "original_id": "X-13",
+      "expected_verdict": "violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": 47.0,
+          "expected_codex_ids_unverified": [
+            "231-74-1",
+            "231-42"
+          ],
+          "expected_description_unverified": "Деньги из вскрытой сумки убраны в сейф без пересчёта и учёта"
+        }
+      ]
+    },
+    {
+      "file": "X-14_mirror.mov",
+      "original_id": "X-14",
+      "expected_verdict": "no_violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": null,
+          "expected_codex_ids_unverified": [],
+          "expected_description_unverified": ""
+        }
+      ]
+    },
+    {
+      "file": "X-20_mirror.mov",
+      "original_id": "X-20",
+      "expected_verdict": "violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": 5.0,
+          "expected_codex_ids_unverified": [
+            "231-20-2b",
+            "231-20-2"
+          ],
+          "expected_description_unverified": "Сейф оставлен открытым"
+        }
+      ],
+      "human_mechanism_checks": {
+        "L-NO-DOCS-ON-LEAVE": {
+          "status": "unsupported_scope",
+          "observation": "User describes safe open while cashier counts; no room exit is described. Equipment movement cannot establish room exit."
+        }
+      }
+    },
+    {
+      "file": "X-21_mirror.mov",
+      "original_id": "X-21",
+      "expected_verdict": "no_violation",
+      "csv_rows": 1,
+      "expected_events": [
+        {
+          "time_sec": null,
+          "expected_codex_ids_unverified": [],
+          "expected_description_unverified": ""
+        }
+      ]
+    }
+  ]
+}

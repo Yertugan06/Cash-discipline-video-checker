@@ -1,0 +1,26 @@
+{
+  "format": "JSON object keyed by exact mirror filename (original export keyed by manifest original_id)",
+  "required": [
+    "status",
+    "verdict for status=done"
+  ],
+  "statuses": "done/failed; queued/processing/unknown/missing/invalid excluded from accuracy",
+  "verdicts": [
+    "violation",
+    "no_violation"
+  ],
+  "optional": [
+    "runtime_s or wall_s (finite >=0; conflicts rejected)",
+    "unknown_count (nonnegative int; missing explicitly reported)",
+    "findings or violations or ranked_findings, each rule_id plus t/timecode_sec; never image/evidence fields"
+  ],
+  "minimal_example": {
+    "X-4_mirror.mov": {
+      "status": "done",
+      "verdict": "violation",
+      "runtime_s": 12.0,
+      "unknown_count": 0
+    }
+  },
+  "note": "Use authoritative D2-1 client export; this is scorer input, not another API client. Adapter awaits that client contract."
+}

@@ -1,0 +1,15 @@
+{
+  "cwd": "/home/ubuntu/workspaces/datathon26-workers/worker-2",
+  "argv": [
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/.venv/bin/python",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-detector/audit.py",
+    "--peer",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a23-peers/hotel",
+    "--a13",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A13-detection-spike",
+    "--out",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-detector"
+  ],
+  "gpu_status": "BLOCKED_NO_CUSTOM_WEIGHTS",
+  "production_mutation": false
+}

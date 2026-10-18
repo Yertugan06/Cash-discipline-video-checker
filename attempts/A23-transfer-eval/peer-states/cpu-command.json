@@ -1,0 +1,13 @@
+[
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/crop_probe.py",
+  "--base",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base",
+  "--manifest",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/human-intervals.json",
+  "--weights",
+  "/home/ubuntu/datathon26-annotation-prefetch/weights/states",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/gpu-results",
+  "--validate-only"
+]

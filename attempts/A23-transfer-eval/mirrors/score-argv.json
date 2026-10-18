@@ -1,0 +1,14 @@
+[
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/mirrors/score.py",
+  "--manifest",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/mirrors/manifest.json",
+  "--truth",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/mirrors/scoring-truth.json",
+  "--mirrors",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/mirrors/allowlisted-mirror-results.json",
+  "--originals",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/mirrors/originals-unavailable.json",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/mirrors/score.json"
+]

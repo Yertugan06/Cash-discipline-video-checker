@@ -1,0 +1,178 @@
+{
+  "purpose": "Frozen evaluation only; gold, names and times must never be inference features",
+  "current_base": "shared/a23/base at main4a3b9ea",
+  "presence_only_no_object_boxes": true,
+  "frames": [
+    {
+      "clip": "X-4",
+      "t": 56.0,
+      "expected": {
+        "cash": true,
+        "safe_open": false
+      }
+    },
+    {
+      "clip": "X-38",
+      "t": 30.0,
+      "expected": {
+        "cash": true
+      }
+    },
+    {
+      "clip": "X-26",
+      "t": 15.0,
+      "expected": {
+        "cash": true
+      }
+    },
+    {
+      "clip": "X-10",
+      "t": 8.0,
+      "expected": {
+        "cash": true
+      }
+    },
+    {
+      "clip": "X-2",
+      "t": 9.8,
+      "expected": {
+        "cash": true,
+        "id_card": false
+      }
+    },
+    {
+      "clip": "X-1",
+      "t": 16.0,
+      "expected": {
+        "id_card": true
+      }
+    },
+    {
+      "clip": "X-13",
+      "t": 30.0,
+      "expected": {
+        "cash": true,
+        "bag": true
+      }
+    },
+    {
+      "clip": "X-14",
+      "t": 60.0,
+      "expected": {
+        "cash": true
+      }
+    },
+    {
+      "clip": "X-15",
+      "t": 17.0,
+      "expected": {
+        "bag": true
+      }
+    },
+    {
+      "clip": "X-17",
+      "t": 6.0,
+      "expected": {
+        "bag": true
+      }
+    },
+    {
+      "clip": "X-20",
+      "t": 6.0,
+      "expected": {
+        "safe_open": true
+      }
+    },
+    {
+      "clip": "X-23",
+      "t": 16.0,
+      "expected": {
+        "cash": false,
+        "safe_open": false,
+        "screen": "locked"
+      }
+    },
+    {
+      "clip": "X-29",
+      "t": 16.0,
+      "expected": {
+        "cash": false,
+        "screen": "locked"
+      }
+    },
+    {
+      "clip": "X-28",
+      "t": 12.0,
+      "expected": {
+        "screen": "working"
+      }
+    },
+    {
+      "clip": "X-11",
+      "t": 21.0,
+      "expected": {
+        "screen": "working"
+      }
+    },
+    {
+      "clip": "X-40",
+      "t": 18.0,
+      "expected": {
+        "coat_bag": true
+      }
+    },
+    {
+      "clip": "X-46",
+      "t": 13.0,
+      "expected": {
+        "food_cup": true
+      }
+    },
+    {
+      "clip": "X-24",
+      "t": 3.0,
+      "expected": {
+        "food_cup": true
+      }
+    },
+    {
+      "clip": "X-32",
+      "t": 2.0,
+      "expected": {
+        "cash": false,
+        "safe_open": false,
+        "coat_bag": false,
+        "food_cup": false,
+        "bag": false
+      }
+    },
+    {
+      "clip": "X-33",
+      "t": 2.0,
+      "expected": {
+        "cash": false,
+        "coat_bag": false,
+        "food_cup": false,
+        "bag": false
+      }
+    }
+  ],
+  "thresholds_frozen_before_new_inference": {
+    "report_presence": 0.3,
+    "class_nms_iou": 0.6
+  },
+  "transfer_status": "BLOCKED: no peer fine-tuned weights or download location available",
+  "model_inputs": "local decoded RGB only; no expected values or annotation/filename prompts",
+  "output_allowlist": [
+    "frame_hash",
+    "native_width",
+    "native_height",
+    "model_revision",
+    "class",
+    "score",
+    "normalized_xyxy",
+    "elapsed_s",
+    "status"
+  ],
+  "invalid_or_missing_model": "unknown; do not count as negative"
+}

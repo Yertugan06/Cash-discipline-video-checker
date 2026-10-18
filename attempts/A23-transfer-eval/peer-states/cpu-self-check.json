@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/crop_probe.py",
+    "--self-check"
+  ],
+  "exit_code": 0,
+  "result": {
+    "check": "numeric-only fit/JSON parity, abstention, invalid features, parent leakage",
+    "fixture_predictions_correct": 6,
+    "fixture_samples": 6,
+    "elapsed_sec": 0.05672057700212463,
+    "neural_inference": false
+  }
+}

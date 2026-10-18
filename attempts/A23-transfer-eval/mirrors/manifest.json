@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "base_commit": "4a3b9ea",
+  "created_utc": "2026-10-18T05:05:41.970953+00:00",
+  "selection_sha256": "22e5fdd37f31c5fd1238d69e4a85d6eb8956e68efdd7cefd55d9e960ba90c8d3",
+  "inputs": [
+    {
+      "file": "X-4_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-4_mirror.mov",
+      "sha256": "d980aede17ee25029e7c6d9c0e4f9aa28901861be294fd00bcbff63aef13eae7",
+      "bytes": 4815616,
+      "duration_sec": 72.7,
+      "stream_duration_sec": 72.7,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "21770/727",
+      "original_id": "X-4",
+      "original_source_id": "\u0425-4",
+      "original_sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-5_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-5_mirror.mov",
+      "sha256": "1d520f11d788ba61a4090a4a0eb87a731b31daf6c1c27aa9bf31f57085788d41",
+      "bytes": 4842078,
+      "duration_sec": 71.6,
+      "stream_duration_sec": 71.6,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "10725/358",
+      "original_id": "X-5",
+      "original_source_id": "\u0425-5",
+      "original_sha256": "1f5840bff58f298e89c4afa00cb1c18f6dafc5c4096c251d9b507604ebefe906",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-11_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-11_mirror.mov",
+      "sha256": "a7a4e9c34eaaa955615c10b9a2c510ce2e64224baaf5bab5c2e922ded0f94cfb",
+      "bytes": 2267409,
+      "duration_sec": 25.6,
+      "stream_duration_sec": 25.6,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "3825/128",
+      "original_id": "X-11",
+      "original_source_id": "\u0425-11",
+      "original_sha256": "b3a954a5b761ad47943e061599315e3fe9d22573eeb92bb14bf315cdcd422fc5",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-12_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-12_mirror.mov",
+      "sha256": "535517bde9bfdf00cabc1de1233a375d70e770cc984dc8e72c12ef045bd9a9d3",
+      "bytes": 3140079,
+      "duration_sec": 42.3,
+      "stream_duration_sec": 42.3,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "12670/423",
+      "original_id": "X-12",
+      "original_source_id": "\u0425-12",
+      "original_sha256": "955755baf54418b48ea645dcd98e7e8dcca1d1e227e9b286a9427062db304fd4",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-13_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-13_mirror.mov",
+      "sha256": "a9e5c2c9cd98141a9f261a2d0af8f023fafb43e2fb3e0eff5102ef86408ae5d6",
+      "bytes": 4319527,
+      "duration_sec": 65.3,
+      "stream_duration_sec": 65.3,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "19560/653",
+      "original_id": "X-13",
+      "original_source_id": "\u0425-13",
+      "original_sha256": "a37930cf119bb691be77d8624b18333b04d9c67066a7f4627d63e3208dfa6057",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-14_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-14_mirror.mov",
+      "sha256": "217fc57ed28cfffe623df7161e19b88a127db9307be24e2d960d0a694d974306",
+      "bytes": 7474354,
+      "duration_sec": 142.534,
+      "stream_duration_sec": 142.533333,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "64095/2138",
+      "original_id": "X-14",
+      "original_source_id": "\u0425-14",
+      "original_sha256": "7d6890ecb4a2b28bbdd3b61b6711566eee84a53ab3439c40cd9b6a3a6714c681",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-20_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-20_mirror.mov",
+      "sha256": "19e6eaefbf5e8d374d9885d110676875754f69e1c1ee2ccf67aa0dff1b2d8c90",
+      "bytes": 846153,
+      "duration_sec": 11.634,
+      "stream_duration_sec": 11.633333,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "30/1",
+      "original_id": "X-20",
+      "original_source_id": "\u0425-20",
+      "original_sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    },
+    {
+      "file": "X-21_mirror.mov",
+      "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/mirrored/X-21_mirror.mov",
+      "sha256": "07605dc35664b88b5e1a6576fe9c1fcce6fb0d83deef5760df7bf5f0ac6d540f",
+      "bytes": 1303756,
+      "duration_sec": 19.6,
+      "stream_duration_sec": 19.6,
+      "native_size_wh": [
+        464,
+        848
+      ],
+      "avg_frame_rate": "2925/98",
+      "original_id": "X-21",
+      "original_source_id": "\u0425-21",
+      "original_sha256": "efd876a04224cac781ac64bf5d6e107ded67340b7b7715fd9ca3408b240a1075",
+      "transform": "ffmpeg hflip and re-encode, supplied real file"
+    }
+  ],
+  "unique_inputs": 8,
+  "camera_override_policy": "empty/default automatic; manual DoorA prohibited",
+  "evaluation_only": true,
+  "independent_heldout": false,
+  "notes": "Real hflip/re-encode; verdict and marker inheritance is evaluation only. No coordinate-mirrored detection cache, new-angle or held-out claims."
+}

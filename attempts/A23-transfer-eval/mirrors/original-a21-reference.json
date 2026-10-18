@@ -1,0 +1,87 @@
+{
+  "attempt_prefix": "A21",
+  "source_commit": "5fae84bc10415111a04b5982d156727ca80f788a",
+  "rows": [
+    {
+      "original_id": "X-20",
+      "name": "Х-20.mov",
+      "label": "violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 50.7,
+      "violations": []
+    },
+    {
+      "original_id": "X-4",
+      "name": "Х-4.mov",
+      "label": "violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 3.1,
+      "violations": []
+    },
+    {
+      "original_id": "X-5",
+      "name": "Х-5.mov",
+      "label": "no_violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 3.1,
+      "violations": []
+    },
+    {
+      "original_id": "X-11",
+      "name": "Х-11.mov",
+      "label": "violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 2.1,
+      "violations": []
+    },
+    {
+      "original_id": "X-12",
+      "name": "Х-12.mov",
+      "label": "no_violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 4.1,
+      "violations": []
+    },
+    {
+      "original_id": "X-13",
+      "name": "Х-13.mov",
+      "label": "violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 3.1,
+      "violations": []
+    },
+    {
+      "original_id": "X-14",
+      "name": "Х-14.mov",
+      "label": "no_violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 6.2,
+      "violations": []
+    },
+    {
+      "original_id": "X-21",
+      "name": "Х-21.mov",
+      "label": "no_violation",
+      "status": "done",
+      "verdict": "no_violation",
+      "error": null,
+      "seconds": 1.0,
+      "violations": []
+    }
+  ],
+  "scope": "Original inputs, saved development results; no fresh A23 inference on originals."
+}

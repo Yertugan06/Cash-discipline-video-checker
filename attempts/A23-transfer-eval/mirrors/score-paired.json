@@ -1,0 +1,277 @@
+{
+  "unique_inputs": 8,
+  "confusion": {
+    "TP": 1,
+    "FN": 3,
+    "FP": 0,
+    "TN": 4
+  },
+  "accuracy_denominator": 8,
+  "correct": 5,
+  "accuracy": 0.625,
+  "excluded": [],
+  "unknown_count_total_known": 44,
+  "unknown_count_missing_inputs": [],
+  "runtime": {
+    "measured_inputs": 8,
+    "total_s": 620.5200660019982,
+    "median_s": 63.11349407399939,
+    "max_s": 150.93587970800218
+  },
+  "paired_complete": 8,
+  "paired_changes": [
+    "X-11_mirror.mov"
+  ],
+  "rows": [
+    {
+      "file": "X-4_mirror.mov",
+      "original_id": "X-4",
+      "expected_verdict": "violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 150.93587970800218,
+        "unknown_count": 36
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "FN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "FN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-5_mirror.mov",
+      "original_id": "X-5",
+      "expected_verdict": "no_violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 117.72099388399874,
+        "unknown_count": 6
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "TN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "TN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-11_mirror.mov",
+      "original_id": "X-11",
+      "expected_verdict": "violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "violation",
+        "verdict_source": "explicit",
+        "findings": [
+          {
+            "rule_id": "A-OUTSIDER-ZONE",
+            "t": 21.0
+          }
+        ],
+        "findings_source": "violations",
+        "runtime_s": 31.2190895370004,
+        "unknown_count": 0
+      },
+      "mirror_reason_checks": [
+        {
+          "rule_id": "A-OUTSIDER-ZONE",
+          "t": 21.0,
+          "mechanism_status": "unknown",
+          "observation": null,
+          "timing_status": "unverified",
+          "legal_status": "unverified"
+        }
+      ],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "TP",
+      "paired_verdict_changed": true,
+      "paired_outcome_before": "FN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-12_mirror.mov",
+      "original_id": "X-12",
+      "expected_verdict": "no_violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 53.73793321899939,
+        "unknown_count": 2
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "TN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "TN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-13_mirror.mov",
+      "original_id": "X-13",
+      "expected_verdict": "violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 72.4890549289994,
+        "unknown_count": 0
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "FN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "FN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-14_mirror.mov",
+      "original_id": "X-14",
+      "expected_verdict": "no_violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 147.0604791930018,
+        "unknown_count": 0
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "TN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "TN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-20_mirror.mov",
+      "original_id": "X-20",
+      "expected_verdict": "violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 20.1674892719966,
+        "unknown_count": 0
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "FN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "FN",
+      "paired_runtime_delta_s": null
+    },
+    {
+      "file": "X-21_mirror.mov",
+      "original_id": "X-21",
+      "expected_verdict": "no_violation",
+      "mirror": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": 27.18914625999969,
+        "unknown_count": 0
+      },
+      "mirror_reason_checks": [],
+      "original_reason_checks": [],
+      "original": {
+        "state": "done",
+        "verdict": "no_violation",
+        "verdict_source": "explicit",
+        "findings": [],
+        "findings_source": "violations",
+        "runtime_s": null,
+        "unknown_count": null
+      },
+      "outcome": "TN",
+      "paired_verdict_changed": false,
+      "paired_outcome_before": "TN",
+      "paired_runtime_delta_s": null
+    }
+  ],
+  "reason_status": "CSV norm/reasons unverified; no reason accuracy inferred from verdict/time",
+  "limits": "Inherited hflip labels, not independent held-out/new-angle evidence; failed/missing/unknown jobs excluded from accuracy, never clean.",
+  "original_source_commit": "5fae84bc10415111a04b5982d156727ca80f788a",
+  "comparison_caveat": "A21 saved originals vs fresh A23 mirrored inputs also change source revision; no isolated mirror effect or comparable runtime claim."
+}

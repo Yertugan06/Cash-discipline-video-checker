@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/crop_probe.py",
+    "--base",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base",
+    "--manifest",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/human-intervals.json",
+    "--weights",
+    "/home/ubuntu/datathon26-annotation-prefetch/weights/states",
+    "--out",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/gpu-results",
+    "--validate-only"
+  ],
+  "exit_code": 1,
+  "expected_error": "LABELS_REQUIRED",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/crop_probe.py\", line 207, in <module>\n    main()\n  File \"/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/crop_probe.py\", line 144, in main\n    validate_samples(manifest[\"samples\"])\n  File \"/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A23-transfer-eval/peer-states/crop_probe.py\", line 24, in validate_samples\n    raise ValueError(\"LABELS_REQUIRED: no human-confirmed timed visible-state intervals\")\nValueError: LABELS_REQUIRED: no human-confirmed timed visible-state intervals\n",
+  "gpu_executed": false
+}

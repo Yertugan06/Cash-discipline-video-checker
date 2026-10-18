@@ -1,0 +1,6 @@
+[
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A23-transfer-eval/publish/publish_synthetic.py",
+  "--wait-seconds",
+  "0"
+]

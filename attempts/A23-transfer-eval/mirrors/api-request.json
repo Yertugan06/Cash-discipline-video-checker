@@ -1,0 +1,9 @@
+{
+  "status": "parent_actual_batch_complete",
+  "base_url": "http://127.0.0.1:8003",
+  "summary": "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored/api-newmain-run1/summary.jsonl",
+  "inputs": 8,
+  "source_commit": "4a3b9ea",
+  "worker_submissions": 0,
+  "published_on_8103": false
+}

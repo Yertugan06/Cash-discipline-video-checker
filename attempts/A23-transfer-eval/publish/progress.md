@@ -1,0 +1,3 @@
+PUBLISHED — 2026-10-18T05:22:58.714540+00:00
+
+Verified directly on http://127.0.0.1:8103: A23 saved run listed; compact3done/3no_violation/3null labels. All3 video Range206; all3 trace200 (status only). Three saved results equal actual raw data; three persistent upload hashes equal API inputs. Existing live42 and3historical42-item runs preserved byte-for-byte. A21 root source corrected to5fae; original audit content retained, A23 unscored report appended. Parent executed outside sandbox after worker Errno30 write failure, with persistent uploads under state-file parent/uploads. No jobs/services/credentials/live items changed. REPORT.md contains actual publication time, source, timing approximation, limitations and URLs.
