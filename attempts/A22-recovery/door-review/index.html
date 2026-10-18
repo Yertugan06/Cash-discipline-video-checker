@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Check the doorway</title>
+<style>
+*{box-sizing:border-box}body{font:16px system-ui;margin:0;background:#101817;color:#e6eeeb}main{max-width:1050px;margin:auto;padding:20px}h1{font-size:24px;margin:0 0 8px}p{line-height:1.5;color:#b8c9c1;margin:8px 0}section{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}.stage{position:relative;max-width:95vw}video{display:block;height:72vh;max-height:850px;max-width:95vw;width:auto}canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}aside{max-width:430px;flex:1;min-width:260px}.buttons{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}button{font:inherit;border:1px solid #748c80;background:#1b2d25;color:#effaf4;border-radius:6px;padding:10px;cursor:pointer}button:focus-visible{outline:3px solid white;outline-offset:3px}.a{border-color:#71baff}.b{border-color:#ffa77d}output{display:block;white-space:pre-wrap;background:#1b2923;padding:14px;border-radius:6px;line-height:1.5}.small{font-size:13px}strong{color:#edf8f1}
+</style>
+<main><h1>Which outline is the actual room doorway?</h1><p>The detector produced two competing regions. Choose the opening a person crosses to enter or leave. The boxes are proposals, not confirmed geometry.</p>
+<section><div class="stage"><video id="video" controls playsinline preload="metadata" src="http://localhost:8103/api/clips/X-11/video"></video><canvas id="overlay" aria-hidden="true"></canvas></div>
+<aside><p><strong>A is blue. B is orange.</strong> If neither outline fits, drag the doorway rectangle yourself.</p>
+<div class="buttons"><button class="a" id="chooseA">A · blue</button><button class="b" id="chooseB">B · orange</button><button id="custom">Draw the doorway</button></div>
+<output id="answer" aria-live="polite">Watch the video, then choose A or B. Reply in the chat with your choice.</output>
+<div class="buttons"><button data-t="0">Start</button><button data-t="10">10 seconds</button><button data-t="17">17 seconds</button></div>
+<p class="small">This is a geometry review for the fixed camera. No verdict, annotation text, or video timestamp will become a runtime rule. The video streams through the existing local service.</p>
+<p class="small" id="error"></p></aside></section></main>
+<script>
+const regions={A:[0,0.025630159198113206,0.33512931034482757,0.5801886792452831],B:[0.20218211206896552,0.023566479952830188,0.5522629310344828,0.486438679245283]};
+const video=document.getElementById('video'),canvas=document.getElementById('overlay'),answer=document.getElementById('answer');
+let custom=null,start=null,drawing=false;
+function paint(){const dpr=window.devicePixelRatio||1;canvas.width=Math.round(canvas.clientWidth*dpr);canvas.height=Math.round(canvas.clientHeight*dpr);const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.font=`bold ${15*dpr}px system-ui`;ctx.lineWidth=3*dpr;for(const [name,box] of Object.entries({...regions,...(custom?{Custom:custom}:{})})){const [a,b,c,d]=box,color=name==='A'?'#71baff':name==='B'?'#ffa77d':'#90e7b8';ctx.strokeStyle=color;ctx.strokeRect(a*canvas.width,b*canvas.height,(c-a)*canvas.width,(d-b)*canvas.height);ctx.fillStyle=color;ctx.fillRect(a*canvas.width,Math.max(0,b*canvas.height),80*dpr,24*dpr);ctx.fillStyle='#10231a';ctx.fillText(name,a*canvas.width+6*dpr,b*canvas.height+18*dpr);}}
+function choose(name,box){answer.textContent=`Selected ${name}\nDoor rectangle: [${box.map(x=>x.toFixed(4)).join(', ')}]\nReply in the chat with ${name==='Custom'?'these coordinates':name}.`;}
+document.getElementById('chooseA').onclick=()=>choose('A',regions.A);document.getElementById('chooseB').onclick=()=>choose('B',regions.B);
+document.getElementById('custom').onclick=()=>{video.pause();drawing=true;canvas.style.pointerEvents='auto';canvas.style.cursor='crosshair';answer.textContent='Drag from one corner of the actual doorway to its opposite corner.';};
+function point(e){const r=canvas.getBoundingClientRect();return[Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))];}
+canvas.onpointerdown=e=>{if(!drawing)return;start=point(e);canvas.setPointerCapture(e.pointerId);};canvas.onpointermove=e=>{if(!start)return;const p=point(e);custom=[Math.min(start[0],p[0]),Math.min(start[1],p[1]),Math.max(start[0],p[0]),Math.max(start[1],p[1])];paint();};
+canvas.onpointerup=e=>{if(!start)return;canvas.onpointermove(e);start=null;drawing=false;canvas.style.pointerEvents='none';if(custom[2]-custom[0]>.01&&custom[3]-custom[1]>.01)choose('Custom',custom);else answer.textContent='That rectangle is too small. Choose Draw the doorway and try again.';};
+for(const button of document.querySelectorAll('[data-t]'))button.onclick=()=>{video.currentTime=Number(button.dataset.t);video.pause();};
+video.addEventListener('loadedmetadata',paint);window.addEventListener('resize',paint);video.addEventListener('error',()=>{document.getElementById('error').textContent='The video could not load. Check that http://localhost:8103/annotate is available.';});
+</script></html>

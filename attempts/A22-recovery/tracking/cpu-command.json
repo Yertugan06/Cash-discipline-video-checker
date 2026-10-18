@@ -1,0 +1,22 @@
+[
+  "/usr/bin/nice",
+  "-n",
+  "10",
+  "/usr/bin/env",
+  "RULE_SCOPE=detector",
+  "OMP_NUM_THREADS=2",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/tracking/run_probe.py",
+  "--base",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "--cache",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache",
+  "--videos",
+  "/home/ubuntu/data/open/videos",
+  "--module",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/backend/f1/temporal_refinement.py",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/tracking/focused-results",
+  "--budget-sec",
+  "480"
+]

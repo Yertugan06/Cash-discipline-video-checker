@@ -1,0 +1,492 @@
+--- a/backend/f1/visual_checks.py
++++ b/backend/f1/visual_checks.py
+@@ -38,6 +38,7 @@
+ 
+ from pydantic import BaseModel, ConfigDict, Field
+ 
++from backend.f1.llm_context import build_llm_context
+ from backend.f1.vision_types import Box, Event, Observation, Scene, State, center, contains
+ 
+ if TYPE_CHECKING:
+@@ -142,6 +143,22 @@
+     window_start: float | None = None
+     window_end: float | None = None
+     parent_trigger: str = ""
++    context_json: str = ""
++
++    @property
++    def prompt(self) -> str:
++        question = QUESTIONS[self.family][0]
++        if not self.context_json:
++            return question
++        return (
++            "Auxiliary CV geometry may be wrong. Coordinates are normalized to the full frame, "
++            "not the crop. It supplies no state answer or proof of absence/active use.\n"
++            + self.context_json
++            + "\n\n"
++            + question
++            + " Base the answer on the visible image, not CV expectations. "
++            "If obscured, answer unknown."
++        )
+ 
+ 
+ def plan_checks(
+@@ -365,7 +382,7 @@
+         payload = {
+             "frame": str(frame.resolve()),
+             "box": request.box,
+-            "prompt": QUESTIONS[request.family][0],
++            "prompt": request.prompt,
+             "deadline": deadline,
+             "options": self.options.model_dump(mode="json"),
+             "lock_held": self.lock_held,
+@@ -441,7 +458,7 @@
+         "video_sha256": checksum,
+         "model": identity,
+         "request": asdict(request),
+-        "prompt": QUESTIONS[request.family][0],
++        "prompt": request.prompt,
+         "schema": question_schema(request.family),
+         "fps": fps,
+         "frame_sha256": frame_sha256,
+@@ -545,7 +562,7 @@
+                 "applied": False,
+                 "diagnostic_only": request.family == "door",
+                 "elapsed_video_s": round(time.monotonic() - started, 4),
+-                "prompt_sha256": _digest(QUESTIONS[request.family][0]),
++                "prompt_sha256": _digest(request.prompt),
+             }
+             evidence.append(record)
+             t0 = time.monotonic()
+@@ -562,6 +579,35 @@
+                 record["error"] = unavailable
+                 continue
+             try:
++                cv_context = build_llm_context(scene, observations, log, request.t)
++                # Keep classifier states/events in diagnostics, outside the visible-state prompt.
++                grounding = {
++                    "target_t": cv_context["target_t"],
++                    "window": {
++                        key: cv_context["window"][key]
++                        for key in (
++                            "start",
++                            "end",
++                            "available_observation_extent",
++                            "target_sample_exists",
++                            "observation_gap_intervals",
++                        )
++                    },
++                    "scene_objects": cv_context["scene"]["objects"],
++                    "actors": [
++                        {"track_id": actor["track_id"], "sample": actor["sample"]}
++                        for actor in cv_context["actors"]
++                    ],
++                }
++                request = replace_request(
++                    request,
++                    context_json=json.dumps(
++                        grounding, sort_keys=True, separators=(",", ":"), allow_nan=False
++                    ),
++                )
++                record.update(
++                    asdict(request), cv_context=cv_context, prompt_sha256=_digest(request.prompt)
++                )
+                 if identity is None:
+                     identity = model.identity()
+                 record["source"] = f"{identity['backend']}:{identity['files_sha256']}"
+--- /dev/null
++++ b/backend/f1/llm_context.py
+@@ -0,0 +1,282 @@
++"""Bounded numeric CV context; no inference, verdicts, labels or financial ownership."""
++
++from __future__ import annotations
++
++import json
++import math
++from collections import defaultdict
++from collections.abc import Sequence
++from itertools import pairwise
++from statistics import median
++from typing import TYPE_CHECKING
++
++if TYPE_CHECKING:
++    from backend.f1.events import EventLog
++    from backend.f1.vision_types import Observation, Scene
++
++
++def build_llm_context(
++    scene: Scene,
++    observations: Sequence[Observation],
++    log: EventLog,
++    target_t: float,
++    window_s: float = 5,
++) -> dict:
++    """Return facts in a centered window of total width window_s, capped at 16 KB.
++
++    Scores/boxes come from the supplied objects; no new state, role or relation is
++    classified here. Source model identity is unavailable in the current schema.
++    """
++    if (
++        isinstance(target_t, bool)
++        or not math.isfinite(target_t)
++        or target_t < 0
++        or isinstance(window_s, bool)
++        or not math.isfinite(window_s)
++        or window_s <= 0
++    ):
++        raise ValueError("target_t must be finite/nonnegative and window_s finite/positive")
++    invalid_numbers = 0
++
++    def clean(value):
++        nonlocal invalid_numbers
++        if isinstance(value, float) and not math.isfinite(value):
++            invalid_numbers += 1
++            return None
++        if isinstance(value, str):
++            return value[:160]
++        if isinstance(value, dict):
++            return {str(k)[:64]: clean(v) for k, v in value.items()}
++        if isinstance(value, tuple | list):
++            return [clean(v) for v in value]
++        return value
++
++    def detection(d, t=None):
++        result = {"label": d.label, "box": d.box, "score": d.score}
++        if t is not None:
++            result["t"] = t
++        result["box_valid"] = (
++            all(math.isfinite(x) and 0 <= x <= 1 for x in d.box)
++            and d.box[0] < d.box[2]
++            and d.box[1] < d.box[3]
++        )
++        return result
++
++    ordered = sorted(
++        (o for o in observations if math.isfinite(o.timestamp_sec)),
++        key=lambda o: o.timestamp_sec,
++    )
++    times = sorted({o.timestamp_sec for o in ordered})
++    step = median(b - a for a, b in pairwise(times)) if len(times) > 1 else None
++    start, end = max(0, target_t - window_s / 2), target_t + window_s / 2
++    window = [o for o in ordered if start <= o.timestamp_sec <= end]
++    selected = sorted(
++        sorted(window, key=lambda o: (abs(o.timestamp_sec - target_t), o.timestamp_sec))[:11],
++        key=lambda o: o.timestamp_sec,
++    )
++    history = defaultdict(list)
++    visible = set()
++    for observation in ordered:
++        for d in observation.detections:
++            if d.track_id:
++                history[d.label, d.track_id].append((observation.timestamp_sec, d))
++                if start <= observation.timestamp_sec <= end:
++                    visible.add((d.label, d.track_id))
++    tracks = {"actors": [], "objects": []}
++    omitted = {"samples": len(window) - len(selected), "actors": 0, "objects": 0, "events": 0}
++    for label, track_id in sorted(visible):
++        seen = history[label, track_id]
++        local = [(t, d) for t, d in seen if start <= t <= end]
++        t, current = min(local, key=lambda pair: (abs(pair[0] - target_t), pair[0]))
++        kind, limit = ("actors", 6) if label == "person" else ("objects", 12)
++        if len(tracks[kind]) >= limit:
++            omitted[kind] += 1
++            continue
++        gaps = [
++            [a[0], b[0]]
++            for a, b in pairwise(seen)
++            if a[0] <= end and b[0] >= start and step is not None and b[0] - a[0] > step * 1.5
++        ]
++        item = {
++            "track_id": track_id,
++            "sample": detection(current, t),
++            "first_observation": detection(seen[0][1], seen[0][0]),
++            "last_observation": detection(seen[-1][1], seen[-1][0]),
++            "gap_intervals": gaps[:6],
++            "gaps_omitted": max(0, len(gaps) - 6),
++            "observation_count": len(seen),
++            "extent_scope": "available cached observations; no interpolation across gaps",
++            "source": "Observation.detections; tracker identity, not persistent visual identity",
++        }
++        if kind == "actors":
++            item.update(
++                role=current.role,
++                role_source="EventBuilder geometric/trajectory assignment; not verified identity",
++                role_samples=[[at, d.role] for at, d in local][:11],
++            )
++        else:
++            item["financial_owner"] = "not established by track/session association"
++        tracks[kind].append(item)
++
++    fact_keys = {
++        "actor_id",
++        "role",
++        "track_id",
++        "object",
++        "kind",
++        "from_id",
++        "to_id",
++        "from_role",
++        "to_role",
++        "cash_id",
++        "session_id",
++        "client_id",
++        "client_ids",
++        "location",
++        "previous_location",
++        "counted",
++        "bag_open_seen",
++        "observed_entry",
++        "box",
++        "duration_sec",
++        "end_reason",
++        "condition_id",
++        "window_end",
++        "source",
++        "fixture",
++        "fixture_id",
++        "near",
++        "near_fixture",
++        "active_use",
++        "active_handling",
++        "evidence_kind",
++        "physical_stacking",
++    }
++    events = sorted(
++        (e for e in log.events if start <= e.timestamp_sec <= end),
++        key=lambda e: (abs(e.timestamp_sec - target_t), e.timestamp_sec),
++    )
++    omitted["events"] = max(0, len(events) - 16)
++    samples = [
++        {
++            "t": o.timestamp_sec,
++            "detection_count": len(o.detections),
++            "untracked_detection_count": sum(not d.track_id for d in o.detections),
++            "state_samples": {
++                key: {"value": state.value, "score": state.score, "margin": state.margin}
++                for key, state in sorted(
++                    o.states.items(),
++                    key=lambda pair: (
++                        pair[0] not in {"safe", "door", "laptop", "counter"},
++                        pair[0],
++                    ),
++                )[:8]
++            },
++            "states_omitted": max(0, len(o.states) - 8),
++            "source": "Observation.states; classifier identity not recorded per sample",
++        }
++        for o in selected
++    ]
++    result = clean(
++        {
++            "schema_version": 1,
++            "target_t": target_t,
++            "window": {
++                "start": start,
++                "end": end,
++                "available_observation_extent": [times[0], times[-1]] if times else None,
++                "target_sample_exists": target_t in times,
++                "extends_beyond_available_observations": bool(not times or end > times[-1]),
++                "recording_end_verified": False,
++                "sampling_step_estimate_s": step,
++                "invalid_observation_timestamps": len(observations) - len(ordered),
++                "boundary_events": [
++                    {
++                        "t": event.timestamp_sec,
++                        "type": event.type,
++                        "end_reason": event.facts["end_reason"],
++                    }
++                    for event in sorted(events, key=lambda event: event.timestamp_sec)
++                    if event.facts.get("end_reason") in {"clip_end", "observation_gap"}
++                ][:8],
++                "observation_gap_intervals": [
++                    [a, b]
++                    for a, b in pairwise(times)
++                    if a <= end and b >= start and step and b - a > step * 1.5
++                ][:12],
++            },
++            "scene": {
++                "source": "Scene calibration; exact model identity not recorded",
++                "confidence": scene.confidence,
++                "objects": {name: detection(d) for name, d in sorted(scene.objects.items())[:12]},
++                "objects_omitted": max(0, len(scene.objects) - 12),
++                "zones": {name: points[:8] for name, points in sorted(scene.zones.items())[:8]},
++                "cashier_position": scene.cashier_position,
++                "cashier_direction": scene.cashier_direction,
++                "warning_count": len(scene.warnings),
++            },
++            "actors": tracks["actors"],
++            "object_tracks": tracks["objects"],
++            "samples": samples,
++            "events": [
++                {
++                    "t": e.timestamp_sec,
++                    "type": e.type,
++                    "evidence_kind": "event_builder_inference_or_proxy",
++                    "source": "backend.f1.events",
++                    "facts": {key: value for key, value in e.facts.items() if key in fact_keys},
++                }
++                for e in sorted(events[:16], key=lambda e: e.timestamp_sec)
++            ],
++            "coverage_flags": {
++                key: value
++                for key, value in log.coverage.items()
++                if key in {"roles", "desk", "hands", "cash", "safe", "door", "laptop", "counter"}
++            },
++            "warning_count": len(log.warnings),
++            "interpretation": {
++                "empty_detection": "no detection; occlusion/miss/absence unresolved",
++                "gap": "not observed between samples; not proof of absence or continuity",
++                "location_hand_or_handover": (
++                    "geometric near-hand/transition proxy, not proven possession/transfer"
++                ),
++                "session_id": "observed-in-session association, not verified financial ownership",
++                "safe_attendance": (
++                    "geometric proximity, not active handling or mechanical lock evidence"
++                ),
++                "state_samples": "classifier outputs at exact times; no propagation across gaps",
++                "coverage_flags": "reliability flags; false is not observed object absence",
++                "clip_end": (
++                    "retain event end_reason; last observation alone does not prove recording end"
++                ),
++            },
++            "omitted": omitted,
++            "limits": {
++                "serialized_bytes": 16000,
++                "samples": 11,
++                "actors": 6,
++                "object_tracks": 12,
++                "events": 16,
++            },
++        }
++    )
++    result["invalid_numeric_values"] = invalid_numbers
++    # shortcut: capped history omits motion detail; expand after a measured evidence/latency check.
++    while (
++        len(json.dumps(result, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode())
++        > 16000
++    ):
++        for key in ("events", "object_tracks", "actors", "samples"):
++            if len(result[key]) > (1 if key == "samples" else 0):
++                if key == "samples":
++                    index = max(
++                        range(len(result[key])), key=lambda i: abs(result[key][i]["t"] - target_t)
++                    )
++                    result[key].pop(index)
++                else:
++                    result[key].pop()
++                result["omitted"][{"object_tracks": "objects"}.get(key, key)] += 1
++                break
++        else:
++            raise ValueError("scene context exceeds 16000-byte budget")
++    return result
+--- /dev/null
++++ b/tests/test_llm_context.py
+@@ -0,0 +1,108 @@
++import json
++
++import pytest
++
++from backend.f1.events import EventLog
++from backend.f1.llm_context import build_llm_context
++from backend.f1.vision_types import Detection, Event, Observation, Scene, State
++
++
++def test_exact_samples_track_gaps_and_proxy_semantics():
++    person = Detection(
++        label="person", score=0.9, box=(0.1, 0.1, 0.3, 0.6), track_id="p1", role="cashier"
++    )
++    cash = Detection(label="cash", score=0.4, box=(0.2, 0.4, 0.3, 0.5), track_id="c1")
++    scene = Scene(objects={"safe": Detection(label="safe", score=0.3, box=(0.5, 0.2, 0.8, 0.6))})
++    observations = [
++        Observation(
++            timestamp_sec=t,
++            detections=[person, cash] if t in {0, 2} else [],
++            states={"safe": State(value="open", score=0.6, margin=0.1)} if t == 0.5 else {},
++        )
++        for t in (0, 0.5, 1, 1.5, 2)
++    ]
++    log = EventLog(
++        [
++            Event(
++                timestamp_sec=1,
++                type="HANDOVER",
++                facts={
++                    "location": "hand:p1",
++                    "session_id": "session-1",
++                    "annotation": "DO_NOT_COPY",
++                    "near": True,
++                },
++            ),
++            Event(timestamp_sec=2, type="WORKSTATION_AWAY_END", facts={"end_reason": "clip_end"}),
++        ],
++        {"safe": False},
++        [],
++        {},
++    )
++    result = build_llm_context(scene, observations, log, 1, window_s=4)
++    assert result["object_tracks"][0]["gap_intervals"] == [[0, 2]]
++    assert result["object_tracks"][0]["first_observation"]["t"] == 0
++    assert result["object_tracks"][0]["last_observation"]["t"] == 2
++    assert result["actors"][0]["role"] == "cashier"
++    assert "geometric" in result["actors"][0]["role_source"]
++    assert result["samples"][1]["state_samples"]["safe"] == {
++        "value": "open",
++        "score": 0.6,
++        "margin": 0.1,
++    }
++    assert result["samples"][2]["state_samples"] == {}
++    assert result["events"][0]["evidence_kind"] == "event_builder_inference_or_proxy"
++    assert result["events"][0]["facts"]["near"] is True
++    assert result["events"][1]["facts"]["end_reason"] == "clip_end"
++    assert result["window"]["boundary_events"][0]["end_reason"] == "clip_end"
++    assert "not proven possession" in result["interpretation"]["location_hand_or_handover"]
++    assert result["window"]["recording_end_verified"] is False
++    assert "DO_NOT_COPY" not in json.dumps(result, allow_nan=False)
++
++
++def test_budget_and_nonfinite_values_are_explicit():
++    scene = Scene.model_construct(
++        objects={},
++        zones={},
++        cashier_direction=None,
++        cashier_position=None,
++        confidence=float("nan"),
++        warnings=[],
++    )
++    detections = [
++        Detection(label="cash", track_id=f"c{i}", score=0.4, box=(0.1, 0.1, 0.2, 0.2))
++        for i in range(30)
++    ]
++    observations = [
++        Observation(
++            timestamp_sec=t / 2,
++            detections=detections,
++            states={"safe": State(value="closed", score=0.6, margin=0.1)},
++        )
++        for t in range(30)
++    ]
++    log = EventLog(
++        [
++            Event(timestamp_sec=t / 2, type="CASH_STATE", facts={"location": "desk"})
++            for t in range(30)
++        ],
++        {},
++        [],
++        {},
++    )
++    result = build_llm_context(scene, observations, log, 7, window_s=20)
++    assert (
++        len(json.dumps(result, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode())
++        <= 16000
++    )
++    assert result["scene"]["confidence"] is None
++    assert result["invalid_numeric_values"] == 1
++    assert result["omitted"]["objects"] >= 18
++    assert result["omitted"]["samples"] > 0
++    assert any(sample["t"] == 7 for sample in result["samples"])
++
++
++@pytest.mark.parametrize("target,window", [(float("nan"), 5), (1, 0)])
++def test_invalid_window_fails(target, window):
++    with pytest.raises(ValueError):
++        build_llm_context(Scene(objects={}), [], EventLog([], {}, [], {}), target, window)

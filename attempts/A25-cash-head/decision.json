@@ -1,0 +1,29 @@
+{
+  "attempt": "A25",
+  "status": "trained_not_promoted",
+  "decision": "reject_promotion",
+  "reason": "Train underfit reduced; all four probe decisions unchanged and both negatives unknown. No demonstrated probe gain.",
+  "actual_cpu_seconds": 9.300682551998761,
+  "selected_lambda": 0.01,
+  "a24_byte_identical": true,
+  "train_confusion": {
+    "tp": 4,
+    "tn": 3,
+    "fp": 0,
+    "fn": 0,
+    "unknown_positive": 1,
+    "unknown_negative": 0
+  },
+  "probe_confusion": {
+    "tp": 1,
+    "tn": 0,
+    "fp": 0,
+    "fn": 0,
+    "unknown_positive": 1,
+    "unknown_negative": 2
+  },
+  "a24_probe_already_seen": true,
+  "head_sha256": "021d6fda04143f2e29a4c0c066590157e56b9c71efc802d784a164388710727f",
+  "selection_sha256": "dddc6d00edc3a50fcc34409c072553f9d2944dddd068c22b6a37c18cbb8f3d1b",
+  "report_sha256": "09aef6fe742252df4a6172cc94d128cfd4d676c586ca01a7c6d7bd9a006a9d48"
+}

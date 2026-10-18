@@ -1,0 +1,96 @@
+--- a/backend/f1/visual_checks.py
++++ b/backend/f1/visual_checks.py
+@@ -38,6 +38,7 @@
+ 
+ from pydantic import BaseModel, ConfigDict, Field
+ 
++from backend.f1.llm_context import build_llm_context
+ from backend.f1.vision_types import Box, Event, Observation, Scene, State, center, contains
+ 
+ if TYPE_CHECKING:
+@@ -142,6 +143,22 @@
+     window_start: float | None = None
+     window_end: float | None = None
+     parent_trigger: str = ""
++    context_json: str = ""
++
++    @property
++    def prompt(self) -> str:
++        question = QUESTIONS[self.family][0]
++        if not self.context_json:
++            return question
++        return (
++            "Auxiliary CV geometry may be wrong. Coordinates are normalized to the full frame, "
++            "not the crop. It supplies no state answer or proof of absence/active use.\n"
++            + self.context_json
++            + "\n\n"
++            + question
++            + " Base the answer on the visible image, not CV expectations. "
++            "If obscured, answer unknown."
++        )
+ 
+ 
+ def plan_checks(
+@@ -365,7 +382,7 @@
+         payload = {
+             "frame": str(frame.resolve()),
+             "box": request.box,
+-            "prompt": QUESTIONS[request.family][0],
++            "prompt": request.prompt,
+             "deadline": deadline,
+             "options": self.options.model_dump(mode="json"),
+             "lock_held": self.lock_held,
+@@ -441,7 +458,7 @@
+         "video_sha256": checksum,
+         "model": identity,
+         "request": asdict(request),
+-        "prompt": QUESTIONS[request.family][0],
++        "prompt": request.prompt,
+         "schema": question_schema(request.family),
+         "fps": fps,
+         "frame_sha256": frame_sha256,
+@@ -545,7 +562,7 @@
+                 "applied": False,
+                 "diagnostic_only": request.family == "door",
+                 "elapsed_video_s": round(time.monotonic() - started, 4),
+-                "prompt_sha256": _digest(QUESTIONS[request.family][0]),
++                "prompt_sha256": _digest(request.prompt),
+             }
+             evidence.append(record)
+             t0 = time.monotonic()
+@@ -562,6 +579,35 @@
+                 record["error"] = unavailable
+                 continue
+             try:
++                cv_context = build_llm_context(scene, observations, log, request.t)
++                # Keep classifier states/events in diagnostics, outside the visible-state prompt.
++                grounding = {
++                    "target_t": cv_context["target_t"],
++                    "window": {
++                        key: cv_context["window"][key]
++                        for key in (
++                            "start",
++                            "end",
++                            "available_observation_extent",
++                            "target_sample_exists",
++                            "observation_gap_intervals",
++                        )
++                    },
++                    "scene_objects": cv_context["scene"]["objects"],
++                    "actors": [
++                        {"track_id": actor["track_id"], "sample": actor["sample"]}
++                        for actor in cv_context["actors"]
++                    ],
++                }
++                request = replace_request(
++                    request,
++                    context_json=json.dumps(
++                        grounding, sort_keys=True, separators=(",", ":"), allow_nan=False
++                    ),
++                )
++                record.update(
++                    asdict(request), cv_context=cv_context, prompt_sha256=_digest(request.prompt)
++                )
+                 if identity is None:
+                     identity = model.identity()
+                 record["source"] = f"{identity['backend']}:{identity['files_sha256']}"

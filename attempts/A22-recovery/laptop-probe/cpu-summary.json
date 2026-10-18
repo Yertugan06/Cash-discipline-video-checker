@@ -1,0 +1,13 @@
+{
+  "status": "CPU_PREPARED",
+  "cases": 8,
+  "sequences": 9,
+  "samples": 37,
+  "no_trigger": [
+    20,
+    21
+  ],
+  "elapsed_sec": 4.176322822000657,
+  "gpu_run": "not_run",
+  "states": "unmeasured"
+}

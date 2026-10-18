@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "checked": [
+    "actual head dimension 3840",
+    "48 references from train8 only",
+    "train/probe SHA disjoint",
+    "current source/preregister hashes match run",
+    "label manifest hash matches snapshot",
+    "finite JSON and class map"
+  ],
+  "head_sha256": "0d8a0ebf4f0072f713954f682068257bdd7ad3b9a07feff054bb485eebc28275",
+  "cpu_run_exit_code": 0
+}

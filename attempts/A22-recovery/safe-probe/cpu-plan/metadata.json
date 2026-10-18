@@ -1,0 +1,10 @@
+{
+  "manifest_sha256": "52fc665dd5ceca52bdb90bed1d14160fd923d46f336df61ed20cd4bbf28ca02f",
+  "script_sha256": "a46418b5d2a5b5924d272401e2351bd9c8a1bc695ec30f759fcb3b90026b8455",
+  "base": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "status": "planned",
+  "model": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/Qwen3-VL-8B-Instruct",
+  "worker_python": "/home/ubuntu/workspaces/datathon26-workers/worker-2/.venv/bin/python",
+  "images_leave_vm": false,
+  "labels_used_by_selector_or_model": false
+}

@@ -1,0 +1,888 @@
+{
+  "model": "Qwen/Qwen3-VL-8B-Instruct",
+  "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+  "precision": "bfloat16",
+  "attention": "sdpa",
+  "offline_only": true,
+  "max_queries": 24,
+  "max_new_tokens": 32,
+  "max_call_sec": 15,
+  "total_sec": 240,
+  "source_native_context_size": [
+    128,
+    128
+  ],
+  "processor_size": {
+    "shortest_edge": 65536,
+    "longest_edge": 1048576
+  },
+  "overlay": "red RGB255,0,0 width2; actual NN box only; full frame and context crop, no labels/text",
+  "classes": [
+    "banknotes",
+    "cloth_personal_item",
+    "id_card",
+    "other",
+    "paper_document",
+    "phone",
+    "unknown"
+  ],
+  "prompt": "Image 1 is the full frame. Image 2 is a 128-pixel native context crop of the same location. A red rectangle in both images marks exactly one target object. Classify only the visible object inside that rectangle, ignoring other objects elsewhere. Choose one class: banknotes, id_card, phone, paper_document, cloth_personal_item, other, unknown. Use banknotes only for clearly recognizable banknotes or banknote bundles; use id_card only for a clearly recognizable identity card. A plain rectangle is insufficient. Use unknown if the target is unclear or occluded. Return only JSON with exactly one key: {\"class\":\"unknown\"}.",
+  "selection": "Per-frame interleave ranked successful finite normal-size native-OWL and DINO NN proposals; NN cash/bundle/id_card only, both box dimensions <=128 original pixels; descending detector score then call index then box; geometry IoU>=0.5 suppresses duplicates independent of NN class. Round robin across all 20 input frame rows, at most24 queries. No expected labels consulted.",
+  "no_proposal": [],
+  "input_hashes": {
+    "native": "7450ef190a5ba4d749923821c64f32b168876bf6e7c4a83f4727454f171a6954",
+    "dino": "19033620d9b7d2cd54e489af385595e8dae4950da2db781c7c6716ead802f520"
+  },
+  "queries": [
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.5168577432632446,
+        "box": [
+          0.29324830811599206,
+          0.5212925605054172,
+          0.33703070673449287,
+          0.5368904977474572
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 56.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-4",
+      "t": 56.0,
+      "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.4113468527793884,
+        "box": [
+          0.28310025971511316,
+          0.4521955094247494,
+          0.4045696916251347,
+          0.5027865283894088
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 16.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-23",
+      "t": 16.0,
+      "sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.4617873728275299,
+        "box": [
+          0.28587403790704136,
+          0.43711742365135337,
+          0.4453415048533472,
+          0.4775681495666504
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 1,
+      "source_crop": [
+        0,
+        338,
+        353,
+        515
+      ],
+      "source_proposal": "desk",
+      "proposal_seed_t": null,
+      "nn_inference_t": 17.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-15",
+      "t": 17.0,
+      "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.5208314657211304,
+        "box": [
+          0.29768318965517243,
+          0.462780070754717,
+          0.34698275862068967,
+          0.48724941037735847
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 3,
+      "source_crop": [
+        92,
+        338,
+        220,
+        466
+      ],
+      "source_proposal": "neural_seed:id_card",
+      "proposal_seed_t": 30.0,
+      "nn_inference_t": 30.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-38",
+      "t": 30.0,
+      "sha256": "5a6f6a13ef88191ec1d9a2a303f1be74d16aa3381a57aaadba8850aac715ff10",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.40188199281692505,
+        "box": [
+          0.15071862319420123,
+          0.20215144247378944,
+          0.21811133417589912,
+          0.218377671151791
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 16.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-29",
+      "t": 16.0,
+      "sha256": "b9bfb76ac8ea47eb368fc78a2f6370e4d98e79185972f63cf301ee22f12b5941",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.366196870803833,
+        "box": [
+          0.12068242862306792,
+          0.5578548863249005,
+          0.18000528730195145,
+          0.5871698991307672
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 6.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-17",
+      "t": 6.0,
+      "sha256": "0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.5,
+        "box": [
+          0.4431573275862069,
+          0.46823408018867924,
+          0.5149515086206896,
+          0.4850383254716981
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 4,
+      "source_crop": [
+        163,
+        332,
+        291,
+        460
+      ],
+      "source_proposal": "fixture_desk_grid",
+      "proposal_seed_t": null,
+      "nn_inference_t": 15.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-26",
+      "t": 15.0,
+      "sha256": "e3a00b6e0f38b1d9b5498140f14906c71e204359262a90ce7a9974d64bf081e9",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.49632516503334045,
+        "box": [
+          0.09979031825887746,
+          0.4575621406987028,
+          0.20891737115794215,
+          0.4990013410460274
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 2.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-32",
+      "t": 2.0,
+      "sha256": "bcc277cbf1a36245156b2bb9a0e0b826432390b42040c0b82201a8c21ab23ce9",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.3673246502876282,
+        "box": [
+          0.28381712683315935,
+          0.45329979230772777,
+          0.4038186237729829,
+          0.5023142616703825
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 6.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-20",
+      "t": 6.0,
+      "sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.4001631736755371,
+        "box": [
+          0.38914331896551724,
+          0.43871609669811323,
+          0.4387122844827586,
+          0.45857900943396224
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 7,
+      "source_crop": [
+        82,
+        311,
+        210,
+        439
+      ],
+      "source_proposal": "pose_wrist",
+      "proposal_seed_t": 8.0,
+      "nn_inference_t": 8.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-10",
+      "t": 8.0,
+      "sha256": "57a0e46c7a45f0e831f61d9c80722fefe4b74dbcfe1d3031ff58307d481f9a5c",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.4505806565284729,
+        "box": [
+          0.5664370306606951,
+          0.480769193397378,
+          0.5974465074210331,
+          0.49069761780073057
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 1,
+      "source_crop": [
+        18,
+        358,
+        369,
+        454
+      ],
+      "source_proposal": "desk",
+      "proposal_seed_t": null,
+      "nn_inference_t": 2.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-33",
+      "t": 2.0,
+      "sha256": "209e8aaca88df59064e5f28b3bcc489fee3eea9eb920889b69c03c83d52430c6",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.4117140471935272,
+        "box": [
+          0.3269767761230469,
+          0.4770425760521079,
+          0.4462913315871666,
+          0.5264834278034713
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 12.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-28",
+      "t": 12.0,
+      "sha256": "d15ef04bcfae571bd2d7fc4e4d709ba595ae19f44136a43e7277f17e7b6e5b6d",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.6601723432540894,
+        "box": [
+          0.3132408405172414,
+          0.5010318396226415,
+          0.3828125,
+          0.5225530660377359
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 4,
+      "source_crop": [
+        95,
+        336,
+        223,
+        464
+      ],
+      "source_proposal": "pose_wrist",
+      "proposal_seed_t": 10.0,
+      "nn_inference_t": 9.8,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-2",
+      "t": 9.8,
+      "sha256": "9932ae0a10d3b9371bf52ea558dc19092fcf47adcd275a73a52a56b95464bca6",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.18787656724452972,
+        "box": [
+          0.28704202586206895,
+          0.3212706367924528,
+          0.3147898706896552,
+          0.35885908018867924
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 3,
+      "source_crop": [
+        57,
+        223,
+        185,
+        351
+      ],
+      "source_proposal": "pose_wrist",
+      "proposal_seed_t": 21.0,
+      "nn_inference_t": 21.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-11",
+      "t": 21.0,
+      "sha256": "b3a954a5b761ad47943e061599315e3fe9d22573eeb92bb14bf315cdcd422fc5",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.28636878728866577,
+        "box": [
+          0.3011179956896552,
+          0.5235112028301887,
+          0.3330414870689655,
+          0.5376621462264151
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 5,
+      "source_crop": [
+        93,
+        338,
+        221,
+        466
+      ],
+      "source_proposal": "pose_wrist",
+      "proposal_seed_t": 16.0,
+      "nn_inference_t": 16.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-1",
+      "t": 16.0,
+      "sha256": "8911a9219b9433091824e553a70bb80335f075fd8ac982d2062d2ecf023c16bc",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "bundle",
+        "score": 0.13006426393985748,
+        "box": [
+          0.41150323275862066,
+          0.4115566037735849,
+          0.47629310344827586,
+          0.4659492924528302
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 5,
+      "source_crop": [
+        153,
+        292,
+        281,
+        420
+      ],
+      "source_proposal": "pose_wrist",
+      "proposal_seed_t": 18.0,
+      "nn_inference_t": 18.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-40",
+      "t": 18.0,
+      "sha256": "6a81739ced0efdcd4a4feb76ea16562a20ceb53a2232a801528716c450366c9f",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.43812400102615356,
+        "box": [
+          0.3883351293103448,
+          0.43617334905660377,
+          0.4403286637931034,
+          0.4591686320754717
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 9,
+      "source_crop": [
+        110,
+        312,
+        238,
+        440
+      ],
+      "source_proposal": "fixture_desk_grid",
+      "proposal_seed_t": null,
+      "nn_inference_t": 30.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-13",
+      "t": 30.0,
+      "sha256": "a37930cf119bb691be77d8624b18333b04d9c67066a7f4627d63e3208dfa6057",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.4201236963272095,
+        "box": [
+          0.30778556034482757,
+          0.47390919811320753,
+          0.3856411637931034,
+          0.49410377358490565
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 7,
+      "source_crop": [
+        108,
+        333,
+        236,
+        461
+      ],
+      "source_proposal": "fixture_desk_grid",
+      "proposal_seed_t": null,
+      "nn_inference_t": 13.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-46",
+      "t": 13.0,
+      "sha256": "66fc5d28c2371592f9260305589bdc86636fdd2ebe7a7ec976eec00a23d43df4",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.49369460344314575,
+        "box": [
+          0.3508216594827586,
+          0.5033534787735849,
+          0.40247844827586204,
+          0.5274911556603774
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "owlv2_native128",
+      "call_index": 2,
+      "source_crop": [
+        116,
+        375,
+        244,
+        503
+      ],
+      "source_proposal": "neural_seed:id_card",
+      "proposal_seed_t": 60.0,
+      "nn_inference_t": 60.0,
+      "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+      "clip": "X-14",
+      "t": 60.0,
+      "sha256": "7d6890ecb4a2b28bbdd3b61b6711566eee84a53ab3439c40cd9b6a3a6714c681",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.529081404209137,
+        "box": [
+          0.389622293669602,
+          0.4414449727760171,
+          0.5107482055137897,
+          0.4849131242284235
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 3.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-24",
+      "t": 3.0,
+      "sha256": "c175a683749401d5a9ecf6f1c188b64fa8a09543f41482c1e4eb2232255715d3",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.34092503786087036,
+        "box": [
+          0.11112944011030526,
+          0.5622528813919931,
+          0.1596726549082789,
+          0.5705472658265311
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 1,
+      "source_crop": [
+        0,
+        402,
+        342,
+        564
+      ],
+      "source_proposal": "desk",
+      "proposal_seed_t": null,
+      "nn_inference_t": 56.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-4",
+      "t": 56.0,
+      "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.3770817816257477,
+        "box": [
+          0.31988642133515455,
+          0.48782848861982236,
+          0.3451670449355553,
+          0.4975645767067963
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 1,
+      "source_crop": [
+        36,
+        336,
+        373,
+        496
+      ],
+      "source_proposal": "desk",
+      "proposal_seed_t": null,
+      "nn_inference_t": 16.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-23",
+      "t": 16.0,
+      "sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "cash",
+        "score": 0.3902752101421356,
+        "box": [
+          0.20182037353515622,
+          0.4556024929262557,
+          0.3181941920313342,
+          0.5090721058395674
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 1,
+      "source_crop": [
+        0,
+        338,
+        353,
+        515
+      ],
+      "source_proposal": "desk",
+      "proposal_seed_t": null,
+      "nn_inference_t": 17.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-15",
+      "t": 17.0,
+      "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+      "size": [
+        464,
+        848
+      ]
+    },
+    {
+      "detection": {
+        "label": "id_card",
+        "score": 0.3365316689014435,
+        "box": [
+          0.4988194827375741,
+          0.4267380912348909,
+          0.5533074346081964,
+          0.44897716450241376
+        ],
+        "track_id": "",
+        "role": "unknown",
+        "body": [],
+        "hands": []
+      },
+      "source": "grounding_dino_base",
+      "call_index": 0,
+      "source_crop": [
+        0,
+        0,
+        464,
+        848
+      ],
+      "source_proposal": "full",
+      "proposal_seed_t": null,
+      "nn_inference_t": 30.0,
+      "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+      "clip": "X-38",
+      "t": 30.0,
+      "sha256": "5a6f6a13ef88191ec1d9a2a303f1be74d16aa3381a57aaadba8850aac715ff10",
+      "size": [
+        464,
+        848
+      ]
+    }
+  ],
+  "development_only": true,
+  "limits": [
+    "Source models had no box gold; frame labels cannot establish proposal correctness",
+    "Some full+desk NN models have raw-finiteness guard gap; retained finite proposals do not certify unrecorded raw tensors",
+    "All40clips influenced development; not held out",
+    "No accepted proposal is not evidence that the frame or an interval lacks cash/ID",
+    "No pixel exports; local in-memory overlays and hashes only"
+  ],
+  "registered_utc": "2026-10-18T04:50:15.365987+00:00",
+  "gate": "Evaluation only: decisively reject the primary OWL X40 target; retain banknote proposals on the five originally supported labelled OWL-positive frames and ID on the labelled positive ID frame; no retained banknotes on five cash-negative frames or ID on the single labelled ID-negative frame; errors/unknowns remain explicit. No automatic integration."
+}

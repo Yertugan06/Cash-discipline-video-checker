@@ -1,0 +1,72 @@
+{
+  "base_requested_commit": "5fae84bc10415111a04b5982d156727ca80f788a",
+  "base_source": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "completed_clips": 40,
+  "new_samples": 4,
+  "additions": [
+    {
+      "clip": 4,
+      "track_ids": [
+        "cash:15"
+      ],
+      "seed_times": [
+        [
+          57.0,
+          57.5
+        ]
+      ],
+      "new_times": [
+        56.5
+      ],
+      "min_ncc": 0.9800454378128052,
+      "min_cycle_ncc": 0.9932801723480225,
+      "max_cycle_error_px": 0.0,
+      "nn_scores": [
+        0.3812195360660553
+      ]
+    },
+    {
+      "clip": 13,
+      "track_ids": [
+        "cash:7"
+      ],
+      "seed_times": [
+        [
+          23.5,
+          24.0
+        ]
+      ],
+      "new_times": [
+        22.0,
+        22.5,
+        23.0
+      ],
+      "min_ncc": 0.9532291889190674,
+      "min_cycle_ncc": 0.9532291889190674,
+      "max_cycle_error_px": 0.0,
+      "nn_scores": [
+        0.31837916374206543
+      ]
+    }
+  ],
+  "changed_finding_clips": [],
+  "changed_handover_clips": [],
+  "rejection_counts": {
+    "low_ncc_or_occlusion": 2,
+    "no_earlier_frame": 1,
+    "two_consecutive_nn_seeds_required": 9,
+    "seed_collision": 10
+  },
+  "cpu_elapsed_clip_total_sec": 52.329228983991925,
+  "focus_elapsed_sec": 13.250961453002674,
+  "held_out_claim": false,
+  "base_hashes": {
+    "backend/f1/events.py": "d13e9fca69dd9c460d9872578eb21b07adfe66fe8bc0fb3ccbd8aaa5ae81f437",
+    "backend/f1/rules.py": "2b1ea7372f30057f70e4f9819f6a19b8b3157cc89f50ac1da043a8ec44f8aea7",
+    "backend/f1/vision_types.py": "013c013d01e4e842c310cc48bb21ba02cd02f77abdb544a7a1cacd3d00b5c809",
+    "backend/f1/detector.py": "2957bc43eddccf62d2a3d7f2dc2932271ec4d924e1dde2de0599aec1a9ad116c",
+    "config/perception.yaml": "9201da3982e88a0d69b78ab2e9c746f665acf25e5307db2e6196e2abf092e75f",
+    "config/f1_codex.yaml": "849e7d2539a5678f12848ddfb3cbbc14ddb1a0d3a30184f64b8a1472fd2750f3",
+    "knowledge/rules.yaml": "bf5a522e75df2a2fe3e895b8e78e5f37b02d8d9984ce53e6d609b0b3ca9cb5f3"
+  }
+}

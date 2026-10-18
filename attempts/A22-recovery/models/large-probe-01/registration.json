@@ -1,0 +1,55 @@
+{
+  "model": "google/owlv2-large-patch14-ensemble",
+  "input_size": 1008,
+  "score_threshold": 0.12,
+  "prompts": {
+    "cash": [
+      "banknotes",
+      "a stack of banknotes"
+    ],
+    "bundle": [
+      "a bundle of banknotes"
+    ],
+    "bag": [
+      "a green fabric cash collection bag",
+      "a green cloth bag"
+    ],
+    "id_card": [
+      "an identity card"
+    ],
+    "document": [
+      "a paper document"
+    ],
+    "tablet": [
+      "a tablet computer"
+    ],
+    "cup": [
+      "a cup",
+      "a drinking bottle"
+    ],
+    "food": [
+      "food",
+      "a sandwich"
+    ],
+    "coat": [
+      "a coat lying on a desk"
+    ],
+    "handbag": [
+      "a handbag"
+    ],
+    "phone": [
+      "a mobile phone"
+    ]
+  },
+  "variants": [
+    "full",
+    "full_desk"
+  ],
+  "cases": 20,
+  "scene_source": "existing canonical CV cache; no label-derived crops",
+  "limitations": [
+    "Development frame-presence labels, no box gold or held-out data.",
+    "Bigger model and input resolution change together.",
+    "No runtime or verdict change; incomplete inference is unknown."
+  ]
+}

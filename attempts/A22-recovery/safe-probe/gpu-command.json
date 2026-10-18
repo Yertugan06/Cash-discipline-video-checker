@@ -1,0 +1,24 @@
+{
+  "machine": "datathon3 only; never datathon2 live GPU",
+  "status": "GPU_RUN_READY",
+  "stage_directory": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/safe-probe",
+  "argv": [
+    "/usr/bin/flock", "--exclusive", "--timeout", "300",
+    "/home/ubuntu/.cache/datathon-workers/gpu.lock",
+    "/usr/bin/timeout", "--signal=TERM", "--kill-after=15s", "600s",
+    "/usr/bin/env", "RULE_SCOPE=detector", "HF_HUB_OFFLINE=1",
+    "TRANSFORMERS_OFFLINE=1", "HF_HUB_DISABLE_TELEMETRY=1",
+    "/bin/bash", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/safe-probe/run_gpu.sh",
+    "--base", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+    "--cache", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache",
+    "--videos", "/home/ubuntu/workspaces/datathon26-workers/shared/a21/videos",
+    "--model", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/Qwen3-VL-8B-Instruct",
+    "--out", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/safe-probe/results-8b"
+  ],
+  "notes": [
+    "Parent stages this owned directory on datathon3 before executing argv. Stage is separate from the read-only combined base.",
+    "Weights must already exist at --model. No model download, fallback model, package install or service restart.",
+    "Launcher selects an existing Transformers>=5 + Accelerate ML Python and prints the choice; SAFE_PROBE_PYTHON may name an explicit existing interpreter. Actual interpreter/packages are saved in metadata.",
+    "Parent holds shared GPU flock and total timeout; do not run CUDA in worker sandbox or on datathon2's live GPU."
+  ]
+}

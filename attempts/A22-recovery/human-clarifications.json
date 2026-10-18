@@ -1,0 +1,32 @@
+{
+  "source": "User clarification in active conversation, 2026-10-18",
+  "scope": "Development evaluation only; never detector/runtime input",
+  "observations": [
+    {
+      "clip": "X-11",
+      "timeline": "Before turning off lights and leaving; exact seconds not supplied",
+      "laptop": "Left on and unlocked",
+      "other_equipment": "Left switched on",
+      "safe_key": "Latest phrase ambiguous; do not infer a new key/lock state",
+      "departure_sec": 18,
+      "departure_precision": "Approximate human observation; not organizer or model input",
+      "user_interpretation": "Workspace not secured before leaving; rule-specific support requires its actual conditions"
+    },
+    {
+      "clip": "X-12",
+      "timeline": "Before turning off lights and leaving; exact seconds not supplied",
+      "laptop": "User explicitly confirms: locks laptop and closes its lid before leaving",
+      "other_equipment": "Turned off, including money counter",
+      "safe_key": "Key taken away",
+      "visible_action": "Lid closure confirmed; an electrical power state is not established from darkness alone"
+    },
+    {
+      "clip": "X-40",
+      "time_sec": 18,
+      "cash_visible": false,
+      "visible_objects": "Coat and personal handbag only",
+      "source": "Explicit user response to the new crop detector cash claim",
+      "scope": "Evaluation-only negative; never a runtime exception"
+    }
+  ]
+}

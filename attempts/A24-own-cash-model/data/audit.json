@@ -1,0 +1,27 @@
+{
+  "source_a13_sha256": "b1e2a56a015141bf25ce13a331f93d608ddf0ac91286b14f8f9f86992fefdef6",
+  "source_videos_jsonl_sha256": "4d3dcf14db472404c7da629a4e4cb4eb19b3e36f33d4f36e226a4e9c8d30189d",
+  "manifest_sha256": "28b2fccd248e3a7179c07ec17874f19d106f2a79184f285ba3756f1e9f47e255",
+  "counts": {
+    "probe_negative": 2,
+    "probe_positive": 2,
+    "train_negative": 3,
+    "train_positive": 5
+  },
+  "train_groups": 8,
+  "probe_groups": 4,
+  "group_overlap": 0,
+  "duplicate_aliases": {
+    "DUP-001": [
+      "\u0425-4",
+      "\u0425-47"
+    ],
+    "DUP-002": [
+      "\u0425-5",
+      "\u0425-48"
+    ]
+  },
+  "checks": "PASS: exact cohort, labels, timestamps, split8/4 and no SHA-group overlap",
+  "pixels_decoded": 0,
+  "training_run": false
+}

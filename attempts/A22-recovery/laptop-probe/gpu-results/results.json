@@ -1,0 +1,1783 @@
+[
+  {
+    "evaluation_input": 11,
+    "source_sha256": "b3a954a5b761ad47943e061599315e3fe9d22573eeb92bb14bf315cdcd422fc5",
+    "cache_sha256": "27475ee0fff435635f2887af3a6c13cb42622d42b2f49bc30884142d8761cc8e",
+    "status": "triggered",
+    "sequences": [
+      {
+        "exit": {
+          "timestamp_sec": 11.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.31868648529052734,
+              0.3413054049015045,
+              0.4963104724884033,
+              0.4855501353740692
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            7.5,
+            137.6968755082954
+          ],
+          [
+            8.0,
+            137.66528749186728
+          ],
+          [
+            8.5,
+            137.8448402935914
+          ],
+          [
+            9.0,
+            138.0183825024398
+          ],
+          [
+            9.5,
+            138.32542849300586
+          ],
+          [
+            10.0,
+            138.82637138093688
+          ],
+          [
+            10.5,
+            139.51414077748862
+          ],
+          [
+            11.0,
+            140.08221931929083
+          ],
+          [
+            11.5,
+            139.73133793510084
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 8.5,
+            "decoded_t": 8.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "a8dc30c9f7541d1c4bda5145a0a53235c7ccb340dc836a8dd9bf83427a711f94",
+            "crop_rgb_sha256": "73c3c50601afc84319b188bffed55aaff86fc55bb80a339dae54a32d4c8127ef"
+          },
+          {
+            "target_t": 9.5,
+            "decoded_t": 9.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "dc666a81ee035c93febded0c53902ea1b45835f6c85033771d2eca1f7beab5d6",
+            "crop_rgb_sha256": "a5ef67aaf49360edf769653919ca7aafcfb56c99babf1f417400053650c365f1"
+          },
+          {
+            "target_t": 10.5,
+            "decoded_t": 10.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "4d67f67db9c536e4e7123a7d69a92b238ae67d03db9b78ed803d266e08096965",
+            "crop_rgb_sha256": "47c87c17293667643847cb3e31d828895ce0c3cdc41f004a38d87ed717b97cdc"
+          },
+          {
+            "target_t": 11.5,
+            "decoded_t": 11.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "f525c348fd0121f8d4c76eeb960f102eebd254ad8fe21baadcaa66e9266949c2",
+            "crop_rgb_sha256": "800ea9406407927ea8da908bd0736bf4a20a31b1d4f01b655d1c31551d711509"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"working\", \"working\", \"working\", \"working\"]}",
+        "status": "answered",
+        "states": [
+          {
+            "t": 8.5,
+            "state": "working"
+          },
+          {
+            "t": 9.5,
+            "state": "working"
+          },
+          {
+            "t": 10.5,
+            "state": "working"
+          },
+          {
+            "t": 11.5,
+            "state": "working"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 2.9903810920004616
+      },
+      {
+        "exit": {
+          "timestamp_sec": 17.0,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.36738741397857666,
+              0.2468072772026062,
+              0.5700328350067139,
+              0.47873109579086304
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            13.0,
+            139.5039113329538
+          ],
+          [
+            13.5,
+            139.07154511629798
+          ],
+          [
+            14.0,
+            138.75494317257645
+          ],
+          [
+            14.5,
+            138.75136731457386
+          ],
+          [
+            15.0,
+            138.44278118900456
+          ],
+          [
+            15.5,
+            138.2011985605075
+          ],
+          [
+            16.0,
+            19.581309470559532
+          ],
+          [
+            16.5,
+            87.88121645250487
+          ],
+          [
+            17.0,
+            100.6485976130449
+          ]
+        ],
+        "luminance_drops": [
+          {
+            "before_t": 15.5,
+            "after_t": 16.0,
+            "before_mean": 138.2011985605075,
+            "after_mean": 19.581309470559532
+          }
+        ],
+        "samples": [
+          {
+            "target_t": 14.0,
+            "decoded_t": 13.966666666666667,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "5b1d6c6c75f89f6e9916a21a02beb2efad985d721e5273f018c96fb36bdf90c0",
+            "crop_rgb_sha256": "70d00d68d1cb2425acf7428881694fd04bb3b22b3fe55d490535d1048096620d"
+          },
+          {
+            "target_t": 15.0,
+            "decoded_t": 15.000000000000002,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "75c472f2588f1a26a597b5e6c3c96640e0c623b822e02adab7085f235373d8d4",
+            "crop_rgb_sha256": "b2c40ba9fbef068465f65e729dd761ec445ab5e6f78901cb8bbf7831a63b94ca"
+          },
+          {
+            "target_t": 15.5,
+            "decoded_t": 15.500000000000002,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "e7ca1fd1bb2bbf3931b789f30546ebacf08f85a800196c9201a6923e117b6084",
+            "crop_rgb_sha256": "ddfcfc9e8f5ea740fe36919edb7a978f4946a76d42bbf066f8ed8ec92806a64d"
+          },
+          {
+            "target_t": 16.0,
+            "decoded_t": 16.1,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "3ef9e2f1d656dc07f26c12412f963dadab5858eab8cd65988e7d1649d3bd0917",
+            "crop_rgb_sha256": "86e66fbbec133b42730a3faf345822d545335156536c225bf29b5152561512e5"
+          },
+          {
+            "target_t": 17.0,
+            "decoded_t": 17.1,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "1ea95ff4ae23daeb84d48a8e30c1dba88d8321a0674fa7410fdf898fc5d2ac6b",
+            "crop_rgb_sha256": "32f69c147b1c73149347cdbf2866d2fa98dedd0272829279f879863ef864083b"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1440,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"working\", \"working\", \"working\", \"unknown\", \"working\"]}",
+        "status": "answered",
+        "states": [
+          {
+            "t": 13.966666666666667,
+            "state": "working"
+          },
+          {
+            "t": 15.000000000000002,
+            "state": "working"
+          },
+          {
+            "t": 15.500000000000002,
+            "state": "working"
+          },
+          {
+            "t": 16.1,
+            "state": "unknown"
+          },
+          {
+            "t": 17.1,
+            "state": "working"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 1.4507276149997779
+      },
+      {
+        "exit": {
+          "timestamp_sec": 20.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:21",
+            "role": "cashier",
+            "box": [
+              0.1434076428413391,
+              0.23990163207054138,
+              0.36794906854629517,
+              0.48485204577445984
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            16.5,
+            87.88121645250487
+          ],
+          [
+            17.0,
+            100.6485976130449
+          ],
+          [
+            17.5,
+            98.71607636629798
+          ],
+          [
+            18.0,
+            92.61956886385816
+          ],
+          [
+            18.5,
+            89.94912725683149
+          ],
+          [
+            19.0,
+            88.70145270819779
+          ],
+          [
+            19.5,
+            91.35649804814574
+          ],
+          [
+            20.0,
+            91.62015340354587
+          ],
+          [
+            20.5,
+            91.86297373129473
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 17.5,
+            "decoded_t": 17.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "4e36359a4873861beb33d28538feadbc828b40f2875290983969875c28a56a78",
+            "crop_rgb_sha256": "590f89d358ac071cc101a4bc3b43cf39666b26a3fb7a43c10654c437039e7467"
+          },
+          {
+            "target_t": 18.5,
+            "decoded_t": 18.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "e946ac4e85d073091549c3181242c19f070f9d77a310a810bd55935e25b68195",
+            "crop_rgb_sha256": "e4b11d2313fc3c3e97d8c75021656d2f633c9fe0918464fb6efc136e4538ac05"
+          },
+          {
+            "target_t": 19.5,
+            "decoded_t": 19.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "a55787753f09af88f82f5f94a7fd028eea855337fc52d1914bad5b9265f793b0",
+            "crop_rgb_sha256": "e22eb663e05f41543277ee092bebfe52f4e5e24f1293f318f047c7df040a5202"
+          },
+          {
+            "target_t": 20.5,
+            "decoded_t": 20.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              104,
+              119
+            ],
+            "crop_box_pixels": [
+              211,
+              329,
+              315,
+              448
+            ],
+            "frame_rgb_sha256": "43f625ff61b4d7a14fb8649180d35795bcef8915d19a47a21cc033b2b81bee6f",
+            "crop_rgb_sha256": "8a7a8fcd7d117081f9052121162218fdbf6e4141e51fdb57a5e97c5679753d3f"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"working\", \"working\", \"working\", \"working\"]}",
+        "status": "answered",
+        "states": [
+          {
+            "t": 17.5,
+            "state": "working"
+          },
+          {
+            "t": 18.5,
+            "state": "working"
+          },
+          {
+            "t": 19.5,
+            "state": "working"
+          },
+          {
+            "t": 20.5,
+            "state": "working"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 1.2303585490008118
+      }
+    ],
+    "prepare_sec": 1.2235316459991736,
+    "inference_sec": 5.671467256001051
+  },
+  {
+    "evaluation_input": 12,
+    "source_sha256": "955755baf54418b48ea645dcd98e7e8dcca1d1e227e9b286a9427062db304fd4",
+    "cache_sha256": "e4dd10b93352658650ba4abcc849a51aafe08c5f990a40853a91199ba9204e6d",
+    "status": "triggered",
+    "sequences": [
+      {
+        "exit": {
+          "timestamp_sec": 37.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:32",
+            "role": "cashier",
+            "box": [
+              0.17033539712429047,
+              0.23843073844909668,
+              0.34591060876846313,
+              0.47456851601600647
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            33.5,
+            96.89308769111906
+          ],
+          [
+            34.0,
+            91.73049416476903
+          ],
+          [
+            34.5,
+            86.47276807498373
+          ],
+          [
+            35.0,
+            82.11142088890696
+          ],
+          [
+            35.5,
+            83.60187510165908
+          ],
+          [
+            36.0,
+            85.42373027813923
+          ],
+          [
+            36.5,
+            87.16906920949903
+          ],
+          [
+            37.0,
+            88.13965161434614
+          ],
+          [
+            37.5,
+            86.02106121909564
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 34.5,
+            "decoded_t": 34.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              127
+            ],
+            "crop_box_pixels": [
+              208,
+              326,
+              315,
+              453
+            ],
+            "frame_rgb_sha256": "0f56329fef647e8e2eb11b31737cbcd835821b768011f479c6787cc72adeb477",
+            "crop_rgb_sha256": "a17f66827d3cd0817dc35ead469ac8222119302c914c9f689b4b405622af20d5"
+          },
+          {
+            "target_t": 35.5,
+            "decoded_t": 35.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              127
+            ],
+            "crop_box_pixels": [
+              208,
+              326,
+              315,
+              453
+            ],
+            "frame_rgb_sha256": "c78936f08e6c0ed6544b842b3517022c1e4b65433eff563df2a70d669b858526",
+            "crop_rgb_sha256": "2766db4932953483e2085c5cdaecb1f7f5d89c9efc52b466f1bad21fc4539cdc"
+          },
+          {
+            "target_t": 36.5,
+            "decoded_t": 36.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              127
+            ],
+            "crop_box_pixels": [
+              208,
+              326,
+              315,
+              453
+            ],
+            "frame_rgb_sha256": "4c53722ce4eda6d3291fc163462dbdd3ceed35f45aaf7b79ec30b959e25997f2",
+            "crop_rgb_sha256": "c2877c22595eda3773cdf173f145b3258c8452b80a2ffdc4842729bdb799e658"
+          },
+          {
+            "target_t": 37.5,
+            "decoded_t": 37.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              127
+            ],
+            "crop_box_pixels": [
+              208,
+              326,
+              315,
+              453
+            ],
+            "frame_rgb_sha256": "451aba2ace72fe3d6f0708e796f412a615fb2851b7d1dfd6a21a74e07466fede",
+            "crop_rgb_sha256": "89fe056510176e51b49abc85eef7883816b8d9f5bd500dc437a6d2c0bae217ee"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"closed\", \"closed\", \"closed\", \"closed\"]}",
+        "status": "answered",
+        "states": [
+          {
+            "t": 34.5,
+            "state": "closed"
+          },
+          {
+            "t": 35.5,
+            "state": "closed"
+          },
+          {
+            "t": 36.5,
+            "state": "closed"
+          },
+          {
+            "t": 37.5,
+            "state": "closed"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 1.2381854950035631
+      }
+    ],
+    "prepare_sec": 0.4019269809978141,
+    "inference_sec": 1.2381854950035631
+  },
+  {
+    "evaluation_input": 28,
+    "source_sha256": "d15ef04bcfae571bd2d7fc4e4d709ba595ae19f44136a43e7277f17e7b6e5b6d",
+    "cache_sha256": "4c9908acdfa3c1b51c7fff390da525c4656d7e4a9878b0a5226786b24e3a5dde",
+    "status": "triggered",
+    "sequences": [
+      {
+        "exit": {
+          "timestamp_sec": 14.0,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.23051336407661438,
+              0.20076091587543488,
+              0.3778473436832428,
+              0.45469793677330017
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            10.0,
+            139.5751387646389
+          ],
+          [
+            10.5,
+            139.53429468932987
+          ],
+          [
+            11.0,
+            139.3319372153546
+          ],
+          [
+            11.5,
+            137.35007827748862
+          ],
+          [
+            12.0,
+            137.6667081774561
+          ],
+          [
+            12.5,
+            138.49034747072218
+          ],
+          [
+            13.0,
+            141.22914209905662
+          ],
+          [
+            13.5,
+            141.02732087670788
+          ],
+          [
+            14.0,
+            140.54818131912816
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 11.0,
+            "decoded_t": 10.966666666666667,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              101
+            ],
+            "crop_box_pixels": [
+              238,
+              308,
+              345,
+              409
+            ],
+            "frame_rgb_sha256": "352b4a088b6ccf7b6eede7f2f5f718e01f43eca93cffd576ab80aff123eb9c1f",
+            "crop_rgb_sha256": "ff0408b382766e99c37bbe2cc7f46029634538dd8e6a22ba29f6cb95e8d263c4"
+          },
+          {
+            "target_t": 12.0,
+            "decoded_t": 12.0,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              101
+            ],
+            "crop_box_pixels": [
+              238,
+              308,
+              345,
+              409
+            ],
+            "frame_rgb_sha256": "69f5898bfede47bb07a920c82101cbd75f65f607df1f509b746a23fcd9c6c9bd",
+            "crop_rgb_sha256": "0a6fc4c35f166d4315b2123b678885faf62dbb82ed742197f5fd253ac61261be"
+          },
+          {
+            "target_t": 13.0,
+            "decoded_t": 13.0,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              101
+            ],
+            "crop_box_pixels": [
+              238,
+              308,
+              345,
+              409
+            ],
+            "frame_rgb_sha256": "9b121a49d2e91f9678f57a10102dff6db0fef4a2f93485d11e8b88689d3c5d25",
+            "crop_rgb_sha256": "8b975af01b75145c9c602aaf10f40eb455ddd303fdeb173e9adeb84e62f96ba1"
+          },
+          {
+            "target_t": 14.0,
+            "decoded_t": 14.000000000000002,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              107,
+              101
+            ],
+            "crop_box_pixels": [
+              238,
+              308,
+              345,
+              409
+            ],
+            "frame_rgb_sha256": "5c7a9c1a1f7de40184fb89e7e79502af5a97785d4cdce0f7bf5a45c7fcb2a284",
+            "crop_rgb_sha256": "be030c3423c2ab0f17dbc577b762cac01fa7fd76f4748e7e16f038fa586045bc"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            16,
+            18
+          ],
+          [
+            1,
+            16,
+            18
+          ],
+          [
+            1,
+            16,
+            18
+          ],
+          [
+            1,
+            16,
+            18
+          ]
+        ],
+        "raw": "{\"states\": [\"working\"]}",
+        "status": "unknown_error",
+        "error": "ValueError",
+        "states": [
+          {
+            "t": 10.966666666666667,
+            "state": "unknown"
+          },
+          {
+            "t": 12.0,
+            "state": "unknown"
+          },
+          {
+            "t": 13.0,
+            "state": "unknown"
+          },
+          {
+            "t": 14.000000000000002,
+            "state": "unknown"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 0.643007889000728
+      }
+    ],
+    "prepare_sec": 0.4477380779972009,
+    "inference_sec": 0.643007889000728
+  },
+  {
+    "evaluation_input": 29,
+    "source_sha256": "b9bfb76ac8ea47eb368fc78a2f6370e4d98e79185972f63cf301ee22f12b5941",
+    "cache_sha256": "007b83fdbd04cfd8fb581c29a4266c46c2ccedf8f37f30db668476907d7c46d3",
+    "status": "triggered",
+    "sequences": [
+      {
+        "exit": {
+          "timestamp_sec": 13.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.20156978070735931,
+              0.1783691644668579,
+              0.3698974847793579,
+              0.4487716257572174
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            9.5,
+            139.58822228773585
+          ],
+          [
+            10.0,
+            139.57977187703318
+          ],
+          [
+            10.5,
+            139.69110889720235
+          ],
+          [
+            11.0,
+            139.7107773869551
+          ],
+          [
+            11.5,
+            138.44817928594665
+          ],
+          [
+            12.0,
+            137.47050107758622
+          ],
+          [
+            12.5,
+            137.53984527488615
+          ],
+          [
+            13.0,
+            138.14340537573196
+          ],
+          [
+            13.5,
+            141.1239147893624
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 10.5,
+            "decoded_t": 10.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              116,
+              122
+            ],
+            "crop_box_pixels": [
+              231,
+              302,
+              347,
+              424
+            ],
+            "frame_rgb_sha256": "f1e6b3f9ae9206092842311021ae1fc2e2ee67b23555c0ab8dee8fad0e6d1362",
+            "crop_rgb_sha256": "10b31d85aad00762d6f5f38f000b61604c005db92d6f51281d5d16ed691fdc22"
+          },
+          {
+            "target_t": 11.5,
+            "decoded_t": 11.466666666666667,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              116,
+              122
+            ],
+            "crop_box_pixels": [
+              231,
+              302,
+              347,
+              424
+            ],
+            "frame_rgb_sha256": "a2c59f8999eeb189e8c90f0dc30c71053df91c68bd02e8c02e74031a32b87b8f",
+            "crop_rgb_sha256": "cdf2d80790eaeb1aff69ff5448d76f82f9f5f3e23e9d639fcf17ee83152fd445"
+          },
+          {
+            "target_t": 12.5,
+            "decoded_t": 12.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              116,
+              122
+            ],
+            "crop_box_pixels": [
+              231,
+              302,
+              347,
+              424
+            ],
+            "frame_rgb_sha256": "59963f16c7b0ce997e0fc33d875baf6d8ba753ccb46821cbdcdf7bf7737a9a2d",
+            "crop_rgb_sha256": "432ce6b7ac71c6cf0a9eaf78c30bf1e09381407c9e0bb2b7b06a8a0dc0a4b589"
+          },
+          {
+            "target_t": 13.5,
+            "decoded_t": 13.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              116,
+              122
+            ],
+            "crop_box_pixels": [
+              231,
+              302,
+              347,
+              424
+            ],
+            "frame_rgb_sha256": "18c4dd6810abc20748ec7b86aa8f5a88cf59b50cf49d34dd10ba8141a8c28a8a",
+            "crop_rgb_sha256": "34860c60074ea3aba7771ee0c18d0fa5457f9a8878692936ac29c05a13a7eb39"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"unknown\"]}",
+        "status": "unknown_error",
+        "error": "ValueError",
+        "states": [
+          {
+            "t": 10.5,
+            "state": "unknown"
+          },
+          {
+            "t": 11.466666666666667,
+            "state": "unknown"
+          },
+          {
+            "t": 12.5,
+            "state": "unknown"
+          },
+          {
+            "t": 13.5,
+            "state": "unknown"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 0.6266778520002845
+      }
+    ],
+    "prepare_sec": 0.4408533809983055,
+    "inference_sec": 0.6266778520002845
+  },
+  {
+    "evaluation_input": 22,
+    "source_sha256": "c9a30d44907e4a41b3a8ccf101774cd2e0804de20927bfbc9e1ccba1f2326b78",
+    "cache_sha256": "f2469a5a39723c44c3526a05f52b3eef4fc40e31f043bd31969629d4ba78b707",
+    "status": "triggered",
+    "sequences": [
+      {
+        "exit": {
+          "timestamp_sec": 17.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.17578740417957306,
+              0.1720070093870163,
+              0.32846158742904663,
+              0.42518097162246704
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            13.5,
+            135.5826183311646
+          ],
+          [
+            14.0,
+            135.77143735767729
+          ],
+          [
+            14.5,
+            135.91336359385167
+          ],
+          [
+            15.0,
+            136.18726110117112
+          ],
+          [
+            15.5,
+            134.88320388744307
+          ],
+          [
+            16.0,
+            134.59639059450228
+          ],
+          [
+            16.5,
+            135.30293896389068
+          ],
+          [
+            17.0,
+            136.1074638093689
+          ],
+          [
+            17.5,
+            138.00802090110605
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 14.5,
+            "decoded_t": 14.500000000000002,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "9fa8470231544d7cb57c029cd49694ed85e313bbb472364302c8849cb7c4cf8d",
+            "crop_rgb_sha256": "c299f23d85c65f62e0abdd84305fdb3a987e2fb8cab076ab722ed79577bb1bb7"
+          },
+          {
+            "target_t": 15.5,
+            "decoded_t": 15.500000000000002,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "68e529e7248f14ab6f15ade0e2347ee23b0d0ba99a0efd2e1fdbbb905530a2a5",
+            "crop_rgb_sha256": "63645faa008e37cfd2c0e201daf66b5864ff775d0059d661ba1a253f621a7f9c"
+          },
+          {
+            "target_t": 16.5,
+            "decoded_t": 16.6,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "31ce96e9702bb7c5eb0eedf4e7ef2c4f696b2aaa8d940785782d24b29ac8cfa9",
+            "crop_rgb_sha256": "18cdcb99b196240536a9246cc90e963e558542958f859b3bb3364b8203e2c842"
+          },
+          {
+            "target_t": 17.5,
+            "decoded_t": 17.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "fb7e5c9931c892b5f5af5b257a62f650c4e73a3051e64caceaab7cff65c584c0",
+            "crop_rgb_sha256": "66ede2d4e250abc0fe62634805c87e29f0ba4b670b6c566255f19d6a737efd6f"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"working\"]}",
+        "status": "unknown_error",
+        "error": "ValueError",
+        "states": [
+          {
+            "t": 14.500000000000002,
+            "state": "unknown"
+          },
+          {
+            "t": 15.500000000000002,
+            "state": "unknown"
+          },
+          {
+            "t": 16.6,
+            "state": "unknown"
+          },
+          {
+            "t": 17.5,
+            "state": "unknown"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 0.6363780520005093
+      },
+      {
+        "exit": {
+          "timestamp_sec": 19.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.280344694852829,
+              0.1917169988155365,
+              0.43204763531684875,
+              0.37785783410072327
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            15.5,
+            134.88320388744307
+          ],
+          [
+            16.0,
+            134.59639059450228
+          ],
+          [
+            16.5,
+            135.30293896389068
+          ],
+          [
+            17.0,
+            136.1074638093689
+          ],
+          [
+            17.5,
+            138.00802090110605
+          ],
+          [
+            18.0,
+            138.0752175504229
+          ],
+          [
+            18.5,
+            137.56044902813923
+          ],
+          [
+            19.0,
+            137.09440570104098
+          ],
+          [
+            19.5,
+            137.1383834173715
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 16.5,
+            "decoded_t": 16.6,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "31ce96e9702bb7c5eb0eedf4e7ef2c4f696b2aaa8d940785782d24b29ac8cfa9",
+            "crop_rgb_sha256": "18cdcb99b196240536a9246cc90e963e558542958f859b3bb3364b8203e2c842"
+          },
+          {
+            "target_t": 17.5,
+            "decoded_t": 17.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "fb7e5c9931c892b5f5af5b257a62f650c4e73a3051e64caceaab7cff65c584c0",
+            "crop_rgb_sha256": "66ede2d4e250abc0fe62634805c87e29f0ba4b670b6c566255f19d6a737efd6f"
+          },
+          {
+            "target_t": 18.5,
+            "decoded_t": 18.46666666666667,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "0857a7afb6e7e62bc5ceb96cd822621cc72c1219efb01b5705eda0903116f535",
+            "crop_rgb_sha256": "0212b93be37524cf1cbd1db3366a50ccd3984504cf9f1e54748b4a04cd6b18f0"
+          },
+          {
+            "target_t": 19.5,
+            "decoded_t": 19.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              100,
+              124
+            ],
+            "crop_box_pixels": [
+              215,
+              280,
+              315,
+              404
+            ],
+            "frame_rgb_sha256": "e962f554e076ee172bcf2d05a733bff451053fc458e369d84832590659e08d57",
+            "crop_rgb_sha256": "51a053929e15e6a10b18bf75082f58974ed15b043db0cf7e8af3c72fbfa012bd"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"working\"]}",
+        "status": "unknown_error",
+        "error": "ValueError",
+        "states": [
+          {
+            "t": 16.6,
+            "state": "unknown"
+          },
+          {
+            "t": 17.5,
+            "state": "unknown"
+          },
+          {
+            "t": 18.46666666666667,
+            "state": "unknown"
+          },
+          {
+            "t": 19.5,
+            "state": "unknown"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 0.6314281619997928
+      }
+    ],
+    "prepare_sec": 0.6688380260020494,
+    "inference_sec": 1.2678062140003021
+  },
+  {
+    "evaluation_input": 23,
+    "source_sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+    "cache_sha256": "ca507695ba3b9cf41545d3998dc59015fb14d143b407b4a8994ad551dff93601",
+    "status": "triggered",
+    "sequences": [
+      {
+        "exit": {
+          "timestamp_sec": 14.5,
+          "type": "EXIT",
+          "facts": {
+            "actor_id": "person:1",
+            "role": "cashier",
+            "box": [
+              0.10487842559814453,
+              0.18025755882263184,
+              0.2662562131881714,
+              0.4069002866744995
+            ]
+          }
+        },
+        "luminance_samples": [
+          [
+            10.5,
+            135.59468272202344
+          ],
+          [
+            11.0,
+            135.54020362312949
+          ],
+          [
+            11.5,
+            135.6721215232596
+          ],
+          [
+            12.0,
+            135.94227035214703
+          ],
+          [
+            12.5,
+            135.97049853610932
+          ],
+          [
+            13.0,
+            136.38137402407287
+          ],
+          [
+            13.5,
+            134.9663406798959
+          ],
+          [
+            14.0,
+            134.7982092753741
+          ],
+          [
+            14.5,
+            135.39358073763825
+          ]
+        ],
+        "luminance_drops": [],
+        "samples": [
+          {
+            "target_t": 11.5,
+            "decoded_t": 11.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              120,
+              122
+            ],
+            "crop_box_pixels": [
+              209,
+              281,
+              329,
+              403
+            ],
+            "frame_rgb_sha256": "708ba409efe9f3e4d437396f2cacd843541017d2650fffd40bd07879388ee13a",
+            "crop_rgb_sha256": "237058f958795bdfd244e7b7fdde0efce488daffaa8f19843b35d053479597c3"
+          },
+          {
+            "target_t": 12.5,
+            "decoded_t": 12.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              120,
+              122
+            ],
+            "crop_box_pixels": [
+              209,
+              281,
+              329,
+              403
+            ],
+            "frame_rgb_sha256": "c31f2f10b76549a10e3e7d243734e2aea0304a86880ffdef762334bb89678211",
+            "crop_rgb_sha256": "74ce6f7e9a3f9979c914d77b40f1e9e845b9bdb190053c1bcd65dc7a5cff2704"
+          },
+          {
+            "target_t": 13.5,
+            "decoded_t": 13.5,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              120,
+              122
+            ],
+            "crop_box_pixels": [
+              209,
+              281,
+              329,
+              403
+            ],
+            "frame_rgb_sha256": "5eec18c7cc87c0a528e2385ea1882b2a51bfdd9ba2262ac914f5c2ec06760e3b",
+            "crop_rgb_sha256": "7d9a976e1d3c5059b41e8b319d79ce2fdcd1b44f04170c5ecd789006111b4b48"
+          },
+          {
+            "target_t": 14.5,
+            "decoded_t": 14.500000000000002,
+            "native_size": [
+              464,
+              848
+            ],
+            "native_crop_size": [
+              120,
+              122
+            ],
+            "crop_box_pixels": [
+              209,
+              281,
+              329,
+              403
+            ],
+            "frame_rgb_sha256": "c3397a09bd8edeead6c35e668e707d47a535244213bc927da0c92604c3cddfbc",
+            "crop_rgb_sha256": "134bcf999649907901e9a92869758861abd07bacd50f9fad2fed416d53489202"
+          }
+        ],
+        "model_pixel_values_shape": [
+          1152,
+          1536
+        ],
+        "model_image_grid_thw": [
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ],
+          [
+            1,
+            18,
+            16
+          ]
+        ],
+        "raw": "{\"states\": [\"unknown\", \"unknown\", \"unknown\", \"unknown\"]}",
+        "status": "answered",
+        "states": [
+          {
+            "t": 11.5,
+            "state": "unknown"
+          },
+          {
+            "t": 12.5,
+            "state": "unknown"
+          },
+          {
+            "t": 13.5,
+            "state": "unknown"
+          },
+          {
+            "t": 14.500000000000002,
+            "state": "unknown"
+          }
+        ],
+        "transitions": [],
+        "inference_sec": 1.2285163429987733
+      }
+    ],
+    "prepare_sec": 0.45665023300171015,
+    "inference_sec": 1.2285163429987733
+  },
+  {
+    "evaluation_input": 20,
+    "source_sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+    "cache_sha256": "dd4f1dea4091dfbf66e8ad47dcb9555f34b7b369812feaa3d2d0c0b08ec23d6c",
+    "status": "no_trigger",
+    "sequences": [],
+    "prepare_sec": 0.02729056899988791
+  },
+  {
+    "evaluation_input": 21,
+    "source_sha256": "efd876a04224cac781ac64bf5d6e107ded67340b7b7715fd9ca3408b240a1075",
+    "cache_sha256": "5b46533f3404f938d43f72fc9271dd2636123648e4b42b9361afd8c562f52d7d",
+    "status": "no_trigger",
+    "sequences": [],
+    "prepare_sec": 0.05976875200212817
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "frozen_before_inference": true,
+  "cases": ["X-20", "X-21", "X-8", "X-14", "X-27", "X-39"],
+  "selection": "First COUNT_START with three consecutive 0.5s counter-running observations and one same visible cashier, after same-actor HAND_ON_SAFE, SAFE_OPEN or generic safe_departure. Missing trigger/roles/calibration => unknown. No timestamps or labels are supplied to the selector or model.",
+  "safe_crop_margin": 0.1,
+  "processor_size": {"shortest_edge": 65536, "longest_edge": 524288},
+  "max_new_tokens": 160,
+  "max_call_s": 45,
+  "inference_budget_s": 300,
+  "prompt": "You see THREE consecutive ordered moments. For each moment there are TWO images: the full room frame, then a crop of the calibrated safe. The six images are full1,crop1,full2,crop2,full3,crop3. Describe only visibly supported action at each moment. action=safe_handling only for a person visibly reaching into, putting into, removing from, or directly manipulating the safe; table_counter_work only for clearly visible work on the table or counting machine away from the safe; otherwise unknown. A wrist projected near the safe, being seated, or the safe merely being reachable does not prove handling. The crop may overlap the desk in projection. If hands, safe or action are occluded or ambiguous, answer unknown. Separately report the visible safe door as open, closed, or unknown; closed does not establish locking. Return ONLY JSON with exactly three ordered entries: {\"samples\":[{\"action\":\"safe_handling|table_counter_work|unknown\",\"safe_door\":\"open|closed|unknown\"},{\"action\":\"safe_handling|table_counter_work|unknown\",\"safe_door\":\"open|closed|unknown\"},{\"action\":\"safe_handling|table_counter_work|unknown\",\"safe_door\":\"open|closed|unknown\"}]}. No percentages, confidence, names, explanations or legal judgments. Do not infer actions between the supplied moments."
+}

@@ -1,0 +1,13 @@
+{
+  "base_revision": "5fae84bc10415111a04b5982d156727ca80f788a",
+  "source_root": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "files": {
+    "backend/f1/visual_checks.py": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb",
+    "backend/f1/events.py": "d13e9fca69dd9c460d9872578eb21b07adfe66fe8bc0fb3ccbd8aaa5ae81f437",
+    "backend/f1/detector.py": "2957bc43eddccf62d2a3d7f2dc2932271ec4d924e1dde2de0599aec1a9ad116c",
+    "backend/f1/vision_types.py": "013c013d01e4e842c310cc48bb21ba02cd02f77abdb544a7a1cacd3d00b5c809",
+    "backend/f1/calibration.py": "275d7860fa62a88cf6191149d93deb95d915eb6fddc994689fd004b9edc9b27a",
+    "backend/f1/perception.py": "6f5e67f564db7a0fd99ca9e51ba427d6f32987f678134aae1c963901148aa266",
+    "config/perception.yaml": "9201da3982e88a0d69b78ab2e9c746f665acf25e5307db2e6196e2abf092e75f"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "full": {
+    "cash": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 5,
+      "tn": 4,
+      "unknown": 0,
+      "unlabelled": 9
+    },
+    "id_card": {
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "tn": 0,
+      "unknown": 0,
+      "unlabelled": 18
+    },
+    "bag": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 1,
+      "tn": 2,
+      "unknown": 0,
+      "unlabelled": 15
+    },
+    "food_cup": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2,
+      "unknown": 0,
+      "unlabelled": 16
+    },
+    "coat_bag": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2,
+      "unknown": 0,
+      "unlabelled": 17
+    }
+  },
+  "full_desk": {
+    "cash": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 3,
+      "tn": 4,
+      "unknown": 0,
+      "unlabelled": 9
+    },
+    "id_card": {
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "tn": 0,
+      "unknown": 0,
+      "unlabelled": 18
+    },
+    "bag": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 1,
+      "tn": 2,
+      "unknown": 0,
+      "unlabelled": 15
+    },
+    "food_cup": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2,
+      "unknown": 0,
+      "unlabelled": 16
+    },
+    "coat_bag": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2,
+      "unknown": 0,
+      "unlabelled": 17
+    }
+  },
+  "wall_sec": 21.16,
+  "peak_gpu_bytes": 2662731264,
+  "cases": 20
+}

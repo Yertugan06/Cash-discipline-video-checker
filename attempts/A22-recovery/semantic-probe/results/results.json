@@ -1,0 +1,1493 @@
+[
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.5168577432632446,
+      "box": [
+        0.29324830811599206,
+        0.5212925605054172,
+        0.33703070673449287,
+        0.5368904977474572
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 56.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-4",
+    "t": 56.0,
+    "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 56.00000000000001,
+    "context_crop": [
+      82,
+      385,
+      210,
+      513
+    ],
+    "source_rgb_sha256": "0d310d88aa4a7a99c9acefd694db8fe7c5a5723799c0208f63860205b1437a20",
+    "context_rgb_sha256": "e783df3b1c7252a9df6b93d9183d7ad6968e45a65c9466e950dbcf25947968f8",
+    "overlay_rgb_sha256": "c8073f43601632e2e4b0d0e642fda3e9baa369b2909f7f1f092a10181c81ba12",
+    "context_overlay_rgb_sha256": "3a164d2840c2adb4df0bc3849c3331c36f4fa6ec6b754c8329233a9b10d1d8b7",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 2.064501007000217,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 2.3852871480012254
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.4113468527793884,
+      "box": [
+        0.28310025971511316,
+        0.4521955094247494,
+        0.4045696916251347,
+        0.5027865283894088
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 16.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-23",
+    "t": 16.0,
+    "sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "error",
+    "decision": "unknown",
+    "returned_detection": null,
+    "error_type": "ValueError",
+    "error": "frame decode/time mismatch",
+    "wall_sec": 0.08519122100187815
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.4617873728275299,
+      "box": [
+        0.28587403790704136,
+        0.43711742365135337,
+        0.4453415048533472,
+        0.4775681495666504
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 1,
+    "source_crop": [
+      0,
+      338,
+      353,
+      515
+    ],
+    "source_proposal": "desk",
+    "proposal_seed_t": null,
+    "nn_inference_t": 17.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-15",
+    "t": 17.0,
+    "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 17.033333333333335,
+    "context_crop": [
+      106,
+      324,
+      234,
+      452
+    ],
+    "source_rgb_sha256": "3133e3b42e19d42c283a50647c74744472b962e384496c90043842b00c6a0507",
+    "context_rgb_sha256": "ed58c108349afc157358b822808fff4f9692a29627e262fc454be7d9cc9bd66b",
+    "overlay_rgb_sha256": "2f447ada521c8e32c7050f5888613a82c65318be05389e9cc44076b2af9166f5",
+    "context_overlay_rgb_sha256": "4cda85fcb944ddac8dcf99c3f4f6c761968934bb75b0cc2bc0738b4377e9e921",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6167107990004297,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7322491800005082
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.5208314657211304,
+      "box": [
+        0.29768318965517243,
+        0.462780070754717,
+        0.34698275862068967,
+        0.48724941037735847
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 3,
+    "source_crop": [
+      92,
+      338,
+      220,
+      466
+    ],
+    "source_proposal": "neural_seed:id_card",
+    "proposal_seed_t": 30.0,
+    "nn_inference_t": 30.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-38",
+    "t": 30.0,
+    "sha256": "5a6f6a13ef88191ec1d9a2a303f1be74d16aa3381a57aaadba8850aac715ff10",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 30.000000000000004,
+    "context_crop": [
+      86,
+      339,
+      214,
+      467
+    ],
+    "source_rgb_sha256": "3a98be78c3738f8a157673c9d6fc83ad18e50088448f9ff44fc10350ffbcc61e",
+    "context_rgb_sha256": "059c3ee70f4907dfbf2fa20daffe2c4f9f2accd6557228585d6db2f07e93f3bd",
+    "overlay_rgb_sha256": "78cbbecaaa11347fb54a6e354c5989d6849bb53b1e873a7b865faa70afad65a4",
+    "context_overlay_rgb_sha256": "c2bd989eac1f5b113390a196a703c1f6ee8c076c9296366e86fc46a34be2723e",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6077483189983468,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7263433730004181
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.40188199281692505,
+      "box": [
+        0.15071862319420123,
+        0.20215144247378944,
+        0.21811133417589912,
+        0.218377671151791
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 16.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-29",
+    "t": 16.0,
+    "sha256": "b9bfb76ac8ea47eb368fc78a2f6370e4d98e79185972f63cf301ee22f12b5941",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "error",
+    "decision": "unknown",
+    "returned_detection": null,
+    "error_type": "ValueError",
+    "error": "frame decode/time mismatch",
+    "wall_sec": 0.07972545399752562
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.366196870803833,
+      "box": [
+        0.12068242862306792,
+        0.5578548863249005,
+        0.18000528730195145,
+        0.5871698991307672
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 6.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-17",
+    "t": 6.0,
+    "sha256": "0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 6.0,
+    "context_crop": [
+      6,
+      421,
+      134,
+      549
+    ],
+    "source_rgb_sha256": "20cc1d211d516b41a1d5a67e9e82f0ff6b6314564e608c6f56a65d1ba2ce4b13",
+    "context_rgb_sha256": "f6cf04de64785c4d1d370614223a2ac04a07cb32b9e945e05da002e2c51e8e02",
+    "overlay_rgb_sha256": "99b43bccc6f89604e500a14c763daf18a38bb43c5ff0d2e6507ef4208866e6b0",
+    "context_overlay_rgb_sha256": "8854ea3f0ddd11408c8f3a5497e0d6d65e2c85059690a3238f80d08bc25eb1cd",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6160577979972004,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7178113080008188
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.5,
+      "box": [
+        0.4431573275862069,
+        0.46823408018867924,
+        0.5149515086206896,
+        0.4850383254716981
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 4,
+    "source_crop": [
+      163,
+      332,
+      291,
+      460
+    ],
+    "source_proposal": "fixture_desk_grid",
+    "proposal_seed_t": null,
+    "nn_inference_t": 15.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-26",
+    "t": 15.0,
+    "sha256": "e3a00b6e0f38b1d9b5498140f14906c71e204359262a90ce7a9974d64bf081e9",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 14.966666666666667,
+    "context_crop": [
+      158,
+      340,
+      286,
+      468
+    ],
+    "source_rgb_sha256": "09a8428593bcec565c8796fe467c0aa35cbf27f21405cec1591980c0050c2879",
+    "context_rgb_sha256": "4c516c4c5f295223e6519b64423a9dcb803081a5fc44ab6183d4d596daba9306",
+    "overlay_rgb_sha256": "bd65eff094ba704b50f9537b9067736438630b5cdf7c96c746a6499d67d44b3f",
+    "context_overlay_rgb_sha256": "2af43af8bc31f351a37e3a20f3b81cd106933ce76a463cdb8332219f9e06ba3b",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6140754299995024,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7194627589997253
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.49632516503334045,
+      "box": [
+        0.09979031825887746,
+        0.4575621406987028,
+        0.20891737115794215,
+        0.4990013410460274
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 2.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-32",
+    "t": 2.0,
+    "sha256": "bcc277cbf1a36245156b2bb9a0e0b826432390b42040c0b82201a8c21ab23ce9",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 2.0,
+    "context_crop": [
+      8,
+      342,
+      136,
+      470
+    ],
+    "source_rgb_sha256": "a90aca0bc3b16c695c2f332e721fb1364aeb1ac8d5042f101b4d60b7e358eccf",
+    "context_rgb_sha256": "e0551243d456167617ab8c835e1b4264a062592b740e463d9735803f184e1b5e",
+    "overlay_rgb_sha256": "e4cf2e61e7baa388245206e01fb1f21e4f08be2e508f7a0ab41a805ea7502360",
+    "context_overlay_rgb_sha256": "bb203de1c9337fb4a6e0b447d2ed1e19c6ae8e45f033e3b4f7fc82609e3c80b6",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6128403650000109,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7153366490019835
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.3673246502876282,
+      "box": [
+        0.28381712683315935,
+        0.45329979230772777,
+        0.4038186237729829,
+        0.5023142616703825
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 6.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-20",
+    "t": 6.0,
+    "sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 6.0,
+    "context_crop": [
+      96,
+      341,
+      224,
+      469
+    ],
+    "source_rgb_sha256": "a211e0600f2b93fc752414e9fd55a4041b777347e67a4754e3fad010e025085c",
+    "context_rgb_sha256": "45e34dbd069cfbef58701197f5df9bd4b41700a628062aa4eaacadd17e053b3a",
+    "overlay_rgb_sha256": "ba8f628510357e50afdfbf52662f9cb9f06e5009312a2e013ddb7e6242d02cb7",
+    "context_overlay_rgb_sha256": "6cc9329dc4602a3ebe9a1cd72517bec69e3ee0f073dd1f83863eb9216775d8d9",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6140254639976774,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7045178270018368
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.4001631736755371,
+      "box": [
+        0.38914331896551724,
+        0.43871609669811323,
+        0.4387122844827586,
+        0.45857900943396224
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 7,
+    "source_crop": [
+      82,
+      311,
+      210,
+      439
+    ],
+    "source_proposal": "pose_wrist",
+    "proposal_seed_t": 8.0,
+    "nn_inference_t": 8.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-10",
+    "t": 8.0,
+    "sha256": "57a0e46c7a45f0e831f61d9c80722fefe4b74dbcfe1d3031ff58307d481f9a5c",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 8.0,
+    "context_crop": [
+      128,
+      316,
+      256,
+      444
+    ],
+    "source_rgb_sha256": "1b034ae01ddafc232b544c1cd6fa74cd1d0050992bb53879cd48be0ad40e3b53",
+    "context_rgb_sha256": "38445abc97f77c5f09bfad397bab2ea9b22ee7de8e8f18c6809945c5b55469f5",
+    "overlay_rgb_sha256": "9072584dbaad4a5d47953eec6155590e002b6b0ca871cbe0e77fed3ce2524507",
+    "context_overlay_rgb_sha256": "a46d5180b8617b2b384be3ce642c261208497fe70df7a1432b7fd64d5e3f20e8",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.613444394999533,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7148458260016923
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.4505806565284729,
+      "box": [
+        0.5664370306606951,
+        0.480769193397378,
+        0.5974465074210331,
+        0.49069761780073057
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 1,
+    "source_crop": [
+      18,
+      358,
+      369,
+      454
+    ],
+    "source_proposal": "desk",
+    "proposal_seed_t": null,
+    "nn_inference_t": 2.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-33",
+    "t": 2.0,
+    "sha256": "209e8aaca88df59064e5f28b3bcc489fee3eea9eb920889b69c03c83d52430c6",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 2.0,
+    "context_crop": [
+      206,
+      348,
+      334,
+      476
+    ],
+    "source_rgb_sha256": "fbb4973613643dfcf0d94f676e14c75b124af5f1be52a6b5e6db3b5d92d15ea5",
+    "context_rgb_sha256": "ca2d4d0f5884849c9f8bceb026cba54a8e9584b296ee8fd9c4536967124b7d22",
+    "overlay_rgb_sha256": "af3b52988989c5985b54b47803183f7f7bed0d6a299cfc5969d29a897814cc68",
+    "context_overlay_rgb_sha256": "fc616c5ab1096edbaf188406a5bf1088aa1a5d140926814932535b2e49fc4955",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6142794560000766,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7030027619985049
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.4117140471935272,
+      "box": [
+        0.3269767761230469,
+        0.4770425760521079,
+        0.4462913315871666,
+        0.5264834278034713
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 12.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-28",
+    "t": 12.0,
+    "sha256": "d15ef04bcfae571bd2d7fc4e4d709ba595ae19f44136a43e7277f17e7b6e5b6d",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 12.0,
+    "context_crop": [
+      115,
+      361,
+      243,
+      489
+    ],
+    "source_rgb_sha256": "69f5898bfede47bb07a920c82101cbd75f65f607df1f509b746a23fcd9c6c9bd",
+    "context_rgb_sha256": "9693b26bf27705c49a1e6faec4e22eabb1ab9314413ddd06a94db686d5f7849b",
+    "overlay_rgb_sha256": "e71bca7a08f853548b72cd590043a27c97e4554db48a27d56092bdfd168cd819",
+    "context_overlay_rgb_sha256": "26f306dc22a309faaa7ba36b575b6a20a842c83992f39db92448b8a94072d222",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6141315910026606,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7185907940001925
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.6601723432540894,
+      "box": [
+        0.3132408405172414,
+        0.5010318396226415,
+        0.3828125,
+        0.5225530660377359
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 4,
+    "source_crop": [
+      95,
+      336,
+      223,
+      464
+    ],
+    "source_proposal": "pose_wrist",
+    "proposal_seed_t": 10.0,
+    "nn_inference_t": 9.8,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-2",
+    "t": 9.8,
+    "sha256": "9932ae0a10d3b9371bf52ea558dc19092fcf47adcd275a73a52a56b95464bca6",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 9.8,
+    "context_crop": [
+      97,
+      370,
+      225,
+      498
+    ],
+    "source_rgb_sha256": "88f2598e0fe6cf61e39e0b8dbe4bd9872e694374eb6751d4f876d99c184404cb",
+    "context_rgb_sha256": "cf14d76093ff5de1a74c7b8347a76b35d5a7b738e52009853ffb361f664cd385",
+    "overlay_rgb_sha256": "7b04035986fe6794884025d1c53567006bf561aeb92453af6d136bb9967f6d6b",
+    "context_overlay_rgb_sha256": "3d009a0ded511400c59b0a3b9c82de065dddc7bc0f2195070c6629ef137a2831",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6152093399978185,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7084822340002574
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.18787656724452972,
+      "box": [
+        0.28704202586206895,
+        0.3212706367924528,
+        0.3147898706896552,
+        0.35885908018867924
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 3,
+    "source_crop": [
+      57,
+      223,
+      185,
+      351
+    ],
+    "source_proposal": "pose_wrist",
+    "proposal_seed_t": 21.0,
+    "nn_inference_t": 21.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-11",
+    "t": 21.0,
+    "sha256": "b3a954a5b761ad47943e061599315e3fe9d22573eeb92bb14bf315cdcd422fc5",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 21.0,
+    "context_crop": [
+      76,
+      224,
+      204,
+      352
+    ],
+    "source_rgb_sha256": "520e55acb1f66d3b0b41e9df14ed5328e45d16c89e110dd349d4d066e0f12803",
+    "context_rgb_sha256": "44b71cb36423ee53ddca17a58e47f3e96041669baebbb9231e1f44720f26c030",
+    "overlay_rgb_sha256": "cd415c28c655e9bb130949cf4c44c220df71fa1eaa0b3d9e7a778635c613246b",
+    "context_overlay_rgb_sha256": "39daaef8e5cd489acc6f269272b99fd65f6e301327af25039c79a6a70cdb4b1b",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6148586090021126,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.6939623770012986
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.28636878728866577,
+      "box": [
+        0.3011179956896552,
+        0.5235112028301887,
+        0.3330414870689655,
+        0.5376621462264151
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 5,
+    "source_crop": [
+      93,
+      338,
+      221,
+      466
+    ],
+    "source_proposal": "pose_wrist",
+    "proposal_seed_t": 16.0,
+    "nn_inference_t": 16.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-1",
+    "t": 16.0,
+    "sha256": "8911a9219b9433091824e553a70bb80335f075fd8ac982d2062d2ecf023c16bc",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 16.033333333333335,
+    "context_crop": [
+      83,
+      386,
+      211,
+      514
+    ],
+    "source_rgb_sha256": "3f655486295cef9f5ab9e986dc0ef7302f594a452ee167c6a827c84b1576842e",
+    "context_rgb_sha256": "483be1564550592df2efafe2fd71f0e0b76126fa4be898eb64e7b64a9e46e321",
+    "overlay_rgb_sha256": "2f2f826573e5682845948ec96aec791b6ea3431837d174902258451b588a184e",
+    "context_overlay_rgb_sha256": "7812cf2267c9741a2702748e41c8983fcd4f30fce3c90d1be3f69b7faa7fcb2f",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6145138390020293,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7021642399995471
+  },
+  {
+    "detection": {
+      "label": "bundle",
+      "score": 0.13006426393985748,
+      "box": [
+        0.41150323275862066,
+        0.4115566037735849,
+        0.47629310344827586,
+        0.4659492924528302
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 5,
+    "source_crop": [
+      153,
+      292,
+      281,
+      420
+    ],
+    "source_proposal": "pose_wrist",
+    "proposal_seed_t": 18.0,
+    "nn_inference_t": 18.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-40",
+    "t": 18.0,
+    "sha256": "6a81739ced0efdcd4a4feb76ea16562a20ceb53a2232a801528716c450366c9f",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 18.0,
+    "context_crop": [
+      142,
+      308,
+      270,
+      436
+    ],
+    "source_rgb_sha256": "43d4ca943f94db13993dd563c5deb5df145c126f8f088ba0e968226a32d9baf6",
+    "context_rgb_sha256": "aafa45877457a28851e17e9d0aefeb3268c7d31ebe10d131d9d295cd6e3b3e45",
+    "overlay_rgb_sha256": "cac04235df7eb3f9a6fb31b49ded2ce2b2b4a64c8a9cc59a70242c078e886a2d",
+    "context_overlay_rgb_sha256": "4b190afce0dd7425443efe6a84b38366ce8a63dc3bd5b3d1575c6512b41745bb",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6188782469980652,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7370824690005975
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.43812400102615356,
+      "box": [
+        0.3883351293103448,
+        0.43617334905660377,
+        0.4403286637931034,
+        0.4591686320754717
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 9,
+    "source_crop": [
+      110,
+      312,
+      238,
+      440
+    ],
+    "source_proposal": "fixture_desk_grid",
+    "proposal_seed_t": null,
+    "nn_inference_t": 30.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-13",
+    "t": 30.0,
+    "sha256": "a37930cf119bb691be77d8624b18333b04d9c67066a7f4627d63e3208dfa6057",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 30.000000000000004,
+    "context_crop": [
+      128,
+      316,
+      256,
+      444
+    ],
+    "source_rgb_sha256": "cf0ce81b5ded0bd25e0aeb4d70567878f0eb0868870c50e8eb762cbf96b4163d",
+    "context_rgb_sha256": "b3c181e07936de1300afbf12f1f88fecbe91f3a7992b5b0acbf930b78bfe963c",
+    "overlay_rgb_sha256": "4ee36b471d796bbe7d6ff9ac04c2bdba9906fd7e4c44314fee462840ad35feda",
+    "context_overlay_rgb_sha256": "de66e5af623769a87f9c3d76232d64b57831718587718e5d323ee1812ba46fb1",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6176559550003731,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7375175560009666
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.4201236963272095,
+      "box": [
+        0.30778556034482757,
+        0.47390919811320753,
+        0.3856411637931034,
+        0.49410377358490565
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 7,
+    "source_crop": [
+      108,
+      333,
+      236,
+      461
+    ],
+    "source_proposal": "fixture_desk_grid",
+    "proposal_seed_t": null,
+    "nn_inference_t": 13.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-46",
+    "t": 13.0,
+    "sha256": "66fc5d28c2371592f9260305589bdc86636fdd2ebe7a7ec976eec00a23d43df4",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 13.0,
+    "context_crop": [
+      97,
+      346,
+      225,
+      474
+    ],
+    "source_rgb_sha256": "ab363a29768cac41ed7cb3f9f37436f7ff5531fc101b212dc86e5ca7873fb914",
+    "context_rgb_sha256": "27789ed6d198fd17e064f9ec741f96fda681f25f875a700981f9fd9a7c917ad8",
+    "overlay_rgb_sha256": "42ead8d108bd515816f25d640e6c4f88fb147ed1068d81d85057b3014e5ef5c5",
+    "context_overlay_rgb_sha256": "57930a83e009faab08107081d27cb02ca3154cc9b7cb28afd4d9811636cd047a",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6170252009978867,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7311115959964809
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.49369460344314575,
+      "box": [
+        0.3508216594827586,
+        0.5033534787735849,
+        0.40247844827586204,
+        0.5274911556603774
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "owlv2_native128",
+    "call_index": 2,
+    "source_crop": [
+      116,
+      375,
+      244,
+      503
+    ],
+    "source_proposal": "neural_seed:id_card",
+    "proposal_seed_t": 60.0,
+    "nn_inference_t": 60.0,
+    "source_model": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "clip": "X-14",
+    "t": 60.0,
+    "sha256": "7d6890ecb4a2b28bbdd3b61b6711566eee84a53ab3439c40cd9b6a3a6714c681",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 60.00000000000001,
+    "context_crop": [
+      111,
+      373,
+      239,
+      501
+    ],
+    "source_rgb_sha256": "f7710ed5afd975fd66249b4294401bd10bf9e5c335263cb90dd401203e18adf1",
+    "context_rgb_sha256": "fa182ed86ffcba35a49f3b1276daa755b2ace2febce5dc91c1ed4f439ffac383",
+    "overlay_rgb_sha256": "99feacd72bef7330810041e2e7ab40e404fc52bd46f966d68c5e971ec671dda0",
+    "context_overlay_rgb_sha256": "2c8a326f1f435c45a3517ad24efacc059ae55de94d7b99613a49529af600b7f8",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6187433689992758,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7933742109999002
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.529081404209137,
+      "box": [
+        0.389622293669602,
+        0.4414449727760171,
+        0.5107482055137897,
+        0.4849131242284235
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 3.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-24",
+    "t": 3.0,
+    "sha256": "c175a683749401d5a9ecf6f1c188b64fa8a09543f41482c1e4eb2232255715d3",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 3.0,
+    "context_crop": [
+      145,
+      329,
+      273,
+      457
+    ],
+    "source_rgb_sha256": "feb253ab0bebcd2e86f931f554a060f83c5fec5eadeb0676e9e0533a357b7855",
+    "context_rgb_sha256": "798750c967e01519344b8d7ad150c460e8a2ba2127423ef5c37ea5109de7053d",
+    "overlay_rgb_sha256": "598f4943b1c62a8e5f42495cb6223db561a2b3642e3821e481f9f94d31635177",
+    "context_overlay_rgb_sha256": "561720a95a17009f35bc69fc99dcd6c322828ca0cefe0b554133b96b204a2aa8",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.608036155001173,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7175745920030749
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.34092503786087036,
+      "box": [
+        0.11112944011030526,
+        0.5622528813919931,
+        0.1596726549082789,
+        0.5705472658265311
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 1,
+    "source_crop": [
+      0,
+      402,
+      342,
+      564
+    ],
+    "source_proposal": "desk",
+    "proposal_seed_t": null,
+    "nn_inference_t": 56.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-4",
+    "t": 56.0,
+    "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 56.00000000000001,
+    "context_crop": [
+      0,
+      416,
+      128,
+      544
+    ],
+    "source_rgb_sha256": "0d310d88aa4a7a99c9acefd694db8fe7c5a5723799c0208f63860205b1437a20",
+    "context_rgb_sha256": "9a4f2b3f26caa2aa53b193d43c6c49f30d631a017d46a7dfc8e1101067a78f63",
+    "overlay_rgb_sha256": "e9567f256793ee529897e9e3872bb529a7bb938254eb0e71479e27450a21937b",
+    "context_overlay_rgb_sha256": "370bac6a15bffba88eb8ca6066e5f4760bd293ead36cef2e2e5d3b81c1ac88e0",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6205786149985215,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.693547992999811
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.3770817816257477,
+      "box": [
+        0.31988642133515455,
+        0.48782848861982236,
+        0.3451670449355553,
+        0.4975645767067963
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 1,
+    "source_crop": [
+      36,
+      336,
+      373,
+      496
+    ],
+    "source_proposal": "desk",
+    "proposal_seed_t": null,
+    "nn_inference_t": 16.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-23",
+    "t": 16.0,
+    "sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "error",
+    "decision": "unknown",
+    "returned_detection": null,
+    "error_type": "ValueError",
+    "error": "frame decode/time mismatch",
+    "wall_sec": 0.065681145999406
+  },
+  {
+    "detection": {
+      "label": "cash",
+      "score": 0.3902752101421356,
+      "box": [
+        0.20182037353515622,
+        0.4556024929262557,
+        0.3181941920313342,
+        0.5090721058395674
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 1,
+    "source_crop": [
+      0,
+      338,
+      353,
+      515
+    ],
+    "source_proposal": "desk",
+    "proposal_seed_t": null,
+    "nn_inference_t": 17.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-15",
+    "t": 17.0,
+    "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 17.033333333333335,
+    "context_crop": [
+      57,
+      345,
+      185,
+      473
+    ],
+    "source_rgb_sha256": "3133e3b42e19d42c283a50647c74744472b962e384496c90043842b00c6a0507",
+    "context_rgb_sha256": "16b4fb342df1536cb47cf78369b7f4bcb61ca1117a992286f0f6e16b28ff5819",
+    "overlay_rgb_sha256": "1e3770b85c6ce2e90412ac2890d9dd4ef52febefb4976190e0ab9519d5fc7c21",
+    "context_overlay_rgb_sha256": "ac5f108ef77bc9f0f6a39a9d1a9d92d39f7a4e68a25af8c5d2fda488f4ddbffd",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6144823739996355,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.7175340779976978
+  },
+  {
+    "detection": {
+      "label": "id_card",
+      "score": 0.3365316689014435,
+      "box": [
+        0.4988194827375741,
+        0.4267380912348909,
+        0.5533074346081964,
+        0.44897716450241376
+      ],
+      "track_id": "",
+      "role": "unknown",
+      "body": [],
+      "hands": []
+    },
+    "source": "grounding_dino_base",
+    "call_index": 0,
+    "source_crop": [
+      0,
+      0,
+      464,
+      848
+    ],
+    "source_proposal": "full",
+    "proposal_seed_t": null,
+    "nn_inference_t": 30.0,
+    "source_model": "IDEA-Research/grounding-dino-base@12bdfa3120f3e7ec7b434d90674b3396eccf88eb",
+    "clip": "X-38",
+    "t": 30.0,
+    "sha256": "5a6f6a13ef88191ec1d9a2a303f1be74d16aa3381a57aaadba8850aac715ff10",
+    "size": [
+      464,
+      848
+    ],
+    "answer": "unknown",
+    "status": "ok",
+    "decision": "unknown",
+    "returned_detection": null,
+    "decoded_t": 30.000000000000004,
+    "context_crop": [
+      180,
+      307,
+      308,
+      435
+    ],
+    "source_rgb_sha256": "3a98be78c3738f8a157673c9d6fc83ad18e50088448f9ff44fc10350ffbcc61e",
+    "context_rgb_sha256": "f4070503c849fd11e22bac48fd33a2e51a9b82ff2acbd38c7eddf9e2c0bef7c1",
+    "overlay_rgb_sha256": "a1e52b0f10717d8d9f11dda29846277ffb7489be712bb9ad069b3a3827ab509a",
+    "context_overlay_rgb_sha256": "be85b85ee21d6c9acef00014aef59dc450524ca67ed53dd6df00a7c74aa34216",
+    "raw": "{\"class\":\"unknown\"}",
+    "inference_sec": 0.6157428370024718,
+    "image_grid_thw": [
+      [
+        1,
+        52,
+        28
+      ],
+      [
+        1,
+        16,
+        16
+      ]
+    ],
+    "wall_sec": 0.6926467989978846
+  }
+]

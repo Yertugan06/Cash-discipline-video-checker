@@ -1,0 +1,106 @@
+{
+  "base_commit": "5fae84bc10415111a04b5982d156727ca80f788a",
+  "model": "google/owlv2-base-patch16-ensemble",
+  "model_input": 640,
+  "threshold": 0.12,
+  "prompts": {
+    "cash": [
+      "banknotes",
+      "a stack of banknotes"
+    ],
+    "bundle": [
+      "a bundle of banknotes"
+    ],
+    "bag": [
+      "a green fabric cash collection bag",
+      "a green cloth bag"
+    ],
+    "id_card": [
+      "an identity card"
+    ],
+    "document": [
+      "a paper document"
+    ],
+    "tablet": [
+      "a tablet computer"
+    ],
+    "cup": [
+      "a cup",
+      "a drinking bottle"
+    ],
+    "food": [
+      "food",
+      "a sandwich"
+    ],
+    "coat": [
+      "a coat lying on a desk"
+    ],
+    "handbag": [
+      "a handbag"
+    ],
+    "phone": [
+      "a mobile phone"
+    ]
+  },
+  "variants": [
+    "full_desk",
+    "full_desk_plus_native128"
+  ],
+  "roi_cap": 12,
+  "manifest_sha256": "c09272870a67937ae3a04040e36809a5a2c3f808423af2785f356ad822dc7d50",
+  "weights_metadata": {
+    "name": "objects",
+    "repo": "google/owlv2-base-patch16-ensemble",
+    "revision": "cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "license": "apache-2.0",
+    "source_url": "https://huggingface.co/google/owlv2-base-patch16-ensemble/tree/cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 4838,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 67,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "size": 414,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "size": 524619,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "size": 619918824,
+        "sha256": "e1e130b9e404cf91a75ad45644c1da9d7fa5284085eecc864266a6923efb99e7"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 425,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 121,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 1100,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "size": 1059962,
+        "sha256": null
+      }
+    ]
+  },
+  "development_only": true
+}

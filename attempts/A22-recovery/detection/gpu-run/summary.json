@@ -1,0 +1,59 @@
+{
+  "full_desk": {
+    "latency": {
+      "measured_frames": 20,
+      "total_sec": 4.363920291001705,
+      "median_sec": 0.1627090704987495,
+      "max_sec": 1.2328956329984067
+    },
+    "cash": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 3,
+      "tn": 4,
+      "unknown_positive": 0,
+      "unknown_negative": 0,
+      "unlabelled": 9
+    },
+    "id_card": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "tn": 0,
+      "unknown_positive": 0,
+      "unknown_negative": 0,
+      "unlabelled": 18
+    }
+  },
+  "full_desk_plus_native128": {
+    "latency": {
+      "measured_frames": 20,
+      "total_sec": 14.16100910703608,
+      "median_sec": 0.6676181329967221,
+      "max_sec": 1.7387979699924472
+    },
+    "cash": {
+      "tp": 5,
+      "fp": 0,
+      "fn": 2,
+      "tn": 4,
+      "unknown_positive": 0,
+      "unknown_negative": 0,
+      "unlabelled": 9
+    },
+    "id_card": {
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "tn": 0,
+      "unknown_positive": 0,
+      "unknown_negative": 0,
+      "unlabelled": 18
+    }
+  },
+  "cases": 20,
+  "no_proposal": 0,
+  "wall_sec": 16.174961230997724,
+  "model_load_sec": 0.9207744289997208,
+  "peak_gpu_bytes": 934809600
+}

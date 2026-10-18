@@ -1,0 +1,258 @@
+{
+  "status": "trained",
+  "selected_lambda": 0.01,
+  "a24_confusion": {
+    "train": {
+      "tp": 1,
+      "tn": 0,
+      "fp": 0,
+      "fn": 0,
+      "unknown_positive": 4,
+      "unknown_negative": 3
+    },
+    "probe": {
+      "tp": 1,
+      "tn": 0,
+      "fp": 0,
+      "fn": 0,
+      "unknown_positive": 1,
+      "unknown_negative": 2
+    }
+  },
+  "rows": [
+    {
+      "index": 1,
+      "clip": "X-38",
+      "split": "train",
+      "label": 1,
+      "state": "present",
+      "reason": "ridge_threshold",
+      "score": 0.6875096179123654,
+      "nearest_train_cosine": 0.9999999999999997,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 2,
+      "clip": "X-26",
+      "split": "train",
+      "label": 1,
+      "state": "unknown",
+      "reason": "score_gap",
+      "score": 0.051562313594214426,
+      "nearest_train_cosine": 1.0000000000000002,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 3,
+      "clip": "X-10",
+      "split": "train",
+      "label": 1,
+      "state": "present",
+      "reason": "ridge_threshold",
+      "score": 0.6330707830438531,
+      "nearest_train_cosine": 1.0000000000000002,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 4,
+      "clip": "X-2",
+      "split": "train",
+      "label": 1,
+      "state": "present",
+      "reason": "ridge_threshold",
+      "score": 0.8410540660448298,
+      "nearest_train_cosine": 1.0000000000000002,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 6,
+      "clip": "X-14",
+      "split": "train",
+      "label": 1,
+      "state": "present",
+      "reason": "ridge_threshold",
+      "score": 0.65407363497724,
+      "nearest_train_cosine": 1.0,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 7,
+      "clip": "X-23",
+      "split": "train",
+      "label": 0,
+      "state": "not_detected",
+      "reason": "ridge_threshold",
+      "score": -0.5788926956469642,
+      "nearest_train_cosine": 1.0,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 8,
+      "clip": "X-29",
+      "split": "train",
+      "label": 0,
+      "state": "not_detected",
+      "reason": "ridge_threshold",
+      "score": -0.5644420098324405,
+      "nearest_train_cosine": 1.0000000000000004,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 9,
+      "clip": "X-32",
+      "split": "train",
+      "label": 0,
+      "state": "not_detected",
+      "reason": "ridge_threshold",
+      "score": -0.606650387741037,
+      "nearest_train_cosine": 1.0000000000000002,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 0,
+      "clip": "X-4",
+      "split": "probe",
+      "label": 1,
+      "requested_t": 56.0,
+      "actual_t": 56.00000000000001,
+      "roi_box": [
+        0,
+        0.4609375,
+        0.801885775862069,
+        0.6785082547169811
+      ],
+      "roi_pixels": [
+        0,
+        390,
+        373,
+        576
+      ],
+      "reextracted_a24_score_delta": 0.0,
+      "state": "present",
+      "reason": "ridge_threshold",
+      "score": 0.8004030099454147,
+      "nearest_train_cosine": 0.959876603946783,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 5,
+      "clip": "X-13",
+      "split": "probe",
+      "label": 1,
+      "requested_t": 30.0,
+      "actual_t": 30.000000000000004,
+      "roi_box": [
+        0,
+        0.3696933962264151,
+        0.8244073275862069,
+        0.6182193396226415
+      ],
+      "roi_pixels": [
+        0,
+        313,
+        383,
+        525
+      ],
+      "reextracted_a24_score_delta": 0.0,
+      "state": "unknown",
+      "reason": "score_gap",
+      "score": -0.0025499193513672247,
+      "nearest_train_cosine": 0.9352223330581468,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 10,
+      "clip": "X-33",
+      "split": "probe",
+      "label": 0,
+      "requested_t": 2.0,
+      "actual_t": 2.0,
+      "roi_box": [
+        0,
+        0.37293632075471694,
+        0.8622609105603449,
+        0.5410082547169811
+      ],
+      "roi_pixels": [
+        0,
+        316,
+        401,
+        459
+      ],
+      "reextracted_a24_score_delta": 0.0,
+      "state": "unknown",
+      "reason": "score_gap",
+      "score": -0.15706882834752517,
+      "nearest_train_cosine": 0.8928843537808364,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    },
+    {
+      "index": 11,
+      "clip": "X-40",
+      "split": "probe",
+      "label": 0,
+      "requested_t": 18,
+      "actual_t": 18.0,
+      "roi_box": [
+        0,
+        0.4149764150943396,
+        0.8598228717672414,
+        0.5402122641509435
+      ],
+      "roi_pixels": [
+        0,
+        351,
+        399,
+        459
+      ],
+      "reextracted_a24_score_delta": 0.0,
+      "state": "unknown",
+      "reason": "score_gap",
+      "score": 0.005242630533466575,
+      "nearest_train_cosine": 0.8683122617914483,
+      "score_kind": "uncalibrated_signed_ridge",
+      "source": "own_dinov2_cash_ridge"
+    }
+  ],
+  "probe_used_for_fit_or_selection": false,
+  "probe_augmented": false,
+  "score_kind": "uncalibrated_signed_ridge",
+  "all_public_40_influenced_development": true,
+  "a24_probe_already_seen": true,
+  "new_heldout_accuracy_claim": false,
+  "device": "cpu",
+  "threads": 2,
+  "elapsed_sec": 9.300682551998761,
+  "a24_byte_identical": true,
+  "head_sha256": "021d6fda04143f2e29a4c0c066590157e56b9c71efc802d784a164388710727f",
+  "selection_sha256": "dddc6d00edc3a50fcc34409c072553f9d2944dddd068c22b6a37c18cbb8f3d1b",
+  "confusion": {
+    "train": {
+      "tp": 4,
+      "tn": 3,
+      "fp": 0,
+      "fn": 0,
+      "unknown_positive": 1,
+      "unknown_negative": 0
+    },
+    "probe": {
+      "tp": 1,
+      "tn": 0,
+      "fp": 0,
+      "fn": 0,
+      "unknown_positive": 1,
+      "unknown_negative": 2
+    }
+  }
+}

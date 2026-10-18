@@ -1,0 +1,64 @@
+{
+  "base_revision": "5fae84bc10415111a04b5982d156727ca80f788a",
+  "private_candidate_root": "/tmp/a22-llm-context-candidate",
+  "patch_dry_run": {
+    "argv": [
+      "patch",
+      "--dry-run",
+      "-p1",
+      "-d",
+      "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+      "-i",
+      "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A22-recovery/context/candidate.patch"
+    ]
+  },
+  "prepare_fresh_candidate": [
+    {
+      "argv": [
+        "cp",
+        "-a",
+        "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+        "/tmp/a22-context-review"
+      ]
+    },
+    {
+      "argv": [
+        "patch",
+        "-p1",
+        "-d",
+        "/tmp/a22-context-review",
+        "-i",
+        "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A22-recovery/context/candidate.patch"
+      ]
+    }
+  ],
+  "tests_actually_run": {
+    "cwd": "/tmp/a22-llm-context-candidate",
+    "env": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "argv": [
+      "/home/ubuntu/workspaces/datathon26-workers/worker-2/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_llm_context.py"
+    ]
+  },
+  "smoke_actually_run": {
+    "cwd": "/tmp",
+    "env": {
+      "PYTHONPATH": "/tmp/a22-llm-context-candidate",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "argv": [
+      "/home/ubuntu/workspaces/datathon26-workers/worker-2/.venv/bin/python",
+      "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A22-recovery/context/smoke.py",
+      "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache/0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364/97d26089af4d0fed1fd997bb48c72e58fbf3f7707bc0240b48628addce403bd7.json",
+      "5",
+      "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A22-recovery/context"
+    ]
+  },
+  "gpu_required": false,
+  "note": "For a fresh candidate substitute /tmp/a22-context-review in test cwd and PYTHONPATH. No service, videos, model or GPU calls."
+}

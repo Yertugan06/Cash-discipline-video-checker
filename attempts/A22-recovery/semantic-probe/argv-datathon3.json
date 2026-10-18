@@ -1,0 +1,16 @@
+[
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a21/visual-venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/semantic-probe/pilot.py",
+  "--native",
+  "/tmp/a22-native128-pilot-01/results.json",
+  "--dino",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-02/results.json",
+  "--model",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/Qwen3-VL-8B-Instruct",
+  "--videos",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a21/videos",
+  "--registration",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/semantic-probe/preregistration.json",
+  "--out",
+  "/tmp/a22-target-semantics-01"
+]

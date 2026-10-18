@@ -1,0 +1,15 @@
+{
+  "owner": "D2-2",
+  "cwd": "/home/ubuntu/workspaces/datathon26-workers/worker-2",
+  "env": {"RULE_SCOPE": "detector", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1"},
+  "argv": [
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/.venv/bin/python",
+    "attempts/A22-recovery/calibration/run_diagnostics.py",
+    "--base", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+    "--cache", "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache",
+    "--videos", "/home/ubuntu/data/open/videos",
+    "--candidate", "/home/ubuntu/workspaces/datathon26-workers/worker-2/backend/f1/fixture_evidence.py",
+    "--out", "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A22-recovery/calibration/numeric"
+  ],
+  "notes": ["CPU numeric caches and content hashes only. No decoding, neural inference, labels or service writes.", "Imports role/calibration helpers from the combined A22 base and loads only the new owned extractor."]
+}

@@ -1,0 +1,10 @@
+{
+  "base": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "module_sha256": "c832291a528f8c0caacc17dd6b0d6f6f07a13f3cfc16b0b4dbe27341a781aa88",
+  "events_module": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base/backend/f1/events.py",
+  "rules_module": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base/backend/f1/rules.py",
+  "opencv_version": "5.0.0",
+  "planned_clips": 6,
+  "status": "complete",
+  "completed_clips": 6
+}

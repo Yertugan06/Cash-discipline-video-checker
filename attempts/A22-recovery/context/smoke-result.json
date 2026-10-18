@@ -1,0 +1,55 @@
+{
+  "cache_path": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache/0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364/97d26089af4d0fed1fd997bb48c72e58fbf3f7707bc0240b48628addce403bd7.json",
+  "cache_sha256": "6c4f1ab193f19fba434a0c2cc38bc2fc33a1c45d89c27c441a48ce43e4d82460",
+  "source_root": "/tmp/a22-llm-context-candidate",
+  "observations": 29,
+  "events": 32,
+  "target_t": 5.0,
+  "context_bytes": 15925,
+  "context_build_ms": 14.238,
+  "actual_grounding_bytes": 1465,
+  "scene_confidence": 1.0,
+  "fixture_detection_scores": {
+    "counter": 0.1515375425418218,
+    "desk": 0.40175554156303406,
+    "door": 0.34443405601713395,
+    "laptop": 0.6208069920539856,
+    "safe": 0.27440165479977924
+  },
+  "coverage_flags": {
+    "roles": true,
+    "desk": true,
+    "safe": true,
+    "door": true,
+    "laptop": true,
+    "counter": true,
+    "hands": true,
+    "cash": false
+  },
+  "role_values_by_track": {
+    "person:1": [
+      "cashier",
+      "outsider"
+    ],
+    "person:2": [
+      "glass"
+    ],
+    "person:11": [
+      "client"
+    ],
+    "person:19": [
+      "glass"
+    ],
+    "person:25": [
+      "glass"
+    ]
+  },
+  "omitted": {
+    "samples": 0,
+    "actors": 0,
+    "objects": 1,
+    "events": 11
+  },
+  "actual_prompt_and_context_change_fingerprint": true,
+  "model_inference_ran": false
+}

@@ -1,0 +1,381 @@
+{
+  "reference_dimensions_only": [
+    464,
+    848
+  ],
+  "cases": [
+    {
+      "clip": "X-4",
+      "evaluation_t": 56.0,
+      "observation_t": 56.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-23",
+      "evaluation_t": 16.0,
+      "observation_t": 16.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-15",
+      "evaluation_t": 17.0,
+      "observation_t": 17.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 8,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-38",
+      "evaluation_t": 30.0,
+      "observation_t": 30.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 12,
+      "sources": [
+        "neural_seed:cash",
+        "neural_seed:id_card",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-29",
+      "evaluation_t": 16.0,
+      "observation_t": 16.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 6,
+      "sources": [
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-17",
+      "evaluation_t": 6.0,
+      "observation_t": 6.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-26",
+      "evaluation_t": 15.0,
+      "observation_t": 15.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 7,
+      "sources": [
+        "neural_seed:cash",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-32",
+      "evaluation_t": 2.0,
+      "observation_t": 2.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-20",
+      "evaluation_t": 6.0,
+      "observation_t": 6.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 9,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-10",
+      "evaluation_t": 8.0,
+      "observation_t": 8.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 12,
+      "sources": [
+        "neural_seed:id_card",
+        "neural_seed:id_card",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-33",
+      "evaluation_t": 2.0,
+      "observation_t": 2.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 6,
+      "sources": [
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-28",
+      "evaluation_t": 12.0,
+      "observation_t": 12.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 6,
+      "sources": [
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-2",
+      "evaluation_t": 9.8,
+      "observation_t": 10.0,
+      "delta_sec": 0.1999999999999993,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-11",
+      "evaluation_t": 21.0,
+      "observation_t": 21.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-1",
+      "evaluation_t": 16.0,
+      "observation_t": 16.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-40",
+      "evaluation_t": 18.0,
+      "observation_t": 18.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-13",
+      "evaluation_t": 30.0,
+      "observation_t": 30.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 12,
+      "sources": [
+        "neural_seed:id_card",
+        "neural_seed:cash",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-46",
+      "evaluation_t": 13.0,
+      "observation_t": 13.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-14",
+      "evaluation_t": 60.0,
+      "observation_t": 60.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 12,
+      "sources": [
+        "neural_seed:id_card",
+        "neural_seed:cash",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    },
+    {
+      "clip": "X-24",
+      "evaluation_t": 3.0,
+      "observation_t": 3.0,
+      "delta_sec": 0.0,
+      "proposal_count_at_reference_464x848": 10,
+      "sources": [
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "pose_wrist",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid",
+        "fixture_desk_grid"
+      ]
+    }
+  ],
+  "max_nearest_delta_sec": 0.1999999999999993,
+  "total_proposals": 190,
+  "no_proposal_cases": 0
+}

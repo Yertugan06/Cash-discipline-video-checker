@@ -1,0 +1,1048 @@
+{
+  "schema_version": 1,
+  "target_t": 5.0,
+  "window": {
+    "start": 2.5,
+    "end": 7.5,
+    "available_observation_extent": [
+      0.0,
+      14.0
+    ],
+    "target_sample_exists": true,
+    "extends_beyond_available_observations": false,
+    "recording_end_verified": false,
+    "sampling_step_estimate_s": 0.5,
+    "invalid_observation_timestamps": 0,
+    "boundary_events": [],
+    "observation_gap_intervals": []
+  },
+  "scene": {
+    "source": "Scene calibration; exact model identity not recorded",
+    "confidence": 1.0,
+    "objects": {
+      "counter": {
+        "label": "counter",
+        "box": [
+          0.052801724137931036,
+          0.3959316037735849,
+          0.25390625,
+          0.5097287735849056
+        ],
+        "score": 0.1515375425418218,
+        "box_valid": true
+      },
+      "desk": {
+        "label": "desk",
+        "box": [
+          0.04953529094827586,
+          0.41538915094339623,
+          0.7446120689655172,
+          0.5512971698113207
+        ],
+        "score": 0.40175554156303406,
+        "box_valid": true
+      },
+      "door": {
+        "label": "door",
+        "box": [
+          0.17820581896551724,
+          0.0,
+          0.3499461206896552,
+          0.5067806603773585
+        ],
+        "score": 0.34443405601713395,
+        "box_valid": true
+      },
+      "laptop": {
+        "label": "laptop",
+        "box": [
+          0.4765625,
+          0.3788325471698113,
+          0.6729525862068966,
+          0.48172169811320753
+        ],
+        "score": 0.6208069920539856,
+        "box_valid": true
+      },
+      "safe": {
+        "label": "safe",
+        "box": [
+          0.6610991379310345,
+          0.361438679245283,
+          0.962823275862069,
+          0.5630896226415094
+        ],
+        "score": 0.27440165479977924,
+        "box_valid": true
+      }
+    },
+    "objects_omitted": 0,
+    "zones": {
+      "cashier": [
+        [
+          1.0,
+          0.48334316037735847
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.48334316037735847
+        ]
+      ],
+      "client": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.48334316037735847
+        ],
+        [
+          0.0,
+          0.48334316037735847
+        ]
+      ],
+      "counter": [
+        [
+          0.052801724137931036,
+          0.3959316037735849
+        ],
+        [
+          0.25390625,
+          0.3959316037735849
+        ],
+        [
+          0.25390625,
+          0.5097287735849056
+        ],
+        [
+          0.052801724137931036,
+          0.5097287735849056
+        ]
+      ],
+      "desk": [
+        [
+          0.04953529094827586,
+          0.41538915094339623
+        ],
+        [
+          0.7446120689655172,
+          0.41538915094339623
+        ],
+        [
+          0.7446120689655172,
+          0.5512971698113207
+        ],
+        [
+          0.04953529094827586,
+          0.5512971698113207
+        ]
+      ],
+      "door": [
+        [
+          0.17820581896551724,
+          0.0
+        ],
+        [
+          0.3499461206896552,
+          0.0
+        ],
+        [
+          0.3499461206896552,
+          0.5067806603773585
+        ],
+        [
+          0.17820581896551724,
+          0.5067806603773585
+        ]
+      ],
+      "laptop": [
+        [
+          0.4765625,
+          0.3788325471698113
+        ],
+        [
+          0.6729525862068966,
+          0.3788325471698113
+        ],
+        [
+          0.6729525862068966,
+          0.48172169811320753
+        ],
+        [
+          0.4765625,
+          0.48172169811320753
+        ]
+      ],
+      "safe": [
+        [
+          0.6610991379310345,
+          0.361438679245283
+        ],
+        [
+          0.962823275862069,
+          0.361438679245283
+        ],
+        [
+          0.962823275862069,
+          0.5630896226415094
+        ],
+        [
+          0.6610991379310345,
+          0.5630896226415094
+        ]
+      ]
+    },
+    "cashier_position": [
+      0.48649280869412687,
+      0.6226557325923218
+    ],
+    "cashier_direction": [
+      0.0,
+      1.0
+    ],
+    "warning_count": 0
+  },
+  "actors": [
+    {
+      "track_id": "person:1",
+      "sample": {
+        "label": "person",
+        "box": [
+          0.34311649203300476,
+          0.4214744567871094,
+          0.5793333649635315,
+          0.629772424697876
+        ],
+        "score": 0.7568359375,
+        "t": 5.0,
+        "box_valid": true
+      },
+      "first_observation": {
+        "label": "person",
+        "box": [
+          0.35414963960647583,
+          0.4216073155403137,
+          0.582570493221283,
+          0.6240364909172058
+        ],
+        "score": 0.78955078125,
+        "t": 0.0,
+        "box_valid": true
+      },
+      "last_observation": {
+        "label": "person",
+        "box": [
+          0.30971458554267883,
+          0.41787296533584595,
+          0.5691496133804321,
+          0.6065279245376587
+        ],
+        "score": 0.75634765625,
+        "t": 14.0,
+        "box_valid": true
+      },
+      "gap_intervals": [],
+      "gaps_omitted": 0,
+      "observation_count": 29,
+      "extent_scope": "available cached observations; no interpolation across gaps",
+      "source": "Observation.detections; tracker identity, not persistent visual identity",
+      "role": "cashier",
+      "role_source": "EventBuilder geometric/trajectory assignment; not verified identity",
+      "role_samples": [
+        [
+          2.5,
+          "cashier"
+        ],
+        [
+          3.0,
+          "cashier"
+        ],
+        [
+          3.5,
+          "cashier"
+        ],
+        [
+          4.0,
+          "cashier"
+        ],
+        [
+          4.5,
+          "cashier"
+        ],
+        [
+          5.0,
+          "cashier"
+        ],
+        [
+          5.5,
+          "cashier"
+        ],
+        [
+          6.0,
+          "cashier"
+        ],
+        [
+          6.5,
+          "cashier"
+        ],
+        [
+          7.0,
+          "cashier"
+        ],
+        [
+          7.5,
+          "cashier"
+        ]
+      ]
+    },
+    {
+      "track_id": "person:11",
+      "sample": {
+        "label": "person",
+        "box": [
+          0.0,
+          0.19509971141815186,
+          0.17464950680732727,
+          0.43264973163604736
+        ],
+        "score": 0.869140625,
+        "t": 5.0,
+        "box_valid": true
+      },
+      "first_observation": {
+        "label": "person",
+        "box": [
+          0.11278486996889114,
+          0.18807539343833923,
+          0.25129544734954834,
+          0.44268879294395447
+        ],
+        "score": 0.8876953125,
+        "t": 4.0,
+        "box_valid": true
+      },
+      "last_observation": {
+        "label": "person",
+        "box": [
+          0.14320644736289978,
+          0.17428907752037048,
+          0.25368842482566833,
+          0.44282665848731995
+        ],
+        "score": 0.87939453125,
+        "t": 11.5,
+        "box_valid": true
+      },
+      "gap_intervals": [],
+      "gaps_omitted": 0,
+      "observation_count": 16,
+      "extent_scope": "available cached observations; no interpolation across gaps",
+      "source": "Observation.detections; tracker identity, not persistent visual identity",
+      "role": "client",
+      "role_source": "EventBuilder geometric/trajectory assignment; not verified identity",
+      "role_samples": [
+        [
+          4.0,
+          "client"
+        ],
+        [
+          4.5,
+          "client"
+        ],
+        [
+          5.0,
+          "client"
+        ],
+        [
+          5.5,
+          "client"
+        ],
+        [
+          6.0,
+          "client"
+        ],
+        [
+          6.5,
+          "client"
+        ],
+        [
+          7.0,
+          "client"
+        ],
+        [
+          7.5,
+          "client"
+        ]
+      ]
+    },
+    {
+      "track_id": "person:2",
+      "sample": {
+        "label": "person",
+        "box": [
+          0.017351940274238586,
+          0.21421392261981964,
+          0.09614281356334686,
+          0.29903027415275574
+        ],
+        "score": 0.302490234375,
+        "t": 2.5,
+        "box_valid": true
+      },
+      "first_observation": {
+        "label": "person",
+        "box": [
+          0.01835278421640396,
+          0.21300989389419556,
+          0.1049695760011673,
+          0.2991122603416443
+        ],
+        "score": 0.37353515625,
+        "t": 0.0,
+        "box_valid": true
+      },
+      "last_observation": {
+        "label": "person",
+        "box": [
+          0.017351940274238586,
+          0.21421392261981964,
+          0.09614281356334686,
+          0.29903027415275574
+        ],
+        "score": 0.302490234375,
+        "t": 2.5,
+        "box_valid": true
+      },
+      "gap_intervals": [],
+      "gaps_omitted": 0,
+      "observation_count": 6,
+      "extent_scope": "available cached observations; no interpolation across gaps",
+      "source": "Observation.detections; tracker identity, not persistent visual identity",
+      "role": "glass",
+      "role_source": "EventBuilder geometric/trajectory assignment; not verified identity",
+      "role_samples": [
+        [
+          2.5,
+          "glass"
+        ]
+      ]
+    }
+  ],
+  "object_tracks": [
+    {
+      "track_id": "handbag:25",
+      "sample": {
+        "label": "handbag",
+        "box": [
+          0.059334591031074524,
+          0.3938679099082947,
+          0.24339978396892548,
+          0.5038325190544128
+        ],
+        "score": 0.332852303981781,
+        "t": 7.0,
+        "box_valid": true
+      },
+      "first_observation": {
+        "label": "handbag",
+        "box": [
+          0.059334591031074524,
+          0.3938679099082947,
+          0.24339978396892548,
+          0.5038325190544128
+        ],
+        "score": 0.332852303981781,
+        "t": 7.0,
+        "box_valid": true
+      },
+      "last_observation": {
+        "label": "handbag",
+        "box": [
+          0.05381195992231369,
+          0.39416274428367615,
+          0.25121229887008667,
+          0.5076650977134705
+        ],
+        "score": 0.23283305764198303,
+        "t": 12.0,
+        "box_valid": true
+      },
+      "gap_intervals": [
+        [
+          7.0,
+          8.0
+        ]
+      ],
+      "gaps_omitted": 0,
+      "observation_count": 6,
+      "extent_scope": "available cached observations; no interpolation across gaps",
+      "source": "Observation.detections; tracker identity, not persistent visual identity",
+      "financial_owner": "not established by track/session association"
+    },
+    {
+      "track_id": "handbag:26",
+      "sample": {
+        "label": "handbag",
+        "box": [
+          0.22777478396892548,
+          0.3991745412349701,
+          0.41352370381355286,
+          0.48231130838394165
+        ],
+        "score": 0.4179840087890625,
+        "t": 7.5,
+        "box_valid": true
+      },
+      "first_observation": {
+        "label": "handbag",
+        "box": [
+          0.22777478396892548,
+          0.3991745412349701,
+          0.41352370381355286,
+          0.48231130838394165
+        ],
+        "score": 0.4179840087890625,
+        "t": 7.5,
+        "box_valid": true
+      },
+      "last_observation": {
+        "label": "handbag",
+        "box": [
+          0.2653556168079376,
+          0.43153005838394165,
+          0.45177802443504333,
+          0.5100235939025879
+        ],
+        "score": 0.6041653752326965,
+        "t": 14.0,
+        "box_valid": true
+      },
+      "gap_intervals": [],
+      "gaps_omitted": 0,
+      "observation_count": 14,
+      "extent_scope": "available cached observations; no interpolation across gaps",
+      "source": "Observation.detections; tracker identity, not persistent visual identity",
+      "financial_owner": "not established by track/session association"
+    },
+    {
+      "track_id": "phone:2",
+      "sample": {
+        "label": "phone",
+        "box": [
+          0.4528556168079376,
+          0.38974055647850037,
+          0.5466055870056152,
+          0.4404481053352356
+        ],
+        "score": 0.2330075204372406,
+        "t": 3.5,
+        "box_valid": true
+      },
+      "first_observation": {
+        "label": "phone",
+        "box": [
+          0.45366379618644714,
+          0.39003539085388184,
+          0.5471444129943848,
+          0.4392688572406769
+        ],
+        "score": 0.18068420886993408,
+        "t": 0.0,
+        "box_valid": true
+      },
+      "last_observation": {
+        "label": "phone",
+        "box": [
+          0.4528556168079376,
+          0.38974055647850037,
+          0.5466055870056152,
+          0.4404481053352356
+        ],
+        "score": 0.2330075204372406,
+        "t": 3.5,
+        "box_valid": true
+      },
+      "gap_intervals": [
+        [
+          2.0,
+          3.0
+        ]
+      ],
+      "gaps_omitted": 0,
+      "observation_count": 6,
+      "extent_scope": "available cached observations; no interpolation across gaps",
+      "source": "Observation.detections; tracker identity, not persistent visual identity",
+      "financial_owner": "not established by track/session association"
+    }
+  ],
+  "samples": [
+    {
+      "t": 2.5,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9728307723999023,
+          "margin": 0.9456615447998047
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.6791787147521973,
+          "margin": 0.35835739970207214
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.8779488205909729,
+          "margin": 0.7910200953483582
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9835969805717468,
+          "margin": 0.9671939611434937
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.99998939037323,
+          "margin": 0.99997878074646
+        },
+        "person:2": {
+          "value": "seated",
+          "score": 0.6926419734954834,
+          "margin": 0.3852839469909668
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 3.0,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9458011984825134,
+          "margin": 0.8916024565696716
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.896251380443573,
+          "margin": 0.792502760887146
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.7361047267913818,
+          "margin": 0.5316958427429199
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9881309270858765,
+          "margin": 0.9762617945671082
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999979734420776,
+          "margin": 0.9999959468841553
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 3.5,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9458011984825134,
+          "margin": 0.8916024565696716
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.896251380443573,
+          "margin": 0.792502760887146
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.7361047267913818,
+          "margin": 0.5316958427429199
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9881309270858765,
+          "margin": 0.9762617945671082
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999979734420776,
+          "margin": 0.9999959468841553
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 4.0,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.961533784866333,
+          "margin": 0.923067569732666
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.7905303239822388,
+          "margin": 0.5810606479644775
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.8844391107559204,
+          "margin": 0.7968677878379822
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9869794845581055,
+          "margin": 0.9739589691162109
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999903440475464,
+          "margin": 0.9999806880950928
+        },
+        "person:11": {
+          "value": "seated",
+          "score": 0.9539660811424255,
+          "margin": 0.9079321622848511
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 4.5,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.961533784866333,
+          "margin": 0.923067569732666
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.7905303239822388,
+          "margin": 0.5810606479644775
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.8844391107559204,
+          "margin": 0.7968677878379822
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9869794845581055,
+          "margin": 0.9739589691162109
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999903440475464,
+          "margin": 0.9999806880950928
+        },
+        "person:11": {
+          "value": "seated",
+          "score": 0.9539660811424255,
+          "margin": 0.9079321622848511
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 5.0,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9416541457176208,
+          "margin": 0.8833082914352417
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.8056321740150452,
+          "margin": 0.6112643480300903
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.882432222366333,
+          "margin": 0.7950596213340759
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9859364032745361,
+          "margin": 0.9718728065490723
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999985694885254,
+          "margin": 0.999997079372406
+        },
+        "person:11": {
+          "value": "seated",
+          "score": 0.9585376977920532,
+          "margin": 0.9170753955841064
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 5.5,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9416541457176208,
+          "margin": 0.8833082914352417
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.8056321740150452,
+          "margin": 0.6112643480300903
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.882432222366333,
+          "margin": 0.7950596213340759
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9859364032745361,
+          "margin": 0.9718728065490723
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999985694885254,
+          "margin": 0.999997079372406
+        },
+        "person:11": {
+          "value": "seated",
+          "score": 0.9585376977920532,
+          "margin": 0.9170753955841064
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 6.0,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9362850189208984,
+          "margin": 0.8725700378417969
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.7745833992958069,
+          "margin": 0.5491667985916138
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.8865668773651123,
+          "margin": 0.8114829659461975
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9814534187316895,
+          "margin": 0.9629068374633789
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999969005584717,
+          "margin": 0.9999938607215881
+        },
+        "person:11": {
+          "value": "unknown",
+          "score": 0.5156199336051941,
+          "margin": 0.031239837408065796
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 6.5,
+      "detection_count": 3,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.9362850189208984,
+          "margin": 0.8725700378417969
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.7745833992958069,
+          "margin": 0.5491667985916138
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.8865668773651123,
+          "margin": 0.8114829659461975
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9814534187316895,
+          "margin": 0.9629068374633789
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999969005584717,
+          "margin": 0.9999938607215881
+        },
+        "person:11": {
+          "value": "unknown",
+          "score": 0.5156199336051941,
+          "margin": 0.031239837408065796
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 7.0,
+      "detection_count": 4,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.5926666259765625,
+          "margin": 0.18533319234848022
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.6791787147521973,
+          "margin": 0.35835739970207214
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.7962678074836731,
+          "margin": 0.6578972339630127
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9822876453399658,
+          "margin": 0.9645753502845764
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999992847442627,
+          "margin": 0.9999985694885254
+        },
+        "person:11": {
+          "value": "seated",
+          "score": 0.9869794845581055,
+          "margin": 0.9739589691162109
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    },
+    {
+      "t": 7.5,
+      "detection_count": 4,
+      "untracked_detection_count": 0,
+      "state_samples": {
+        "counter": {
+          "value": "idle",
+          "score": 0.5926666259765625,
+          "margin": 0.18533319234848022
+        },
+        "door": {
+          "value": "closed",
+          "score": 0.6791787147521973,
+          "margin": 0.35835739970207214
+        },
+        "laptop": {
+          "value": "closed",
+          "score": 0.7962678074836731,
+          "margin": 0.6578972339630127
+        },
+        "safe": {
+          "value": "closed",
+          "score": 0.9822876453399658,
+          "margin": 0.9645753502845764
+        },
+        "person:1": {
+          "value": "seated",
+          "score": 0.9999992847442627,
+          "margin": 0.9999985694885254
+        },
+        "person:11": {
+          "value": "seated",
+          "score": 0.9869794845581055,
+          "margin": 0.9739589691162109
+        }
+      },
+      "states_omitted": 0,
+      "source": "Observation.states; classifier identity not recorded per sample"
+    }
+  ],
+  "events": [],
+  "coverage_flags": {
+    "roles": true,
+    "desk": true,
+    "safe": true,
+    "door": true,
+    "laptop": true,
+    "counter": true,
+    "hands": true,
+    "cash": false
+  },
+  "warning_count": 1,
+  "interpretation": {
+    "empty_detection": "no detection; occlusion/miss/absence unresolved",
+    "gap": "not observed between samples; not proof of absence or continuity",
+    "location_hand_or_handover": "geometric near-hand/transition proxy, not proven possession/transfer",
+    "session_id": "observed-in-session association, not verified financial ownership",
+    "safe_attendance": "geometric proximity, not active handling or mechanical lock evidence",
+    "state_samples": "classifier outputs at exact times; no propagation across gaps",
+    "coverage_flags": "reliability flags; false is not observed object absence",
+    "clip_end": "retain event end_reason; last observation alone does not prove recording end"
+  },
+  "omitted": {
+    "samples": 0,
+    "actors": 0,
+    "objects": 1,
+    "events": 11
+  },
+  "limits": {
+    "serialized_bytes": 16000,
+    "samples": 11,
+    "actors": 6,
+    "object_tracks": 12,
+    "events": 16
+  },
+  "invalid_numeric_values": 0
+}

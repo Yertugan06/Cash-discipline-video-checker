@@ -1,0 +1,12 @@
+{
+  "policy_sha256": "46928abc0d12fd576e1b550bdf1f5f609724eab8742110b2238ea2db678dc016",
+  "runner_sha256": "1cbddf02146576182211f57ad9e8e938618c738d301b1f70a25d9b91c2f12fa4",
+  "base_sources_sha256": {
+    "backend/f1/events.py": "d13e9fca69dd9c460d9872578eb21b07adfe66fe8bc0fb3ccbd8aaa5ae81f437",
+    "backend/f1/calibration.py": "275d7860fa62a88cf6191149d93deb95d915eb6fddc994689fd004b9edc9b27a",
+    "backend/f1/visual_checks.py": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb",
+    "config/perception.yaml": "9201da3982e88a0d69b78ab2e9c746f665acf25e5307db2e6196e2abf092e75f",
+    "config/overrides.yaml": "66ef96a57809c4ca39497303c1f5399ce596be3c1d20f5c5a8d6ea399fb0e787"
+  },
+  "status": "CPU_PREPARED"
+}

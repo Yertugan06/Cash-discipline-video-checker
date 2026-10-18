@@ -1,0 +1,16 @@
+[
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a21/visual-venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/detection/pilot.py",
+  "--base",
+  "/tmp/a22-detection-candidate",
+  "--weights",
+  "/home/ubuntu/datathon26-annotation-prefetch/weights",
+  "--videos",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a21/videos",
+  "--cache",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache",
+  "--manifest",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/detection/manifest.json",
+  "--out",
+  "/tmp/a22-native128-pilot-01"
+]

@@ -1,0 +1,9 @@
+{
+  "parser": "passed",
+  "provenance": "all selected NN outputs match actual source calls",
+  "queries": 24,
+  "frame_coverage": 20,
+  "expected_labels_invariant": true,
+  "confirmed_negative_target_included": true,
+  "no_proposal": []
+}

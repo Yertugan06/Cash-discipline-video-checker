@@ -1,0 +1,14 @@
+{
+  "model": "Qwen/Qwen3-VL-8B-Instruct",
+  "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+  "registration_sha256": "a4ef0c9b080177f781eab8b1b392f9c2fd87773c6e1be4c6a287f9fc70efbb3c",
+  "model_manifest_sha256": "a33eb233e3e47defb73cb5d5905eed4d4229223be0f76a2f1984708e34ee0726",
+  "script_sha256": "57c34d59f840660c07aa5d8d645f6c7b184cbe1cebbae1bf71fb3a406b0c85ac",
+  "no_proposal": [],
+  "queries": 24,
+  "load_sec": 96.64133797400063,
+  "total_sec": 113.66915967800014,
+  "peak_gpu_bytes": 17743593472,
+  "completed": 24,
+  "errors": 3
+}

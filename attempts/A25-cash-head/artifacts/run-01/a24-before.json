@@ -1,0 +1,16 @@
+{
+  "model.py": "a91929ecd80a3a2f494b7eaeb2d1457541bd3a85370527091b5a80933451521a",
+  "progress.md": "65857610f74a2e710ac32218269656a701034de3064a492080311ddf616494b3",
+  "cpu-training.log": "b16200f68db1d034c9f760a36d6f419cc69a6158609dd6b316dfc47c624085a2",
+  "REPORT.md": "6705d46157d636e03fbd2c6b61ae97177989dde5c07dbcd725018f977c77a74b",
+  "artifact-check.json": "80466027f387eb649c61923fd69b38f086e5603dcec503398fbe5e3a0f959bb2",
+  "PREREGISTER.md": "5ab42181eb87939fff6b0b7b9d555fb3d3b824a564015bb5a6aece008fba7f29",
+  "cpu-command.json": "87e4328b6717cf4c9d25aa4c21f7b65e07508bc6288d19ea8629e6fa6026aabb",
+  "selfcheck-result.json": "bb53395dde563abee9a42169747d6d77944a511e6e2bea1a96f2b0bb086acaf2",
+  "train.py": "4ef3518ffee28afdc22cf857e8752af9fe4ac523fe56543de1b621fe48afe301",
+  "delivery.tar.gz": "4128c1ebdab9e93feaaf61aa4683a0a01b94603983b77264e2c20205a361751c",
+  "tests/selfcheck.py": "3c038cac404360107a163f2512d1b69b021f080b1375affae1a5abe6322e6f16",
+  "artifacts/run-01/head.json": "0d8a0ebf4f0072f713954f682068257bdd7ad3b9a07feff054bb485eebc28275",
+  "artifacts/run-01/label-manifest.used.json": "28b2fccd248e3a7179c07ec17874f19d106f2a79184f285ba3756f1e9f47e255",
+  "artifacts/run-01/report.json": "db6193cee7a1acff7def96ec46815c18e877f8a0f41f7b0d8c684e6549a6116c"
+}

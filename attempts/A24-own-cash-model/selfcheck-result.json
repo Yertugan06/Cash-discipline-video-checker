@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": [
+    "dual weighted ridge",
+    "class balancing invariant under duplicating positives",
+    "JSON artifact roundtrip",
+    "prediction and OOD",
+    "invalid/zero features"
+  ],
+  "gpu_used": false,
+  "model_inference": false
+}

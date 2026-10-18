@@ -1,0 +1,14 @@
+Loading weights:   0%|          | 0/223 [00:00<?, ?it/s]Loading weights: 100%|██████████| 223/223 [00:00<00:00, 3204.49it/s]
+{"row": 0, "split": "probe", "status": "features_ready", "feature_sec": 0.8413623380001809}
+{"row": 1, "split": "train", "status": "features_ready", "feature_sec": 2.6968369880014507}
+{"row": 2, "split": "train", "status": "features_ready", "feature_sec": 2.8902413770010753}
+{"row": 3, "split": "train", "status": "features_ready", "feature_sec": 2.670964486002049}
+{"row": 4, "split": "train", "status": "features_ready", "feature_sec": 2.6078009410011873}
+{"row": 5, "split": "probe", "status": "features_ready", "feature_sec": 0.5581744980008807}
+{"row": 6, "split": "train", "status": "features_ready", "feature_sec": 2.6981043390005652}
+{"row": 7, "split": "train", "status": "features_ready", "feature_sec": 3.1259280779995606}
+{"row": 8, "split": "train", "status": "features_ready", "feature_sec": 2.577362523999909}
+{"row": 9, "split": "train", "status": "features_ready", "feature_sec": 2.623755484000867}
+{"row": 10, "split": "probe", "status": "features_ready", "feature_sec": 0.5093172540000523}
+{"row": 11, "split": "probe", "status": "features_ready", "feature_sec": 0.610178391001682}
+{"status": "trained", "elapsed_sec": 34.58446050999919, "confusion": {"train": {"tp": 1, "tn": 0, "fp": 0, "fn": 0, "unknown_positive": 4, "unknown_negative": 3}, "probe": {"tp": 1, "tn": 0, "fp": 0, "fn": 0, "unknown_positive": 1, "unknown_negative": 2}}}

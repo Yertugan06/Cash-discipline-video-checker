@@ -1,0 +1,11 @@
+*.tar.gz
+__pycache__/
+context/real-trace.json
+detection/gpu-run/results.json
+models/*/results.json
+tracking/*-results/results.json
+calibration/numeric/summary.json
+safe-probe/*/cv-selection.json
+safe-probe/*/results.json
+laptop-probe/*/selection.json
+model-review/numeric-review.json

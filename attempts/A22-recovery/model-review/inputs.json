@@ -1,0 +1,30 @@
+{
+  "paths_sha256": {
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/datathon26-a22-large-probe.py": "d03d191fcd79ccfaf041ff12166888776c084b189320b913bc11e3a2388d662f",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/large-probe-01/results.json": "7c65d3e910f658f38b81ebbc7c9f380d06144a6c98f8fb549a1f00f08b9c9d64",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/large-probe-01/summary.json": "bedbb038e5b4dfb10450ae49b072fd34995f32e4eb8a7cb44ecc54ca742f674c",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/large-probe-01/registration.json": "811d60028975a93e698708a70643690b6ef6baeb178cfd438e76746ef4370ef8",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-01/results.json": "c1bc491eadc8332dfe9f0afef69df637d2f72375b41589fd647df2b4b254ce2d",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-01/summary.json": "f468ae760c549ebdf7f102424534360e78ba54707a363d78af4d4ef0e57570b0",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-01/registration.json": "8d6d05024c0e636ce5599ef3bca3c8026e55fd2d5e096cbd85f83f4e52cfc534",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-02/results.json": "19033620d9b7d2cd54e489af385595e8dae4950da2db781c7c6716ead802f520",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-02/summary.json": "aae4ee8b39f8a2fa0dfb827b94bf356de61d4c44bc5f936ed561f806e2b31119",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/dino-probe-02/registration.json": "0cf876be53f32f654edfae4feb849d8f71935d59781933c99c3a3db2ce78de3c",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base/backend/f1/perception.py": "6f5e67f564db7a0fd99ca9e51ba427d6f32987f678134aae1c963901148aa266",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base/backend/f1/object_refinement.py": "f0a859e53ed0633658a880e0d6fb135eeeba96c32a218748985cd147b4b7e537",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base/attempts/A21-deadline/recognition/compare_objects.py": "ddb937f2f2c4d8167d270b82c9a2c7654e150eafaaeb48654d97b6263a9ceaae",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/grounding-dino-base/download-manifest.json": "d81bb55322133a46dba23c06b2978fc708cd14b8f65546ca7414a93746b95778",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/grounding-dino-base/config.json": "eda416dae6f49419ff831b1c190ec430a060b19aae688dbaf2425a075b650608",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/grounding-dino-base/preprocessor_config.json": "8454179ba95e2ad22947835aad7b45862a601fc0055ab88bf1ee70892d3aea60",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/owlv2-large-patch14-ensemble/download-manifest.json": "a010a208f74e3468e5d36f5166b970f2739903f6a81cb4e34ce139c782fc4305",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/owlv2-large-patch14-ensemble/config.json": "3d45ac1f2698c5d824aef0a0dacd356d063f9cd950119103a03fd6a62b828a52",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/owlv2-large-patch14-ensemble/preprocessor_config.json": "15cfb3c68e48169abf0ff599a65123d79f92d6f2e3eff6f5ae96bb69e76359f6"
+  },
+  "checks": {
+    "records": 60,
+    "exported_boxes": 457,
+    "all_confusion_counts_match": true,
+    "same_case_sets": true,
+    "dino02_runner_hash_matches": true
+  }
+}

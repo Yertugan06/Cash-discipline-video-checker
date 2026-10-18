@@ -1,0 +1,28 @@
+{
+  "model": "IDEA-Research/grounding-dino-base",
+  "input_size": "processor default (800 shortest side)",
+  "score_threshold": 0.25,
+  "prompts": {
+    "cash": [
+      "banknotes."
+    ],
+    "id_card": [
+      "identity card."
+    ]
+  },
+  "variants": [
+    "full",
+    "full_desk"
+  ],
+  "cases": 20,
+  "runner_sha256": "d03d191fcd79ccfaf041ff12166888776c084b189320b913bc11e3a2388d662f",
+  "probe_sha256": "ddb937f2f2c4d8167d270b82c9a2c7654e150eafaaeb48654d97b6263a9ceaae",
+  "scene_source": "existing canonical CV cache; no label-derived crops",
+  "limitations": [
+    "Development frame-presence labels, no box gold or held-out data.",
+    "Bigger model and input resolution change together.",
+    "No runtime or verdict change; incomplete inference is unknown.",
+    "Grounding DINO uses independent cash/ID captions only; other classes are unqueried."
+  ],
+  "text_threshold": 0.25
+}

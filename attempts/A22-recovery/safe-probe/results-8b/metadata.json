@@ -1,0 +1,33 @@
+{
+  "manifest_sha256": "52fc665dd5ceca52bdb90bed1d14160fd923d46f336df61ed20cd4bbf28ca02f",
+  "script_sha256": "a46418b5d2a5b5924d272401e2351bd9c8a1bc695ec30f759fcb3b90026b8455",
+  "base": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "status": "finished",
+  "model": "/home/ubuntu/workspaces/datathon26-workers/shared/a22/models/Qwen3-VL-8B-Instruct",
+  "worker_python": "/home/ubuntu/workspaces/datathon26-workers/shared/a21/visual-venv/bin/python",
+  "images_leave_vm": false,
+  "labels_used_by_selector_or_model": false,
+  "load_s": 101.93592330400134,
+  "torch": "2.10.0+cu128",
+  "transformers": "5.20.1",
+  "config_sha256": "5cd452860dc1e9c29dd71cc3cef7f39b338b7a40793f7a260655c2d3568f3661",
+  "weights": [
+    {
+      "file": "model-00003-of-00004.safetensors",
+      "bytes": 4999831048
+    },
+    {
+      "file": "model-00002-of-00004.safetensors",
+      "bytes": 4915962496
+    },
+    {
+      "file": "model-00004-of-00004.safetensors",
+      "bytes": 2716270024
+    },
+    {
+      "file": "model-00001-of-00004.safetensors",
+      "bytes": 4902275944
+    }
+  ],
+  "inference_elapsed_s": 5.185
+}

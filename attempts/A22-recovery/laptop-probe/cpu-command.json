@@ -1,0 +1,13 @@
+[
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/laptop-probe/run_probe.py",
+  "--base",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/base",
+  "--cache",
+  "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache",
+  "--videos",
+  "/home/ubuntu/data/open/videos",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A22-recovery/laptop-probe/cpu-selection",
+  "--prepare-only"
+]

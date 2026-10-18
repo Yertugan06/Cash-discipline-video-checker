@@ -1,0 +1,17 @@
+{
+  "frozen_utc": "2026-10-18T04:27:04.134459+00:00",
+  "ncc_min": 0.9,
+  "max_back_sec": 8.0,
+  "canonical_step_sec": 0.5,
+  "seed_pair_gap_sec": 0.5,
+  "min_side_px": 6,
+  "min_template_std_gray": 12.0,
+  "min_peak_gap": 0.05,
+  "max_seed_size_ratio": 1.25,
+  "max_center_error_px": 2.0,
+  "search_radius_fraction_min_side": 0.04,
+  "min_search_radius_px": 4,
+  "collision": "any positive IoU with another nonempty track_id, including people",
+  "source_confidence": "copy earliest genuine seed score unchanged; NCC recorded separately",
+  "stopping": "first failed/ambiguous/occluded frame; no resuming across gaps"
+}

@@ -1,0 +1,75 @@
+{
+  "scope": "Local numeric per-frame evidence; not media; excluded from Git",
+  "artifacts": [
+    {
+      "path": "attempts/A22-recovery/calibration/numeric/summary.json",
+      "sha256": "e419a255a435b1dbbef212f30445662a7cf8a9bc447b964428e7f0d8cd30e57e",
+      "bytes": 144385
+    },
+    {
+      "path": "attempts/A22-recovery/detection/gpu-run/results.json",
+      "sha256": "7450ef190a5ba4d749923821c64f32b168876bf6e7c4a83f4727454f171a6954",
+      "bytes": 825375
+    },
+    {
+      "path": "attempts/A22-recovery/laptop-probe/cpu-selection/selection.json",
+      "sha256": "a4f70de39552d71cbbf6489aed09829fe3f90357bda5ee4136a09da5e4bcf2a4",
+      "bytes": 34253
+    },
+    {
+      "path": "attempts/A22-recovery/laptop-probe/gpu-results-4b/selection.json",
+      "sha256": "98978d08998e82352255200c8d640e1a4e1679219874bfc5335fb1fc92d401ec",
+      "bytes": 34254
+    },
+    {
+      "path": "attempts/A22-recovery/laptop-probe/gpu-results/selection.json",
+      "sha256": "54bf7069bbb873b4c569bb87c801918f66c90d328b8711d1ed5b304227a4e963",
+      "bytes": 34252
+    },
+    {
+      "path": "attempts/A22-recovery/model-review/numeric-review.json",
+      "sha256": "1464968f61d9f73587692d927f81df22f4525150074c9c19ecddcfa691e61a2f",
+      "bytes": 92322
+    },
+    {
+      "path": "attempts/A22-recovery/models/dino-probe-01/results.json",
+      "sha256": "c1bc491eadc8332dfe9f0afef69df637d2f72375b41589fd647df2b4b254ce2d",
+      "bytes": 42027
+    },
+    {
+      "path": "attempts/A22-recovery/models/dino-probe-02/results.json",
+      "sha256": "19033620d9b7d2cd54e489af385595e8dae4950da2db781c7c6716ead802f520",
+      "bytes": 159165
+    },
+    {
+      "path": "attempts/A22-recovery/models/large-probe-01/results.json",
+      "sha256": "7c65d3e910f658f38b81ebbc7c9f380d06144a6c98f8fb549a1f00f08b9c9d64",
+      "bytes": 339441
+    },
+    {
+      "path": "attempts/A22-recovery/safe-probe/cpu-plan/cv-selection.json",
+      "sha256": "1edde655f37fd5b186fa6356c3af9f71a9ef3426af790344fb36181d715d9366",
+      "bytes": 398383
+    },
+    {
+      "path": "attempts/A22-recovery/safe-probe/results-8b/cv-selection.json",
+      "sha256": "0eb46b3fe1c3a8ed2d5ec8ee854824350c60c7af46251e055f6c9e115b853a88",
+      "bytes": 398569
+    },
+    {
+      "path": "attempts/A22-recovery/safe-probe/results-8b/results.json",
+      "sha256": "05258e6ce34e271bfbb2379f7adaea0e61370f12b08fb2d8f694b03b78c820b7",
+      "bytes": 401060
+    },
+    {
+      "path": "attempts/A22-recovery/tracking/all40-results/results.json",
+      "sha256": "541ad1d409a530e6a00ab6d892a668fba44fea3441924f500b512c20d7f56f8c",
+      "bytes": 273850
+    },
+    {
+      "path": "attempts/A22-recovery/tracking/focused-results/results.json",
+      "sha256": "4a973a11d2ae3ded344ad8dd507186817de478d969aededc07e4f1771aab2682",
+      "bytes": 64302
+    }
+  ]
+}
