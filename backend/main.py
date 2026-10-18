@@ -44,7 +44,12 @@ def _build_pipeline(config: Settings) -> Pipeline:
         from backend.vlm.detector import VlmDetector
 
         detector = VlmDetector(config.vlm, knowledge.enabled_rules())
-    return Pipeline(detector=detector, rank=rank, knowledge=knowledge)
+    return Pipeline(
+        detector=detector,
+        rank=rank,
+        knowledge=knowledge,
+        finalize_reserve_s=config.finalize_reserve_s,
+    )
 
 
 def _is_ready(config: Settings) -> bool:

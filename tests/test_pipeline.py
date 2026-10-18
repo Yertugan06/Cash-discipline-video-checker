@@ -9,7 +9,8 @@ import time
 import pytest
 
 from backend.config import ROOT
-from backend.pipeline import Pipeline
+from backend.contracts import Coverage
+from backend.pipeline import IncompleteAnalysisError, Pipeline
 from tests.conftest import (
     FakeDetector,
     FakeKnowledge,
@@ -52,8 +53,32 @@ def test_detector_passes_through_the_video_info_and_the_deadline(video):
     assert len(detector.calls) == 1
     called_video, info, plan = detector.calls[0]
     assert called_video == video
-    assert plan.deadline_monotonic == deadline
+    # The finalize reserve keeps ranking, evidence and serialization inside the job deadline.
+    assert plan.deadline_monotonic == deadline - pipeline.finalize_reserve_s
     assert info.duration_sec > 0
+
+
+def _partial_coverage() -> Coverage:
+    return Coverage(step_s=0.5, planned=20, done=8, failed=0, deadline_hit=True, mode="partial")
+
+
+@requires_ffmpeg
+def test_partial_coverage_without_findings_is_not_reported_as_no_violation(video):
+    detector = FakeDetector(findings=[], coverage=_partial_coverage())
+    pipeline = Pipeline(detector=detector, rank=identity_rank, knowledge=FakeKnowledge())
+    with pytest.raises(IncompleteAnalysisError, match="8 of 20"):
+        pipeline.run("job-partial", video, deadline_monotonic=time.monotonic() + 60)
+
+
+@requires_ffmpeg
+def test_partial_coverage_keeps_the_findings_it_has(video):
+    detector = FakeDetector(
+        findings=[make_finding("T-RULE", t_anchor=0.4)], coverage=_partial_coverage()
+    )
+    pipeline = Pipeline(detector=detector, rank=identity_rank, knowledge=FakeKnowledge())
+    job = pipeline.run("job-partial-found", video, deadline_monotonic=time.monotonic() + 60)
+    assert job.verdict == "violation"
+    assert job.coverage.deadline_hit and job.coverage.mode == "partial"
 
 
 @requires_ffmpeg

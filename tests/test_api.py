@@ -19,6 +19,7 @@ from backend.contracts import Coverage, DoneJob
 from backend.main import create_app
 from backend.pipeline import Pipeline
 from backend.store import JobStore
+from backend.worker import MIN_START_BUDGET_S, Worker, fair_share_s
 from tests.conftest import FakeDetector, FakeKnowledge, FakePipeline, identity_rank, requires_ffmpeg
 
 API_KEY = "test-only-key"
@@ -159,6 +160,54 @@ def test_deadline_passed_to_the_pipeline_reflects_job_budget(settings):
     assert len(fake.calls) == 1
     _, _, deadline = fake.calls[0]
     assert before + settings.job_budget_s - 1 <= deadline <= before + settings.job_budget_s + 5
+
+
+def test_fair_share_alone_gets_all_remaining_time():
+    assert fair_share_s(270.0, [], 30.0) == 270.0
+
+
+def test_fair_share_splits_time_between_jobs_uploaded_together():
+    # Five jobs uploaded at once: run one after another, each must fit in 270 / 5 s.
+    assert fair_share_s(270.0, [270.0] * 4, 30.0) == pytest.approx(54.0)
+
+
+def test_fair_share_uses_the_tightest_later_deadline():
+    # The job behind has only 100 s left: this job and that one get 50 s each.
+    assert fair_share_s(260.0, [100.0, 250.0], 30.0) == pytest.approx(50.0)
+
+
+def test_fair_share_ignores_later_jobs_that_cannot_start_anyway():
+    assert fair_share_s(200.0, [20.0], 30.0) == 200.0
+
+
+def test_fair_share_never_goes_below_the_minimum_start_budget():
+    assert fair_share_s(270.0, [270.0] * 20, 30.0) == 30.0
+
+
+def test_fair_share_refuses_a_job_whose_deadline_has_nearly_passed():
+    assert fair_share_s(29.0, [], 30.0) is None
+
+
+def test_later_remaining_lists_only_the_jobs_queued_behind(settings, tmp_path):
+    store = JobStore(tmp_path / "jobs.sqlite3")
+    for job_id in ("first", "second", "third"):
+        store.create(job_id, tmp_path / f"{job_id}.mov")
+    worker = Worker(store, settings, FakePipeline(result=done_job()))
+    remaining = worker._later_remaining_s("second")
+    assert len(remaining) == 1
+    assert settings.job_budget_s - 5 <= remaining[0] <= settings.job_budget_s
+
+
+def test_job_reached_after_its_deadline_fails_as_not_analysed(settings):
+    # A budget below MIN_START_BUDGET_S stands in for a job that waited too long in the queue.
+    tight = replace(settings, job_budget_s=MIN_START_BUDGET_S - 10)
+    fake = FakePipeline(result=done_job())
+    with TestClient(create_app(tight, pipeline=fake)) as client:
+        response = upload(client)
+        payload = wait_for_job(client, response.json()["job_id"])
+    assert payload["status"] == "failed"
+    assert payload["error"].startswith("Not analysed")
+    assert fake.calls == []
 
 
 # --- failure handling ---------------------------------------------------------

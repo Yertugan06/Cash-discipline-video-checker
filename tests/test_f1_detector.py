@@ -16,12 +16,16 @@ import time
 import pytest
 
 from backend.config import ROOT, Settings
+from backend.contracts import SamplingPlan, VideoInfo
 from backend.f1.detector import (
+    FPS,
+    STRIDES,
     F1Detector,
     _extra_template_facts,
     _scalar_facts,
     _support_times,
     models_loadable,
+    sampling_stride,
 )
 from backend.f1.rules import Finding as LegacyFinding
 from backend.knowledge import Knowledge
@@ -209,3 +213,47 @@ def test_trace_write_failure_is_logged_not_raised(tmp_path, caplog):
     blocker.write_text("a file where the directory should be")
     write_trace(blocker / "job.json", {})
     assert "Could not write trace" in caplog.text
+
+
+def test_sampling_stride_keeps_2_fps_when_it_fits():
+    assert sampling_stride(200, available_s=200.0, sec_per_frame=0.5) == 1
+
+
+def test_sampling_stride_halves_the_rate_when_2_fps_would_overrun():
+    # 200 frames * 0.5 s * 1.25 = 125 s; 100 frames fit in 70 s.
+    assert sampling_stride(200, available_s=70.0, sec_per_frame=0.5) == 2
+
+
+def test_sampling_stride_falls_back_to_the_coarsest_rate():
+    assert sampling_stride(200, available_s=1.0, sec_per_frame=0.5) == STRIDES[-1]
+
+
+@pytest.mark.skipif(not HAS_FFMPEG, reason="ffmpeg not installed on this machine")
+def test_detect_reports_reduced_sampling_and_a_cut_off_run(tmp_path, monkeypatch):
+    """Perception is faked: what is checked is the stride choice, the partial
+    coverage and that events/rules see the cut-off recording, not the models."""
+    import backend.f1.perception as perception
+    from backend.f1.vision_types import Observation, Scene
+
+    detector = _detector(tmp_path)
+    detector._sec_per_frame = 5.0  # 2 fps would overrun the 30 s below
+    calls = []
+
+    def fake_perceive(frames, checksum, settings, deadline, fps):
+        calls.append((len(frames), fps))
+        config = perception.load_perception_config(settings.perception_config)
+        observations = [Observation(timestamp_sec=0.0, detections=[], states={})]
+        return Scene(objects={}), observations, {**config, "cache_hit": False, "complete": False}
+
+    monkeypatch.setattr(perception, "perceive_video", fake_perceive)
+    video = make_video(tmp_path / "clip.mov", duration=4.0)
+    info = VideoInfo(sha256="0" * 64, duration_sec=4.0, fps=30.0, width=64, height=64)
+    plan = SamplingPlan(coarse_t=[], fill_t=[], deadline_monotonic=time.monotonic() + 30)
+    result = detector.detect(video, info, plan)
+
+    assert calls and calls[0][1] < FPS
+    assert result.coverage.mode == "partial" and result.coverage.deadline_hit
+    assert result.coverage.done == 1 and result.coverage.step_s == 1 / calls[0][1]
+    assert any("Sampling reduced" in w for w in result.warnings)
+    assert any("Time limit reached" in w for w in result.warnings)
+    assert result.findings == []

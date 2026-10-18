@@ -111,7 +111,17 @@ def run_detector(
     backend = StateBackend(door, unknown_at)
     monkeypatch.setattr(vc, "_backend", lambda _: backend)
     monkeypatch.setattr(F1Detector, "_extract_frames", lambda *args: frames)
-    monkeypatch.setattr(perception, "perceive_video", lambda *args: (scene, observations, config))
+    # The shape the real function returns for a cached, complete run (built per call: tests
+    # change `config` after this).
+    monkeypatch.setattr(
+        perception,
+        "perceive_video",
+        lambda *args: (
+            scene,
+            observations,
+            {**config, "cache_hit": True, "complete": True, "loop_s": 0.0},
+        ),
+    )
     settings = Settings(
         api_key="test-only",
         rule_scope="detector",

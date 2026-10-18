@@ -63,8 +63,12 @@ See [the numeric re-score](../attempts/A20-night-orchestration/logs/a13-small-ob
 ## Runtime, queue and cache limits
 
 - One FIFO worker processes one GPU video job at a time. The gateway submits serially.
-  Queued uploads can consume the 270 s budget before processing starts; concurrent long
-  uploads have no demonstrated throughput/latency guarantee on one L4.
+  Under a burst of uploads each job gets a fair share of its time and may be sampled at
+  1 or 0.5 fps instead of 2 (reported in `warnings`); accuracy at those rates is not
+  measured. Simulated with the measured L4 cost (0.55 s/frame, VLM off), five 142 s
+  uploads at once all finish at 0.5 fps in about 240 s; if the real cost is 45% higher
+  they are all cut off. A cut-off job without findings fails ("Analysis incomplete")
+  and counts as unprocessed. No real burst has been run on the L4.
 - The enabled 42-file pass reused perception for 41 files and 476 previous VLM answers;
   40 VLM calls ran afresh. Its median 2.0675 s is predominantly cached work.
 - Forced-cold X20: 50.669 s, 23/23 samples, 23 fresh VLM calls, no errors/deadline hit.

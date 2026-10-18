@@ -31,7 +31,8 @@ See `knowledge/README.md`; detection agreement does not verify legal applicabili
 All 40 public clips influenced development. A20 cached geometry perturbations are not
 unseen-camera data or a full robustness validation of every A21 change. The longest-clip
 cold run with the current VLM enabled is unmeasured. The 2.0675 s median is predominantly
-cached work. A queue of concurrent long uploads can exceed per-upload deadlines.
+cached work. Under an upload burst, jobs now share time and drop to 1 or 0.5 fps;
+accuracy at those rates and a real burst on the L4 are unmeasured.
 
 ## Deployment and documentation boundaries
 

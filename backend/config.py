@@ -46,7 +46,13 @@ class Settings:
     # citations marked pending (experiments). See knowledge/README.md.
     rule_scope: RuleScope = "jury"
     knowledge_dir: Path = ROOT / "knowledge"
+    # Absolute per-job deadline, counted from the upload (queue wait included).
     job_budget_s: float = 270.0
+    # Part of that budget kept for ranking, evidence frames and serialization after detection.
+    finalize_reserve_s: float = 15.0
+    # Starting estimate of F1 perception cost per sampled frame (measured on an L4, VLM off);
+    # the detector replaces it with its own measurements. Used to fit the sampling to the budget.
+    f1_sec_per_frame: float = 0.55
     max_upload_bytes: int = 64 * 1024 * 1024
     results_ttl_hours: float = 24.0
     work_dir: Path = ROOT / "runtime"
@@ -82,6 +88,10 @@ class Settings:
             raise ValueError("RULE_SCOPE must be 'jury' or 'detector'")
         if self.job_budget_s <= 0:
             raise ValueError("job_budget_s must be positive")
+        if not 0 <= self.finalize_reserve_s < self.job_budget_s:
+            raise ValueError("finalize_reserve_s must be non-negative and below job_budget_s")
+        if self.f1_sec_per_frame <= 0:
+            raise ValueError("f1_sec_per_frame must be positive")
         if self.max_upload_bytes <= 0:
             raise ValueError("max_upload_bytes must be positive")
         if self.results_ttl_hours <= 0:
@@ -104,6 +114,8 @@ class Settings:
             rule_scope=os.environ.get("RULE_SCOPE", "jury"),  # type: ignore[arg-type]
             knowledge_dir=Path(os.environ.get("KNOWLEDGE_DIR", str(ROOT / "knowledge"))),
             job_budget_s=float(os.environ.get("JOB_BUDGET_S", "270")),
+            finalize_reserve_s=float(os.environ.get("FINALIZE_RESERVE_S", "15")),
+            f1_sec_per_frame=float(os.environ.get("F1_SEC_PER_FRAME", "0.55")),
             max_upload_bytes=int(os.environ.get("MAX_UPLOAD_BYTES", str(64 * 1024 * 1024))),
             results_ttl_hours=float(os.environ.get("RESULTS_TTL_HOURS", "24")),
             work_dir=Path(os.environ.get("WORK_DIR", str(ROOT / "runtime"))),

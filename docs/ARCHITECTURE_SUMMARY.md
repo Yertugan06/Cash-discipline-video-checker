@@ -177,11 +177,26 @@ purged.
 
 ## Deadline and coverage
 
-- Each job has a budget of 270 s (`JOB_BUDGET_S`), a 30 s margin inside the
-  jury's 300 s limit.
-- F1 samples the whole video uniformly at 2 fps. Coverage is reported as
-  `mode="full", step_s=0.5`; if the budget runs out before perception
-  finishes, `coverage.deadline_hit` is `true`.
+- Each job's deadline is absolute: upload receipt + 270 s (`JOB_BUDGET_S`),
+  queue wait included, a 30 s margin inside the jury's 300 s limit.
+  Detection stops `FINALIZE_RESERVE_S` (15 s) before it, so ranking, evidence
+  frames and serialization still fit.
+- Jobs run one at a time. When others are queued, a job's detection time is
+  capped by a fair share (`backend/worker.py:fair_share_s`): the k-th queued
+  job keeps at least 1/k of the time before its own deadline. A job reached
+  less than 30 s before its deadline fails as "Not analysed".
+- F1 samples the whole video at 2 fps when that fits the job's time. Otherwise
+  that one job samples every 2nd or 4th frame (1 or 0.5 fps) and says so in
+  `warnings`; the cost per frame starts at `F1_SEC_PER_FRAME` (0.55 s, L4,
+  VLM off) and is then measured on this host's cold runs. Coverage reports the
+  rate in `step_s`.
+- If the deadline still arrives mid-video, the seen prefix is evaluated as a
+  recording that ends there: `coverage.mode="partial"`, `deadline_hit=true`.
+  Its findings are returned; with none, the job fails with "Analysis
+  incomplete" rather than answering «no violation» for a video that was not
+  fully seen (`backend/pipeline.py`).
+- The reduced rates have not been measured against the labels: under load,
+  recall of short events and timecode precision are expected to drop.
 - Perception results are cached per video checksum
   (`Settings.reuse_perception`, on by default), so re-running the same
   video can skip F1 inference. Visual answers have a separate identity-keyed cache.

@@ -97,7 +97,17 @@ def desk_clip(tmp_path, monkeypatch):
 
     config = load_perception_config(ROOT / "config/perception.yaml")
     monkeypatch.setattr(F1Detector, "_extract_frames", staticmethod(extract_frames))
-    monkeypatch.setattr(perception, "perceive_video", lambda *args: (scene, observations, config))
+    # The shape the real function returns for a cached, complete run (built per call: tests
+    # change `config` after this).
+    monkeypatch.setattr(
+        perception,
+        "perceive_video",
+        lambda *args: (
+            scene,
+            observations,
+            {**config, "cache_hit": True, "complete": True, "loop_s": 0.0},
+        ),
+    )
     log = EventLog(
         [
             Event(type="SAFE_OPEN", timestamp_sec=0, facts={"state": "open"}),

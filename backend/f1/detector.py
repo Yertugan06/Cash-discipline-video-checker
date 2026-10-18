@@ -3,9 +3,13 @@
 This is the fallback (`DETECTOR=f1`, architecture.md §1 L3). It samples the
 whole video uniformly at `FPS` (2 fps / 0.5 s step) rather than following
 `SamplingPlan`'s coarse-then-fill grid -- the plan's `deadline_monotonic` is
-still honoured, but `coarse_t`/`fill_t` are a VLM-sampler concept. Coverage
-is always reported as `mode="full", step_s=0.5` (or `deadline_hit=True` if
-the budget ran out before perception finished).
+still honoured, but `coarse_t`/`fill_t` are a VLM-sampler concept.
+
+Only when 2 fps would not fit the job's time (other jobs queued, a long
+video) does one job sample every 2nd or 4th frame (`sampling_stride`), with a
+warning; the cost per frame is measured on this host's cold runs. If the
+deadline still arrives mid-video, the seen prefix is evaluated as a recording
+that ends there and coverage is `mode="partial", deadline_hit=True`.
 
 Heavy imports (torch, onnxruntime, opencv, supervision, transformers) only
 happen inside `detect()`, through the already-lazy `backend.f1.perception`
@@ -17,6 +21,7 @@ from __future__ import annotations
 
 import json
 import logging
+import math
 import shutil
 import subprocess
 import tempfile
@@ -42,6 +47,9 @@ logger = logging.getLogger(__name__)
 FPS = 2.0
 STEP_S = 1.0 / FPS
 _MAX_SUPPORT_SAMPLES = 8
+# Every 1st, 2nd or 4th 2-fps frame: 2, 1 or 0.5 fps. Estimates are inflated by _COST_SAFETY.
+STRIDES = (1, 2, 4)
+_COST_SAFETY = 1.25
 
 
 class F1DetectorError(RuntimeError):
@@ -62,6 +70,14 @@ def models_loadable(settings: Settings) -> bool:
         return False
 
 
+def sampling_stride(frame_count: int, available_s: float, sec_per_frame: float) -> int:
+    """The smallest stride whose estimated perception time fits `available_s`."""
+    for stride in STRIDES:
+        if math.ceil(frame_count / stride) * sec_per_frame * _COST_SAFETY <= available_s:
+            return stride
+    return STRIDES[-1]
+
+
 class F1Detector:
     """`Detector` implementation wrapping the existing F1 CV stack.
 
@@ -76,6 +92,7 @@ class F1Detector:
         from backend.f1.rules import RULES as EVALUATORS
 
         self._settings = settings
+        self._sec_per_frame = settings.f1_sec_per_frame
         self._codex = load_codex(settings.f1_codex_path)
         self._rules_by_id = {r.rule_id: r for r in rules}
         codex_by_id = {rule.id: rule for rule in self._codex.rules}
@@ -123,13 +140,18 @@ class F1Detector:
         deadline = plan.deadline_monotonic
         frames_dir = Path(tempfile.mkdtemp(prefix="f1-frames-", dir=str(settings.work_dir)))
         try:
-            frames = self._extract_frames(video, frames_dir, deadline)
-            if not frames:
+            all_frames = self._extract_frames(video, frames_dir, deadline)
+            if not all_frames:
                 raise F1DetectorError("No video frames could be decoded")
             checksum = video_checksum(video)
+            stride = sampling_stride(
+                len(all_frames), deadline - time.monotonic(), self._sec_per_frame
+            )
+            frames = all_frames[::stride]
+            fps = FPS / stride
             try:
                 scene, observations, config = perceive_video(
-                    frames, checksum, settings, deadline, FPS
+                    frames, checksum, settings, deadline, fps
                 )
             except TimeoutError as exc:
                 raise F1DetectorError("Processing exceeded the configured time limit") from exc
@@ -137,7 +159,22 @@ class F1Detector:
                 # Library/OS messages can hold paths and internals: log them, show a fixed message.
                 logger.warning("F1 perception failed: %s", exc)
                 raise F1DetectorError("F1 perception failed on this video") from exc
-            log = build_events(scene, observations, config, FPS, info.duration_sec)
+            if not config["cache_hit"] and len(observations) >= 10:
+                measured = config["loop_s"] / len(observations)
+                self._sec_per_frame = (self._sec_per_frame + measured) / 2
+            complete = config["complete"]
+            # A cut-off run is evaluated as a recording that ends after its last sample.
+            covered_s = (
+                info.duration_sec
+                if complete
+                else min(info.duration_sec, observations[-1].timestamp_sec + 1 / fps)
+            )
+            # Frames that have an observation; a complete run must still match them one to one.
+            seen_frames = frames if complete else frames[: len(observations)]
+            sampling_warnings = _sampling_warnings(fps, complete, covered_s, info.duration_sec)
+            for warning in sampling_warnings:
+                logger.warning("%s", warning)
+            log = build_events(scene, observations, config, fps, covered_s)
             checks = None
             visual_warnings: list[str] = []
             if settings.visual_checks.enabled:
@@ -159,13 +196,13 @@ class F1Detector:
                     observations,
                     options=check_options,
                     deadline_monotonic=deadline,
-                    duration=info.duration_sec,
+                    duration=covered_s,
                     video_sha256=checksum,
-                    frames=frames,
-                    fps=FPS,
+                    frames=seen_frames,
+                    fps=fps,
                 )
                 observations = apply_checks(observations, checks)
-                log = build_events(scene, observations, config, FPS, info.duration_sec)
+                log = build_events(scene, observations, config, fps, covered_s)
                 log = add_verified_state_events(log, checks)
                 unknown = sum(check["answer"] == "unknown" for check in checks)
                 errors = sorted({check["error"] for check in checks if check.get("error")})
@@ -181,13 +218,13 @@ class F1Detector:
             if config.get("desk_objects", False):
                 from backend.f1.desk_objects import build_desk_objects
 
-                if len(frames) != len(observations):
+                if len(seen_frames) != len(observations):
                     raise F1DetectorError(
                         "Desk history frames do not match perception observations"
                     )
                 try:
                     desk_objects = build_desk_objects(
-                        _desk_images(frames, deadline), observations, scene, log
+                        _desk_images(seen_frames, deadline), observations, scene, log
                     )
                 except F1DetectorError:
                     raise
@@ -201,14 +238,17 @@ class F1Detector:
                 log,
                 observations,
                 scene,
-                info.duration_sec,
+                covered_s,
                 desk_objects,
                 visual_checks=checks,
             )
             enabled_ids = {rule_id for rule_id, rule in self._rules_by_id.items() if rule.enabled}
             legacy_findings = evaluate_rules(context, enabled_ids)
             findings = [self._to_finding(f, info.duration_sec) for f in legacy_findings]
-            trace = build_trace(checksum, config, info.duration_sec, scene, observations, log)
+            trace = build_trace(
+                checksum, config, info.duration_sec, scene, observations, log, fps=fps
+            )
+            trace["sampling"] = {"stride": stride, "complete": complete, "covered_s": covered_s}
             if checks is not None:
                 trace["visual_checks"] = checks
                 trace["warnings"].extend(visual_warnings)
@@ -220,19 +260,18 @@ class F1Detector:
                 else None
             )
             write_trace(settings.traces_dir / f"{video.stem}.json", trace)
-            planned = len(frames)
             coverage = Coverage(
-                step_s=STEP_S,
-                planned=planned,
-                done=planned,
+                step_s=1 / fps,
+                planned=len(frames),
+                done=len(observations),
                 failed=0,
-                deadline_hit=time.monotonic() > deadline,
-                mode="full",
+                deadline_hit=not complete or time.monotonic() > deadline,
+                mode="full" if complete else "partial",
             )
             return DetectionResult(
                 findings=findings,
                 coverage=coverage,
-                warnings=[*scene.warnings, *visual_warnings],
+                warnings=[*scene.warnings, *sampling_warnings, *visual_warnings],
             )
         finally:
             shutil.rmtree(frames_dir, ignore_errors=True)
@@ -321,6 +360,28 @@ class F1Detector:
         )
 
 
+def _sampling_warnings(
+    fps: float, complete: bool, covered_s: float, duration_s: float
+) -> list[str]:
+    warnings = []
+    if fps < FPS:
+        warnings.append(
+            f"Sampling reduced to {fps:g} fps (normally {FPS:g}) to fit the time limit; "
+            "short events can be missed and timecodes are less precise."
+        )
+    if not complete:
+        warnings.append(
+            f"Time limit reached: only {_mmss(covered_s)} of {_mmss(duration_s)} was analysed; "
+            "the rest of the video was not checked."
+        )
+    return warnings
+
+
+def _mmss(seconds: float) -> str:
+    whole = int(seconds)
+    return f"{whole // 60}:{whole % 60:02d}"
+
+
 def _desk_images(frames: list[Path], deadline: float) -> Iterator[Any]:
     import cv2
 
@@ -334,7 +395,13 @@ def _desk_images(frames: list[Path], deadline: float) -> Iterator[Any]:
 
 
 def build_trace(
-    checksum: str, config: dict, duration: float, scene: Any, observations: list, log: Any
+    checksum: str,
+    config: dict,
+    duration: float,
+    scene: Any,
+    observations: list,
+    log: Any,
+    fps: float = FPS,
 ) -> dict[str, Any]:
     """Everything between perception and findings, for debugging a verdict and for the
     replay overlay: calibration, raw state changes, the event log and per-frame boxes
@@ -356,7 +423,7 @@ def build_trace(
     return {
         "video_sha256": checksum,
         "perception_cache_hit": bool(config.get("cache_hit")),
-        "fps": FPS,
+        "fps": fps,
         "duration_sec": duration,
         "scene": scene.model_dump(),
         "state_changes": changes,

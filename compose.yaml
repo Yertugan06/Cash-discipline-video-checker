@@ -21,6 +21,8 @@ services:
       # detector: every enabled rule, citations marked pending (experiments).
       RULE_SCOPE: ${RULE_SCOPE:-jury}
       JOB_BUDGET_S: ${JOB_BUDGET_S:-270}
+      FINALIZE_RESERVE_S: ${FINALIZE_RESERVE_S:-15}
+      F1_SEC_PER_FRAME: ${F1_SEC_PER_FRAME:-0.55}
       MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-67108864}
       RESULTS_TTL_HOURS: ${RESULTS_TTL_HOURS:-24}
       DEVICE: ${DEVICE:-auto}

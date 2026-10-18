@@ -387,7 +387,7 @@ def perceive_video(
         return (
             Scene.model_validate(payload["scene"]),
             [Observation.model_validate(v) for v in payload["observations"]],
-            {**config, "cache_hit": True},
+            {**config, "cache_hit": True, "complete": True, "loop_s": 0.0},
         )
     models = get_models(
         settings.weights_dir,
@@ -422,9 +422,15 @@ def perceive_video(
     last_objects = []
     last_states = {}
     last_object_time = last_state_time = -100.0
+    loop_started = time.monotonic()
+    complete = True
     for index, frame in enumerate(frames):
         if time.monotonic() > deadline:
-            raise TimeoutError("Perception exceeded the configured processing time limit")
+            if not observations:
+                raise TimeoutError("Perception exceeded the configured processing time limit")
+            # Keep the prefix that was seen; the caller reports it as partial coverage.
+            complete = False
+            break
         timestamp = index / fps
         with Image.open(frame) as raw:
             image = raw.convert("RGB")
@@ -490,6 +496,9 @@ def perceive_video(
         observations.append(
             Observation(timestamp_sec=timestamp, detections=tracked, states=last_states.copy())
         )
+    timing = {"complete": complete, "loop_s": time.monotonic() - loop_started}
+    if not complete:
+        return scene, observations, {**config, "cache_hit": False, **timing}
     cache.parent.mkdir(parents=True, exist_ok=True)
     temporary = cache.with_suffix(".partial")
     temporary.write_text(
@@ -499,4 +508,4 @@ def perceive_video(
         encoding="utf-8",
     )
     temporary.replace(cache)
-    return scene, observations, {**config, "cache_hit": False}
+    return scene, observations, {**config, "cache_hit": False, **timing}
