@@ -110,6 +110,8 @@ replaced by a fabricated `no_violation` (architecture.md §2, "Job management").
 ```bash
 cp .env.example .env   # TODO(team): add an .env.example once API_KEY/DETECTOR/VLM_* are finalised by WP1
 # edit .env: set API_KEY; DETECTOR=f1 is the default and the deployed detector (DETECTOR=vlm + VLM_MODEL is the alternative)
+# RULE_SCOPE=jury (default) reports only rules with human-verified citations and refuses to start
+# while there are none; RULE_SCOPE=detector reports every enabled rule, citations marked pending.
 docker compose -f compose.yaml [-f compose.gpu.yaml] up --build
 # UI and API are served together on :8000 behind the reverse proxy (TLS terminated upstream)
 ```

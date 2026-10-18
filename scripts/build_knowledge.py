@@ -1,536 +1,309 @@
-"""Build the runtime Knowledge Pack (``knowledge/rules.yaml`` + ``knowledge/norms.json``) from the
-build-time sources: the kit's ``codex/codex_verified.json`` (verbatim norm text, 217 rows) and
-``config/f1_codex.yaml`` (the F1 team's independent citation/title research, used here only to
-cross-check and to document open conflicts in ``knowledge/README.md``).
+"""Generate everything rule-related from the rulebook (`knowledge/rulebook.yaml`, the one source):
 
-The runtime (``backend/knowledge.py``) never reads either source file; it only reads the two
-files this script writes. Re-run after editing the rule table below:
+  knowledge/rules.yaml, knowledge/norms.json   the runtime Knowledge Pack
+  config/f1_codex.yaml (`rules` only)          F1 thresholds and templates; other keys are kept
+                                               (except per-clip labels, which never ship)
 
-    .venv/bin/python scripts/build_knowledge.py
+The generated files are validated by the same loaders the service uses at startup
+(`backend.knowledge.Knowledge`, `backend.f1.codex.load_codex`), so a rulebook the service would
+reject is never written.
+
+    .venv/bin/python scripts/build_knowledge.py            # regenerate
+    .venv/bin/python scripts/build_knowledge.py --check    # fail if a generated file is stale
+    .venv/bin/python scripts/build_knowledge.py --freeze   # also fail unless every enabled rule
+                                                           # rests on human-verified law
+Then re-render `docs/RULES.md` with `scripts/render_rules_doc.py`.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
+import tempfile
+from datetime import date
 from pathlib import Path
+from typing import Literal
 
 import yaml
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
 ROOT = Path(__file__).resolve().parent.parent
-CODEX_VERIFIED = (
-    ROOT
-    / "archive"
-    / "vm-copies"
-    / "datathon"
-    / "forte_brev_kit"
-    / "brev_kit"
-    / "codex"
-    / "codex_verified.json"
-)
+sys.path.insert(0, str(ROOT))
+
+from backend.f1.codex import Codex, Rule, load_codex  # noqa: E402
+from backend.knowledge import Knowledge  # noqa: E402
+
+RULEBOOK = ROOT / "knowledge" / "rulebook.yaml"
 KNOWLEDGE_DIR = ROOT / "knowledge"
+F1_CODEX = ROOT / "config" / "f1_codex.yaml"
 
-# ---------------------------------------------------------------------------------------------
-# Canonical rules. One row per id from architecture.md §3 / backend/rules/timeline.py.
-# `norm_ids`: first entry is the primary citation (used by the serializer's `source`/`source_url`
-# /`source_quote`). Every id here must exist in codex_verified.json.
-# `kit_rule`: the kit's short name, kept only as provenance documentation (not used at runtime).
-# ---------------------------------------------------------------------------------------------
-RULES: list[dict] = [
-    {
-        "rule_id": "L-NO-CASH-ON-LEAVE",
-        "kit_rule": "leave_cash",
-        "title_ru": "Наличные/ценности оставлены без присмотра: кассир покинул рабочее место",
-        "title_en": "Cash left unattended: the cashier left the desk",
-        "mechanism": (
-            "The cashier is away from the desk for at least min_away_s; within the first "
-            "check_window_s of the absence, cash or a cash bag is visible on the desk at least "
-            "cash_frac_threshold of the time."
-        ),
-        "states_used": ["cashier_at_desk", "desk_cash", "desk_bag"],
-        "params": {
-            "min_away_s": 3.0,
-            "min_samples": 2.0,
-            "check_window_s": 6.0,
-            "cash_frac_threshold": 0.5,
-        },
-        "description_template": (
-            "С {t_start} по {t_end} с кассир отсутствует на рабочем месте; на столе видны {object}."
-        ),
-        "visibility_caveat": (
-            "Видео не показывает номинал и принадлежность купюр, только их визуальное присутствие "
-            "на столе."
-        ),
-        "norm_ids": ["231-20-2", "231-22"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "L-SAFE-LOCKED-ON-LEAVE",
-        "kit_rule": "leave_key",
-        "title_ru": "Ключ оставлен в замке сейфа",
-        "title_en": "Key left in the safe lock",
-        "mechanism": (
-            "After the cashier exits the room (within the away run), a key is visible sticking "
-            "out of the safe lock for at least key_frac_threshold of the post-exit exit_window_s."
-        ),
-        "states_used": ["cashier_at_desk", "cashier_in_room", "key_in_safe_lock", "cashier_action"],
-        "params": {
-            "min_away_s": 3.0,
-            "min_samples": 2.0,
-            "exit_window_s": 3.0,
-            "key_frac_threshold": 0.5,
-            "key_lookback_s": 5.0,
-        },
-        "description_template": (
-            "С {t_start} по {t_end} с, после выхода кассира из комнаты, ключ виден в замке сейфа."
-        ),
-        "visibility_caveat": (
-            "По видео не подтверждается, заперт ли сейф механически, только положение ключа в "
-            "замке."
-        ),
-        "norm_ids": ["231-80-1"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "L-PC-LOCKED",
-        "kit_rule": "leave_laptop",
-        "title_ru": "Рабочее место (ноутбук) оставлено незаблокированным",
-        "title_en": "Workstation (laptop) left unlocked",
-        "mechanism": (
-            "After the cashier exits the room, the laptop screen is classified 'unlocked' for at "
-            "least unlocked_frac_threshold of the remaining away run."
-        ),
-        "states_used": ["cashier_at_desk", "cashier_in_room", "laptop_screen"],
-        "params": {
-            "min_away_s": 3.0,
-            "min_samples": 2.0,
-            "unlocked_frac_threshold": 0.6,
-        },
-        "description_template": (
-            "С {t_start} по {t_end} с, после выхода кассира из комнаты, экран ноутбука остаётся "
-            "разблокированным (рабочий экран, не заставка блокировки)."
-        ),
-        "visibility_caveat": (
-            "Фактическая блокировка операционной системы (пароль/сессия) по видео не "
-            "подтверждается, только визуальное состояние экрана."
-        ),
-        "norm_ids": ["53-71-9"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "L-NO-DOCS-ON-LEAVE",
-        "kit_rule": "leave_docs",
-        "title_ru": "Документы/носители оставлены на столе при уходе",
-        "title_en": "Documents/media left on the desk on exit",
-        "mechanism": (
-            "After the cashier exits the room, documents are visible on the desk for at least "
-            "docs_frac_threshold of the same post-exit window used by L-SAFE-LOCKED-ON-LEAVE."
-        ),
-        "states_used": ["cashier_at_desk", "cashier_in_room", "desk_documents"],
-        "params": {
-            "min_away_s": 3.0,
-            "min_samples": 2.0,
-            "docs_frac_threshold": 0.5,
-            "exit_window_s": 3.0,
-        },
-        "description_template": (
-            "С {t_start} по {t_end} с, после выхода кассира из комнаты, на столе видны документы "
-            "или носители."
-        ),
-        "visibility_caveat": (
-            "Содержимое документов и факт их конфиденциальности по видео не определяются."
-        ),
-        "norm_ids": ["231-80-3"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "S-SAFE-CLOSED",
-        "kit_rule": "safe_open",
-        "title_ru": "Сейф (хранилище) оставлен открытым",
-        "title_en": "Safe/vault left open",
-        "mechanism": (
-            "The safe door is visible open, and the cashier's action is not 'at_safe', for at "
-            "least safe_open_s continuously."
-        ),
-        "states_used": ["safe_door", "cashier_action"],
-        "params": {"safe_open_s": 4.0},
-        "description_template": (
-            "С {t_start} по {t_end} с сейф открыт, а кассир находится не у сейфа."
-        ),
-        "visibility_caveat": (
-            "Физический статус замка сейфа по видео не определяется, только положение дверцы."
-        ),
-        "norm_ids": ["231-20-2b"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "S-CLEAN-DESK-HANDOVER",
-        "kit_rule": "dirty_desk",
-        "title_ru": "Деньги предыдущего клиента не убраны при обслуживании следующего",
-        "title_en": "Previous client's cash not cleared before the next one",
-        "mechanism": (
-            "A new client session starts (clients_at_desk >= 1, merged across gaps <= "
-            "session_gap_s) while cash was visible on the desk for at least cash_frac_threshold of "
-            "the cash_lookback_s before the session's entry moment."
-        ),
-        "states_used": ["clients_at_desk", "desk_cash", "person_at_door"],
-        "params": {
-            "session_gap_s": 2.5,
-            "min_samples": 2.0,
-            "entry_lookback_s": 4.0,
-            "cash_lookback_s": 3.0,
-            "cash_frac_threshold": 0.6,
-        },
-        "description_template": (
-            "В {t_end} с начинается обслуживание следующего клиента; наличные предыдущей операции "
-            "ещё видны на столе."
-        ),
-        "visibility_caveat": (
-            "Принадлежность конкретных купюр предыдущему клиенту не подтверждается, только "
-            "непрерывное визуальное присутствие наличных на столе между сессиями."
-        ),
-        "norm_ids": ["231-20-2"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "S-NO-MERGE",
-        "kit_rule": "merge_cash",
-        "title_ru": "Наличные разных клиентов смешаны на рабочем месте",
-        "title_en": "Different clients' cash merged on the desk",
-        "mechanism": (
-            "Within a session flagged by S-CLEAN-DESK-HANDOVER, the cashier receives or counts "
-            "cash from the new client at least merge_min_gap_s after that session started, "
-            "while the "
-            "previous client's cash was still visible."
-        ),
-        "states_used": ["clients_at_desk", "cash_in_hands_of", "cashier_action"],
-        "params": {"merge_min_gap_s": 3.0},
-        "description_template": (
-            "В {t} с кассир работает с наличными нового клиента, пока на столе остаются наличные "
-            "предыдущей операции."
-        ),
-        "visibility_caveat": (
-            "Принадлежность купюр конкретной сессии не прослеживается покадрово по видео."
-        ),
-        "norm_ids": ["231-20-2", "231-21"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "A-OUTSIDER-ZONE",
-        "kit_rule": "outsider",
-        "title_ru": "Посторонний в кассовой кабине",
-        "title_en": "An outsider in the cashier booth",
-        "mechanism": (
-            "Two or more people are on the cashier's side of the desk at once, with no collector "
-            "present, for at least min_samples consecutive samples."
-        ),
-        "states_used": ["people_cashier_side", "collector_present"],
-        "params": {"min_samples": 2.0},
-        "description_template": (
-            "С {t_start} по {t_end} с на стороне кассира находится {people_count} человек(а) "
-            "одновременно."
-        ),
-        "visibility_caveat": (
-            "Роль каждого человека (сотрудник/посторонний) определяется по положению в кадре, "
-            "не по документам или должности."
-        ),
-        "norm_ids": ["14-16-1", "14-8-1"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "A-DOOR-LOCK",
-        "kit_rule": "door_open",
-        "title_ru": "Дверь кассы не закрыта",
-        "title_en": "Cash-room door not closed",
-        "mechanism": (
-            "The room door is open for at least door_open_s, and the cashier is at the desk for at "
-            "least presence_frac_threshold of that time."
-        ),
-        "states_used": ["room_door", "cashier_at_desk"],
-        "params": {"door_open_s": 4.0, "presence_frac_threshold": 0.5},
-        "description_template": (
-            "С {t_start} по {t_end} с дверь кассового помещения открыта, пока кассир работает за "
-            "столом."
-        ),
-        "visibility_caveat": (
-            "Фактическое запирание двери на замок по видео не подтверждается, только "
-            "открытое/закрытое положение."
-        ),
-        "norm_ids": ["14-16-1", "14-8-1"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "A-SECOND-PERSON",
-        "kit_rule": "two_clients",
-        "title_ru": "Одновременное обслуживание нескольких клиентов",
-        "title_en": "Two clients served at once",
-        "mechanism": (
-            "Two or more clients are at the client side of the desk at once, with no collector "
-            "present, for at least min_samples consecutive samples."
-        ),
-        "states_used": ["clients_at_desk", "collector_present"],
-        "params": {"min_samples": 2.0},
-        "description_template": (
-            "С {t_start} по {t_end} с одновременно несколько клиентов обслуживаются за столом."
-        ),
-        "visibility_caveat": "Число и личности клиентов определяются визуально, не по документам.",
-        "norm_ids": ["231-20-2", "231-21"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "C-COUNT-BEFORE-EXIT",
-        "kit_rule": "client_left_count",
-        "title_ru": "Пересчёт денег не в присутствии клиента (клиент ушёл)",
-        "title_en": "Cash counted without the client present (client left)",
-        "mechanism": (
-            "A client session ends and, in the window around the end (count_window_before_s "
-            "before, count_window_after_s after), counting is active for at least "
-            "count_frac_threshold of that window."
-        ),
-        "states_used": ["clients_at_desk", "counting_machine_in_use", "cashier_action"],
-        "params": {
-            "session_gap_s": 2.5,
-            "min_samples": 2.0,
-            "entry_lookback_s": 4.0,
-            "count_window_before_s": 3.0,
-            "count_window_after_s": 2.0,
-            "count_frac_threshold": 0.5,
-        },
-        "description_template": (
-            "В {t} с клиент покидает стол, пока наличные ещё пересчитываются или проверяются на "
-            "машине."
-        ),
-        "visibility_caveat": (
-            "Завершение пересчёта определяется по действию кассира/машине, а не по итоговой сумме."
-        ),
-        "norm_ids": ["231-20-1"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "C-ID-BEFORE-CASH",
-        "kit_rule": "no_id",
-        "title_ru": "Приём наличных без предъявления документа клиентом",
-        "title_en": "Cash accepted without an ID document shown",
-        "mechanism": (
-            "The first cash handover of a client session happens with no document shown "
-            "(id_document_visible / checking_id_document) in the id_lookback_s before it or "
-            "earlier in the session."
-        ),
-        "states_used": [
-            "clients_at_desk",
-            "cash_in_hands_of",
-            "cashier_action",
-            "id_document_visible",
-        ],
-        "params": {
-            "session_gap_s": 2.5,
-            "min_samples": 2.0,
-            "entry_lookback_s": 4.0,
-            "id_lookback_s": 2.0,
-        },
-        "description_template": (
-            "В {t} с зафиксирована первая передача наличных клиентом; показ документа ранее в "
-            "сессии не зафиксирован."
-        ),
-        "visibility_caveat": (
-            "Подлинность и тип документа по видео не определяются, только факт его предъявления в "
-            "кадре."
-        ),
-        "norm_ids": ["231-19-1", "231-7"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "C-DETECTOR-CHECK",
-        "kit_rule": "no_detector",
-        "title_ru": "Пересчёт без проверки подлинности на детекторе (эксперимент)",
-        "title_en": "Counting without a detector check (experimental)",
-        "mechanism": (
-            "Experimental, whole-video check: the cashier is seen counting by hand at some point, "
-            "and the detector is never seen in use anywhere in the observed timeline."
-        ),
-        "states_used": ["cashier_action", "detector_in_use"],
-        "params": {},
-        "description_template": (
-            "В {t} с кассир пересчитывает наличные вручную; использование детектора подлинности не "
-            "зафиксировано ни в одном наблюдаемом кадре."
-        ),
-        "visibility_caveat": (
-            "Экспериментальное правило: отсутствие детектора оценивается по всему наблюдаемому "
-            "видео, что не покрывает интервалы между сэмплами и части кадра вне обзора."
-        ),
-        "norm_ids": ["231-19-2b"],
-        "enabled": False,
-    },
-    {
-        "rule_id": "W-NO-PERSONAL-ITEMS",
-        "kit_rule": "personal_items",
-        "title_ru": "Личные вещи на рабочем месте кассира",
-        "title_en": "Personal items at the cashier's workplace",
-        "mechanism": (
-            "Personal items (coat, bag, backpack) are visible on the desk for at least min_samples "
-            "consecutive samples."
-        ),
-        "states_used": ["desk_personal_items"],
-        "params": {"min_samples": 2.0},
-        "description_template": (
-            "С {t_start} по {t_end} с на рабочем столе кассира находятся личные вещи."
-        ),
-        "visibility_caveat": (
-            "Принадлежность вещи кассиру, а не клиенту, не всегда достоверна по видео."
-        ),
-        "norm_ids": ["231-12-1"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "W-NO-FOOD",
-        "kit_rule": "food",
-        "title_ru": "Еда/напитки на рабочем месте кассира",
-        "title_en": "Food/drink at the cashier's workplace",
-        "mechanism": (
-            "Food or drink is visible on the desk, or the cashier's action is 'eating_drinking', "
-            "for at least min_samples consecutive samples."
-        ),
-        "states_used": ["desk_food_drink", "cashier_action"],
-        "params": {"min_samples": 2.0},
-        "description_template": (
-            "С {t_start} по {t_end} с на рабочем месте кассира видны еда или напитки."
-        ),
-        "visibility_caveat": (
-            "Факт употребления пищи не подтверждается, только присутствие еды/напитка в кадре."
-        ),
-        "norm_ids": ["231-12-2"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "W-NO-CAMERA-PHONE",
-        "kit_rule": "phone",
-        "title_ru": "Телефон в руках кассира в кассовом узле",
-        "title_en": "Phone in the cashier's hands in the cash unit",
-        "mechanism": (
-            "The phone is visible in the cashier's hand, or the cashier's action is 'using_phone', "
-            "for at least min_samples consecutive samples."
-        ),
-        "states_used": ["phone_in_cashier_hand", "cashier_action"],
-        "params": {"min_samples": 2.0},
-        "description_template": (
-            "С {t_start} по {t_end} с у кассира в руках телефон на рабочем месте."
-        ),
-        "visibility_caveat": (
-            "Содержание звонка или переписки не определяется, только факт удержания телефона."
-        ),
-        "norm_ids": ["231-12-2b"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "K-SEAL-CHECK",
-        "kit_rule": "collector_quick",
-        "title_ru": "Сумка от инкассатора принята без проверки (инкассатор сразу ушёл)",
-        "title_en": "Collector's bag accepted without inspection (collector left right away)",
-        "mechanism": (
-            "A collector is present; a bag appears on the desk; the collector leaves within "
-            "collector_quick_s of the bag appearing."
-        ),
-        "states_used": ["collector_present", "desk_bag"],
-        "params": {"collector_quick_s": 6.0},
-        "description_template": (
-            "В {t_end} с инкассатор покидает помещение в пределах {collector_quick_s:.0f} с после "
-            "появления сумки на столе; совместный осмотр сумки не зафиксирован."
-        ),
-        "visibility_caveat": (
-            "Содержимое сумки и целостность пломбы по видео не проверяются, только присутствие "
-            "сумки и людей."
-        ),
-        "norm_ids": ["231-24-3", "231-24-4"],
-        "enabled": True,
-    },
-    {
-        "rule_id": "K-RECOUNT-BEFORE-SAFE",
-        "kit_rule": "bag_to_safe_no_count",
-        "title_ru": "Деньги из вскрытой сумки убраны в сейф без пересчёта",
-        "title_en": "Cash from an opened bag moved to the safe without a recount",
-        "mechanism": (
-            "After the cashier opens a bag (cashier_action='packing_or_opening_bag'), the safe is "
-            "used (open, or cashier_action='at_safe') before any counting is observed in between."
-        ),
-        "states_used": ["cashier_action", "safe_door", "counting_machine_in_use"],
-        "params": {},
-        "description_template": (
-            "В {t} с кассир использует сейф после вскрытия сумки; пересчёт содержимого между этими "
-            "моментами не зафиксирован."
-        ),
-        "visibility_caveat": (
-            "Факт пересчёта подтверждается по видимому действию или работе машины, а не по "
-            "итоговой сумме."
-        ),
-        "norm_ids": ["231-74-1", "231-42"],
-        "enabled": True,
-    },
-]
+Strength = Literal["direct", "indirect", "weak"]
 
 
-def _norm_ref(by_id: dict[str, dict], norm_id: str) -> dict:
-    row = by_id[norm_id]
+class _Strict(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class Act(_Strict):
+    document_title: str
+    issuing_authority: str
+    adopted_on: date
+    jurisdiction: Literal["KZ"]
+    in_force: Literal["verified", "repealed", "unverified"]
+
+
+class Norm(_Strict):
+    act: str
+    punkt: str
+    quote: str = Field(min_length=1)
+    url: HttpUrl
+    citation_status: Literal["verified", "pending", "invalid"]
+    verified_by: str | None
+    verified_at: date | None
+
+    @model_validator(mode="after")
+    def _verified_has_who_and_when(self) -> Norm:
+        if self.citation_status == "verified" and not (self.verified_by and self.verified_at):
+            raise ValueError("a verified norm needs verified_by and verified_at")
+        return self
+
+
+class UnverifiedReference(_Strict):
+    text: str
+    url: HttpUrl
+    strength: Strength
+
+
+class F1Fields(_Strict):
+    family: str
+    signals: str
+    min_duration_text: str
+    min_duration_sec: float | None
+    timecode_anchor: str
+    title: str
+    description_template: str
+    title_en: str
+    description_template_en: str
+
+
+class RuleSpec(_Strict):
+    type_ru: str
+    type_en: str
+    requirement: str
+    visible_breach: str
+    not_visible: str
+    norms: dict[str, Strength]  # first entry = primary citation
+    unverified_reference: UnverifiedReference | None = None
+    business_status: Literal["confirmed", "candidate"]
+    implementation_status: Literal["implemented", "unimplemented"]
+    enabled: bool
+    disabled_reason: str | None
+    condition: str
+    states_used: list[str]
+    params: dict[str, float]
+    description_template: str
+    f1: F1Fields
+
+    @model_validator(mode="after")
+    def _reference_only_without_norms(self) -> RuleSpec:
+        if self.norms and self.unverified_reference:
+            raise ValueError("unverified_reference is only for rules with no norm")
+        if not self.norms and not self.unverified_reference:
+            raise ValueError("a rule with no norm needs an unverified_reference")
+        return self
+
+
+class Rulebook(_Strict):
+    version: Literal[1]
+    acts: dict[str, Act]
+    norms: dict[str, Norm]
+    rules: dict[str, RuleSpec]
+
+    @model_validator(mode="after")
+    def _references_resolve(self) -> Rulebook:
+        for norm_id, norm in self.norms.items():
+            if norm.act not in self.acts:
+                raise ValueError(f"norm {norm_id} names unknown act {norm.act!r}")
+        for rule_id, rule in self.rules.items():
+            if unknown := [n for n in rule.norms if n not in self.norms]:
+                raise ValueError(f"rule {rule_id} cites unknown norms {unknown}")
+        return self
+
+
+def load_rulebook(path: Path = RULEBOOK) -> Rulebook:
+    return Rulebook.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")))
+
+
+# ---- generated files ---------------------------------------------------------------------------
+
+
+def knowledge_pack(rb: Rulebook) -> tuple[list[dict], list[dict]]:
+    """(rules.yaml rows, norms.json rows) in the runtime's schema."""
+    rules = [
+        {
+            "rule_id": rule_id,
+            "business_status": r.business_status,
+            "implementation_status": r.implementation_status,
+            "title_ru": r.type_ru,
+            "title_en": r.type_en,
+            "mechanism": r.condition,
+            "states_used": r.states_used,
+            "params": r.params,
+            "description_template": r.description_template,
+            "visibility_caveat": r.not_visible,
+            "norm_ids": list(r.norms),
+            "citation_strengths": dict(r.norms),
+            "enabled": r.enabled,
+            "disabled_reason": r.disabled_reason,
+            "jury_eligible": not jury_blockers(rb, rule_id),
+        }
+        for rule_id, r in rb.rules.items()
+    ]
+    cited = list(dict.fromkeys(n for r in rb.rules.values() for n in r.norms))
+    norms = []
+    for norm_id in cited:
+        norm, act = rb.norms[norm_id], rb.acts[rb.norms[norm_id].act]
+        norms.append(
+            {
+                "norm_id": norm_id,
+                "jurisdiction": act.jurisdiction,
+                "document_title": act.document_title,
+                "issuing_authority": act.issuing_authority,
+                "adopted_on": act.adopted_on.isoformat(),
+                "act": norm.act,
+                "act_number": norm.act,
+                "punkt": norm.punkt,
+                "quote": norm.quote,
+                "url": str(norm.url),
+                "citation_status": norm.citation_status,
+                "verified_by": norm.verified_by,
+                "verified_at": norm.verified_at.isoformat() if norm.verified_at else None,
+            }
+        )
+    return rules, norms
+
+
+def _f1_rule(rb: Rulebook, rule_id: str, r: RuleSpec) -> Rule:
+    if r.norms:
+        primary = rb.norms[next(iter(r.norms))]
+        source = "; ".join(
+            f"Постановление № {rb.norms[n].act}, {rb.norms[n].punkt}" for n in r.norms
+        )
+        source_url, strength = str(primary.url), next(iter(r.norms.values()))
+    else:
+        ref = r.unverified_reference
+        source, source_url, strength = f"не проверено: {ref.text}", str(ref.url), ref.strength
+    return Rule(
+        id=rule_id,
+        family=r.f1.family,
+        requirement=r.requirement,
+        breach_condition=r.visible_breach,
+        signals=r.f1.signals,
+        min_duration_text=r.f1.min_duration_text,
+        min_duration_sec=r.f1.min_duration_sec,
+        timecode_anchor=r.f1.timecode_anchor,
+        source=source,
+        source_url=source_url,
+        strength=strength.capitalize(),
+        status=r.business_status.capitalize(),
+        title=r.f1.title,
+        description_template=r.f1.description_template,
+        title_en=r.f1.title_en,
+        description_template_en=r.f1.description_template_en,
+    )
+
+
+def f1_codex(rb: Rulebook, current: dict) -> Codex:
+    """The F1 codex with its `rules` regenerated and every other key kept as it is. Per-clip label
+    data (`clips`) is never carried into this runtime file."""
+    rules = [_f1_rule(rb, rule_id, r) for rule_id, r in rb.rules.items()]
+    kept = {k: v for k, v in current.items() if k != "clips"}
+    return Codex.model_validate({**kept, "rules": [rule.model_dump() for rule in rules]})
+
+
+def render(rb: Rulebook, current_f1: dict) -> dict[Path, str]:
+    rules, norms = knowledge_pack(rb)
     return {
-        "norm_id": row["id"],
-        "act": row["act"],
-        "punkt": row["punkt"],
-        "quote": row["quote"],
-        "url": row["url"],
-        "strength": row["strength"],
-        "human_verified": False,
-        "verified_by": None,
-        "verified_at": None,
+        KNOWLEDGE_DIR / "rules.yaml": yaml.safe_dump(
+            rules, allow_unicode=True, sort_keys=False, width=100
+        ),
+        KNOWLEDGE_DIR / "norms.json": json.dumps(norms, ensure_ascii=False, indent=2) + "\n",
+        F1_CODEX: yaml.safe_dump(
+            f1_codex(rb, current_f1).model_dump(), allow_unicode=True, sort_keys=False
+        ),
     }
 
 
-def main() -> None:
-    codex = json.loads(CODEX_VERIFIED.read_text(encoding="utf-8"))
-    by_id = {row["id"]: row for row in codex}
+def validate_outputs(files: dict[Path, str]) -> None:
+    """Load the generated files with the service's own loaders; raises what startup would."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_dir = Path(tmp)
+        for path, text in files.items():
+            (tmp_dir / path.name).write_text(text, encoding="utf-8")
+        Knowledge.load(tmp_dir)
+        load_codex(tmp_dir / F1_CODEX.name)
 
-    referenced: list[str] = []
-    for rule in RULES:
-        for norm_id in rule["norm_ids"]:
-            if norm_id not in by_id:
-                print(
-                    f"error: rule {rule['rule_id']} references unknown codex id {norm_id}",
-                    file=sys.stderr,
-                )
-                sys.exit(1)
-            if norm_id not in referenced:
-                referenced.append(norm_id)
 
-    for rule in RULES:
-        if rule["enabled"] and not rule["norm_ids"]:
-            print(f"error: enabled rule {rule['rule_id']} has no norm_ids", file=sys.stderr)
-            sys.exit(1)
+def jury_blockers(rb: Rulebook, rule_id: str) -> list[str]:
+    """Why a rule may not be reported to the jury (Q32): it must be enabled and rest only on
+    human-verified norms from acts confirmed in force (task.md §9, criterion 4)."""
+    rule = rb.rules[rule_id]
+    if not rule.enabled:
+        return [f"{rule_id}: disabled"]
+    if not rule.norms:
+        return [f"{rule_id}: cites no norm"]
+    blockers = []
+    for norm_id in rule.norms:
+        norm = rb.norms[norm_id]
+        if norm.citation_status != "verified":
+            blockers.append(f"{rule_id}: norm {norm_id} is {norm.citation_status}")
+        if rb.acts[norm.act].in_force != "verified":
+            blockers.append(f"{rule_id}: act {norm.act} in force is {rb.acts[norm.act].in_force}")
+    return sorted(set(blockers))
 
-    norms = [_norm_ref(by_id, nid) for nid in referenced]
 
-    KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
-    rules_out = [
-        {
-            "rule_id": r["rule_id"],
-            "title_ru": r["title_ru"],
-            "title_en": r["title_en"],
-            "mechanism": r["mechanism"],
-            "states_used": r["states_used"],
-            "params": r["params"],
-            "description_template": r["description_template"],
-            "visibility_caveat": r["visibility_caveat"],
-            "norm_ids": r["norm_ids"],
-            "enabled": r["enabled"],
-        }
-        for r in RULES
-    ]
-    (KNOWLEDGE_DIR / "rules.yaml").write_text(
-        yaml.safe_dump(rules_out, allow_unicode=True, sort_keys=False, width=100),
-        encoding="utf-8",
+def freeze_problems(rb: Rulebook) -> list[str]:
+    """Blockers of every enabled rule: the submission needs none (`--freeze`)."""
+    return sorted(
+        b for rule_id, r in rb.rules.items() if r.enabled for b in jury_blockers(rb, rule_id)
     )
-    (KNOWLEDGE_DIR / "norms.json").write_text(
-        json.dumps(norms, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    ap.add_argument("--check", action="store_true", help="write nothing; fail if a file is stale")
+    ap.add_argument("--freeze", action="store_true", help="fail unless enabled law is verified")
+    args = ap.parse_args(argv)
+
+    rb = load_rulebook()
+    files = render(rb, yaml.safe_load(F1_CODEX.read_text(encoding="utf-8")))
+    validate_outputs(files)
+
+    ok = True
+    stale = [p for p, text in files.items() if p.read_text(encoding="utf-8") != text]
+    if args.check:
+        for p in stale:
+            print(f"stale: {p.relative_to(ROOT)} (run scripts/build_knowledge.py)", file=sys.stderr)
+        ok = not stale
+    else:
+        for p in stale:
+            p.write_text(files[p], encoding="utf-8")
+            print(f"wrote {p.relative_to(ROOT)}")
+
+    problems = freeze_problems(rb)
+    enabled = [rule_id for rule_id, r in rb.rules.items() if r.enabled]
+    eligible = [rule_id for rule_id in enabled if not jury_blockers(rb, rule_id)]
+    print(
+        f"{len(rb.rules)} rules: {len(enabled)} detector-enabled, {len(eligible)} jury-eligible; "
+        f"{len(problems)} blocker(s) on enabled rules"
     )
-    print(f"wrote {len(rules_out)} rules, {len(norms)} norms -> {KNOWLEDGE_DIR}")
+    if args.freeze:
+        for p in problems:
+            print(f"  {p}", file=sys.stderr)
+        ok &= not problems
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

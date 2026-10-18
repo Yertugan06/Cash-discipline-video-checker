@@ -33,14 +33,14 @@ fixed, delete it here and say where in the commit message.
 - **Where:** `eval/run_eval.py:47` (`to_pred_entry`), read by
   `validation/validation-evidence/harness/score.py` through `code_match()` in
   `score_utils.py`.
-- **Affects:** the "mechanism" line of the scorer report (does a predicted
+- **Affects:** the "legal-citation match" line of the scorer report (called "mechanism" before 2026-10-18) (does a predicted
   event cite the same norm as the team annotation, within ±3 s). Verdict and
   timecode metrics are not affected.
 
 **What happens.** `to_pred_entry` passes each violation's `rule_id` (for example
 `A-OUTSIDER-ZONE`) as the event `code`. `code_match()` compares norm numbers it
 extracts from both codes, and `code_key("A-OUTSIDER-ZONE")` is `None`, so no
-event ever matches. The service's mechanism score is 0/N even when it finds
+event ever matches. The service's legal-citation match is 0/N even when it finds
 the right rule at the right time.
 
 Passing the violation's `source` field instead does not work either for every
@@ -59,7 +59,7 @@ act: `code_key("14, п. 16 пп. 1)")` gives `14-16` while the annotation
 (the first entry of `norm_ids` in `knowledge/rules.yaml`, e.g. `14-16-1`) and
 pass that as `code`. Add a test in `tests/test_eval_run_eval.py` that a
 `DoneJob` with `A-DOOR-LOCK` produces a code that `code_match()` accepts
-against `п. 16 пп. 1)`. Fix this before scoring A12, otherwise its mechanism
+against `п. 16 пп. 1)`. Fix this before scoring A12, otherwise its legal-citation match
 number will read 0 and look like a real result.
 
 Caveat: the screen-lock rule cites `53-71-9` in `knowledge/rules.yaml`, and

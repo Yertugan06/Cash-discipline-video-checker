@@ -4,6 +4,7 @@ Excel workbooks and organizer labels are build-time research inputs only, never 
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,6 +25,23 @@ def test_no_backend_module_references_private_data_or_labels():
         if hits:
             offenders[str(path.relative_to(ROOT))] = hits
     assert not offenders, f"backend/ modules reference private data/labels: {offenders}"
+
+
+# Runtime config and the Knowledge Pack ship inside the service image: no clip may be named there
+# (Latin or Cyrillic X), or per-clip label data could reach the running service.
+CLIP_ID = re.compile(r"[XХ]\s*-\s*\d+")
+RUNTIME_DATA_DIRS = (ROOT / "config", ROOT / "knowledge")
+
+
+def test_runtime_config_and_knowledge_name_no_clip():
+    offenders = {
+        str(p.relative_to(ROOT)): sorted(set(CLIP_ID.findall(p.read_text(encoding="utf-8"))))
+        for d in RUNTIME_DATA_DIRS
+        for p in sorted(d.rglob("*"))
+        if p.is_file() and p.suffix in {".yaml", ".yml", ".json"}
+    }
+    offenders = {k: v for k, v in offenders.items() if v}
+    assert not offenders, f"runtime data names clips: {offenders}"
 
 
 def test_backend_python_files_were_actually_scanned():

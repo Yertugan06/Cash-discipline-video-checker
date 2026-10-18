@@ -166,6 +166,9 @@ class NormRef(BaseModel):
     verified_at: date | None = None
 
 
+RuleScope = Literal["detector", "jury"]
+
+
 class RuleEntry(BaseModel):
     rule_id: str
     business_status: Literal["confirmed", "candidate"]
@@ -179,8 +182,11 @@ class RuleEntry(BaseModel):
     visibility_caveat: str  # what the video cannot establish
     norm_ids: list[str]  # first = primary citation
     citation_strengths: dict[str, Literal["direct", "indirect", "weak"]]
-    enabled: bool
+    enabled: bool  # the detector runs it
     disabled_reason: str | None = None
+    # Enabled, and every cited norm and its act are human-verified (knowledge/rulebook.yaml).
+    # Only these are reported under RULE_SCOPE=jury.
+    jury_eligible: bool = False
 
 
 class GroundedFinding(BaseModel):

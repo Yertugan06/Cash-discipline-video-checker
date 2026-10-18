@@ -1,19 +1,26 @@
 # Knowledge Pack: provenance, open verification, open conflicts
 
-`rules.yaml` and `norms.json` are build outputs read by `backend/knowledge.py`.
-`scripts/build_knowledge.py` builds rule lifecycle metadata from its registry and norm text from:
-
-- `archive/vm-copies/datathon/forte_brev_kit/brev_kit/codex/codex_verified.json` (217 rows, verbatim
-  legal text + `act`/`punkt`/`url` per norm) -- the source for every `norms.json` row;
-- `config/f1_codex.yaml`, regenerated from `data/Cash_Discipline_Cases_Rules.xlsx`, for rule IDs
-  and business statuses. The lifecycle registry below must stay in sync with it.
-
-Re-run after editing the rule table in `scripts/build_knowledge.py`:
+`rulebook.yaml` is the one source for every rule and its legal basis (acts, verbatim norm clauses,
+requirement, visible breach, what the video cannot show, lifecycle, F1 thresholds; see
+`docs/adr/0001-rulebook-single-source.md`). `rules.yaml`, `norms.json` and the `rules` part of
+`config/f1_codex.yaml` are generated from it; never edit those by hand.
 
 ```
-.venv/bin/python scripts/build_knowledge.py
-.venv/bin/python scripts/render_rules_doc.py   # regenerates docs/RULES.md
+.venv/bin/python scripts/build_knowledge.py            # regenerate
+.venv/bin/python scripts/build_knowledge.py --check    # what tests/test_rulebook.py enforces
+.venv/bin/python scripts/build_knowledge.py --freeze   # before submission: enabled rules must rest
+                                                       # on human-verified norms and acts in force
+.venv/bin/python scripts/render_rules_doc.py           # regenerates docs/RULES.md
 ```
+
+Two separate facts per rule: `enabled` (F1 runs it) and `jury_eligible` (generated: enabled, and
+every cited norm and its act human-verified). The service reports only jury-eligible rules unless
+`RULE_SCOPE=detector` is set for an experiment, so a pending citation never reaches the jury as if
+it were verified. With nothing verified, `RULE_SCOPE=jury` refuses to start.
+
+The norm texts were first taken from the kit's `codex_verified.json` (now under
+`archive/vm-copies/`); the rulebook keeps only the legal fields, so the build no longer reads the
+archive. Sections below describe how the pack got its current content.
 
 ## Rule lifecycle
 

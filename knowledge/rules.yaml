@@ -25,6 +25,7 @@
     231-22: direct
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: L-SAFE-LOCKED-ON-LEAVE
   business_status: candidate
   implementation_status: unimplemented
@@ -53,6 +54,7 @@
     231-80-1: indirect
   enabled: false
   disabled_reason: No evaluator is wired for this rule.
+  jury_eligible: false
 - rule_id: L-PC-LOCKED
   business_status: confirmed
   implementation_status: implemented
@@ -78,6 +80,7 @@
     53-71-9: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: L-NO-DOCS-ON-LEAVE
   business_status: confirmed
   implementation_status: implemented
@@ -103,6 +106,7 @@
     231-80-3: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: S-SAFE-CLOSED
   business_status: confirmed
   implementation_status: implemented
@@ -123,6 +127,7 @@
     231-20-2b: direct
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: S-CLEAN-DESK-HANDOVER
   business_status: confirmed
   implementation_status: implemented
@@ -151,6 +156,7 @@
     231-20-2: direct
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: S-NO-MERGE
   business_status: confirmed
   implementation_status: implemented
@@ -176,6 +182,7 @@
     231-21: weak
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: A-OUTSIDER-ZONE
   business_status: confirmed
   implementation_status: implemented
@@ -200,6 +207,7 @@
     14-8-1: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: A-DOOR-LOCK
   business_status: confirmed
   implementation_status: implemented
@@ -225,6 +233,7 @@
     14-8-1: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: A-SECOND-PERSON
   business_status: confirmed
   implementation_status: implemented
@@ -247,6 +256,7 @@
     231-21: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: C-COUNT-BEFORE-EXIT
   business_status: confirmed
   implementation_status: implemented
@@ -274,6 +284,7 @@
     231-20-1: direct
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: C-ID-BEFORE-CASH
   business_status: confirmed
   implementation_status: implemented
@@ -303,6 +314,7 @@
     231-7: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: C-DETECTOR-CHECK
   business_status: candidate
   implementation_status: unimplemented
@@ -324,6 +336,7 @@
     231-19-2b: direct
   enabled: false
   disabled_reason: Experimental rule has no F1 evaluator.
+  jury_eligible: false
 - rule_id: W-NO-PERSONAL-ITEMS
   business_status: confirmed
   implementation_status: implemented
@@ -343,6 +356,7 @@
     231-12-1: direct
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: W-NO-FOOD
   business_status: confirmed
   implementation_status: implemented
@@ -363,6 +377,7 @@
     231-12-2: weak
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: W-NO-CAMERA-PHONE
   business_status: candidate
   implementation_status: unimplemented
@@ -383,6 +398,7 @@
     231-12-2b: direct
   enabled: false
   disabled_reason: No evaluator is wired for this rule.
+  jury_eligible: false
 - rule_id: K-SEAL-CHECK
   business_status: confirmed
   implementation_status: implemented
@@ -407,6 +423,7 @@
     231-24-4: direct
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: K-RECOUNT-BEFORE-SAFE
   business_status: confirmed
   implementation_status: implemented
@@ -431,6 +448,7 @@
     231-42: indirect
   enabled: true
   disabled_reason: null
+  jury_eligible: false
 - rule_id: L-NO-BAG-ON-LEAVE
   business_status: confirmed
   implementation_status: implemented
@@ -447,6 +465,7 @@
   citation_strengths: {}
   enabled: false
   disabled_reason: Legal basis for treating a collection bag as unattended valuables needs review.
+  jury_eligible: false
 - rule_id: C-REJECT-NOT-RETURNED
   business_status: confirmed
   implementation_status: unimplemented
@@ -463,6 +482,7 @@
   citation_strengths: {}
   enabled: false
   disabled_reason: No evaluator is wired for this rule.
+  jury_eligible: false
 - rule_id: K-COLLECTOR-DOC
   business_status: confirmed
   implementation_status: implemented
@@ -481,3 +501,4 @@
   enabled: false
   disabled_reason: The video cannot establish that no accompanying document exists outside the camera
     view; legal and visibility basis needs review.
+  jury_eligible: false

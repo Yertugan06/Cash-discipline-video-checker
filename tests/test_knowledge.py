@@ -240,3 +240,13 @@ def test_docs_rules_md_is_in_sync_with_knowledge_pack():
     expected = render(k)
     actual = (ROOT / "docs" / "RULES.md").read_text(encoding="utf-8")
     assert actual == expected, "docs/RULES.md is stale; re-run scripts/render_rules_doc.py"
+
+
+def test_docs_violation_types_md_is_in_sync_with_knowledge_pack():
+    from scripts.render_rules_doc import render_types
+
+    expected = render_types(Knowledge.load(KNOWLEDGE_ROOT))
+    actual = (ROOT / "docs" / "VIOLATION_TYPES.md").read_text(encoding="utf-8")
+    assert actual == expected, (
+        "docs/VIOLATION_TYPES.md is stale; re-run scripts/render_rules_doc.py"
+    )

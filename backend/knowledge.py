@@ -14,7 +14,9 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from backend.contracts import Finding, GroundedFinding, NormRef, RuleEntry
+from backend.contracts import Finding, GroundedFinding, NormRef, RuleEntry, RuleScope
+
+NOT_JURY_ELIGIBLE = "Not jury-eligible: its legal basis is not human-verified yet."
 
 
 class KnowledgeError(ValueError):
@@ -28,7 +30,9 @@ class Knowledge:
         self._norms = norms
 
     @classmethod
-    def load(cls, root: Path) -> Knowledge:
+    def load(cls, root: Path, scope: RuleScope = "detector") -> Knowledge:
+        """`scope="jury"` reports only jury-eligible rules: every other enabled rule is loaded as
+        disabled, so its citations can never reach the jury as if they had been verified."""
         rules_path = root / "rules.yaml"
         norms_path = root / "norms.json"
 
@@ -90,6 +94,29 @@ class Knowledge:
                     raise KnowledgeError(
                         f"enabled rule {rule.rule_id!r} uses invalid citation {norm_id!r}"
                     )
+            if rule.jury_eligible and not (
+                rule.enabled
+                and rule.norm_ids
+                and all(norms[n].citation_status == "verified" for n in rule.norm_ids)
+            ):
+                raise KnowledgeError(
+                    f"rule {rule.rule_id!r} is jury_eligible without enabled, verified citations"
+                )
+
+        if scope == "jury":
+            rules = [
+                r
+                if r.jury_eligible or not r.enabled
+                else r.model_copy(update={"enabled": False, "disabled_reason": NOT_JURY_ELIGIBLE})
+                for r in rules
+            ]
+            if not any(r.enabled for r in rules):
+                raise KnowledgeError(
+                    "RULE_SCOPE=jury but no rule is jury-eligible: verify the norms in "
+                    "knowledge/rulebook.yaml, or set RULE_SCOPE=detector for experiments"
+                )
+        elif scope != "detector":
+            raise KnowledgeError(f"unknown rule scope {scope!r}")
 
         return cls(rules, norms)
 

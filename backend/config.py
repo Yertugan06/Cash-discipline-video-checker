@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
+from backend.contracts import RuleScope
+
 try:
     from backend.vlm.config import VlmSettings
 except ModuleNotFoundError:
@@ -39,6 +41,9 @@ DetectorName = Literal["vlm", "f1"]
 class Settings:
     api_key: str = field(repr=False)
     detector: DetectorName = "f1"
+    # "jury": report only jury-eligible rules (the submission). "detector": every enabled rule,
+    # citations marked pending (experiments). See knowledge/README.md.
+    rule_scope: RuleScope = "jury"
     knowledge_dir: Path = ROOT / "knowledge"
     job_budget_s: float = 270.0
     max_upload_bytes: int = 64 * 1024 * 1024
@@ -70,6 +75,8 @@ class Settings:
             )
         if self.detector not in ("vlm", "f1"):
             raise ValueError("DETECTOR must be 'vlm' or 'f1'")
+        if self.rule_scope not in ("jury", "detector"):
+            raise ValueError("RULE_SCOPE must be 'jury' or 'detector'")
         if self.job_budget_s <= 0:
             raise ValueError("job_budget_s must be positive")
         if self.max_upload_bytes <= 0:
@@ -91,6 +98,7 @@ class Settings:
         return cls(
             api_key=os.environ.get("API_KEY", ""),
             detector=detector,  # type: ignore[arg-type]
+            rule_scope=os.environ.get("RULE_SCOPE", "jury"),  # type: ignore[arg-type]
             knowledge_dir=Path(os.environ.get("KNOWLEDGE_DIR", str(ROOT / "knowledge"))),
             job_budget_s=float(os.environ.get("JOB_BUDGET_S", "270")),
             max_upload_bytes=int(os.environ.get("MAX_UPLOAD_BYTES", str(64 * 1024 * 1024))),
