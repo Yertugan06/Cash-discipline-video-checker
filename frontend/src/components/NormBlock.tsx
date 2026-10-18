@@ -1,5 +1,6 @@
 import type { LegalBasis, Violation } from '../contract.ts';
 import { actNumberText, citationBadge, strengthText, words, type Language } from '../messages.ts';
+import Icon from './Icon.tsx';
 
 /**
  * The legal basis (implementation-plan.md WP4 UI requirements): every norm
@@ -30,16 +31,21 @@ export default function NormBlock({ violation, language }: { violation: Violatio
     <section className="norm-block">
       <h4>{text.legalBasis}</h4>
       <p className="norm-source">
+        <span className="norm-label"><Icon name="book" size={15} />{text.source}</span>{' '}
         {violation.source_url ? (
           <a href={violation.source_url} rel="noreferrer" target="_blank">
-            {violation.document_title ?? violation.source ?? text.openSource}
+            {violation.document_title ?? violation.source ?? text.openSource}<Icon name="arrowUpRight" size={13} />
           </a>
         ) : (
           <span>{violation.document_title ?? violation.source}</span>
         )}
         <CitationBadge status={violation.citation_status} language={language} />
       </p>
-      {violation.source_quote ? <blockquote className="norm-quote">«{violation.source_quote}»</blockquote> : null}
+      {violation.source_quote ? (
+        <blockquote className="norm-quote">
+          <span className="norm-label">{text.quote}</span> «{violation.source_quote}»
+        </blockquote>
+      ) : null}
     </section>
   );
 }
@@ -61,7 +67,7 @@ function NormItem({ norm, primary, language }: { norm: LegalBasis; primary: bool
       <p className="norm-meta">
         {norm.issuing_authority}, {actNumberText(norm.act_number, norm.adopted_on, language)} ·{' '}
         <a href={norm.url} rel="noreferrer" target="_blank" title={norm.document_title}>
-          {text.openAdilet}
+          {text.openAdilet}<Icon name="arrowUpRight" size={13} />
         </a>
       </p>
     </li>
