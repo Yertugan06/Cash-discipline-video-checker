@@ -11,10 +11,10 @@ import { words, type Language } from './messages.ts';
 type Theme = 'light' | 'dark';
 
 function preferredTheme(): Theme {
-  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    return 'light';
+  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
   }
-  return 'dark';
+  return 'light';
 }
 
 function fileSize(bytes: number): string {
