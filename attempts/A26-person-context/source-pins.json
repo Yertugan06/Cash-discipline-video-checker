@@ -1,0 +1,16 @@
+{
+  "declared_base_commit": "4a3b9ea",
+  "sha256": {
+    "backend/f1/rules.py": "58c19c185c62ee054f5edf392629812458b363277f88c75c59f94868955a4324",
+    "backend/f1/events.py": "d13e9fca69dd9c460d9872578eb21b07adfe66fe8bc0fb3ccbd8aaa5ae81f437",
+    "backend/f1/calibration.py": "275d7860fa62a88cf6191149d93deb95d915eb6fddc994689fd004b9edc9b27a",
+    "backend/f1/vision_types.py": "013c013d01e4e842c310cc48bb21ba02cd02f77abdb544a7a1cacd3d00b5c809",
+    "config/perception.yaml": "9201da3982e88a0d69b78ab2e9c746f665acf25e5307db2e6196e2abf092e75f",
+    "config/f1_codex.yaml": "eb70cb46e11121a4c7099682792e87ead14f3b4e6d4bbe062301b904f6da853b",
+    "config/overrides.yaml": "66ef96a57809c4ca39497303c1f5399ce596be3c1d20f5c5a8d6ea399fb0e787",
+    "knowledge/rules.yaml": "d83c738c06f25358b7e24df038fdcd8b0db1f597abadff894db89704c663acda",
+    "scripts/replay_f1.py": "6c638a19d1a44983c9ea6eb45d9e9cde5fb7f4d7e5b02d29ade587f9d6cd0956",
+    "data/prepared/videos.jsonl": "4d3dcf14db472404c7da629a4e4cb4eb19b3e36f33d4f36e226a4e9c8d30189d",
+    "mirror_publication_metadata": "602dcccb00bc2ecd21960fe4739033a2a2ee602f3e5eb709b1eec2b1bdb174eb"
+  }
+}

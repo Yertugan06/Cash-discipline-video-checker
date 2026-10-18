@@ -1,0 +1,9 @@
+# A26 D2 person context
+
+First numeric diagnosis05:29UTC, within one minute. Exact mirrorX11 trace hash a3b67344d3235a68d1e1efa3e0e0755f9107a7f7f95beb1995872babd07b85e8 matches publication metadata. Cashier person:1 last visible20.0; no person20.5; person:19 alone21–23.5, outsider until23.0, cashier23.5. Zero samples show the two as distinct simultaneous people. MirrorX12 has analogous non-coexisting later tracks without a sustained outsider finding.
+
+Root cause supported by text: stale cashier_known plus a new location-derived outsider identity, before later workstation-based reassignment. The numeric trace cannot distinguish fragmentation from a ghost detection or establish physical continuity. Do not merge IDs, assume solitary=cashier, or suppress room exits.
+
+Candidate frozen before all40 comparison: require an accused track to have been observed alongside a separately visible cashier at/before the accusation. This is evidence for distinct actor identity, not a calibrated probability or sufficient proof of unauthorized status. Preserve all exit events and already supported multi-actor evidence. Candidate patch only; no sourcebase or production mutation.
+
+05:31–05:33UTC: all40 CPU baseline matches30/40 (TP11,TN19,FN10,FP0); after candidate remains30/40. All12 original finding records identical. X30 outsider@13 actor23 and X18 second-person@19.5 preserved. Exact8 mirror trace outsider-rule replay removes only X11 outsider@21 actor19. Publication's apparent5/8 falls to counterfactual4/8; no replacement reason claimed. One focused regression including prior independent identity after exit and future-only evidence passed. Dry-run patch applies; core source digest unchanged. Upstream roles remain unverified; this is an unapplied rule evidence safeguard. Report and numeric artifacts ready; parent controls promotion.

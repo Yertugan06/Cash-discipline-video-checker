@@ -1,0 +1,23 @@
+{
+  "cwd": "/home/ubuntu/workspaces/datathon26-workers/worker-2",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "RULE_SCOPE": "detector"
+  },
+  "argv": [
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/.venv/bin/python",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A26-person-context/replay.py",
+    "--base",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base",
+    "--cache",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a22/perception_cache",
+    "--publication",
+    "/home/ubuntu/workspaces/datathon26-workers/shared/a23-mirrored-publication",
+    "--out",
+    "/home/ubuntu/workspaces/datathon26-workers/worker-2/attempts/A26-person-context"
+  ]
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "name": "originalX11",
+    "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base/runtime/traces/f555445cea4a4037a849e50824e67f37.json",
+    "trace_sha256": "363ea87b24bff98505cfad633811028ad71d6544844c71a61f498f2fadcff924",
+    "mtime": 1792294754.272736,
+    "findings": [],
+    "keys": [
+      "video_sha256",
+      "perception_cache_hit",
+      "fps",
+      "duration_sec",
+      "scene",
+      "state_changes",
+      "events",
+      "coverage",
+      "sessions",
+      "warnings",
+      "frames",
+      "visual_checks",
+      "findings",
+      "desk_objects_enabled",
+      "desk_objects"
+    ]
+  },
+  {
+    "name": "originalX11",
+    "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base/runtime/traces/eb9e626b4a194ec78b0ee675b45a867c.json",
+    "trace_sha256": "c834fddb2fc70d9804163cbb9640948bddb879b1f9da01fbeb917887e2bc5ebb",
+    "mtime": 1792295165.542577,
+    "findings": [],
+    "keys": [
+      "video_sha256",
+      "perception_cache_hit",
+      "fps",
+      "duration_sec",
+      "scene",
+      "state_changes",
+      "events",
+      "coverage",
+      "sessions",
+      "warnings",
+      "frames",
+      "findings",
+      "desk_objects_enabled",
+      "desk_objects"
+    ]
+  },
+  {
+    "name": "originalX11",
+    "path": "/home/ubuntu/workspaces/datathon26-workers/shared/a23/base/runtime/traces/642b578f57484e51824e0bf9ee7fc300.json",
+    "trace_sha256": "032137f3e0ff52a9b3053707c785d8e3fecfbb23f380789fdf3c901ce0cf951c",
+    "mtime": 1792296077.1392398,
+    "findings": [],
+    "keys": [
+      "video_sha256",
+      "perception_cache_hit",
+      "fps",
+      "duration_sec",
+      "scene",
+      "state_changes",
+      "events",
+      "coverage",
+      "sessions",
+      "warnings",
+      "frames",
+      "visual_checks",
+      "findings",
+      "desk_objects_enabled",
+      "desk_objects"
+    ]
+  }
+]

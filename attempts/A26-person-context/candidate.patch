@@ -1,0 +1,25 @@
+--- a/backend/f1/rules.py
++++ b/backend/f1/rules.py
+@@ -566,7 +566,21 @@
+ def a_outsider_zone(ctx: Context) -> list[Finding]:
+     if not ctx.log.coverage.get("roles"):
+         return []
+-    return sustained(ctx, "A-OUTSIDER-ZONE", "PERSON_IN_CASHIER_ZONE")
++    distinct_seen = {}
++    for observation in ctx.observations:
++        people = [p for p in observation.detections if p.label == "person" and p.role != "glass"]
++        cashier_ids = {p.track_id for p in people if p.role == "cashier" and p.track_id}
++        if cashier_ids:
++            for person in people:
++                if person.track_id and person.track_id not in cashier_ids:
++                    distinct_seen.setdefault(person.track_id, observation.timestamp_sec)
++    # A new track in the zone may be the lost cashier; location cannot establish identity.
++    return [
++        finding
++        for finding in sustained(ctx, "A-OUTSIDER-ZONE", "PERSON_IN_CASHIER_ZONE")
++        if distinct_seen.get(str(finding.facts.get("actor_id", "")), float("inf"))
++        <= finding.timestamp_sec
++    ]
+ 
+ 
+ def a_second_person(ctx: Context) -> list[Finding]:
