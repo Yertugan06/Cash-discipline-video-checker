@@ -39,7 +39,8 @@ Working notes for coding agents on this project. Read before starting work.
 - `datathon` (Brev, L4): live service in `~/datathon26`, compose project `datathon26`,
   `DETECTOR=f1`, `RULE_SCOPE=detector`, on port 8000 with `API_HOST=0.0.0.0`, public only
   through Brev's proxy at `https://forte-checker-wwi4jcrss.gobrev.dev` (`deploy/README.md`).
-  Rollback image of the previous version: `forte-cash-checker:cuda-7ae5873`.
+  Deployed: `277ac67` (mov/mp4/mkv uploads). Rollback image of the previous version (`5d8f0bf`):
+  `forte-cash-checker:cuda-5d8f0bf`; gateway: `datathon26-realtime:pre-277ac67`.
   No git checkout there: deploy by piping
   `git archive HEAD` (plus uncommitted files) over ssh. What's deployed is in
   `~/datathon26/DEPLOYED_COMMIT`.
