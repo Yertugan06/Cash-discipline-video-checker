@@ -1,0 +1,11 @@
+{
+  "validated_done_jobs": 42,
+  "evidence_jpegs_decoded": 12,
+  "citation_statuses": {
+    "pending": 12
+  },
+  "source_files_matched": 13,
+  "perception_cache_hits": 42,
+  "visual_inference_calls": 0,
+  "production_vms": 1
+}

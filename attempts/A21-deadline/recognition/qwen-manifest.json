@@ -1,0 +1,635 @@
+{
+  "version": 1,
+  "frozen_before_qwen_outputs": true,
+  "model_repo": "Qwen/Qwen3-VL-4B-Instruct",
+  "model_revision": "not recorded in local checkpoint; record config hash and weight-file inventory",
+  "variants": {
+    "full": {
+      "offsets_sec": [
+        0.0
+      ],
+      "target_index": 0,
+      "crop": "full"
+    },
+    "tiles384": {
+      "offsets_sec": [
+        0.0
+      ],
+      "target_index": 0,
+      "crop": "tiles"
+    },
+    "tiles384_temporal3": {
+      "offsets_sec": [
+        -0.4,
+        0.0,
+        0.4
+      ],
+      "target_index": 1,
+      "crop": "tiles"
+    }
+  },
+  "tile_size": 384,
+  "tile_overlap": 0.25,
+  "max_new_tokens": 32,
+  "max_call_sec": 5.0,
+  "inference_budget_sec": 600.0,
+  "processor_size": {
+    "shortest_edge": 65536,
+    "longest_edge": 524288
+  },
+  "prompt": "Answer only JSON: {\"cash\":\"yes|no|unknown\",\"id_card\":\"yes|no|unknown\"}. Cash means recognizable banknotes, not a phone, card, ordinary document or surface texture. ID means a recognizable identity document/card, not any small rectangle. Say yes only when identifiable in the target image; no only when clearly absent; otherwise unknown. No explanations.",
+  "single_instruction": "The only image is the target image.",
+  "temporal_instruction": "Three images show the SAME crop in chronological order. The SECOND image is the target. Answer ONLY about objects visibly present in that second image. An object seen only in the first or third image does not count; if the target is occluded or ambiguous, answer unknown.",
+  "label_source_sha256": "b1e2a56a015141bf25ce13a331f93d608ddf0ac91286b14f8f9f86992fefdef6",
+  "cases": [
+    {
+      "clip": "X-4",
+      "t": 56.0,
+      "expected": {
+        "cash": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-38",
+      "t": 30.0,
+      "expected": {
+        "cash": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-26",
+      "t": 15.0,
+      "expected": {
+        "cash": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-10",
+      "t": 8.0,
+      "expected": {
+        "cash": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-2",
+      "t": 9.8,
+      "expected": {
+        "cash": true,
+        "id_card": false
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-1",
+      "t": 16.0,
+      "expected": {
+        "id_card": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-13",
+      "t": 30.0,
+      "expected": {
+        "cash": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-14",
+      "t": 60.0,
+      "expected": {
+        "cash": true
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-23",
+      "t": 16.0,
+      "expected": {
+        "cash": false
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-29",
+      "t": 16.0,
+      "expected": {
+        "cash": false
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-32",
+      "t": 2.0,
+      "expected": {
+        "cash": false
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    },
+    {
+      "clip": "X-33",
+      "t": 2.0,
+      "expected": {
+        "cash": false
+      },
+      "source_size_wh": [
+        464,
+        848
+      ],
+      "tiles_xyxy_px": [
+        [
+          0,
+          0,
+          384,
+          384
+        ],
+        [
+          80,
+          0,
+          464,
+          384
+        ],
+        [
+          0,
+          232,
+          384,
+          616
+        ],
+        [
+          80,
+          232,
+          464,
+          616
+        ],
+        [
+          0,
+          464,
+          384,
+          848
+        ],
+        [
+          80,
+          464,
+          464,
+          848
+        ]
+      ]
+    }
+  ]
+}

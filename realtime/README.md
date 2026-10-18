@@ -1,6 +1,7 @@
 # realtime/ - live verdict gateway
 
-A separate process in front of the checker API. The checker (`backend/`) is unchanged.
+A separate process in front of the checker API. It submits videos through the existing
+checker contract and keeps annotations outside inference.
 The gateway pushes each job's status and final verdict to the browser over a WebSocket
 as soon as it changes.
 
@@ -19,11 +20,56 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
   re-queues unfinished folder clips from scratch, and marks unfinished uploads as failed
   (their temp files are gone).
 - Annotations are saved as `annotations/<clip key>.json` next to `STATE_FILE` (so annotating needs
-  `STATE_FILE`). They are team ground truth: they stay in the gateway and never reach the checker.
+  `STATE_FILE`). Reviewed annotations are reference material; unreviewed AI drafts remain marked
+  as drafts. Both stay in the gateway and never reach the checker.
+- `/annotate` defaults to **Description**: watch the video beside one editable whole-clip
+  description, correct the local model's draft, then **Looks right · next clip**. No start/end
+  times or per-second labels are required. Existing timeline notes are combined in action order
+  without deleting the original rows. Edits autosave; a draft arriving later never replaces
+  text the person has started writing. `N` pauses and focuses the description; Ctrl/Cmd+Enter
+  saves it as reviewed and opens the next clip. Share links with `?view=easy`.
+- **Detailed review** (`?view=detailed`) retains the editable event timeline, range selection,
+  quick presets, and detector review. `I` / `O` mark the range start/end; `N` focuses a note,
+  Ctrl/Cmd+Enter adds it. Search clips and filter unfinished ones in the library. Camera layout
+  and people count are under **Clip details**. Both views preserve the same saved annotation.
+- The optional `python -m realtime.descriptions --videos VIDEO_DIR --output STATE_DIR/descriptions
+  --model /local/Qwen3-VL-4B-Instruct --first X-2` worker runs entirely on the GPU VM, using
+  existing PyAV, torch, transformers, and Pydantic dependencies. It samples up to 64 frames over
+  the whole video using presentation times, generates neutral action descriptions, and records
+  model, source hash, sampled times, and errors. It resumes completed drafts and reuses identical
+  videos. No labels, rules, manual annotations, or cloud model APIs are used by the worker.
+  Draft files are separate from human corrections; loading one sets `description_source=ai_draft`,
+  `description_model`, `assisted=true`, and draft status. Only the reviewer marks a clip done.
+  Descriptions can miss brief actions or misidentify small objects and must be checked.
+- **Review suggestions** loads saved events and per-frame object boxes from the selected run.
+  Confirm an event to add it to the timeline, correct its time or fields, or reject it with a
+  comment. Confirming an exactly matching existing event keeps the manual note. Object feedback
+  is saved separately: confirming a box records a sighting, never a made-up placement action.
+  **Detect this clip** queues only the current clip through the existing local checker; no new
+  model or cloud processing is involved. Missing/expired traces are reported explicitly.
+- Detailed review starts without model output. Loading suggestions permanently marks that
+  clip `assisted`; accepted/corrected event rows retain their suggestion IDs, and `reviews`
+  stores decisions, source run, original labels/boxes, corrections, and comments. Older annotation
+  JSON files load with defaults. **Needs a closer look** notes stay saved but are excluded from
+  confirmed event scoring. Score summaries show how many timelines used suggestions.
+- Autosaves are serialized and preserve edits made while a request is pending. A failed save
+  can be retried; version conflicts stop navigation and offer **Download my notes**. Add or clear
+  an unfinished composer note before switching clips. **Save now** also adds the current note
+  after validation; unfinished notes are explicitly labeled as unsaved. **Save & mark done**
+  finishes a clip.
 - To keep a finished run for `/compare`, copy `state.json` to `state.<name>.json` in the same
   folder before starting the next run.
 - The page loads `/api/state` over plain HTTP on open, then follows `/ws`. While the socket
   is down it re-reads `/api/state` every 3 s.
+- On the live page, choose a saved run in **Run / Attempt**, or use **Previous / Next**
+  (left/right arrow keys outside form fields and the video player). Previous from Live opens
+  the most recently saved snapshot. **Back to Live** returns to the current feed; live updates
+  keep arriving while you browse history. **Refresh runs** discovers newly saved snapshots.
+  The selected run is stored in the URL (`/?run=<name>`), so reload and browser Back/Forward work.
+- Saved results include their evidence and replay video when available. Offline replay snapshots
+  can omit evidence images and checker job IDs; their verdicts and source video still open, with
+  an explicit message when no trace was recorded. A saved state does not preserve checker traces
+  or uploaded video files after those files have been removed.
 
 ## Endpoints
 
@@ -35,15 +81,21 @@ browser --ws /ws, POST /api/upload, POST /api/run-folder--> gateway :8100 --X-AP
 | POST | `/api/run-folder` | queues every `.mov`/`.mp4`/`.mkv` in `VIDEO_DIR`, in clip-number order |
 | GET | `/api/state` | same as the snapshot |
 | GET | `/api/config` | `{folder, labels}` |
-| GET | `/api/items/{id}/video` | the item's source video (Range requests, for the replay player) |
-| GET | `/api/items/{id}/trace` | the checker's per-job trace (boxes, roles, events), proxied with the gateway's key |
+| GET | `/api/items/{id}/video?run=live` | the selected run's source video (Range requests); `run` defaults to `live` |
+| GET | `/api/items/{id}/trace?run=live` | the selected run's checker trace (boxes, roles, events), proxied with the gateway's key; `run` defaults to `live` |
 | GET | `/compare` | page comparing runs per clip; the `live` column follows `/ws` |
+| GET | `/evaluation` | published verdict/observation audit; clip links open annotation |
+| GET | `/api/evaluation` | fixed `evaluation.json` beside `STATE_FILE`; explicit 404 until published |
 | GET | `/api/runs` | `{"runs": ["live", ...saved]}`; saved runs are files `state.<name>.json` next to `STATE_FILE` |
-| GET | `/api/runs/{name}` | that run's items without evidence images |
-| GET | `/annotate` | page for writing what really happens in each clip (blind: no system output until a clip is marked done) |
+| GET | `/api/runs/{name}` | compact items for comparison; `?full=true` returns original items including evidence |
+| GET | `/annotate` | video, range selection, editable timeline, and optional detector review |
+| GET | `/annotate/assets/{name}` | annotation JavaScript/CSS; only the two known asset names are accepted |
 | GET | `/api/clips`, `/api/clips/{key}/video` | clips in `VIDEO_DIR` with annotation status; a clip's video |
+| POST | `/api/clips/{key}/analyze` | queue just this clip on the local detector; returns `item_id`, reuses a pending job |
 | GET, PUT | `/api/annotations/{key}?base_version=` | a clip's timeline (`realtime/annotations.py` schema); PUT refuses with 409 if someone saved since `base_version` |
-| GET | `/api/annotations-score?run=&clip=` | done timelines vs that run's traces: recall/extra per action, role accuracy, clips with no trace |
+| GET | `/api/annotation-description/{key}` | local video description draft and provenance; explicit unavailable/queued/processing/ready/failed status |
+| GET | `/api/annotation-suggestions/{key}?run=live` | saved event suggestions and object boxes with stable IDs for review; 404 when no result/trace exists |
+| GET | `/api/annotations-score?run=&clip=` | done timelines vs traces; description-only clips are listed separately and excluded from timed event scoring |
 
 Item `status`: `queued -> submitting -> processing -> done | failed`. A `done` item carries
 the checker's `DoneJob` verbatim in `result`.
@@ -76,4 +128,59 @@ docker run -d --name datathon26-realtime --restart unless-stopped --network host
 Open it from your machine through a tunnel: `ssh -N -L 8100:127.0.0.1:8100 datathon`,
 then go to http://localhost:8100.
 
-Tests: `tests/test_realtime_gateway.py` (fake checker via `httpx.MockTransport`).
+## Current one-VM review service
+
+A21 runs on **datathon2** in `~/workspaces/datathon26-workers/shared/a21/candidate`.
+Checker **8003**, gateway **8103**, all model weights and Python environments are
+on that VM. The former 8002/8102 preview is stopped; its data remains backed up.
+All 42 annotation records and 42 local description drafts were retained.
+
+Open a tunnel, then use <http://localhost:8103/evaluation>, `/annotate`, or `/compare`:
+
+```bash
+ssh -NT -o ServerAliveInterval=30 -L 8103:127.0.0.1:8103 datathon2
+```
+
+The running service was started with this launcher (refuses to replace busy ports):
+
+```bash
+python3 ~/workspaces/datathon26-workers/shared/a21/boot_candidate.py \
+  --root ~/workspaces/datathon26-workers/shared/a21/candidate \
+  --checker-python ~/workspaces/datathon26-workers/worker-1/.venv/bin/python \
+  --gateway-python ~/datathon26-annotation-preview/.venv/bin/python \
+  --model-python ~/dt26-validation/.venv/bin/python \
+  --weights ~/agentA-rulebook/weights \
+  --model ~/dt26-validation/models/Qwen3-VL-4B-Instruct \
+  --videos ~/data/open/videos --visual-checks
+```
+
+For a new checkout, use `attempts/A21-deadline/boot_candidate.py` and substitute local
+paths. The launcher defaults to VLM **on** at the user's request; `--no-visual-checks`
+disables it. Generic `Settings.from_env()` remains opt-in via `F1_VISUAL_CHECKS=1`.
+This helper uses `RULE_SCOPE=detector` and creates a private mode-0600 service key.
+The separate model environment needs the measured Transformers 5.20.1 / Accelerate 1.15.0
+stack; the F1 environment is unchanged. No cloud inference or second VM is required.
+
+`runtime/realtime/state.live.json` holds the current run; `state.*.json` holds earlier
+comparisons. `annotations/`, `descriptions/` and the published `evaluation.json` share
+that directory. Raw results/images and checker traces remain on the VM. A Git checkout
+alone does not restore runtime data or model weights. Never overwrite this directory
+with an empty deployment snapshot.
+
+The complete enabled API run is 30/40 unique verdicts, 0/19 clean false alarms and
+42/42 successful jobs; the VLM added no correct detections. See
+[the measured release report](../attempts/A21-deadline/RESULTS.md).
+
+Tests (no GPU or checker service required):
+
+```
+python -m pytest tests/test_realtime_gateway.py tests/test_realtime_annotations.py -q
+node --test --test-isolation=none tests/realtime_frontend.test.mjs
+node --test --test-isolation=none tests/annotation_frontend.test.mjs
+```
+
+Gateway tests use a fake checker via `httpx.MockTransport`. Frontend tests exercise run switching,
+out-of-order responses, saved-run links, offline results, and live updates while browsing history.
+Annotation tests also cover old-file compatibility, review provenance, object feedback, invalid
+inputs, one-clip detection, concurrent browser edits during saving, retry/conflict handling,
+and navigation with unfinished notes.

@@ -5,14 +5,15 @@ submission (task.md §8, G4 checklist item 10).** Licence notes here were
 read from the cards on 2026-10-17 and are marked `[Rep]` (reported) where
 this team did not independently re-verify them today.
 
-Only one detector is loaded on the GPU per deployment, selected by the
-`DETECTOR` environment variable (`backend/config.py`). Switching detectors
-means a restart, never running both at once (`archive/research1/architecture.md` §5).
+The top-level detector is selected by `DETECTOR`. The current A21 service uses F1
+and a separate local Qwen safe-state helper on the **same L4 VM**. The helper is
+`F1_VISUAL_CHECKS=1`; it is distinct from the alternative `DETECTOR=vlm` pipeline.
 
 ## Deployed path: `DETECTOR=f1`
 
-Runs on `datathon` and is the default in `backend/config.py`. A classical
-computer-vision stack; no model sees the rules or writes user-facing text:
+F1 is the default in `backend/config.py`. A21 runs on datathon2; the last recorded
+public A20 deployment is on datathon. These models generate observations, while
+deterministic rules, descriptions and the Knowledge Pack produce findings:
 
 | Purpose | Checkpoint | Licence | Pinned revision |
 | --- | --- | --- | --- |
@@ -29,9 +30,28 @@ validation before deployment; it has not been validated for this bank
 camera domain. Weights use safetensors (RT-DETR, OWLv2, OpenCLIP) or ONNX
 (RTMPose); no unpickling or remote model code is enabled. Exact artifact
 sizes, source revisions and weight SHA-256 hashes are recorded by
-`scripts/download_weights.py` in `weights/manifest.json`. **This stack has
-not beaten the floor baselines on the full 40-video run** (A01 in
-`attempts/README.md`: 20/40 correct, 13/19 clean videos falsely flagged).
+`scripts/download_weights.py` in `weights/manifest.json`. Current A21 verdict agreement
+is 30/40, 0/19 clean false alarms, 10/21 misses. Historical A20 scored 32/40 with two
+contradicted explanations. These public-development results do not establish unseen accuracy.
+
+## Enabled A21 local helper: Qwen3-VL-4B-Instruct
+
+`backend/f1/visual_checks.py` runs [Qwen/Qwen3-VL-4B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct)
+in a local offline Transformers subprocess, bf16 on the same VM. Safe-state checks are
+selected from observed events/movement; known answers refine exact samples and retain
+provenance. Unknown answers do not prove absence. Cash/ID recognition is not supplied;
+door answers remain diagnostic and the current enabled family is `safe` only.
+
+The generic settings default to off; the A21 launcher defaults to **on at the user's request**.
+It uses `F1_VISUAL_MODEL_PATH`, `F1_VISUAL_WORKER_PYTHON` and `F1_VISUAL_CACHE_DIR`.
+The measured worker environment is Transformers 5.20.1, Accelerate 1.15.0 and PyTorch 2.11.0
+with CUDA. The F1 environment is separate and unchanged. No vLLM server is needed.
+
+The local 4B checkpoint's upstream commit was not recorded; do not describe it as revision-
+pinned in `models.lock.json`. Model file identity/inventory, prompt and frame hashes are
+captured in probe/cache artifacts. Licence is reported as Apache-2.0; recheck the linked card
+before submission. The enabled run made 40 fresh calls and reused 476 answers, with no
+verdict improvement. [Measured report](../attempts/A21-deadline/RESULTS.md).
 
 ## Alternative path, not deployed: `DETECTOR=vlm`
 
@@ -49,9 +69,10 @@ free text that reaches the user, never decides a verdict, and never chooses
 or states a legal citation - that is the deterministic rules engine's job
 (`archive/docs-vlm-era/ARCHITECTURE_SUMMARY.md`).
 
-### Smaller VLM option: `Qwen3-VL-4B`
+### Historical smaller option for the alternative pipeline
 
-Same serving path and same state-form contract as the 9B model, swapped in
+This describes the older alternative design, not the enabled A21 subprocess helper.
+It uses the same serving path and state-form contract as the 9B model, swapped in
 only if the 9B cannot meet the per-job timing budget or a licence check
 fails close to the deadline (`archive/research1/architecture.md` §6, "Trade-off
 levers"). Apache-2.0 `[Rep]`. Never loaded alongside the 9B.

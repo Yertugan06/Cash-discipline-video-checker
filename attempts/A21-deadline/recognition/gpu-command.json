@@ -1,0 +1,21 @@
+[
+  "/usr/bin/flock",
+  "--exclusive",
+  "/home/ubuntu/.cache/datathon-workers/gpu.lock",
+  "/usr/bin/env",
+  "RULE_SCOPE=detector",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A21-deadline/recognition/compare_objects.py",
+  "--videos",
+  "/home/ubuntu/data/open/videos",
+  "--weights",
+  "/home/ubuntu/agentA-rulebook/weights",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A21-deadline/recognition/gpu-results",
+  "--device",
+  "cuda",
+  "--threads",
+  "2"
+]

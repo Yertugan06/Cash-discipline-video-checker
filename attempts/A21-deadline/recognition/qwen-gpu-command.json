@@ -1,0 +1,23 @@
+[
+  "/usr/bin/flock",
+  "--exclusive",
+  "/home/ubuntu/.cache/datathon-workers/gpu.lock",
+  "/usr/bin/timeout",
+  "--signal=TERM",
+  "--kill-after=15s",
+  "650s",
+  "/usr/bin/env",
+  "RULE_SCOPE=detector",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "/home/ubuntu/dt26-validation/.venv/bin/python",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A21-deadline/recognition/compare_qwen.py",
+  "--manifest",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A21-deadline/recognition/qwen-manifest.json",
+  "--videos",
+  "/home/ubuntu/data/open/videos",
+  "--model",
+  "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+  "--out",
+  "/home/ubuntu/workspaces/datathon26-workers/worker-1/attempts/A21-deadline/recognition/qwen-results"
+]

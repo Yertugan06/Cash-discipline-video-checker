@@ -1,5 +1,17 @@
 # What is current and what is history
 
+## Active release (2026-10-18)
+
+A21 runs on datathon2: checker 8003, gateway/tunnel 8103, F1 plus local Qwen3-VL-4B
+safe-state checks. The previous 8002/8102 preview is stopped. The existing public A20
+endpoint on datathon was not replaced. All production stages use one VM.
+
+Current measured agreement is **30/40**, with **0/19** clean false alarms and **10/21**
+misses; 42/42 API jobs completed. A20's historical 32/40 included two contradicted
+explanations. This is not an accuracy gain. [Results and source](attempts/A21-deadline/RESULTS.md),
+[current startup](realtime/README.md#current-one-vm-review-service).
+
+
 Updated 2026-10-18. Everything in the repo root except `archive/` is part of
 the current system or its evaluation. `archive/` holds history: research
 notes, superseded designs and raw copies of experiment workspaces. Nothing was
@@ -9,9 +21,9 @@ deleted when the repo was split; files were moved with `git mv`.
 
 | Path | What it is | Read by the running service? |
 |---|---|---|
-| `backend/` | FastAPI service. Deployed detector: `backend/f1/` (`DETECTOR=f1`). `backend/vlm/` is the alternative detector, kept but not deployed | yes |
+| `backend/` | FastAPI service. Current detector: `backend/f1/` plus `backend/f1/visual_checks.py` on datathon2. `backend/vlm/` remains a separate unused alternative | yes |
 | `frontend/` | React + TypeScript UI | yes (built into the image) |
-| `realtime/` | Live verdict gateway (WebSocket feed, runs a folder of videos through the API) | separate container |
+| `realtime/` | Live verdict gateway, annotation and evaluation | separate process on the same VM (A21); older deployment uses a container |
 | `config/` | `f1_codex.yaml` (rule thresholds), `perception.yaml` (prompts, thresholds), `overrides.yaml` (manual zones per video hash). `f1_codex.yaml`'s `rules` are generated from `knowledge/rulebook.yaml` | yes |
 | `knowledge/` | `rulebook.yaml` (the one source for rules and their legal basis) and the Knowledge Pack generated from it: `rules.yaml`, `norms.json` | yes, except `rulebook.yaml` |
 | `models.lock.json`, `Dockerfile`, `compose*.yaml`, `requirements*.txt`, `pyproject.toml` | Build and model pins | yes |

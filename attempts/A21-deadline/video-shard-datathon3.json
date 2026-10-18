@@ -1,0 +1,105 @@
+{
+  "purpose": "temporary parallel evaluation; production remains one VM",
+  "videos": [
+    {
+      "filename": "Х-39.mov",
+      "sha256": "deeeee54539fb894b17447296bd7f0807b9dc662bad9af4dcd27f4fbdd677187",
+      "duration_sec": 78.734
+    },
+    {
+      "filename": "Х-4.mov",
+      "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+      "duration_sec": 72.7
+    },
+    {
+      "filename": "Х-13.mov",
+      "sha256": "a37930cf119bb691be77d8624b18333b04d9c67066a7f4627d63e3208dfa6057",
+      "duration_sec": 65.3
+    },
+    {
+      "filename": "Х-19.mov",
+      "sha256": "16065504b21260bff18698c7bbf048ffa356c9de43d43b92643b6c2eddedac0f",
+      "duration_sec": 57.434
+    },
+    {
+      "filename": "Х-12.mov",
+      "sha256": "955755baf54418b48ea645dcd98e7e8dcca1d1e227e9b286a9427062db304fd4",
+      "duration_sec": 42.3
+    },
+    {
+      "filename": "Х-8.mov",
+      "sha256": "6a53e10acdcf52396ad5b1697eead32d8322c0911d792523a5c33fe5b388f4e7",
+      "duration_sec": 38.034
+    },
+    {
+      "filename": "Х-25.mov",
+      "sha256": "901f61cf1a1b8754dda56466308c19fc203a1a4c0e85d1e7827849d34e2d52f0",
+      "duration_sec": 31.7
+    },
+    {
+      "filename": "X-1.mov",
+      "sha256": "8911a9219b9433091824e553a70bb80335f075fd8ac982d2062d2ecf023c16bc",
+      "duration_sec": 25.934
+    },
+    {
+      "filename": "Х-40.mov",
+      "sha256": "6a81739ced0efdcd4a4feb76ea16562a20ceb53a2232a801528716c450366c9f",
+      "duration_sec": 25.267
+    },
+    {
+      "filename": "Х-43.mov",
+      "sha256": "39e28d7be01cdb090ede1881ce3ef704fa413271deb69d6735c1953f340d6069",
+      "duration_sec": 23.367
+    },
+    {
+      "filename": "Х-18.mov",
+      "sha256": "90607b0b0cb772fcf29b0c7e0e56fa6af36da6fac0efe93b8a616b5de94a156c",
+      "duration_sec": 22.6
+    },
+    {
+      "filename": "Х-15.mov",
+      "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+      "duration_sec": 20.867
+    },
+    {
+      "filename": "Х-3.mov",
+      "sha256": "21468fcef4ea5f45ce7d465e620f84e09c8b50314f4ecdc06f69224c701b3a5b",
+      "duration_sec": 20.034
+    },
+    {
+      "filename": "Х-26.mov",
+      "sha256": "e3a00b6e0f38b1d9b5498140f14906c71e204359262a90ce7a9974d64bf081e9",
+      "duration_sec": 19.8
+    },
+    {
+      "filename": "Х-46.mov",
+      "sha256": "66fc5d28c2371592f9260305589bdc86636fdd2ebe7a7ec976eec00a23d43df4",
+      "duration_sec": 19.134
+    },
+    {
+      "filename": "Х-34.mov",
+      "sha256": "f3e351bea71150f4e8c76e2c8f0656a4e92063319d7cd39e264078c5ba9139c3",
+      "duration_sec": 17.734
+    },
+    {
+      "filename": "Х-29.mov",
+      "sha256": "b9bfb76ac8ea47eb368fc78a2f6370e4d98e79185972f63cf301ee22f12b5941",
+      "duration_sec": 17.3
+    },
+    {
+      "filename": "Х-28.mov",
+      "sha256": "d15ef04bcfae571bd2d7fc4e4d709ba595ae19f44136a43e7277f17e7b6e5b6d",
+      "duration_sec": 16.534
+    },
+    {
+      "filename": "Х-17.mov",
+      "sha256": "0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364",
+      "duration_sec": 14.734
+    },
+    {
+      "filename": "Х-24.mov",
+      "sha256": "c175a683749401d5a9ecf6f1c188b64fa8a09543f41482c1e4eb2232255715d3",
+      "duration_sec": 14.7
+    }
+  ]
+}

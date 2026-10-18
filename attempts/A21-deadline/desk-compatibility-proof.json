@@ -1,0 +1,8 @@
+{
+  "change": "restore pre-existing strict optional desk_objects flag; default false",
+  "nn_and_tracking_code_ast_identical": true,
+  "baseline_perception_sha256": "04785e9a33eed33c02fa0b6907287dd9036018d2a59a7c2f32574238c5aa1681",
+  "compat_perception_sha256": "6f5e67f564db7a0fd99ca9e51ba427d6f32987f678134aae1c963901148aa266",
+  "all_runtime_nn_functions_unchanged": true,
+  "existing_option_tests_passed": 15
+}

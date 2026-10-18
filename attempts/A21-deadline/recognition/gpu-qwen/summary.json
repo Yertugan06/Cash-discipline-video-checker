@@ -1,0 +1,92 @@
+{
+  "full": {
+    "classes": {
+      "cash": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "tn": 0,
+        "unknown": 8,
+        "unknown_positive": 4,
+        "unknown_negative": 4,
+        "unlabelled": 1
+      },
+      "id_card": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 2,
+        "unknown_positive": 1,
+        "unknown_negative": 1,
+        "unlabelled": 10
+      }
+    },
+    "inference_sec_total": 9.689234152003337,
+    "inference_sec_mean": 0.8074361793336114,
+    "failed_crops": 0,
+    "invalid_output_values": 0,
+    "invalid_responses": 0,
+    "not_run_calls": 0
+  },
+  "tiles384": {
+    "classes": {
+      "cash": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 8,
+        "unknown_positive": 4,
+        "unknown_negative": 4,
+        "unlabelled": 1
+      },
+      "id_card": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 2,
+        "unknown_positive": 1,
+        "unknown_negative": 1,
+        "unlabelled": 10
+      }
+    },
+    "inference_sec_total": 45.752765864981484,
+    "inference_sec_mean": 3.812730488748457,
+    "failed_crops": 0,
+    "invalid_output_values": 0,
+    "invalid_responses": 0,
+    "not_run_calls": 0
+  },
+  "tiles384_temporal3": {
+    "classes": {
+      "cash": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 9,
+        "unknown_positive": 5,
+        "unknown_negative": 4,
+        "unlabelled": 1
+      },
+      "id_card": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 1,
+        "unknown_positive": 1,
+        "unknown_negative": 0,
+        "unlabelled": 10
+      }
+    },
+    "inference_sec_total": 52.08471391796775,
+    "inference_sec_mean": 4.340392826497312,
+    "failed_crops": 0,
+    "invalid_output_values": 0,
+    "invalid_responses": 0,
+    "not_run_calls": 0
+  }
+}

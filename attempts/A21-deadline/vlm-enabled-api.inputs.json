@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "path_base": "explicit --root; defaults to repository root",
+  "labels": {
+    "path": "data/prepared/videos.jsonl",
+    "sha256": "4d3dcf14db472404c7da629a4e4cb4eb19b3e36f33d4f36e226a4e9c8d30189d",
+    "bytes": 19018
+  },
+  "predictions": [
+    {
+      "path": "attempts/A21-deadline/vlm-enabled-api.jsonl",
+      "sha256": "cab36ac2549362bced01a64bbbb247d5fe8e7e88e0d529147ea650c093a0cb2d",
+      "bytes": 10775
+    }
+  ],
+  "assertions": {
+    "path": "attempts/A21-deadline/human-assertions-all40.json",
+    "sha256": "bda85ec0e2f9bb5943426897c1b3174f960d8cab44b5d287dd3289b45a780cb7",
+    "bytes": 79449
+  },
+  "references": []
+}

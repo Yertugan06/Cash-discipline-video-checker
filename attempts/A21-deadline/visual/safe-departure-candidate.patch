@@ -1,0 +1,88 @@
+--- a/backend/f1/rules.py
++++ b/backend/f1/rules.py
+@@ -316,6 +316,22 @@
+         for event in ctx.log.events
+         if event.type in {"HAND_ON_SAFE", "SAFE_UNATTENDED_START", "WORKSTATION_AWAY_START", "EXIT"}
+     ]
++    # Planner-only departures must be backed by the same visible actor's near-to-away transition.
++    was_near = {}
++    for frame in sorted(ctx.observations, key=lambda frame: frame.timestamp_sec):
++        for person in frame.detections:
++            if person.label != "person" or person.role != "cashier":
++                continue
++            near = safe_attended(ctx.scene, person)
++            if was_near.get(person.track_id) and not near:
++                triggers.append(
++                    Event(
++                        type="SAFE_DEPARTURE",
++                        timestamp_sec=frame.timestamp_sec,
++                        facts={"actor_id": person.track_id},
++                    )
++                )
++            was_near[person.track_id] = near
+     checks = [check for trigger in triggers for check in ctx.verified_checks("safe", trigger)]
+     if not checks:
+         return (
+@@ -325,12 +341,8 @@
+         )
+     if "safe" not in ctx.scene.objects:
+         return []
+-    checked = {}
+-    for check in checks:
+-        if ctx.observations:
+-            frame = ctx.nearby(check["t"])
+-            if abs(frame.timestamp_sec - check["t"]) <= STATE_SAMPLE_GAP_SEC:
+-                checked[frame.timestamp_sec] = check
++    sampled_times = {frame.timestamp_sec for frame in ctx.observations}
++    checked = {check["t"]: check for check in checks if check["t"] in sampled_times}
+     output, run = [], []
+     exits = ctx.room_exits()
+     last_cashier_seen = -1.0
+--- a/tests/test_f1_evidence_guards.py
++++ b/tests/test_f1_evidence_guards.py
+@@ -606,3 +606,45 @@
+     ctx.observations = [Observation(timestamp_sec=t, detections=[]) for t in times]
+     ctx.visual_checks = [visual_state("safe", t, "HAND_ON_SAFE") for t in times]
+     assert len(RULES["S-SAFE-CLOSED"](ctx)) == expected
++
++
++@requires_cv2
++def test_safe_departure_unknown_breaks_raw_support_at_its_exact_sample():
++    ctx = context(
++        [
++            event("SAFE_UNATTENDED_START", 5, condition_id="safe", actor_id="person:1"),
++            event("SAFE_UNATTENDED_END", 9.5, condition_id="safe", actor_id="person:1"),
++        ]
++    )
++    ctx.scene.objects["safe"] = Detection(label="safe", score=1, box=(0.8, 0, 1, 0.2))
++    near, away = person_at(0.9, 0.2), person_at(0.3, 0.6)
++    near.role = away.role = "cashier"
++    times = [4.5 + i / 2 for i in range(11)]
++    ctx.observations = [
++        Observation(
++            timestamp_sec=t,
++            detections=[near if t == 4.5 else away],
++            states={"safe": State(value="open", score=0.9, margin=0.8)},
++        )
++        for t in times
++    ]
++    ctx.visual_checks = [
++        visual_state(
++            "safe",
++            t,
++            "safe_open_window",
++            parent_trigger="safe_departure",
++            window_start=4.5,
++            window_end=9.5,
++        )
++        for t in times
++    ]
++    before = list(ctx.log.events)
++    assert len(RULES["S-SAFE-CLOSED"](ctx)) == 1
++    middle = next(check for check in ctx.visual_checks if check["t"] == 7)
++    middle["answer"] = "unknown"
++    # apply_checks leaves raw CLIP open for unknown; the rule must still break support.
++    assert RULES["S-SAFE-CLOSED"](ctx) == []
++    middle["t"] = 7.25  # No sampled frame exists here; never move this answer to 7 or 7.5.
++    assert len(RULES["S-SAFE-CLOSED"](ctx)) == 1
++    assert ctx.log.events == before

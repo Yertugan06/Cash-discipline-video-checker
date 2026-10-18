@@ -61,6 +61,19 @@ Offline replay, 40 unique videos, organizer labels:
 
 - `LAB.md` - the working file; `logs/` - per-clip replays, API runs, spikes; `reports/` - agent
   reports; `tasks/` - agent briefs; `spikes/` - the GPU spikes (door/screen states, screen change)
+- [Main integration and annotation audit](reports/main-integration-and-annotation-audit.md):
+  local annotation/run-browser integration, 761 passing Python tests, a fresh cached replay
+  matching the API verdicts/rule IDs, and all 40 unique outputs compared with human descriptions.
+  It separates label agreement from supported explanations and preserves clip-boundary uncertainty.
+- [Claude Opus 5.5 tracking review](reports/opus-5-5-small-object-review.md): user-approved
+  high-effort text review of the small-object proposal, checked against the code. Recommends a
+  native-crop/sequence diagnostic before additional tracking; no new performance result is claimed.
+- [Claude Opus 5.5 ID-rule review](reports/opus-5-5-id-rule-review.md): separately approved
+  high-effort review after the X-19 correction. Preserves observed events and organizer labels
+  while keeping the blanket visual requirement provisional; no runtime or label changes.
+- [Next cash-workflow experiment](reports/next-cash-workflow-experiment.md): prepared recognition
+  comparison using existing labels, followed conditionally by client cash-history checks and a
+  full regression. Planning only; no new experiment result or detector change.
 
 ## Conclusion
 

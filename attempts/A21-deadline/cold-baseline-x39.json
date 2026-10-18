@@ -1,0 +1,24 @@
+{
+  "video": "Х-39.mov",
+  "sha256": "deeeee54539fb894b17447296bd7f0807b9dc662bad9af4dcd27f4fbdd677187",
+  "duration_sec": 78.733021,
+  "inference_seconds": 95.78170756500185,
+  "cache_reuse": false,
+  "source_commit": "7bc47e71cbab37a74b2ebce82ac790d6b5111b45",
+  "perception_config_sha256": "f81c0567d8785081048c9dc74e97e9c84ad5d0afd728d7d3e78c0e56e0da928d",
+  "models_lock_sha256": "2f4a4b92ff8935282f98cf375b5c2c8941f51d414acadc0b028d675672e3d4a9",
+  "result": {
+    "findings": [],
+    "coverage": {
+      "step_s": 0.5,
+      "planned": 157,
+      "done": 157,
+      "failed": 0,
+      "deadline_hit": false,
+      "mode": "full"
+    },
+    "warnings": [
+      "Кассир ни разу не виден один за рабочим местом; сторону кассира не определить, задайте ручные зоны."
+    ]
+  }
+}

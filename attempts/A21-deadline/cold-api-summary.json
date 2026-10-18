@@ -1,0 +1,20 @@
+{
+  "video": "\u0425-39.mov",
+  "status": "done",
+  "verdict": "no_violation",
+  "wall_s": 137.9,
+  "coverage": {
+    "step_s": 0.5,
+    "planned": 157,
+    "done": 157,
+    "failed": 0,
+    "deadline_hit": false,
+    "mode": "full"
+  },
+  "visual_checks": 3,
+  "visual_inference_calls": 3,
+  "visual_errors": [],
+  "all_stages_vm": "datathon2",
+  "variant": "diagnostic candidate with safe verifier enabled",
+  "perception_cache_hit": false
+}

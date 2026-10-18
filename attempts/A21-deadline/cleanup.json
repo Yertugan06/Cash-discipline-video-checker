@@ -1,0 +1,15 @@
+{
+  "obsolete_preview_gateway_stopped": 50128,
+  "obsolete_idle_checker_stopped": 4347,
+  "old_checker_finished_jobs": 42,
+  "obsolete_tunnel_closed": 8102,
+  "completed_worker_monitor_stopped": 2531030,
+  "abandoned_checkpoint_transfer_stopped": true,
+  "incomplete_temporary_checkpoint_removed": true,
+  "isolated_smoke_browser_closed": "a21-evaluation",
+  "annotations_preserved": 42,
+  "description_drafts_preserved": 42,
+  "retained_tunnel": 8103,
+  "runtime_vm": "datathon2",
+  "worker_worktrees_preserved": true
+}

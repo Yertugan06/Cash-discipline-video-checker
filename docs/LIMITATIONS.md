@@ -1,142 +1,104 @@
 # Limitations and known error cases
 
-task.md §8 requires "перечень ограничений решения и известных случаев
-ошибок". This page describes the deployed detector, the F1 computer-vision
-stack (`DETECTOR=f1`, `docs/ARCHITECTURE_SUMMARY.md`). The earlier version
-written for the VLM-first design is in `archive/docs-vlm-era/LIMITATIONS.md`.
-Every number below is cited from `attempts/` or marked `TODO(team)` where it
-has not been measured yet; nothing here is invented.
+Current implementation: A21, F1 plus local Qwen3-VL-4B safe-state checks, running on
+one datathon2 VM. Exact results and provenance: [A21 release](../attempts/A21-deadline/RESULTS.md).
+The public endpoint on datathon was last recorded with A20 and was not upgraded by A21.
 
-## Verdict policy: recall first
+## Measured detection quality
 
-The task brief is explicit that a missed violation is worse than a false
-alarm (task.md FAQ 16: "ложных срабатываний должно быть как можно меньше,
-пропуск нарушения недопустим"). The pipeline is tuned accordingly: a finding
-is reported whenever an enabled rule's conditions are met on the observed
-timeline, even when its citation is still `pending` (see "Citation
-status" below) - the alternative, suppressing a real finding until a human
-has verified its law citation, would turn a detection miss into a legal
-one. This means **false positives are possible and expected to be more
-common than silent misses**; task.md FAQ 15 also warns that invoking
-"insufficient data" without justification is itself penalized, so the
-service never substitutes an unjustified "no violation" for a genuine
-"could not establish this".
+| Run | Correct unique verdicts | Violations caught / missed | Clean false alarms |
+|---|---|---|---|
+| Historical A20 | 32/40 | 13 / 8 | 0/19 |
+| Current A21, VLM enabled | 30/40 | 11 / 10 | 0/19 |
 
-## Sampling gap: events shorter than the step can be missed
+The two lost catches were X4/X47 and X20. Their A20 verdicts agreed with labels, but
+ID-before-cash and documents-on-exit explanations contradicted the supplied observations.
+A21 removes those accusations without recovering the actual violations. Supported findings
+remain 9; 3 findings have unknown observation support. No overall detection improvement or
+complete explanation accuracy is claimed. The VLM has not improved the verdict score.
 
-There is no proposer stage: F1 samples the whole video uniformly at 2 fps
-(0.5 s step) and every rule works on that timeline. A state only counts once
-it has held for `hysteresis_sec` (0.6 s in `config/perception.yaml`,
-`backend/f1/events.py`), which at a 0.5 s step means three consecutive
-samples. So **a violation whose visible signature lasts less than about a
-second can be missed**. If the 270 s budget runs out before perception finishes,
-`coverage.deadline_hit` is `true` and the rules run on what was observed.
+All 40 public clips influenced development. These results are not held-out accuracy or
+proof of performance on a new room, camera, layout or scenario. X4/X47 and X5/X48 are byte
+duplicates; 42 file results represent 40 independent video hashes.
 
-## Weak perception: what the 8 misses have in common
+## Current misses and uncertainty
 
-Every violation A20 misses on the 40 open videos comes from something the detectors don't see
-(`attempts/A20-night-orchestration/LAB.md`, sections 3 and 5):
+| Clip/group | Observation or capability gap |
+|---|---|
+| X1, X2 | Organizer labels are retained, but the causes remain unresolved. Hand counting, counterfeit money or a blanket ID-first requirement are not established by these notes. |
+| X4/X47 | Earlier cash remains at the next client's entry; later cash is stacked. Recognition/provenance does not support the correct finding. Cash first detected during a new session can be attributed incorrectly. |
+| X11 | Human prose supports leaving; reliable working-versus-locked screen evidence is missing. X11/X12 supplied descriptions are identical, so prose alone does not establish their screen difference. |
+| X13 | Bundles from an opened bag reach the safe without a described recount; cash/bundle transfer evidence is missing. |
+| X20 | Safe is left open while work continues. Safe-open answers exist, but image-plane proximity marks the cashier as attending it for too long. |
+| X22 | Key-after-exit capability is disabled/unimplemented; a shut door does not prove locking or key removal. |
+| X32, X33 | Door state remains unreliable. The local verifier also answered open on clean X31; door answers stay diagnostic-only. |
+| X44 | Rejected-note recombination without detector inspection is not implemented. It is distinct from returning a questionable note to a client. |
 
-| Clip | Violation | Why it's missed |
-| --- | --- | --- |
-| X-1 | Manual recount after the machine | No cash and no counter signal at that moment |
-| X-2 | Cash accepted without an ID check | Cash and ID cards are seen in 0 of 34 frames |
-| X-13 | Cash from an opened bag put in the safe without a recount | No bundles and no cash-to-safe event |
-| X-22 | Key left in the safe lock | A key is never detected |
-| X-44 | Rejected notes merged back without the banknote detector | The detector device is not a calibrated object |
-| X-11 | Laptop left unlocked | CLIP reads the laptop as closed in all 51 frames |
-| X-32, X-33 | Door left open | CLIP reads the door as closed while it is open |
+Missing detections are not proof of absence. `C-ID-BEFORE-CASH` requires an explicit,
+attributed continuously observed non-presentation interval; no production producer currently
+provides it. A still-frame unknown/no-ID answer cannot provide that interval. Policy scope
+and legal applicability remain unverified.
 
-- **States CLIP can't read:** the door, the laptop screen and the safe door. A spike (A20,
-  `spikes/states_spike.py`) found that new CLIP prompts and Qwen2.5-VL-7B on the same crops
-  don't read them either.
-- **Small objects:** on 20 hand-labelled frames, OWLv2, Grounding DINO and a VLM each answered
-  only 4 of 11 cash checks correctly (A13).
-- **Right verdict, wrong type:** X-20 is reported as documents left on the desk, but its
-  violation is the safe left open; X-4/X-47 is reported as cash accepted without ID, but both
-  clients showed their ID and the violation is the first client's cash left and mixed with the
-  second's (`OPEN_ISSUES.md` #3).
+The default-false `desk_objects` experiment remains available for isolated comparisons;
+A18/A19 did not improve accuracy and it is not enabled in the deployed service.
 
-## Upload concurrency
+## Sampling, tracking and state verification
 
-The worker runs **one GPU job at a time** (a single FIFO queue); running
-jobs in parallel on one L4 GPU does not add throughput, it only splits it
-(`archive/research1/architecture.md` §4). A second upload that arrives while a job
-is running is queued and starts with less of the 270 s budget already
-remaining, so a long video behind another long video can hit the deadline
-(`coverage.deadline_hit`); there is no separate, lower-quality code path.
-Single-job runtimes for this stack: mean 83.9 s and worst 294.6 s at 5 fps
-(A01), 50.8 s cold for X-1 at 2 fps in the deployed service (A12). Two long
-uploads at once can therefore exceed the jury's 300 s budget for the second
-one; this is a known ceiling of one L4 GPU, not a bug.
+F1 samples the whole clip at 2 fps. Processing every sample (`coverage.mode="full"`) does
+not mean every object/action was recognized. Brief actions, occlusion, track fragmentation,
+pose estimates and wrong fixture calibration can corrupt ownership or attendance evidence.
+Raw states normally use hysteresis; verified categorical answers update only their exact
+sampled frames. Unknowns and gaps do not establish absence or continuous duration. A
+recording cutoff does not establish a future abandoned object; X43/X45 remain clear.
 
-## Citation status
+Only the safe family is enabled for the local VLM. It does not detect cash/ID objects or
+produce legal conclusions. Door checks are diagnostic; laptop checks are not enabled.
 
-Every displayed norm carries a `citation_status`: `"verified"` only if a
-human has checked it against adilet.zan.kz and recorded that in
-`knowledge/norms.json` (`verified_by`, `verified_at`); `"pending"` means it
-still needs review and `"invalid"` means a known citation conflict. The UI
-shows each state separately.
-**An AI-produced result never marks a citation `verified` on its own**
-- the violation is still reported (recall-first policy above), but its legal
-grounding is never presented as confirmed until a person has done that check.
-As of this writing every norm in `knowledge/norms.json` still has
-`citation_status: "pending"`. The screen-lock citation is still an open conflict:
-`53-71-9` in the kit vs `48-71-9` in the R1 workbook (see
-`knowledge/README.md`). Every citation currently shows as
-"ожидает проверки" in the UI. TODO(team): complete the human verification
-pass against adilet.zan.kz and record `verified_by`/`verified_at` in
-`knowledge/norms.json` before the freeze. Rule-to-clause strength is recorded
-per rule because one clause can support different rules with different strength.
+The fixed 12-input Qwen crop/temporal probe left most cash cases unknown and produced a
+false ID answer in the temporal variant. Sparse labels lack box/track ground truth. In the
+older A13 re-score, OWLv2 and Qwen2.5-VL-7B each detected **0/7 cash positives**; their
+4/11 cash accuracy came from four true negatives, not four successful cash detections.
+See [the numeric re-score](../attempts/A20-night-orchestration/logs/a13-small-object-rescore.json).
 
-## Camera angle
+## Runtime, queue and cache limits
 
-The open dataset uses a few fixed angles (over the cashier's shoulder, facing the cashier, from
-the side). F1 calibrates zones from the first 2 s of each video (`backend/f1/calibration.py`) and
-puts the cashier on the side where a lone person works at the laptop, so it does not assume one
-camera direction. Distances are measured relative to the calibrated desk, so a nearer or farther
-camera gives the same events. If calibration is not confident, the result carries a warning, and
-manual zones can be set in `config/overrides.yaml` by the video's SHA-256.
+- One FIFO worker processes one GPU video job at a time. The gateway submits serially.
+  Queued uploads can consume the 270 s budget before processing starts; concurrent long
+  uploads have no demonstrated throughput/latency guarantee on one L4.
+- The enabled 42-file pass reused perception for 41 files and 476 previous VLM answers;
+  40 VLM calls ran afresh. Its median 2.0675 s is predominantly cached work.
+- Forced-cold X20: 50.669 s, 23/23 samples, 23 fresh VLM calls, no errors/deadline hit.
+- The longest clip (142.533 s) completed cold in 158.6 s with the VLM **off**. Cold longest-
+  clip latency with the current enabled configuration has not been measured.
+- Cached perception is keyed by source/config/model identity. The compatibility-only flag
+  restoration reused identical numeric payloads after AST/config comparison; its copy is
+  explicit and recorded, not claimed as new neural inference.
 
-What has been checked without new videos: replaying the 40 clips mirrored, zoomed 0.7-1.3 or with
-20-30% of object detections dropped changes at most one verdict (A20). What has not: a real
-video from a new room or angle.
+## Camera and generalization
 
-- TODO(team): fill in from `robustness/README.md`'s results table once self-filmed clips exist.
+The user confirms one fixed physical camera position with several table/equipment setups
+and scenario groups. References to a previous clip supply setup context, not established
+cross-file transaction continuity. Zones and desk-relative distances are calibrated per clip;
+this reduces hardcoded layout assumptions but does not prove unseen-angle performance.
+Historical A20 mirror/zoom/drop replays perturb cached geometry; they are not new filmed data
+or a measured robustness result for every A21 change.
 
-## Data handling and deletion
+## Legal grounding
 
-Uploaded videos and their sampled frames are deleted when a job ends. The
-result JSON (including its embedded evidence JPEGs) is kept for 24 hours
-and then purged. Everything - uploads, results, caches - is deleted after
-the hackathon window closes, per the organizer's data-use restriction
-(task.md FAQ 6: "данные должны использоваться только в рамках хакатона").
-No face recognition or identification is performed (task.md FAQ 29); no
-audio is used (task.md FAQ 28, videos are silent regardless).
+All 12 citations in the current API run remain `pending`. Human source verification is
+required before marking a norm/act verified. Current operation uses `RULE_SCOPE=detector`;
+`jury` scope has no eligible rules and refuses startup. Neither matching an organizer
+verdict nor proximity to its timestamp verifies a rule, legal clause or causal explanation.
+See [the Knowledge Pack](../knowledge/README.md) for unresolved source conflicts.
 
-## Other known constraints, by design
+## Data handling
 
-- **No closed violation taxonomy.** The organizers do not publish a fixed
-  list of violation types (task.md FAQ 8–9), and the test set may contain
-  mechanisms outside the training distribution; `docs/VIOLATION_TYPES.md`
-  lists only the mechanisms this service actually checks for.
-- **Visual evidence only.** The service never claims a violation that would
-  require invisible data (ledger entries, system reconciliation) to
-  establish, per task.md §7's explicit constraint.
-- **Result is a hint, not a verdict.** Every output is meant for human
-  review, never presented as a final disciplinary or legal conclusion
-  (task.md §7).
-- **Ranking is capped.** At most 3 findings are reported per video
-  (persistence-ranked, then rule order); additional lower-ranked findings on
-  a busy video are not surfaced (`archive/research1/architecture.md` §2).
+Checker uploads and sampled frames are removed after jobs; stored API results/evidence
+follow the configured TTL. The review gateway retains source folder videos, persistent
+annotations, drafts and saved runs separately. Upload replay files can remain until the
+gateway restarts. TTL is not a promise to delete every annotation/cache at that moment.
+Hackathon dataset use/deletion still follows the organizer's restrictions.
 
-## Aggregate detection results
-
-Measured on the 40 unique open videos (`attempts/README.md`):
-
-- A01, the F1 stack at 5 fps before it was ported into this service: 20/40 correct verdicts,
-  recall 14/21, 13/19 clean videos flagged, worst runtime 294.6 s.
-- A17, deployed before A20: 25/40, 5/19 clean videos flagged, 10/21 missed.
-- A20, this version: 32/40, 0/19 clean videos flagged, 8/21 missed, the same in the offline
-  replay and through the real API (`attempts/A20-night-orchestration/`). These clips were used
-  while building it.
+No dataset media is sent to cloud AI. There is no face-identity database or audio analysis.
+Outputs are signs for human review, not disciplinary/legal conclusions. At most three
+findings are returned, so lower-ranked findings can be omitted.

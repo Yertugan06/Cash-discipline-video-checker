@@ -1,0 +1,19 @@
+{
+  "validated_done_jobs": 42,
+  "source_files_matched": 13,
+  "vlm_enabled": true,
+  "vlm_model": "Qwen3-VL-4B-Instruct",
+  "visual_families": [
+    "safe"
+  ],
+  "fresh_visual_inference_calls": 40,
+  "visual_answer_cache_hits": 476,
+  "perception_cache_hits": 41,
+  "unknown_checks": 9,
+  "bounded_check_errors": {},
+  "evidence_jpegs_decoded": 12,
+  "citation_statuses": {
+    "pending": 12
+  },
+  "production_vms": 1
+}

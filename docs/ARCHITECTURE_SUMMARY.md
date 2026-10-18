@@ -1,5 +1,29 @@
 # Architecture summary
 
+## Current deployment and evidence (A21)
+
+The complete checker, local Qwen3-VL-4B helper and realtime gateway run on one
+datathon2 VM (8003/8103). The existing public A20 endpoint on datathon is separate.
+The two-VM 20+20 split was temporary evaluation only.
+
+Current API: 42/42 jobs complete; **30/40** unique verdicts, **0/19** clean false alarms,
+**10/21** misses. Findings: 9 compatible with human prose, 0 contradicted, 3 unknown.
+The higher A20 score included two contradicted explanations; no detection gain is claimed.
+See [A21 results](../attempts/A21-deadline/RESULTS.md) and
+[current startup](../realtime/README.md#current-one-vm-review-service).
+
+After the initial event build, `backend/f1/visual_checks.py` selects bounded local checks.
+The enabled `safe` family refines exact known samples, rebuilds events and passes provenance
+into rule consumers. It does not create cash/ID detections, room exits, ownership or legal
+conclusions. Door answers remain diagnostic. This is `DETECTOR=f1` with a VLM helper,
+not the alternative `DETECTOR=vlm` pipeline. Generic settings remain opt-in; the current
+launcher defaults to on at the user's request.
+
+Evidence guards distinguish room exit from workstation movement, require interval evidence
+for ID non-presentation, expire ownership across gaps and retain clip boundaries. A doorway-
+hand departure can corroborate a cashier exit when hips miss the calibrated zone; an
+ambiguous overlapping continuation blocks that added path.
+
 The short version for task.md §8 ("краткое описание архитектуры, выбранного
 подхода и используемых моделей"). It describes the detector that is actually
 deployed: the F1 computer-vision stack (`DETECTOR=f1`, the default in
@@ -18,43 +42,79 @@ events (cashier left the desk, cash on desk, someone entered, door closed,
 A read-only Knowledge Pack attaches each finding's normative citation. The
 verdict is `violation` if and only if at least one finding survives.
 
+### System flow
+
+```mermaid
+flowchart LR
+  subgraph clients["Clients"]
+    UI["React UI<br/>served by the API at /"]
+    Jury["Jury client"]
+    GW["Live gateway (optional)<br/>realtime/gateway.py<br/>WebSocket /ws on :8100"]
+  end
+
+  subgraph host["datathon host · 1x NVIDIA L4 · 127.0.0.1:8000 · offline"]
+    API["FastAPI app<br/>backend/main.py<br/>X-API-Key, upload checks"]
+    Store[("JobStore · SQLite<br/>processing / done / failed<br/>TTL purge 24 h")]
+    Worker["Worker<br/>backend/worker.py<br/>FIFO, 1 GPU job at a time"]
+
+    subgraph pipe["Pipeline.run · backend/pipeline.py"]
+      direction TB
+      Probe["probe + build_plan<br/>ffprobe, 270 s deadline"]
+      Det["F1Detector.detect<br/>backend/f1/ (see below)"]
+      Rank["rank, cap at 3<br/>backend/rules/ranking.py"]
+      KP["Knowledge Pack ground<br/>knowledge/rules.yaml + norms.json"]
+      Ev["evidence.collect<br/>1-3 JPEGs from the source video,<br/>trigger box drawn"]
+      Ser["serialize.to_done_job<br/>jury contract + UI extras"]
+      Probe --> Det --> Rank --> KP --> Ev --> Ser
+    end
+  end
+
+  UI & Jury & GW -->|"POST /api/v1/analyze (.mov)"| API
+  API -->|"create job"| Store
+  API -->|"enqueue"| Worker
+  Worker --> Probe
+  Ser -->|"DoneJob"| Store
+  Store -->|"GET /api/v1/jobs/{id}"| API
+  API -.->|"verdict + violations + evidence"| clients
 ```
-Client --POST .mov--> API --> Worker (1 GPU job at a time, FIFO)
-                                  |
-                       ffprobe + per-job deadline (270 s)
-                                  |
-                 F1Detector (backend/f1/detector.py)
-   frames at 2 fps (0.5 s step), decoded with ffmpeg
-                                  |
-   perception (backend/f1/perception.py, config/perception.yaml)
-     RT-DETR r18vd   people
-     OWLv2           scene objects (desk, laptop, safe, door, counter)
-                     and small objects (cash, documents, bags, ...)
-     OpenCLIP B-32   crop states (door open/closed, safe open, ...)
-     RTMPose         hand / body keypoints
-     ByteTrack       person tracks
-                                  |
-   calibration (backend/f1/calibration.py): first 2 s -> desk, laptop,
-     safe, door zones; cashier / client half-planes around the desk
-                                  |
-   events (backend/f1/events.py): ENTER, EXIT, PERSON_IN_CASHIER_ZONE,
-     PERSONAL_ON_DESK, SAFE_UNATTENDED, COUNT_START, HAND_ON_*, ...
-     with hysteresis
-                                  |
-   rules (backend/f1/rules.py): one function per rule id, thresholds
-     from config/f1_codex.yaml; findings for ids that are not in
-     knowledge/rules.yaml are dropped
-                                  |
-                 Rank + cap at 3 findings (backend/rules/ranking.py)
-                                  |
-          Knowledge Pack (knowledge/rules.yaml + knowledge/norms.json)
-                                  |
-   Evidence (backend/evidence.py): 1-3 JPEGs cut from the source video,
-     with the triggering object's box drawn on the anchor frame
-                                  |
-          Serialize -> jury contract (+ optional UI extras)
-                                  |
-                           GET /jobs/{id}
+
+The API accepts the upload, writes a `processing` row and returns a job id
+at once (HTTP 202). The worker takes one job at a time, so the GPU is never
+shared, and runs `Pipeline.run`. The finished `DoneJob` (or a `FailedJob`
+with the error) goes back into SQLite, where clients poll it with
+`GET /api/v1/jobs/{id}`. The uploaded video is deleted when the job ends.
+
+### Inside the F1 detector
+
+```mermaid
+flowchart TB
+  V["Uploaded video"] --> FF["ffmpeg frame extraction<br/>2 fps (step 0.5 s), whole video"]
+  FF --> Cache{"perception cache hit?<br/>keyed by video checksum"}
+
+  subgraph perc["Perception · backend/f1/perception.py · config/perception.yaml"]
+    direction LR
+    RT["RT-DETR r18vd<br/>people"]
+    OWL["OWLv2<br/>open-vocabulary objects:<br/>desk, safe, door, laptop, counter,<br/>cash, bag, ID card, food, phone..."]
+    CLIP["OpenCLIP B-32<br/>crop states: safe/door open-closed,<br/>laptop working-locked, counter running"]
+    POSE["RTMPose wholebody<br/>hand keypoints"]
+    BT["ByteTrack<br/>stable track ids per label"]
+    RT --> BT
+    OWL --> BT
+  end
+
+  Cache -->|"miss"| perc
+  Cache -->|"hit"| Obs
+  perc --> Obs["Per-frame observations<br/>boxes, labels, states, keypoints, track ids"]
+
+  Obs --> Cal["Calibration · calibration.py<br/>first 2 s: desk, laptop, safe, door zones;<br/>cashier / client half-planes"]
+  Cal --> Evt["Event builder · events.py<br/>hysteresis 0.6 s, exit gap 1.2 s<br/>ENTER, EXIT, PERSON_IN_CASHIER_ZONE,<br/>PERSONAL_ON_DESK, SAFE_UNATTENDED,<br/>COUNT_START, HAND_ON_* ..."]
+  Obs --> Evt
+  Evt --> Rules["Temporal rules · rules.py<br/>one Python function per rule id,<br/>thresholds from config/f1_codex.yaml"]
+  Rules --> Filt{"rule id in<br/>knowledge/rules.yaml?"}
+  Filt -->|"yes"| Out["Findings<br/>rule_id, anchor time, facts, boxes"]
+  Filt -->|"no"| Drop["dropped<br/>(kept in trace only)"]
+  Evt -.-> Trace[("Trace JSON<br/>GET /api/v1/jobs/{id}/trace")]
+  Rules -.-> Trace
 ```
 
 ## What the rules rely on
@@ -74,6 +134,21 @@ threshold fitted to one clip:
 | Cash collection | `K-SEAL-CHECK` fires when a visitor with an observed entry delivers a bag that appears on the desk and leaves quickly, without staying for the check |
 | Ranking | Among equal findings, the one with a confirmed exit ranks first, so the top timecode is the moment the cashier is really gone |
 
+## Pipeline stages
+
+| Stage | Input | Output | Why it is there |
+| --- | --- | --- | --- |
+| Probe + plan (`backend/media.py`, `backend/plan.py`) | uploaded file | duration, sampling plan, monotonic deadline | Rejects broken videos early and fixes a 270 s budget, 30 s inside the jury's 300 s limit |
+| Frame extraction (`backend/f1/detector.py`) | video | JPEG frames at 2 fps | Uniform coverage of the whole clip; reported as `coverage.mode="full", step_s=0.5` |
+| Perception (`backend/f1/perception.py`) | frames | per-frame detections, states, keypoints, track ids | Models only describe the scene; none of them sees the rules or decides anything |
+| Calibration (`backend/f1/calibration.py`) | first 2 s of observations | `Scene`: zones for desk, laptop, safe, door, and cashier / client sides | Turns pixel boxes into places, so "a person is behind the desk" becomes a geometric check |
+| Event builder (`backend/f1/events.py`) | observations + scene | time-ordered `EventLog` | Hysteresis and exit gaps remove single-frame flicker before any rule runs |
+| Rules (`backend/f1/rules.py`) | event log, thresholds from `config/f1_codex.yaml` | findings with an anchor time | Each rule is a small, testable Python function (for example `l_no_cash_on_leave`, `a_door_lock`, `w_no_food`); only ids present in the Knowledge Pack survive |
+| Rank (`backend/rules/ranking.py`) | findings | at most 3 findings | Keeps the answer short and puts the most important ones first |
+| Knowledge Pack (`backend/knowledge.py`) | rule ids | findings with norm citations and descriptions | Deterministic `rule_id -> norm_ids` lookup; no model writes legal text |
+| Evidence (`backend/evidence.py`) | original video + anchor times | 1-3 base64 JPEGs with the triggering box drawn | Shows the jury the exact moment; cut from the source video, not from the sampled frames |
+| Serialize (`backend/serialize.py`) | grounded findings, coverage, frames | `DoneJob` in the jury contract | `verdict = violation` if and only if at least one finding is left |
+
 ## Components
 
 | Component | Role |
@@ -90,9 +165,10 @@ threshold fitted to one clip:
 
 ## Locality
 
-Every model runs on the team's own host (`datathon`, one NVIDIA L4) from
-weights downloaded ahead of time (`scripts/download_weights.py`, pinned in
-`models.lock.json`). Hugging Face offline mode is forced in
+Every model runs on the selected local GPU host (current A21: datathon2, one NVIDIA L4) from
+F1 weights downloaded ahead of time (`scripts/download_weights.py`, pinned in
+`models.lock.json`), plus the separately provided Qwen checkpoint described in
+`docs/MODELS.md`. Hugging Face offline mode is forced in
 `backend/f1/perception.py`, so processing needs no internet access and no
 cloud AI API is called (task.md §7, FAQ 21). The service binds to
 `127.0.0.1:8000`. Uploaded videos and sampled frames are deleted when a job
@@ -108,7 +184,7 @@ purged.
   finishes, `coverage.deadline_hit` is `true`.
 - Perception results are cached per video checksum
   (`Settings.reuse_perception`, on by default), so re-running the same
-  video skips inference.
+  video can skip F1 inference. Visual answers have a separate identity-keyed cache.
 
 ## Alternative detector (not deployed)
 
@@ -127,12 +203,16 @@ organizer labels (`attempts/A20-night-orchestration/`):
 | --- | --- | --- | --- |
 | A01, the F1 stack before it was ported into this service | 20 | 13 | 7 |
 | A17, deployed on `datathon` before A20 | 25 | 5 | 10 |
-| **A20, this version** | **32** | **0** | **8** |
+| A20, historical baseline | 32 | 0 | 8 |
+| **A21, current real API with local helper** | **30** | **0** | **10** |
 
-- **Timecodes:** 13 caught violations; mean distance to the organizer second 1.54 s; within
+- **Historical A20 timecodes:** 13 caught violations; mean distance to the organizer second 1.54 s; within
   ±1 / ±3 / ±5 s: 7 / 11 / 13.
-- **Robustness probes** (`scripts/replay_f1.py run --zoom/--mirror/--drop`, the clips replayed
+- **Historical A20 robustness probes** (`scripts/replay_f1.py run --zoom/--mirror/--drop`, the clips replayed
   as another camera distance, a mirrored camera or a weaker detector): zoom 0.7-1.3 and mirror
   give exactly 32/0/8; losing 20% of object detections gives 31-32 / 0 / 8-9.
-- All 40 videos were also used while building A20, so expect less on new videos. The 8 misses
-  are listed in `docs/LIMITATIONS.md`.
+- All public clips influenced development; these are not held-out results. A21's current
+  ten misses and unknown legal/timing support are listed in `docs/LIMITATIONS.md`.
+- Current enabled API latency: median 2.0675 s with 41 perception cache hits and 476 answer
+  hits; a forced-cold X20 took 50.669 s. The 158.6 s longest-clip cold measurement had the
+  VLM off. Do not present cached or disabled-helper measurements as current cold latency.

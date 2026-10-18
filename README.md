@@ -10,24 +10,40 @@ No cloud AI is used anywhere in the processing path (task.md §7). Everything
 - perception, rules, evidence extraction, serving - runs on the team's own
 GPU host.
 
-## Submission (jury)
+## Existing public deployment (A20)
 
 | Item | Value |
 | --- | --- |
-| UI URL | https://forte-checker-wwi4jcrss.gobrev.dev/ (A20, `5d8f0bf`, `RULE_SCOPE=detector`; `deploy/README.md`) |
+| UI URL | https://forte-checker-wwi4jcrss.gobrev.dev/ (last recorded A20 deployment on `datathon`; see `deploy/README.md`) |
 | API base URL | https://forte-checker-wwi4jcrss.gobrev.dev/api/v1 |
 | API key | TODO(team): handed to the jury out of band (not in this repo) |
 | Jury `curl` | See `docs/USAGE.md` |
 
-## Current state
+## Current state — A21
 
-- Detector: F1 (`DETECTOR=f1`, `docs/ARCHITECTURE_SUMMARY.md`).
-- On the 40 open videos (attempt A20): 32/40 correct verdicts, 0/19 clean videos flagged,
-  8/21 violations missed, the same in the offline replay and through the real API. The misses
-  are listed in `docs/LIMITATIONS.md`.
-- Until the norms in `knowledge/rulebook.yaml` are human-verified, run with
-  `RULE_SCOPE=detector` (the default `jury` refuses to start with no verified citation,
-  `docs/USAGE.md`).
+The validated review service runs entirely on **datathon2**, with F1 perception/rules and
+local **Qwen3-VL-4B safe-state checks enabled**. It is separate from the existing public
+A20 endpoint above. The two-VM split was temporary evaluation only.
+
+- [Evaluation](http://localhost:8103/evaluation), [live results](http://localhost:8103/),
+  [watch and annotate](http://localhost:8103/annotate). These URLs require the SSH tunnel
+  described in [realtime setup](realtime/README.md#current-one-vm-review-service).
+- **42/42 API jobs successful; 30/40 unique verdicts agree with organizer labels**:
+  11/21 violations caught, 10 missed, 0/19 clean false alarms.
+- Findings: 9 compatible with supplied human observations, 0 contradicted, 3 unknown.
+  This is observation compatibility, not legal verification.
+- A20 scored 32/40; two of its findings had contradicted explanations. A21 removes those
+  accusations and misses the corresponding clips. **Detection accuracy regressed; the
+  enabled VLM has not improved the score.**
+- The enabled run made 40 fresh VLM calls and reused 476 prior answers. Its median
+  2.0675 s is predominantly cached work; a forced-cold X20 took 50.669 s. Longest-clip
+  cold latency with the current VLM-enabled configuration has not been measured.
+- All 40 public clips influenced development; unseen-room/camera performance is untested.
+- All citations remain pending human verification. Use `RULE_SCOPE=detector` for review;
+  the default `jury` scope refuses startup while no rule is eligible.
+
+Exact source hashes, validation, known gaps and the preserved comparisons:
+[A21 results](attempts/A21-deadline/RESULTS.md).
 
 ## Documentation
 
@@ -75,6 +91,7 @@ npm run build
 
 ## Privacy
 
-Organizer dataset videos, frames and labels are never committed to this
-repository (see `.gitignore`) and never leave the deployment host. Test
-videos supplied by the jury are processed and discarded per `docs/LIMITATIONS.md`.
+Dataset videos/frames, runtime uploads, model weights and credentials are excluded by
+default. Checked-in attempts contain public-development labels, numeric predictions and
+textual observations for reproducibility; see `CONTEXT.md`. No cloud AI processes dataset
+media. API uploads and evidence retention are described in `docs/LIMITATIONS.md`.

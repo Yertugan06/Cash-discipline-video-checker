@@ -1,0 +1,234 @@
+{
+  "full": {
+    "classes": {
+      "cash": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 5,
+        "tn": 4,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 9
+      },
+      "id_card": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 1,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 18
+      },
+      "bag": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "tn": 2,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 15
+      },
+      "food_cup": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 2,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 16
+      },
+      "coat_bag": {
+        "tp": 1,
+        "fp": 2,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 17
+      }
+    },
+    "inference_sec_total": 3.8640317429999413,
+    "inference_sec_mean": 0.19320158714999708,
+    "failed_crops": 0,
+    "invalid_output_values": 0
+  },
+  "full_desk": {
+    "classes": {
+      "cash": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 2,
+        "tn": 4,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 9
+      },
+      "id_card": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 1,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 18
+      },
+      "bag": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "tn": 2,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 15
+      },
+      "food_cup": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 2,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 16
+      },
+      "coat_bag": {
+        "tp": 1,
+        "fp": 2,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 17
+      }
+    },
+    "inference_sec_total": 7.0990625959930185,
+    "inference_sec_mean": 0.35495312979965093,
+    "failed_crops": 0,
+    "invalid_output_values": 0
+  },
+  "native_tiles": {
+    "classes": {
+      "cash": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 4,
+        "tn": 4,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 9
+      },
+      "id_card": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 18
+      },
+      "bag": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "tn": 2,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 15
+      },
+      "food_cup": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "tn": 1,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 16
+      },
+      "coat_bag": {
+        "tp": 1,
+        "fp": 2,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 17
+      }
+    },
+    "inference_sec_total": 3.009328659994935,
+    "inference_sec_mean": 0.15046643299974677,
+    "failed_crops": 0,
+    "invalid_output_values": 0
+  },
+  "full_desk_tiles": {
+    "classes": {
+      "cash": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 2,
+        "tn": 4,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 9
+      },
+      "id_card": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 18
+      },
+      "bag": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "tn": 2,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 15
+      },
+      "food_cup": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "tn": 1,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 16
+      },
+      "coat_bag": {
+        "tp": 1,
+        "fp": 2,
+        "fn": 0,
+        "tn": 0,
+        "unknown": 0,
+        "unknown_positive": 0,
+        "unknown_negative": 0,
+        "unlabelled": 17
+      }
+    },
+    "inference_sec_total": 10.108391255987954,
+    "inference_sec_mean": 0.5054195627993977,
+    "failed_crops": 0,
+    "invalid_output_values": 0
+  }
+}

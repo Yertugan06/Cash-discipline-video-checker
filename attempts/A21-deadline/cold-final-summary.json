@@ -1,0 +1,21 @@
+{
+  "video": "\u0425-14.mov",
+  "sha256": "7d6890ecb4a2b28bbdd3b61b6711566eee84a53ab3439c40cd9b6a3a6714c681",
+  "duration_sec": 142.533021,
+  "status": "done",
+  "verdict": "no_violation",
+  "wall_s": 158.6,
+  "perception_cache_hit": false,
+  "visual_inference_calls": 0,
+  "coverage": {
+    "step_s": 0.5,
+    "planned": 285,
+    "done": 285,
+    "failed": 0,
+    "deadline_hit": false,
+    "mode": "full"
+  },
+  "production_vms": 1,
+  "runtime_vm": "datathon2",
+  "source_manifest_sha256": "867857a35af9f1f3f4d124a02cd2dbf4b929fa56853f564611779c32637ee050"
+}

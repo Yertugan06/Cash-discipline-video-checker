@@ -1,0 +1,388 @@
+{
+  "variant": "v1 with safe verification; before reviewed exit fix",
+  "files": 42,
+  "records": [
+    {
+      "name": "X-1.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "X-2.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-3.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-4.mov",
+      "perception_cache_hit": true,
+      "checks": 15,
+      "inference_calls": 15,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-5.mov",
+      "perception_cache_hit": true,
+      "checks": 24,
+      "inference_calls": 24,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-8.mov",
+      "perception_cache_hit": true,
+      "checks": 23,
+      "inference_calls": 23,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-10.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-11.mov",
+      "perception_cache_hit": true,
+      "checks": 18,
+      "inference_calls": 18,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-12.mov",
+      "perception_cache_hit": true,
+      "checks": 27,
+      "inference_calls": 24,
+      "cache_hits": 0,
+      "unknown": 3,
+      "errors": [
+        "check_budget_exhausted"
+      ]
+    },
+    {
+      "name": "\u0425-13.mov",
+      "perception_cache_hit": true,
+      "checks": 14,
+      "inference_calls": 14,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-14.mov",
+      "perception_cache_hit": true,
+      "checks": 9,
+      "inference_calls": 9,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-15.mov",
+      "perception_cache_hit": true,
+      "checks": 16,
+      "inference_calls": 16,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-16.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-17.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-18.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-19.mov",
+      "perception_cache_hit": true,
+      "checks": 18,
+      "inference_calls": 18,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-20.mov",
+      "perception_cache_hit": true,
+      "checks": 23,
+      "inference_calls": 23,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-21.mov",
+      "perception_cache_hit": true,
+      "checks": 15,
+      "inference_calls": 15,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-22.mov",
+      "perception_cache_hit": true,
+      "checks": 16,
+      "inference_calls": 16,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-23.mov",
+      "perception_cache_hit": true,
+      "checks": 16,
+      "inference_calls": 16,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-24.mov",
+      "perception_cache_hit": true,
+      "checks": 12,
+      "inference_calls": 12,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-25.mov",
+      "perception_cache_hit": true,
+      "checks": 35,
+      "inference_calls": 24,
+      "cache_hits": 0,
+      "unknown": 12,
+      "errors": [
+        "check_budget_exhausted"
+      ]
+    },
+    {
+      "name": "\u0425-26.mov",
+      "perception_cache_hit": true,
+      "checks": 17,
+      "inference_calls": 17,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-27.mov",
+      "perception_cache_hit": true,
+      "checks": 14,
+      "inference_calls": 14,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-28.mov",
+      "perception_cache_hit": true,
+      "checks": 13,
+      "inference_calls": 13,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-29.mov",
+      "perception_cache_hit": true,
+      "checks": 11,
+      "inference_calls": 11,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-30.mov",
+      "perception_cache_hit": true,
+      "checks": 9,
+      "inference_calls": 9,
+      "cache_hits": 0,
+      "unknown": 2,
+      "errors": []
+    },
+    {
+      "name": "\u0425-31.mov",
+      "perception_cache_hit": true,
+      "checks": 12,
+      "inference_calls": 12,
+      "cache_hits": 0,
+      "unknown": 3,
+      "errors": []
+    },
+    {
+      "name": "\u0425-32.mov",
+      "perception_cache_hit": true,
+      "checks": 7,
+      "inference_calls": 7,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-33.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-34.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-35.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-37.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-38.mov",
+      "perception_cache_hit": true,
+      "checks": 15,
+      "inference_calls": 15,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-39.mov",
+      "perception_cache_hit": true,
+      "checks": 3,
+      "inference_calls": 3,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-40.mov",
+      "perception_cache_hit": true,
+      "checks": 12,
+      "inference_calls": 12,
+      "cache_hits": 0,
+      "unknown": 3,
+      "errors": []
+    },
+    {
+      "name": "\u0425-43.mov",
+      "perception_cache_hit": true,
+      "checks": 10,
+      "inference_calls": 10,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-44.mov",
+      "perception_cache_hit": true,
+      "checks": 6,
+      "inference_calls": 6,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-45.mov",
+      "perception_cache_hit": true,
+      "checks": 23,
+      "inference_calls": 23,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-46.mov",
+      "perception_cache_hit": true,
+      "checks": 9,
+      "inference_calls": 9,
+      "cache_hits": 0,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-47.mov",
+      "perception_cache_hit": true,
+      "checks": 15,
+      "inference_calls": 0,
+      "cache_hits": 15,
+      "unknown": 0,
+      "errors": []
+    },
+    {
+      "name": "\u0425-48.mov",
+      "perception_cache_hit": true,
+      "checks": 24,
+      "inference_calls": 0,
+      "cache_hits": 24,
+      "unknown": 0,
+      "errors": []
+    }
+  ]
+}

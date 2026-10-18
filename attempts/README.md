@@ -8,7 +8,8 @@ Logs go in each attempt's `logs/` folder, per-video detail included (this repo i
 
 ## Map
 
-All runs are on the 40 unique open videos (21 with a violation, 19 clean), 2026-10-17.
+The common dataset has 40 unique open videos (21 with a violation, 19 clean),
+42 file aliases. Runs span 2026-10-17/18; individual rows distinguish file/unique counts.
 "Correct" is the whole-video verdict. "Clean FP" is clean videos wrongly flagged.
 "Timecode" is labelled events matched within the given window (22 events).
 "R1 validation" = `validation/validation-evidence/` (pre-registered harness and scorer, write-up in
@@ -30,7 +31,7 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A10](A10-agentA-rulebook/) | agentA (datathon2) | Rulebook variant of the F1 checker | as A01 | - | - | - | - | - | ran on dev, **no score recorded** |
 | [A11](A11-agentB-hybrid/) | agentB (datathon) | Hybrid: F1 detections + VLM probes at anchors | F1 stack + Qwen VLM | - | - | - | - | - | ran on dev, **no score recorded** |
 | [A12](A12-adr002-service-f1/) | ADR-002 service | ADR-002 service, `DETECTOR=f1`, evidence boxes (live on `datathon`) | as A01 | - | - | - | - | - | **not evaluated on 40 yet**; 1-video smoke test |
-| [A13](A13-detection-spike/) | teammate (datathon) | Spike: can open-vocabulary detectors or a VLM see the objects on 20 hand-labelled frames | OWLv2, Grounding DINO, Qwen2.5-VL-7B | n/a | per-frame checks: OWLv2 17/33, GDINO 13/33, VLM 21/33 | - | - | 4.1 s per frame (VLM) | measured; cash seen 4/11 by all |
+| [A13](A13-detection-spike/) | teammate (datathon) | Spike: can open-vocabulary detectors or a VLM see the objects on 20 hand-labelled frames | OWLv2, Grounding DINO, Qwen2.5-VL-7B | n/a | per-frame checks: OWLv2 17/33, GDINO 13/33, VLM 21/33 | - | - | 4.1 s per frame (VLM) | legacy 4/11 cash accuracy is not recall; re-score: OWLv2/VLM 0/7 cash TP |
 | [A14](A14-glass-reflection-fix/) | agent (datathon) | A12 + glass-reflection filter, laptop-desk calibration, near/far cashier split; per-job traces, replay, /compare | as A01 | 23/42 (files) | 9/22 | 6/20 | - | 146.6 s | live; outsider on clean 10 -> 0, misses up |
 | [A15](A15-vlm-roles-spike/) | agent (datathon) | Spike: per-person role + situation from one frame with numbered boxes | Qwen2.5-VL-7B (bf16) | n/a | cashier right in 5/21 two-person frames | - | - | 6.4 s per frame (median) | measured; rejected (swaps cashier and client) |
 | [A16](A16-cashier-side-from-lone-person/) | agent (offline replay) | Cashier side = where a lone person works at the laptop (any camera angle) | as A14 | 21/42 (files) | 15/22 | 14/20 | - | - | measured offline, not deployed; roles right on front-facing cameras, exposes leave-rule FPs |
@@ -38,32 +39,33 @@ same numbers (`validation/validation-evidence/logs/arch_rescore_teammates.txt`).
 | [A18](A18-desk-object-history/) | agent (offline replay) | Desk objects by history: items found by desk change (emptiest moment of the clip as background), named only when 2 clues agree (origin zone, counter ran, detector label) | as A14 + OpenCV | 22/40 (replay; A17 25) | - | 6/19 (A17 5) | - | 74 s for 40 clips (CPU) | rejected: failed the agreed bar; "any item left" cuts misses 10 -> 7 but clean FP 5 -> 9 |
 | [A19](A19-desk-objects-strict-origin/) | agent (offline replay) | A18 + strict origin (hand inside the open safe / on the counter) + blob shape filter; pre-registered, one run | as A18 | 22/40 (replay) | - | 5/19 | - | ~75 s for 40 clips (CPU) | rejected: 13 missed; naming items from history doesn't beat the detector without new labels |
 | [A20](A20-night-orchestration/) | orchestrator + Codex agents (offline replay, API check on datathon) | Verified rule fixes on F1 (door entry, personal-item gaps and equipment, client sessions, leave evidence, desk-relative scale, collector visit, timecode ranking) + robustness probes; merged with fix-dataset | as A14 | **32/40** (replay) | 13/21 | **0/19** | ±1/3/5 s: 7/11/13 of 13 caught | - | merged to main; zoom/mirror/drop stable |
+| [A21](A21-deadline/) | orchestrator + four remote workers | Evidence guards, observed doorway-hand exit correction, independent explanation audit; local state verifier enabled at user request after measurement | existing local F1 stack; Qwen3-VL-4B diagnostic | **30/40** (real API) | 11/21 | **0/19** | compatible human timing mostly unannotated | median 2.0675 s mostly cached; X20 cold 50.669 s | one-VM VLM-enabled release; 9 compatible / 0 contradicted / 3 unknown findings; [results](A21-deadline/RESULTS.md) |
 
-## Takeaways so far
+## Current conclusions
 
-- A20 is the first clear win over the floor: 32/40 with no clean video flagged, from rule-level
-  mechanisms on the same perception, stable under the replay's zoom, mirror and detection-loss
-  probes. All 40 clips were used while building it, so expect less on new videos.
-- What's left is perception: the door, laptop screen and safe states (CLIP can't read them) and
-  small objects (cash, ID, key, seal, banknote detector). The teammate's Qwen3-VL 4B crop
-  questions read the door and screen on these clips (`local-vlm-prototype`, 32/1/7 on its own).
+- A21 is the active one-VM review release: 30/40 unique verdict agreement, 0/19 clean
+  false alarms, 10/21 misses. A20's historical 32/40 included two contradicted explanations.
+  Supported findings remain 9; improved auditing has not improved detection accuracy.
+- Local Qwen3-VL-4B safe checks are enabled at the user's request. The measured comparison
+  added no correct detections. Door checks failed a clean control and remain diagnostic.
+- A13's historical 4/11 cash accuracy came mainly from negatives. The re-score records
+  OWLv2/Qwen2.5-VL-7B cash TP 0, FN 7, TN 4; Grounding DINO TP 1, FN 6, TN 3, FP 1.
+- A21's native-tile object probe adds no cash detections beyond the existing full+desk
+  inputs. The 4B temporal probe leaves most cash cases unknown and adds one false ID.
+- A08 already tested 4B/8B generic violation-window prompts without useful clean-twin
+  discrimination. A larger model is not a demonstrated fix; test a specific observation
+  capability before adding it to runtime.
+- Desk-change/history naming failed in A18/A19 and stays disabled. Missing detections,
+  brief occlusion and recording cutoff do not justify inferred failures.
+- All public clips influenced development. Cached geometry probes do not establish
+  unseen-camera or unseen-scenario accuracy.
 
-- Nothing has clearly beaten "always violation" (21/40). Best is A04 F3-whole at 23/40,
-  inside the ±2-video tie band from the pre-registration.
-- Every approach that flags often (A01, A02, A06) has 68-100% clean false alarms. The brief
-  puts false alarms right after misses.
-- Zero-shot VLMs don't tell a real event from its clean twin (A08), at 4B or 8B.
-- The missing piece is targeted perception of small objects (cash, keys, screen, door);
-  see `archive/research1/problem-validation.md` §9.
+## Next priorities
 
-- Desk change finds left items without naming them (A18), but naming them from their history
-  failed: the origin and counter clues both just mean "cash session", and the detector rarely
-  overlaps a desk-change object. Tightening the clues (A19) only trades catches for clean clips.
-
-## Next to run
-
-- VLM checks at F1's own event moments (door after an entry, laptop screen and safe at a leave,
-  desk cash at a new client, ID card in a session), measured with the real model on `datathon`
-  (branch `orch/vlmchecks`, see `attempts/A20-night-orchestration/LAB.md`).
-- Human verification of the norms in `knowledge/rulebook.yaml`, so the service can run with the
-  default `RULE_SCOPE=jury`.
+1. Recover supported observations for cash at a client change and safe attendance/open
+   state, with unchanged rules across all clips and clean controls. No filename/time or
+   annotation lookup exceptions.
+2. Compare any model/input change on a fixed prompt/manifest and record unknowns,
+   false positives, latency and same-VM memory; promote only measured useful changes.
+3. Complete human norm/source verification before jury scope is enabled. X1/X2's causes
+   and the blanket ID-first policy remain unresolved.

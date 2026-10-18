@@ -1,0 +1,4473 @@
+{
+  "schema_version": 1,
+  "scope": "Retrospective audit only; no model inference or runtime rule changes.",
+  "summary": {
+    "organizer_samples": 42,
+    "unique_sha_groups": 40,
+    "duplicate_samples": 2,
+    "duplicate_sha_groups": 2,
+    "input_prediction_records": 40,
+    "additional_prediction_records_for_sha": 0,
+    "conflicting_prediction_sha_groups": 0,
+    "unique_verdict_confusion": {
+      "TP": 10,
+      "FN": 11,
+      "FP": 0,
+      "TN": 19,
+      "missing": 0,
+      "invalid": 0,
+      "failed": 0,
+      "label_conflict": 0
+    },
+    "sample_verdict_confusion": {
+      "TP": 10,
+      "FN": 12,
+      "FP": 0,
+      "TN": 20,
+      "missing": 0,
+      "invalid": 0,
+      "failed": 0,
+      "label_conflict": 0
+    },
+    "finding_reason_counts": {
+      "contradicted": 0,
+      "supported": 8,
+      "unknown": 3
+    },
+    "human_annotated_sha_groups": 40,
+    "missing_human_annotation_sha_groups": 0,
+    "timed_human_events_available": 6,
+    "unknown_cause_sha_groups": 2,
+    "compatible_event_timing": {
+      "with_human_time": 0,
+      "human_time_unknown": 8,
+      "distances_to_human_interval_sec": []
+    },
+    "invalid_output_records": 0,
+    "invalid_output_errors": 0,
+    "unlabelled_prediction_records": 0,
+    "runtime": {
+      "measured_records": 0,
+      "missing_records": 40,
+      "min_sec": null,
+      "median_sec": null,
+      "max_sec": null,
+      "over_300_sec": 0,
+      "provenance": "Supplied wall/runtime fields only; no inference timed by audit."
+    }
+  },
+  "assertion_provenance": {
+    "id": "A21-human-text-review-all40-2026-10-18",
+    "kind": "provenance_tagged_human_text_review",
+    "source": "Full42 annotation export, latest8 user clarifications, and 40-group text comparison; read-only review at 2026-10-18 03:02 UTC.",
+    "authority": "Text-supported observational compatibility only, not independent video rewatch, organizer reason ground truth, or legal/policy approval.",
+    "inputs": [
+      {
+        "id": "annotations.json",
+        "original_path": "/home/ubuntu/workspaces/datathon26-workers/shared/a21/annotations/annotations.json",
+        "path": "attempts/A21-deadline/validation/sources/annotations.json",
+        "sha256": "94f2edcfe526b2420e6176c42af2616a77279807dc3813cf75171b874eee6ded",
+        "bytes": 68096
+      },
+      {
+        "id": "clarifications.json",
+        "original_path": "/home/ubuntu/workspaces/datathon26-workers/shared/a21/annotations/clarifications.json",
+        "path": "attempts/A21-deadline/validation/sources/clarifications.json",
+        "sha256": "bb5087774904866a884162354609bc261f9fc2d5d4a26d0aae08b63684fc1f73",
+        "bytes": 11323
+      },
+      {
+        "id": "human-comparison.md",
+        "original_path": "/home/ubuntu/workspaces/datathon26-workers/shared/a21/annotations/human-comparison.md",
+        "path": "attempts/A21-deadline/validation/sources/human-comparison.md",
+        "sha256": "a156238efe1b8279d012a712d8f02032cdacfeec46f67af204773ec92a8016f5",
+        "bytes": 18321
+      }
+    ],
+    "precedence": "Latest explicit clarifications supersede earlier tentative wording; the comparison is a secondary interpretation. Original AI-draft/existing-notes/manual origins remain tagged.",
+    "review_status_definition": {
+      "reviewed": "Prose read and a bounded sequence/state identified; other events and legal compliance remain unknown.",
+      "unknown": "Prose read, but a salient cause, state, category, geometry or policy question remains unresolved."
+    },
+    "support_definition": "Supported means compatible observational mechanism/proxy, subject to stated caveats; not every duration, actor role, object content or legal predicate has been independently verified."
+  },
+  "limitations": [
+    "Partial observations are transcribed from the assignment; this worker has not inspected organizer images/videos.",
+    "No cross-file cash history, appearance/position shortcuts, or timestamp adjustments are evaluation evidence.",
+    "An absent ID recognition or a few negative stills cannot establish non-presentation; adequate interval visibility is required.",
+    "Recording cutoff cannot establish future cash abandonment.",
+    "All legal/policy applicability remains pending source review under RULE_SCOPE=detector.",
+    "All 40 groups were text-reviewed; this is not complete timed event annotation coverage. Only X1 manual rows and X4 explicit clarifications supply human event times.",
+    "Clean binary labels never prove all actions compliant. Missing prose never proves absence; uncertain/occluded states stay unknown.",
+    "X2/X3 descriptions retain their ai_draft origin despite done status. Model suggestions and automatic review timestamps are not promoted into independent human event times.",
+    "X11/X12 screen state remains unknown; X35 hypothetical counterfeit and occluded detector contact are not facts.",
+    "A supported quick-visit proxy in X17 is not direct seal inspection evidence; X15 bag contents and X40 exact desk placement remain qualified.",
+    "Organizer verdicts/timestamps do not establish the reason or its legal validity.",
+    "No overall reason accuracy: human coverage is partial and causes can be unknown.",
+    "Per-file offsets never give timing credit to incompatible/unknown reasons.",
+    "API images, full API schema, and legal citations are not validated by this audit."
+  ],
+  "rule_assumptions": [
+    {
+      "priority": "P0",
+      "id": "physical-id-first-policy",
+      "rule_ids": [
+        "C-ID-BEFORE-CASH"
+      ],
+      "status": "provisional_policy",
+      "question": "Verify transactions requiring physical ID before cash, permitted alternatives, and adequate evidence of non-presentation. Clean X19 is an applicability counterexample to investigate, not proof that ID is universally unnecessary."
+    },
+    {
+      "priority": "P0",
+      "id": "room-exit-versus-workstation-away",
+      "rule_ids": [
+        "L-NO-CASH-ON-LEAVE",
+        "L-NO-DOCS-ON-LEAVE",
+        "L-PC-LOCKED"
+      ],
+      "status": "trigger_scope_pending",
+      "question": "Review whether each clause requires leaving the room or leaving the workstation. Walking to the safe/equipment cannot itself prove room exit; X20's document-exit finding has the wrong observed trigger."
+    },
+    {
+      "priority": "P0",
+      "id": "cash-handover-versus-physical-combination",
+      "rule_ids": [
+        "S-CLEAN-DESK-HANDOVER",
+        "S-NO-MERGE"
+      ],
+      "status": "mechanism_scope_pending",
+      "question": "Keep prior-session cash present at next entry separate from actual combination. New cash received beside old cash does not prove stacking/mixing, and presence-only model answers cannot establish cash owners or boxes. X4/X47 support both events, with combination time unknown."
+    },
+    {
+      "priority": "P0",
+      "id": "cutoff-and-negative-visibility",
+      "rule_ids": [
+        "L-NO-CASH-ON-LEAVE",
+        "C-DETECTOR-CHECK",
+        "C-ID-BEFORE-CASH"
+      ],
+      "status": "observation_scope_pending",
+      "question": "Require a visible trigger and adequate observation interval; unknown/model failure is not absence. X43/X45 end during or after processing, so do not infer future abandonment."
+    },
+    {
+      "priority": "P1",
+      "id": "x1-unresolved-cause",
+      "rule_ids": [],
+      "status": "cause_unknown",
+      "question": "Identify the actual prohibited act in X1 before evaluating a reason. The counter accepts the notes and some notes are hand-counted/returned; counterfeit, rejected-note, off-camera-check, and manual-count prohibition claims are unsupported."
+    },
+    {
+      "priority": "P1",
+      "id": "key-and-rejected-note-procedure",
+      "rule_ids": [
+        "L-SAFE-LOCKED-ON-LEAVE",
+        "C-DETECTOR-CHECK",
+        "C-REJECT-NOT-RETURNED"
+      ],
+      "status": "capability_and_policy_pending",
+      "question": "Review key-left-after-exit and rejected-note recombination procedures separately. A rule about returning a rejected note to a client is not equivalent to recombining rejected notes without detector inspection; better perception alone does not implement either procedure."
+    },
+    {
+      "priority": "P1",
+      "id": "state-versus-legal-conclusion",
+      "rule_ids": [
+        "S-SAFE-CLOSED",
+        "A-DOOR-LOCK",
+        "L-PC-LOCKED"
+      ],
+      "status": "legal_scope_pending",
+      "question": "Verify unattended thresholds and what closed/open/locked states actually establish. Visible closure alone cannot prove mechanical locking; a detector-supported state is not a verified legal citation."
+    }
+  ],
+  "capability_gaps": [
+    {
+      "id": "X22-key-after-exit",
+      "clip_ids": [
+        "X-22"
+      ],
+      "rule_ids": [
+        "L-SAFE-LOCKED-ON-LEAVE"
+      ],
+      "status": "disabled_unimplemented_in_pinned_baseline",
+      "explanation": "Human account describes a key left after cashier exit. knowledge/rules.yaml disables L-SAFE-LOCKED-ON-LEAVE and backend/f1/rules.py has no evaluator for it. Perception changes alone cannot enable this rule."
+    },
+    {
+      "id": "X44-rejected-notes-recombined-without-check",
+      "clip_ids": [
+        "X-44"
+      ],
+      "rule_ids": [
+        "C-DETECTOR-CHECK",
+        "C-REJECT-NOT-RETURNED"
+      ],
+      "status": "disabled_unimplemented_and_mechanism_gap_in_pinned_baseline",
+      "explanation": "Human account describes rejected notes recombined without detector inspection. Both candidate rules are disabled/unimplemented; their existing descriptions (whole-video manual counting/no detector, or returning notes to a client) do not directly implement that procedure."
+    }
+  ],
+  "invalid_outputs": [],
+  "unlabelled_predictions": [],
+  "clips": [
+    {
+      "sha256": "8911a9219b9433091824e553a70bb80335f075fd8ac982d2062d2ecf023c16bc",
+      "clip_ids": [
+        "X-1"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-1",
+          "verdict": "violation",
+          "timestamps_sec": [
+            22
+          ],
+          "duration_sec": 25.934,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 2,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-1",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 21,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-1"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Counter accepts all notes; visible hand count/partial return near 22 s. Organizer-positive cause remains unresolved; no reason score.",
+        "events": [
+          {
+            "id": "id_checked",
+            "description": "Manual annotation row: ID is examined.",
+            "interval_sec": [
+              6.5,
+              6.5
+            ]
+          },
+          {
+            "id": "cash_received",
+            "description": "Manual annotation row: client gives cash while cashier handles ID.",
+            "interval_sec": [
+              8.6,
+              8.6
+            ]
+          },
+          {
+            "id": "counter_loaded",
+            "description": "Manual annotation row: cash loaded into counter.",
+            "interval_sec": [
+              14.9,
+              14.9
+            ]
+          },
+          {
+            "id": "partial_return",
+            "description": "Manual annotation row: notes taken from counter and part returned by hand count; latest clarification says all notes accepted as valid.",
+            "interval_sec": [
+              22,
+              22
+            ]
+          }
+        ],
+        "reason_checks": [],
+        "cause_unresolved": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 0,
+            "clip_id": "X-1",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "existing_notes",
+            "annotator": "",
+            "version": 1792277552.5601377
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 0,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 1,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 105,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "9932ae0a10d3b9371bf52ea558dc19092fcf47adcd275a73a52a56b95464bca6",
+      "clip_ids": [
+        "X-2"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-2",
+          "verdict": "violation",
+          "timestamps_sec": [
+            10
+          ],
+          "duration_sec": 17.067,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 3,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-2",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 26,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-2"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Cash receipt/counter loading described; ID omitted from prose, so non-presentation and violation cause are unknown.",
+        "events": [
+          {
+            "id": "cash_to_counter",
+            "description": "Reviewed description, originally an AI draft: client brings cash and cashier loads it into counter; no ID sequence supplied.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-ID-BEFORE-CASH"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "cash_to_counter"
+            ],
+            "explanation": "Omission of ID handling from prose is not an observed absence. Preserve the AI-draft origin and unresolved cause."
+          }
+        ],
+        "cause_unresolved": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 11,
+            "clip_id": "X-2",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "ai_draft",
+            "annotator": "",
+            "version": 1792277720.9026706
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 106,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "21468fcef4ea5f45ce7d465e620f84e09c8b50314f4ecdc06f69224c701b3a5b",
+      "clip_ids": [
+        "X-3"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-3",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 20.034,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 4,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-3",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 6,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-3"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "ID examined before cash; client watches counting. These are bounded observed actions, not proof all policies are satisfied.",
+        "events": [
+          {
+            "id": "id_then_cash_count",
+            "description": "Reviewed description, originally an AI draft: ID examined, cash received, client present while machine operates.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-ID-BEFORE-CASH"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "id_then_cash_count"
+            ],
+            "explanation": "ID before cash is explicitly described; no missing-ID accusation is supported for this exchange."
+          },
+          {
+            "rule_ids": [
+              "C-COUNT-BEFORE-EXIT"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "id_then_cash_count"
+            ],
+            "explanation": "The described counting occurs with the client watching, contradicting departure during that visible phase; later behavior is unspecified."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 22,
+            "clip_id": "X-3",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "ai_draft",
+            "annotator": "",
+            "version": 1792277934.3709836
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 107,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "5385be9420e6a70547d6bcfd0b13d60f9c0738877645afa277d09550a96b8445",
+      "clip_ids": [
+        "X-4",
+        "X-47"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-4",
+          "verdict": "violation",
+          "timestamps_sec": [
+            57
+          ],
+          "duration_sec": 72.7,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 5,
+            "sheet": "labels"
+          }
+        },
+        {
+          "clip_id": "X-47",
+          "verdict": "violation",
+          "timestamps_sec": [
+            68
+          ],
+          "duration_sec": 72.7,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 42,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-4",
+          "outcome": "FN"
+        },
+        {
+          "clip_id": "X-47",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 11,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-4",
+          "X-47"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Two distinct cash events: previous cash at client 2 entry at 57 s, then physical stacking at unknown time. Both clients show ID first.",
+        "events": [
+          {
+            "id": "door_contact",
+            "description": "Client 2 touches the door; contact alone is not entry.",
+            "interval_sec": [
+              55,
+              55
+            ]
+          },
+          {
+            "id": "old_cash_at_next_entry",
+            "description": "Client 2 is inside closing the door while client 1 cash remains on desk.",
+            "interval_sec": [
+              57,
+              57
+            ]
+          },
+          {
+            "id": "id_before_cash_both_clients",
+            "description": "Both source descriptions and final explicit clarification establish ID first, then cash.",
+            "interval_sec": null
+          },
+          {
+            "id": "cash_stacked",
+            "description": "Client 2 cash is placed directly on client 1 cash, then cashier uses laptop. Stacking time is unspecified; no inference about future counting.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-ID-BEFORE-CASH"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "id_before_cash_both_clients"
+            ],
+            "explanation": "Latest explicit answer resolves the ambiguous wording as ID first, then money. A nearby organizer marker cannot rescue the missing-ID reason."
+          },
+          {
+            "rule_ids": [
+              "S-CLEAN-DESK-HANDOVER"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "old_cash_at_next_entry"
+            ],
+            "explanation": "Human observations support previous-session cash remaining at new-client entry around 57 s; policy/citation validity remains pending."
+          },
+          {
+            "rule_ids": [
+              "S-NO-MERGE"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "cash_stacked"
+            ],
+            "explanation": "Physical stacking of the two client batches is explicitly described. Its time is unknown and distinct from the 57 s entry event."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 32,
+            "clip_id": "X-4",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792281997.740082
+          },
+          {
+            "input": "annotations.json",
+            "record_index": 38,
+            "clip_id": "X-47",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1925383
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 4,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 5,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 6,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 7,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 108,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "1f5840bff58f298e89c4afa00cb1c18f6dafc5c4096c251d9b507604ebefe906",
+      "clip_ids": [
+        "X-5",
+        "X-48"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-5",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 71.6,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 6,
+            "sheet": "labels"
+          }
+        },
+        {
+          "clip_id": "X-48",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 71.6,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 43,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-5",
+          "outcome": "TN"
+        },
+        {
+          "clip_id": "X-48",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 4,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-5",
+          "X-48"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "First cash batch stored before next client; ID handling explicit. Cash occlusion and a key during service do not establish later abandonment.",
+        "events": [
+          {
+            "id": "cash_stored_between_clients",
+            "description": "Cash counted, held during laptop entry, then put in safe before first client leaves and next client shows ID.",
+            "interval_sec": null
+          },
+          {
+            "id": "id_before_cash",
+            "description": "First client shows ID before cash; next client presents ID at cutoff.",
+            "interval_sec": null
+          },
+          {
+            "id": "key_during_service",
+            "description": "X48 describes key left in lock while cashier remains; no cashier departure established.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "S-CLEAN-DESK-HANDOVER",
+              "S-NO-MERGE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "cash_stored_between_clients"
+            ],
+            "explanation": "Storage before the next client contradicts carryover/mixing of this described batch; no general clean-label compliance inference."
+          },
+          {
+            "rule_ids": [
+              "C-ID-BEFORE-CASH"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "id_before_cash"
+            ],
+            "explanation": "ID before cash is described for the cash-bearing first client."
+          },
+          {
+            "rule_ids": [
+              "L-SAFE-LOCKED-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "key_during_service"
+            ],
+            "explanation": "Key presence during service is not a key remaining after a cashier exit; the needed later trigger is unobserved."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 40,
+            "clip_id": "X-5",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792281999.1439276
+          },
+          {
+            "input": "annotations.json",
+            "record_index": 39,
+            "clip_id": "X-48",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.197297
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 109,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "6a53e10acdcf52396ad5b1697eead32d8322c0911d792523a5c33fe5b388f4e7",
+      "clip_ids": [
+        "X-8"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-8",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 38.034,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 7,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-8",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 16,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-8"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Cash counted and stored; notebook records are made. No laptop entry alone is not a missing-record violation.",
+        "events": [
+          {
+            "id": "count_store_write",
+            "description": "Counter recount, safe storage, then notebook writing explicitly described; laptop entry is not used.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 41,
+            "clip_id": "X-8",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282000.5307608
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 110,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "57a0e46c7a45f0e831f61d9c80722fefe4b74dbcfe1d3031ff58307d481f9a5c",
+      "clip_ids": [
+        "X-10"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-10",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 15.567,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 8,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-10",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 12,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-10"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Phone put away, counting starts, then cutoff. Initial desk-cash ownership and prior sessions are unknown.",
+        "events": [
+          {
+            "id": "phone_put_away",
+            "description": "Personal phone is briefly held then put in pocket.",
+            "interval_sec": null
+          },
+          {
+            "id": "initial_cash_and_cutoff",
+            "description": "Three cash stacks initially on desk; one goes into counter. Recording ends as counting starts; no initial owners are established.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "S-CLEAN-DESK-HANDOVER",
+              "S-NO-MERGE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "initial_cash_and_cutoff"
+            ],
+            "explanation": "Initial piles alone do not establish previous-client ownership, a new-client entry, or physical combination."
+          },
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "initial_cash_and_cutoff"
+            ],
+            "explanation": "A recording cutoff is not a later observed leave/abandonment event."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 1,
+            "clip_id": "X-10",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.2019725
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 111,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "b3a954a5b761ad47943e061599315e3fe9d22573eeb92bb14bf315cdcd422fc5",
+      "clip_ids": [
+        "X-11"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-11",
+          "verdict": "violation",
+          "timestamps_sec": [
+            18
+          ],
+          "duration_sec": 25.6,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 9,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-11",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 29,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-11"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Cashier departure is described, but identical X11/X12 prose does not resolve screen state.",
+        "events": [
+          {
+            "id": "departure_screen_unspecified",
+            "description": "Laptop work, stand up, safe closed/key taken, lights off and cashier exits. Screen locking is not specified.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-PC-LOCKED"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "departure_screen_unspecified"
+            ],
+            "explanation": "Different organizer labels do not supply the missing screen-state observation; absence of locking prose does not prove an unlocked screen."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 2,
+            "clip_id": "X-11",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282001.5802197
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 112,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "955755baf54418b48ea645dcd98e7e8dcca1d1e227e9b286a9427062db304fd4",
+      "clip_ids": [
+        "X-12"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-12",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 42.3,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 10,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-12",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 24,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-12"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Same prose as X11; no resolved screen-lock state despite clean binary label.",
+        "events": [
+          {
+            "id": "departure_screen_unspecified",
+            "description": "Laptop work, stand up, safe closed/key taken, lights off and cashier exits. Screen locking is not specified.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-PC-LOCKED"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "departure_screen_unspecified"
+            ],
+            "explanation": "Clean organizer label is not evidence the screen was locked; identical text leaves the state unknown."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 3,
+            "clip_id": "X-12",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282002.628126
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 113,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "a37930cf119bb691be77d8624b18333b04d9c67066a7f4627d63e3208dfa6057",
+      "clip_ids": [
+        "X-13"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-13",
+          "verdict": "violation",
+          "timestamps_sec": [
+            47
+          ],
+          "duration_sec": 65.3,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 11,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-13",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 27,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-13"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Bag opened and three bundles taken directly to safe without an observed recount; described sequence is missed.",
+        "events": [
+          {
+            "id": "opened_bag_direct_storage",
+            "description": "Cashier opens taped bag, removes three bundles and takes them directly to safe; no intervening recount is observed in the stated sequence.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "K-RECOUNT-BEFORE-SAFE"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "opened_bag_direct_storage"
+            ],
+            "explanation": "The described opening-to-storage sequence supports the observational no-intervening-recount mechanism; exact time and legal applicability remain unverified."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 4,
+            "clip_id": "X-13",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282003.6777027
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 114,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "7d6890ecb4a2b28bbdd3b61b6711566eee84a53ab3439c40cd9b6a3a6714c681",
+      "clip_ids": [
+        "X-14"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-14",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 142.534,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 12,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-14",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 19,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-14"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "All three extracted bundles are recounted before safe storage; temporary desk placement occurs during processing.",
+        "events": [
+          {
+            "id": "all_bundles_recounted",
+            "description": "Each of three bundles is individually passed through counter, re-banded and stored in safe before laptop entry/cutoff.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "K-RECOUNT-BEFORE-SAFE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "all_bundles_recounted"
+            ],
+            "explanation": "The explicit recount of all three bundles before storage contradicts a no-recount claim for this operation."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 5,
+            "clip_id": "X-14",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282004.8367064
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 115,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "69caf59620fcd80bedcb664514730ab38f2f800da27000a8e037d7440be5dc7a",
+      "clip_ids": [
+        "X-15"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-15",
+          "verdict": "violation",
+          "timestamps_sec": [
+            15
+          ],
+          "duration_sec": 20.867,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 13,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-15",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "L-NO-CASH-ON-LEAVE",
+          "t": 15.0,
+          "reason_status": "supported",
+          "explanation": "Supports the bag-left-after-exit branch, not direct proof of cash inside the bag. Cash-bag classification, duration and legal scope remain qualified.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "bag_after_exit",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-15",
+              "timestamps_sec": [
+                15
+              ],
+              "signed_offsets_sec": [
+                0.0
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 15,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-15"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Bag remains on desk after cashier exits. Cash contents are contextual, not directly shown.",
+        "events": [
+          {
+            "id": "bag_after_exit",
+            "description": "Cashier inspects bag, closes safe/takes key, exits and closes door; bag remains on desk. Contents unspecified.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE",
+              "L-NO-BAG-ON-LEAVE"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "bag_after_exit"
+            ],
+            "explanation": "Supports the bag-left-after-exit branch, not direct proof of cash inside the bag. Cash-bag classification, duration and legal scope remain qualified."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 6,
+            "clip_id": "X-15",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282005.9750555
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 116,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "3f516431cf37e3900b7eae857a7b09be258f485702ab56bc6e5b6129103f1fa5",
+      "clip_ids": [
+        "X-16"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-16",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 22.734,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 14,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-16",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 9,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-16"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "ID checked, bag accepted, visitor seated at cutoff. Subsequent inspection/recount/departure is unobserved.",
+        "events": [
+          {
+            "id": "bag_handover_visitor_stays",
+            "description": "Visitor shows ID, gets it back, hands over bag and sits; recording ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "K-SEAL-CHECK"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "bag_handover_visitor_stays"
+            ],
+            "explanation": "The observed visitor has not left before cutoff; later departure or inspection cannot be inferred. Role and exact visit duration are not established."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 7,
+            "clip_id": "X-16",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282007.0203898
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 117,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "0378b8026b2e6afd1775a5d0fdd12dd09c491785b626e9c20428f7dc6bd59364",
+      "clip_ids": [
+        "X-17"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-17",
+          "verdict": "violation",
+          "timestamps_sec": [
+            7
+          ],
+          "duration_sec": 14.734,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 15,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-17",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "K-SEAL-CHECK",
+          "t": 9.5,
+          "reason_status": "supported",
+          "explanation": "Supports the quick-handover/departure proxy only. It does not directly prove a missing seal inspection, collector identity, exact seconds or legal breach.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "bag_then_immediate_departure",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-17",
+              "timestamps_sec": [
+                7
+              ],
+              "signed_offsets_sec": [
+                2.5
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 1,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-17"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Bag handover followed by immediate departure supports the implemented visit-behavior proxy; actual seal inspection is not observed.",
+        "events": [
+          {
+            "id": "bag_then_immediate_departure",
+            "description": "Man hands over bag; cashier receives it; man immediately leaves and closes door.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "K-SEAL-CHECK"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "bag_then_immediate_departure"
+            ],
+            "explanation": "Supports the quick-handover/departure proxy only. It does not directly prove a missing seal inspection, collector identity, exact seconds or legal breach."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 8,
+            "clip_id": "X-17",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282008.0637386
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 118,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "90607b0b0cb772fcf29b0c7e0e56fa6af36da6fac0efe93b8a616b5de94a156c",
+      "clip_ids": [
+        "X-18"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-18",
+          "verdict": "violation",
+          "timestamps_sec": [
+            20
+          ],
+          "duration_sec": 22.6,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 16,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-18",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "A-SECOND-PERSON",
+          "t": 19.5,
+          "reason_status": "supported",
+          "explanation": "Text explicitly overlaps first-client counting with second-client ID service; exact event timing is not supplied.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "second_client_during_count",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-18",
+              "timestamps_sec": [
+                20
+              ],
+              "signed_offsets_sec": [
+                -0.5
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 23,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-18"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Second visitor hands ID over while first client counting is active; simultaneous service mechanism supported.",
+        "events": [
+          {
+            "id": "second_client_during_count",
+            "description": "First client cash is in counter when another visitor enters and hands over ID; recording then stops.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "A-SECOND-PERSON"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "second_client_during_count"
+            ],
+            "explanation": "Text explicitly overlaps first-client counting with second-client ID service; exact event timing is not supplied."
+          },
+          {
+            "rule_ids": [
+              "C-ID-BEFORE-CASH"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "second_client_during_count"
+            ],
+            "explanation": "First-client ID handling is omitted, not observed absent. Second-client ID cannot satisfy another session."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 9,
+            "clip_id": "X-18",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282008.9132688
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 119,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "16065504b21260bff18698c7bbf048ffa356c9de43d43b92643b6c2eddedac0f",
+      "clip_ids": [
+        "X-19"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-19",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 57.434,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 17,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-19",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 3,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-19"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "User confirms first client cash without prior ID, second client ID, and retracts blanket ID-first policy. Scope remains provisional.",
+        "events": [
+          {
+            "id": "first_cash_without_prior_id",
+            "description": "Latest clarification explicitly confirms first client hands over cash without first showing ID; this is a human report, not a detector miss.",
+            "interval_sec": null
+          },
+          {
+            "id": "cash_stored_between_clients",
+            "description": "First cash counted and stored before next client arrives; second client presents ID.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-ID-BEFORE-CASH"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "first_cash_without_prior_id"
+            ],
+            "explanation": "Observed sequence is clarified, but applicability of a universal physical-ID-first policy is retracted/unverified; clean label proves neither a general exemption nor universal compliance."
+          },
+          {
+            "rule_ids": [
+              "S-CLEAN-DESK-HANDOVER",
+              "S-NO-MERGE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "cash_stored_between_clients"
+            ],
+            "explanation": "Storage of the described first batch before second-client service contradicts its carryover/mixing at that transition."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 10,
+            "clip_id": "X-19",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282009.76265
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 2,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "clarifications.json",
+            "record_index": 3,
+            "field": "clarifications",
+            "kind": "explicit_user_clarification"
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 120,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+      "clip_ids": [
+        "X-20"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-20",
+          "verdict": "violation",
+          "timestamps_sec": [
+            5
+          ],
+          "duration_sec": 11.634,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 18,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-20",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 20,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-20"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Open safe followed by desk counting, not a described room exit; old document-exit reason has the wrong trigger.",
+        "events": [
+          {
+            "id": "safe_open_then_count",
+            "description": "Cashier opens safe, takes cash, leaves safe open, returns to desk and loads counter; clip ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-NO-DOCS-ON-LEAVE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "safe_open_then_count"
+            ],
+            "explanation": "The reported trigger is unsupported: the described movement is to safe/equipment and back, not a room exit. Binary agreement cannot establish a documents-on-exit reason."
+          },
+          {
+            "rule_ids": [
+              "S-SAFE-CLOSED"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "safe_open_then_count"
+            ],
+            "explanation": "Open-safe-while-counting state is described; precise unattended duration and legal applicability remain unknown."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 12,
+            "clip_id": "X-20",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282010.8063736
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 121,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "efd876a04224cac781ac64bf5d6e107ded67340b7b7715fd9ca3408b240a1075",
+      "clip_ids": [
+        "X-21"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-21",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 19.6,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 19,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-21",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 39,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-21"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Safe is explicitly closed/locked by the author before return to counting; visual closure does not independently prove mechanical locking.",
+        "events": [
+          {
+            "id": "safe_closed_before_count",
+            "description": "After taking cash, cashier closes safe and performs locking action before returning to counter.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "S-SAFE-CLOSED"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "safe_closed_before_count"
+            ],
+            "explanation": "Explicit closure before counting contradicts a safe-left-open claim for that sequence; mechanical lock success is a separate unknown."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 13,
+            "clip_id": "X-21",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282011.748923
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 122,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "c9a30d44907e4a41b3a8ccf101774cd2e0804de20927bfbc9e1ccba1f2326b78",
+      "clip_ids": [
+        "X-22"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-22",
+          "verdict": "violation",
+          "timestamps_sec": [
+            14
+          ],
+          "duration_sec": 21.034,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 20,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-22",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 34,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-22"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Key remains after cashier exit; baseline capability disabled/unimplemented. Laptop locking is explicitly described.",
+        "events": [
+          {
+            "id": "key_after_exit",
+            "description": "Cashier locks laptop, closes/locks safe, leaves key in safe lock and exits.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-SAFE-LOCKED-ON-LEAVE"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "key_after_exit"
+            ],
+            "explanation": "Human account explicitly includes key remaining after exit; baseline lacks an enabled F1 evaluator for this capability."
+          },
+          {
+            "rule_ids": [
+              "L-PC-LOCKED"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "key_after_exit"
+            ],
+            "explanation": "Author explicitly describes laptop locking before departure; no unlocked-screen claim follows from this text."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 14,
+            "clip_id": "X-22",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282012.9958534
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 123,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "b637677ef5a7f0fa54d9f116ce6493cf74a4c99b8149a9c9916b96ef257535bd",
+      "clip_ids": [
+        "X-23"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-23",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 18.267,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 21,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-23",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 30,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-23"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Laptop locked and safe key taken before exit; supports these particular actions, not all-policy compliance.",
+        "events": [
+          {
+            "id": "laptop_locked_key_taken",
+            "description": "Cashier locks laptop, locks safe, removes/takes key and exits.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-PC-LOCKED",
+              "L-SAFE-LOCKED-ON-LEAVE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "laptop_locked_key_taken"
+            ],
+            "explanation": "Explicit laptop locking and key removal contradict those specific accusations in the described departure."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 15,
+            "clip_id": "X-23",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282014.0429513
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 124,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "c175a683749401d5a9ecf6f1c188b64fa8a09543f41482c1e4eb2232255715d3",
+      "clip_ids": [
+        "X-24"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-24",
+          "verdict": "violation",
+          "timestamps_sec": [
+            8
+          ],
+          "duration_sec": 14.7,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 22,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-24",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "L-NO-DOCS-ON-LEAVE",
+          "t": 10.5,
+          "reason_status": "unknown",
+          "explanation": "Exit is described, but notebook category and persistent desk evidence need confirmation. Moving an anchor to a numeric exit does not validate the object/reason.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-24",
+              "timestamps_sec": [
+                8
+              ],
+              "signed_offsets_sec": [
+                2.5
+              ],
+              "eligible_for_compatible_timing": false
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 33,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-24"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Notebook/jars present before exit; continued desk presence is contextual and notebook document/media classification is unconfirmed.",
+        "events": [
+          {
+            "id": "notebook_and_exit",
+            "description": "Cashier closes a notebook on/at desk, stands, takes safe key and exits; table/jar continuity is contextual, no timed after-exit object annotation supplied.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-NO-DOCS-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "notebook_and_exit"
+            ],
+            "explanation": "Exit is described, but notebook category and persistent desk evidence need confirmation. Moving an anchor to a numeric exit does not validate the object/reason."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 16,
+            "clip_id": "X-24",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282015.095156
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 125,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "901f61cf1a1b8754dda56466308c19fc203a1a4c0e85d1e7827849d34e2d52f0",
+      "clip_ids": [
+        "X-25"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-25",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 31.7,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 23,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-25",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 22,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-25"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Notebook and both jars explicitly moved to safe before departure.",
+        "events": [
+          {
+            "id": "notebook_jars_stored",
+            "description": "Cashier places notebook and both jars in safe, closes/locks safe, takes key and exits.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-NO-DOCS-ON-LEAVE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "notebook_jars_stored"
+            ],
+            "explanation": "The described objects are explicitly stored before departure, contradicting a claim that these objects remain on desk."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 17,
+            "clip_id": "X-25",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282016.2510214
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 126,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "e3a00b6e0f38b1d9b5498140f14906c71e204359262a90ce7a9974d64bf081e9",
+      "clip_ids": [
+        "X-26"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-26",
+          "verdict": "violation",
+          "timestamps_sec": [
+            9
+          ],
+          "duration_sec": 19.8,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 24,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-26",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "L-NO-CASH-ON-LEAVE",
+          "t": 12.5,
+          "reason_status": "supported",
+          "explanation": "Directly described cash-on-desk plus cashier departure supports the observational mechanism; exact event time is not supplied.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "cash_left_after_exit",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-26",
+              "timestamps_sec": [
+                9
+              ],
+              "signed_offsets_sec": [
+                3.5
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 38,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-26"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Cash batch explicitly left on desk while cashier takes key and leaves.",
+        "events": [
+          {
+            "id": "cash_left_after_exit",
+            "description": "Cashier bands cash, leaves it in center of desk, takes safe key and exits room.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "cash_left_after_exit"
+            ],
+            "explanation": "Directly described cash-on-desk plus cashier departure supports the observational mechanism; exact event time is not supplied."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 18,
+            "clip_id": "X-26",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282017.9125748
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 127,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "d3d21494d74e40a7586fe4f6164e515f6621a2d413538c4e15c67d394e85fc2d",
+      "clip_ids": [
+        "X-27"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-27",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 26.434,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 25,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-27",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 36,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-27"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Cash stored and key taken before exit; the described batch is not left on desk.",
+        "events": [
+          {
+            "id": "cash_stored_key_taken",
+            "description": "Cashier bands cash, carries it to safe, stores it, closes/locks safe, takes key and exits.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE",
+              "L-SAFE-LOCKED-ON-LEAVE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "cash_stored_key_taken"
+            ],
+            "explanation": "Explicit storage of this cash batch and key removal contradict those specific leave claims; other unmentioned objects are not assessed."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 19,
+            "clip_id": "X-27",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282019.1999493
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 128,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "d15ef04bcfae571bd2d7fc4e4d709ba595ae19f44136a43e7277f17e7b6e5b6d",
+      "clip_ids": [
+        "X-28"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-28",
+          "verdict": "violation",
+          "timestamps_sec": [
+            7
+          ],
+          "duration_sec": 16.534,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 26,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-28",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 35,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-28"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Author explicitly says laptop left unlocked during departure. D3-1 numeric cache cannot confirm EXIT, so candidate still misses this human-described event.",
+        "events": [
+          {
+            "id": "unlocked_laptop_departure",
+            "description": "Cashier finishes laptop work, explicitly does not lock it, takes safe key and leaves room according to the human description.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-PC-LOCKED"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "unlocked_laptop_departure"
+            ],
+            "explanation": "Human prose supports unlocked-screen/departure sequence. This is separate from the cache track loss/no EXIT, exact 8 s anchor and legal applicability; dropping the finding does not prove the scene clean."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 20,
+            "clip_id": "X-28",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282020.484518
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 129,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "b9bfb76ac8ea47eb368fc78a2f6370e4d98e79185972f63cf301ee22f12b5941",
+      "clip_ids": [
+        "X-29"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-29",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 17.3,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 27,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-29",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 31,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-29"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Laptop explicitly locked and key taken before exit.",
+        "events": [
+          {
+            "id": "laptop_locked_before_exit",
+            "description": "Cashier locks laptop, gets safe key and leaves room, closing door.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "L-PC-LOCKED"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "laptop_locked_before_exit"
+            ],
+            "explanation": "Explicit locking before departure contradicts an unlocked-laptop claim for this sequence."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 21,
+            "clip_id": "X-29",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282021.735393
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 130,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "05af66ce27b83d7c10c5d33b6f1847ec042c01ed21afdcbd43a13abcefd28199",
+      "clip_ids": [
+        "X-30"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-30",
+          "verdict": "violation",
+          "timestamps_sec": [
+            13
+          ],
+          "duration_sec": 18.8,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 28,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-30",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "A-OUTSIDER-ZONE",
+          "t": 13.0,
+          "reason_status": "unknown",
+          "explanation": "A visitor at the doorway does not establish crossing the calibrated cashier work-zone boundary; absence of such detail is not proof no crossing occurred.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-30",
+              "timestamps_sec": [
+                13
+              ],
+              "signed_offsets_sec": [
+                0.0
+              ],
+              "eligible_for_compatible_timing": false
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 2,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-30"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Door is open and visitor stops at doorway; crossing cashier-side work zone is not established.",
+        "events": [
+          {
+            "id": "open_door_equipment",
+            "description": "Cashier enters leaving door open and starts counter.",
+            "interval_sec": null
+          },
+          {
+            "id": "visitor_at_doorway",
+            "description": "Visitor stops at open doorway; no described boundary crossing into cashier work zone.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "A-DOOR-LOCK"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "open_door_equipment"
+            ],
+            "explanation": "Supports open-door/equipment-work state; duration and legal locking obligation remain unverified."
+          },
+          {
+            "rule_ids": [
+              "A-OUTSIDER-ZONE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "visitor_at_doorway"
+            ],
+            "explanation": "A visitor at the doorway does not establish crossing the calibrated cashier work-zone boundary; absence of such detail is not proof no crossing occurred."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 23,
+            "clip_id": "X-30",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792282022.787374
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 131,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "6a9fa7dd2e6db4cbe57f3c96a6cb256f23c04aa4e6fd44622fdf5de662cc0649",
+      "clip_ids": [
+        "X-31"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-31",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 23.8,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 29,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-31",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 18,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-31"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Door explicitly closed before equipment start; no global clean-policy inference.",
+        "events": [
+          {
+            "id": "closed_door_equipment",
+            "description": "Cashier enters, closes door firmly, starts counter and detector, then recording ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "A-DOOR-LOCK"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "closed_door_equipment"
+            ],
+            "explanation": "Explicit door closure before equipment start contradicts an open-door claim for the described phase; mechanical locking is separate."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 24,
+            "clip_id": "X-31",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1328592
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 132,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "bcc277cbf1a36245156b2bb9a0e0b826432390b42040c0b82201a8c21ab23ce9",
+      "clip_ids": [
+        "X-32"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-32",
+          "verdict": "violation",
+          "timestamps_sec": [
+            5
+          ],
+          "duration_sec": 21.3,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 30,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-32",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 32,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-32"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Door explicitly left open while equipment starts; described door-state mechanism is missed.",
+        "events": [
+          {
+            "id": "open_door_equipment",
+            "description": "Cashier enters, leaves door open, starts counter and detector, stays; recording ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "A-DOOR-LOCK"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "open_door_equipment"
+            ],
+            "explanation": "Human prose explicitly supports open door during equipment work; exact persistence/duration is not annotated."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 25,
+            "clip_id": "X-32",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1373758
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 133,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "209e8aaca88df59064e5f28b3bcc489fee3eea9eb920889b69c03c83d52430c6",
+      "clip_ids": [
+        "X-33"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-33",
+          "verdict": "violation",
+          "timestamps_sec": [
+            6
+          ],
+          "duration_sec": 14.334,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 31,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-33",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 5,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-33"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Open door and observer leaning into aperture are explicit; crossing cashier-side work zone remains unconfirmed.",
+        "events": [
+          {
+            "id": "open_door_equipment",
+            "description": "Cashier leaves door open and starts equipment.",
+            "interval_sec": null
+          },
+          {
+            "id": "observer_in_aperture",
+            "description": "Observer leans so head/part torso enter open door aperture, looking at cashier; work-zone boundary crossing not established.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "A-DOOR-LOCK"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "open_door_equipment"
+            ],
+            "explanation": "Open-door/work state explicitly described; quantitative persistence and legal scope remain pending."
+          },
+          {
+            "rule_ids": [
+              "A-OUTSIDER-ZONE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "observer_in_aperture"
+            ],
+            "explanation": "Leaning into an aperture is not by itself proof of crossing into the cashier-side work zone."
+          }
+        ],
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 26,
+            "clip_id": "X-33",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1419287
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 134,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "f3e351bea71150f4e8c76e2c8f0656a4e92063319d7cd39e264078c5ba9139c3",
+      "clip_ids": [
+        "X-34"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-34",
+          "verdict": "violation",
+          "timestamps_sec": [
+            13
+          ],
+          "duration_sec": 17.734,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 32,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-34",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "C-COUNT-BEFORE-EXIT",
+          "t": 15.0,
+          "reason_status": "supported",
+          "explanation": "Described departure overlaps the counting/loading operation before observed completion; exact onset/time is not supplied.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "client_leaves_during_loading",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-34",
+              "timestamps_sec": [
+                13
+              ],
+              "signed_offsets_sec": [
+                2.0
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 40,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-34"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Client leaves as cash is loaded into counter, before observed completion.",
+        "events": [
+          {
+            "id": "client_leaves_during_loading",
+            "description": "Client hands cash, sits, then rises/leaves while cashier loads machine; recording ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-COUNT-BEFORE-EXIT"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "client_leaves_during_loading"
+            ],
+            "explanation": "Described departure overlaps the counting/loading operation before observed completion; exact onset/time is not supplied."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 27,
+            "clip_id": "X-34",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.146459
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 135,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "26430119e074d6f0eb5dbc7ec3e26bbc31cf18903265bb4372bd7d7104908640",
+      "clip_ids": [
+        "X-35"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-35",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 56.767,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 33,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-35",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 7,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-35"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Detector contact is occluded; leaning/pause is observed. Hypothetical counterfeit status is not established.",
+        "events": [
+          {
+            "id": "lean_toward_detector_occluded",
+            "description": "After counting cashier leans toward detector and pauses; bill-to-light contact is occluded. The author hypothesizes a doubtful/counterfeit note without proving it.",
+            "interval_sec": null
+          },
+          {
+            "id": "client_stays_through_storage",
+            "description": "Client remains while cash is processed/stored, then leaves.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-DETECTOR-CHECK"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "lean_toward_detector_occluded"
+            ],
+            "explanation": "Occluded detector contact cannot establish either an actual check or its absence. A tentative counterfeit interpretation is not a fact."
+          },
+          {
+            "rule_ids": [
+              "C-COUNT-BEFORE-EXIT"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "client_stays_through_storage"
+            ],
+            "explanation": "The described client remains until processing and storage finish, contradicting early departure during that operation."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 28,
+            "clip_id": "X-35",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1510599
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 136,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "ac4cf04844c0aa08a5e19f5f7fe984f1477943294922d6ef77bdc5b88b97160e",
+      "clip_ids": [
+        "X-37"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-37",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 15.867,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 34,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-37",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 28,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-37"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Counting starts with client present; recording ends before later departure/storage outcome.",
+        "events": [
+          {
+            "id": "count_with_client_then_cutoff",
+            "description": "Client gives cash and sits; cashier loads counter, counting starts and clip ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-COUNT-BEFORE-EXIT",
+              "L-NO-CASH-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "count_with_client_then_cutoff"
+            ],
+            "explanation": "Cutoff before the later outcome cannot establish early departure or future cash abandonment."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 29,
+            "clip_id": "X-37",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1555724
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 137,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "5a6f6a13ef88191ec1d9a2a303f1be74d16aa3381a57aaadba8850aac715ff10",
+      "clip_ids": [
+        "X-38"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-38",
+          "verdict": "violation",
+          "timestamps_sec": [
+            33
+          ],
+          "duration_sec": 58.967,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 35,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-38",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "S-CLEAN-DESK-HANDOVER",
+          "t": 32.0,
+          "reason_status": "supported",
+          "explanation": "Explicit old cash at new-client entry supports the mechanism; organizer 33 s is not a human event timestamp.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "prior_cash_at_new_client",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-38",
+              "timestamps_sec": [
+                33
+              ],
+              "signed_offsets_sec": [
+                -1.0
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 13,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-38"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "First-client cash remains at second-client entry. Second pile placed beside first; physical stacking is not established.",
+        "events": [
+          {
+            "id": "prior_cash_at_new_client",
+            "description": "First counted batch remains on desk when second client enters and hands over a different batch.",
+            "interval_sec": null
+          },
+          {
+            "id": "two_piles_beside",
+            "description": "After second recount, second pile is put beside first; last approach toward door is not a confirmed later entry.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "S-CLEAN-DESK-HANDOVER"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "prior_cash_at_new_client"
+            ],
+            "explanation": "Explicit old cash at new-client entry supports the mechanism; organizer 33 s is not a human event timestamp."
+          },
+          {
+            "rule_ids": [
+              "S-NO-MERGE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "two_piles_beside"
+            ],
+            "explanation": "Two coexisting adjacent batches do not establish physical combination. A coexistence-only runtime fact must not be displayed as proven stacking."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 30,
+            "clip_id": "X-38",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1602292
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 138,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "deeeee54539fb894b17447296bd7f0807b9dc662bad9af4dcd27f4fbdd677187",
+      "clip_ids": [
+        "X-39"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-39",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 78.734,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 36,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-39",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 37,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-39"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Cash stored between clients; key visibility is occluded and cannot be promoted to a visible fact.",
+        "events": [
+          {
+            "id": "cash_stored_between_clients",
+            "description": "Each client batch is counted and moved to safe before the next service/recording end.",
+            "interval_sec": null
+          },
+          {
+            "id": "key_occluded",
+            "description": "Author says key stays in lock but also notes occlusion; actual visible key persistence and a cashier exit are unestablished.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "S-CLEAN-DESK-HANDOVER",
+              "S-NO-MERGE"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "cash_stored_between_clients"
+            ],
+            "explanation": "The described cash is stored between clients, contradicting carryover/mixing of those batches at that transition."
+          },
+          {
+            "rule_ids": [
+              "L-SAFE-LOCKED-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "key_occluded"
+            ],
+            "explanation": "Occluded key detail during client service is not proof of a key remaining after cashier departure."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 31,
+            "clip_id": "X-39",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1650214
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 139,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "6a81739ced0efdcd4a4feb76ea16562a20ceb53a2232a801528716c450366c9f",
+      "clip_ids": [
+        "X-40"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-40",
+          "verdict": "violation",
+          "timestamps_sec": [
+            17
+          ],
+          "duration_sec": 25.267,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 37,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-40",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "W-NO-PERSONAL-ITEMS",
+          "t": 19.5,
+          "reason_status": "unknown",
+          "explanation": "Personal-item identity/workstation presence is supported, but the prose does not establish precise desk placement or the applicable forbidden region. A positive binary label cannot fill that geometry gap.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-40",
+              "timestamps_sec": [
+                17
+              ],
+              "signed_offsets_sec": [
+                2.5
+              ],
+              "eligible_for_compatible_timing": false
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 17,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_unresolved_reason",
+      "human_observation": {
+        "clip_ids": [
+          "X-40"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_unresolved_reason",
+        "text_reviewed": true,
+        "review_status": "unknown",
+        "review_note": "Personal coat and handbag left at workstation are described; exact prohibited desk region is unconfirmed.",
+        "events": [
+          {
+            "id": "personal_items_at_workstation",
+            "description": "Cashier arrives with personal bag, removes coat, leaves both at workstation and starts equipment; clip ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "W-NO-PERSONAL-ITEMS"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "personal_items_at_workstation"
+            ],
+            "explanation": "Personal-item identity/workstation presence is supported, but the prose does not establish precise desk placement or the applicable forbidden region. A positive binary label cannot fill that geometry gap."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 33,
+            "clip_id": "X-40",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1696231
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 140,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "39e28d7be01cdb090ede1881ce3ef704fa413271deb69d6735c1953f340d6069",
+      "clip_ids": [
+        "X-43"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-43",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 23.367,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 38,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-43",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 8,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-43"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Rejected notes checked under detector then hand-counted; cutoff leaves later custody unknown. Rejection is not proof of counterfeit.",
+        "events": [
+          {
+            "id": "detector_check_then_cutoff",
+            "description": "Several rejected notes are checked under lit detector, manually counted and put on desk, then clip ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-DETECTOR-CHECK"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "detector_check_then_cutoff"
+            ],
+            "explanation": "Explicit detector checks contradict a never-used-detector claim in the observed clip; authenticity itself is not established."
+          },
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "detector_check_then_cutoff"
+            ],
+            "explanation": "Cash on desk at cutoff does not establish a later cashier exit or abandonment."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 34,
+            "clip_id": "X-43",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1740696
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 141,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "9774ed882153af3ba1a7e71c9b9249619e2b3a97ae336aad6143369802ca3522",
+      "clip_ids": [
+        "X-44"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-44",
+          "verdict": "violation",
+          "timestamps_sec": [
+            16
+          ],
+          "duration_sec": 20.434,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 39,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "FN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-44",
+          "outcome": "FN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 25,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-44"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Accepted/rejected portions explicitly recombined without detailed detector inspection; rejection does not prove counterfeit. Baseline capability gap remains.",
+        "events": [
+          {
+            "id": "rejected_notes_recombined",
+            "description": "Most notes go to reject pocket, cashier takes both portions and combines them without detailed detector inspection, leaves pile on desk, clip ends.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-DETECTOR-CHECK",
+              "C-REJECT-NOT-RETURNED"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "rejected_notes_recombined"
+            ],
+            "explanation": "Narrow recombination-without-inspection event is described, but existing disabled rules do not directly encode it: one requires a hand-count/no-use condition, the other a return to client. Neither counterfeit status nor return is established."
+          },
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "rejected_notes_recombined"
+            ],
+            "explanation": "End of recording is not an observed later leave or abandonment."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 35,
+            "clip_id": "X-44",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1785736
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 142,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "524bf9ff2d5e81211dbbeff73129dbb5f3a5e5e35a64f443f53e16b1c2d471c7",
+      "clip_ids": [
+        "X-45"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-45",
+          "verdict": "no_violation",
+          "timestamps_sec": [],
+          "duration_sec": 33.334,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 40,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "no_violation",
+      "unique_outcome": "TN",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-45",
+          "outcome": "TN"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 10,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-45"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Each rejected note checked under detector, hand-counted, stamped; later custody unknown at cutoff.",
+        "events": [
+          {
+            "id": "individual_checks_then_cutoff",
+            "description": "Each rejected note is checked under detector, manually counted and stamped; recording stops.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "C-DETECTOR-CHECK"
+            ],
+            "status": "contradicted",
+            "event_ids": [
+              "individual_checks_then_cutoff"
+            ],
+            "explanation": "Explicit individual detector checks contradict a never-used-detector claim in this observed sequence."
+          },
+          {
+            "rule_ids": [
+              "L-NO-CASH-ON-LEAVE"
+            ],
+            "status": "unknown",
+            "event_ids": [
+              "individual_checks_then_cutoff"
+            ],
+            "explanation": "Recording cutoff provides no observed later abandonment/exit trigger."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 36,
+            "clip_id": "X-45",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.1830747
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 143,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    },
+    {
+      "sha256": "66fc5d28c2371592f9260305589bdc86636fdd2ebe7a7ec976eec00a23d43df4",
+      "clip_ids": [
+        "X-46"
+      ],
+      "organizer_files": [
+        {
+          "clip_id": "X-46",
+          "verdict": "violation",
+          "timestamps_sec": [
+            11
+          ],
+          "duration_sec": 19.134,
+          "provenance": {
+            "file": "open/open/open_labels.xlsx",
+            "row": 41,
+            "sheet": "labels"
+          }
+        }
+      ],
+      "organizer_label_conflict": false,
+      "prediction_state": "done",
+      "predicted_verdict": "violation",
+      "unique_outcome": "TP",
+      "sample_outcomes": [
+        {
+          "clip_id": "X-46",
+          "outcome": "TP"
+        }
+      ],
+      "prediction_records": 1,
+      "findings_source": "ranked_findings",
+      "findings": [
+        {
+          "rule_id": "W-NO-FOOD",
+          "t": 12.0,
+          "reason_status": "supported",
+          "explanation": "Coffee drinking and desk placement explicitly support the food/drink mechanism; two findings are not two independently annotated events and their exact times are unknown.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "coffee_on_desk",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-46",
+              "timestamps_sec": [
+                11
+              ],
+              "signed_offsets_sec": [
+                1.0
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        },
+        {
+          "rule_id": "W-NO-FOOD",
+          "t": 15.5,
+          "reason_status": "supported",
+          "explanation": "Coffee drinking and desk placement explicitly support the food/drink mechanism; two findings are not two independently annotated events and their exact times are unknown.",
+          "provenance_id": "A21-human-text-review-all40-2026-10-18",
+          "legal_policy_status": "pending_source_review",
+          "compatible_event_timing": [
+            {
+              "event_id": "coffee_on_desk",
+              "human_interval_sec": null,
+              "absolute_distance_to_interval_sec": null
+            }
+          ],
+          "organizer_offsets": [
+            {
+              "clip_id": "X-46",
+              "timestamps_sec": [
+                11
+              ],
+              "signed_offsets_sec": [
+                4.5
+              ],
+              "eligible_for_compatible_timing": true
+            }
+          ]
+        }
+      ],
+      "runtime_records": [
+        {
+          "source": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+          "record": 14,
+          "runtime_s": null
+        }
+      ],
+      "human_annotation_coverage": "reviewed_prose_partial_event_coverage",
+      "human_observation": {
+        "clip_ids": [
+          "X-46"
+        ],
+        "provenance_id": "A21-human-text-review-all40-2026-10-18",
+        "coverage": "reviewed_prose_partial_event_coverage",
+        "text_reviewed": true,
+        "review_status": "reviewed",
+        "review_note": "Coffee sip and drink on desk explicitly described; two replay anchors may describe one continuous episode.",
+        "events": [
+          {
+            "id": "coffee_on_desk",
+            "description": "After counting, cashier retrieves coffee from occluded side area, drinks and places it on desk. Contents of the separate blue jar are unspecified.",
+            "interval_sec": null
+          }
+        ],
+        "reason_checks": [
+          {
+            "rule_ids": [
+              "W-NO-FOOD"
+            ],
+            "status": "supported",
+            "event_ids": [
+              "coffee_on_desk"
+            ],
+            "explanation": "Coffee drinking and desk placement explicitly support the food/drink mechanism; two findings are not two independently annotated events and their exact times are unknown."
+          }
+        ],
+        "recording_cutoff": true,
+        "sources": [
+          {
+            "input": "annotations.json",
+            "record_index": 37,
+            "clip_id": "X-46",
+            "field": "summary",
+            "annotation_status": "done",
+            "description_source": "manual",
+            "annotator": "Sultanbek",
+            "version": 1792284535.187593
+          },
+          {
+            "input": "human-comparison.md",
+            "line": 144,
+            "kind": "secondary_text_comparison_not_new_observation"
+          }
+        ]
+      },
+      "reason_audit_failures": 0,
+      "legal_policy_status": "pending_source_review"
+    }
+  ],
+  "inputs": {
+    "schema_version": 1,
+    "path_base": "explicit --root; defaults to repository root",
+    "labels": {
+      "path": "/home/sultanbek/projects/hackathons/datathon26/data/prepared/videos.jsonl",
+      "sha256": "4d3dcf14db472404c7da629a4e4cb4eb19b3e36f33d4f36e226a4e9c8d30189d",
+      "bytes": 19018
+    },
+    "predictions": [
+      {
+        "path": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/fresh-evidence-replay.jsonl",
+        "sha256": "34e30e5584ca9b34efea31910ba82fbe9f2ce265a0443fcb26c1d640f4d884b5",
+        "bytes": 9360
+      }
+    ],
+    "assertions": {
+      "path": "/home/sultanbek/projects/hackathons/datathon26/attempts/A21-deadline/human-assertions-all40.json",
+      "sha256": "bda85ec0e2f9bb5943426897c1b3174f960d8cab44b5d287dd3289b45a780cb7",
+      "bytes": 79449
+    },
+    "references": []
+  },
+  "manifest_sha256": "2cdfd7ce7ae956363ddf75ff81114b1ca465ea6c35bd729532e918fa51d04bdd",
+  "auditor_sha256": "b71c1ccafca30d1cf25e4aee61c8b4392c869198ebc1abb0e8b05976d4ef88c7"
+}

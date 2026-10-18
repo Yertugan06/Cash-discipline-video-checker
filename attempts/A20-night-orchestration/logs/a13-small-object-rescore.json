@@ -1,0 +1,59 @@
+{
+  "method": "Re-scored existing per-frame answers only; no model inference or image viewing.",
+  "sources": [
+    {
+      "path": "attempts/A13-detection-spike/logs/spike_out/results.json",
+      "sha256": "62876973313020c9929192cac5a82ad8672862d0fc3c5e2cf403722a3b120467",
+      "records": 20
+    },
+    {
+      "path": "attempts/A13-detection-spike/logs/spike_out_vlm/results.json",
+      "sha256": "d94b8f8efb1a92d205f14d82e41bb728dbdc704b78dd6e6a3ce7e92a39138999",
+      "records": 20
+    }
+  ],
+  "counts": {
+    "owl:cash": {
+      "TP": 0,
+      "FP": 0,
+      "TN": 4,
+      "FN": 7,
+      "unknown": 0
+    },
+    "gdino:cash": {
+      "TP": 1,
+      "FP": 1,
+      "TN": 3,
+      "FN": 6,
+      "unknown": 0
+    },
+    "owl:id_card": {
+      "TP": 1,
+      "FP": 1,
+      "TN": 0,
+      "FN": 0,
+      "unknown": 0
+    },
+    "gdino:id_card": {
+      "TP": 0,
+      "FP": 1,
+      "TN": 0,
+      "FN": 1,
+      "unknown": 0
+    },
+    "vlm:cash": {
+      "TP": 0,
+      "FP": 0,
+      "TN": 4,
+      "FN": 7,
+      "unknown": 0
+    },
+    "vlm:id_card": {
+      "TP": 0,
+      "FP": 1,
+      "TN": 0,
+      "FN": 1,
+      "unknown": 0
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "vlm_model": "Qwen3-VL-4B-Instruct",
+  "runtime_vm": "datathon2",
+  "video": "\u0425-20.mov",
+  "wall_s": 50.669,
+  "perception_cache_hit": false,
+  "inference_calls": 23,
+  "answer_cache_hits": 0,
+  "known_checks": 23,
+  "unknown_checks": 0,
+  "errors": [],
+  "coverage": {
+    "step_s": 0.5,
+    "planned": 23,
+    "done": 23,
+    "failed": 0,
+    "deadline_hit": false,
+    "mode": "full"
+  }
+}

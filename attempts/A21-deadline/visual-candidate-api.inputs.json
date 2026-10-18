@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "path_base": "explicit --root; defaults to repository root",
+  "labels": {
+    "path": "data/prepared/videos.jsonl",
+    "sha256": "4d3dcf14db472404c7da629a4e4cb4eb19b3e36f33d4f36e226a4e9c8d30189d",
+    "bytes": 19018
+  },
+  "predictions": [
+    {
+      "path": "attempts/A21-deadline/visual-candidate-api.jsonl",
+      "sha256": "d633cc295e6ae3a4c80b99066283a515333b63e4f556420665b4cab7e1239547",
+      "bytes": 10757
+    }
+  ],
+  "assertions": {
+    "path": "attempts/A21-deadline/human-assertions-all40.json",
+    "sha256": "bda85ec0e2f9bb5943426897c1b3174f960d8cab44b5d287dd3289b45a780cb7",
+    "bytes": 79449
+  },
+  "references": []
+}

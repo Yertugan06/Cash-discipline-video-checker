@@ -1,0 +1,20 @@
+{
+  "base_main": "2c5db9a6392a8efe189f6d21009806905077bc5e",
+  "production_vms": 1,
+  "runtime_visual_verification": false,
+  "files": {
+    "backend/config.py": "93dcd52411f6e565e110302f05f31b685bfddc63800d10ca4f31b30503d47d62",
+    "backend/f1/detector.py": "2957bc43eddccf62d2a3d7f2dc2932271ec4d924e1dde2de0599aec1a9ad116c",
+    "backend/f1/perception.py": "04785e9a33eed33c02fa0b6907287dd9036018d2a59a7c2f32574238c5aa1681",
+    "backend/f1/calibration.py": "275d7860fa62a88cf6191149d93deb95d915eb6fddc994689fd004b9edc9b27a",
+    "backend/f1/vision_types.py": "013c013d01e4e842c310cc48bb21ba02cd02f77abdb544a7a1cacd3d00b5c809",
+    "backend/f1/events.py": "d13e9fca69dd9c460d9872578eb21b07adfe66fe8bc0fb3ccbd8aaa5ae81f437",
+    "backend/f1/rules.py": "2b1ea7372f30057f70e4f9819f6a19b8b3157cc89f50ac1da043a8ec44f8aea7",
+    "backend/f1/visual_checks.py": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb",
+    "config/perception.yaml": "f81c0567d8785081048c9dc74e97e9c84ad5d0afd728d7d3e78c0e56e0da928d",
+    "config/f1_codex.yaml": "849e7d2539a5678f12848ddfb3cbbc14ddb1a0d3a30184f64b8a1472fd2750f3",
+    "knowledge/rules.yaml": "bf5a522e75df2a2fe3e895b8e78e5f37b02d8d9984ce53e6d609b0b3ca9cb5f3",
+    "realtime/gateway.py": "1192daf2b96c420cbed315723f0578430e526d79e049632be03ac0daf491954c",
+    "realtime/static/evaluation.html": "9b49d0b2936f4254df67b507e1b36bd4cedbe72defdfd4a28d26a86bebc7fa1d"
+  }
+}

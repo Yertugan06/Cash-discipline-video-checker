@@ -1,0 +1,18 @@
+Main 7bc47e7 with restored local annotation/run-history work.
+
+Python: python -m pytest tests -q -ra
+=========================== short test summary info ============================
+SKIPPED [1] tests/e2e/test_e2e.py:111: set E2E_BASE_URL, E2E_API_KEY and E2E_CLIPS_DIR to run the external acceptance suite against a deployed service
+SKIPPED [1] tests/test_dataset_real.py:30: team data root /home/sultanbek/projects/hackathons/datathon26/data absent or incomplete (python -m eval.sync_data --pull)
+SKIPPED [1] tests/test_dataset_real.py:34: team data root /home/sultanbek/projects/hackathons/datathon26/data absent or incomplete (python -m eval.sync_data --pull)
+SKIPPED [1] tests/test_dataset_real.py:40: team data root /home/sultanbek/projects/hackathons/datathon26/data absent or incomplete (python -m eval.sync_data --pull)
+SKIPPED [1] tests/test_dataset_real.py:50: team data root /home/sultanbek/projects/hackathons/datathon26/data absent or incomplete (python -m eval.sync_data --pull)
+SKIPPED [1] tests/test_dataset_real.py:56: team data root /home/sultanbek/projects/hackathons/datathon26/data absent or incomplete (python -m eval.sync_data --pull)
+SKIPPED [1] tests/test_f1_detector.py:168: needs torch/onnxruntime/opencv and downloaded model weights, not available in this sandbox (SHARED_BRIEF.md); run on datathon2/Docker.
+761 passed, 7 skipped, 1 warning in 19.92s
+
+Realtime JavaScript: 30 tests passed.
+React frontend: 4 test files passed; TypeScript and Vite production build passed.
+Ruff: backend, realtime, tests, scripts, eval passed.
+Cached replay: 40 unique clips; no verdict or rule-ID differences from main API reference.
+GPU inference and external deployed acceptance suite were not rerun.

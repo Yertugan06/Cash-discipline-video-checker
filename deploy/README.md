@@ -4,6 +4,18 @@ This covers WP1's part of the stack: the FastAPI app container, the reverse
 proxy, and the systemd unit that keeps it running. vLLM's own serving setup
 (`deploy/vllm/`) is WP2's; see that directory for the perception server.
 
+## Current validated review deployment (A21)
+
+A21 uses **one datathon2 VM** with checker 8003, gateway 8103 and local Qwen3-VL-4B
+safe-state checks. [Start/tunnel instructions](../realtime/README.md#current-one-vm-review-service)
+and [measured results](../attempts/A21-deadline/RESULTS.md) are authoritative for that release.
+The former 8002/8102 preview is stopped. A Git push does not copy model weights, restore
+annotations or replace the separately running public A20 endpoint on datathon.
+
+The Compose/Caddy/systemd steps below describe deployment options; they are not a claim
+that Caddy/systemd manage the A21 review processes. `DETECTOR=vlm` below is the older
+alternative server, distinct from A21's `DETECTOR=f1` plus `F1_VISUAL_CHECKS=1` helper.
+
 ## Pieces
 
 | File | Purpose |
@@ -41,7 +53,7 @@ docker compose -f compose.yaml -f compose.gpu.yaml up -d --build
 
 ## Public URL (architecture.md §8)
 
-**Current (2026-10-18):** Brev's port exposure on `datathon`,
+**Last recorded public A20 deployment (2026-10-18):** Brev's port exposure on `datathon`,
 `https://forte-checker-wwi4jcrss.gobrev.dev` -> port 8000:
 
 ```sh

@@ -1,0 +1,145 @@
+{
+  "status": "complete",
+  "argv": [
+    "--videos",
+    "/home/ubuntu/data/open/videos",
+    "--weights",
+    "/home/ubuntu/agentA-rulebook/weights",
+    "--out",
+    "attempts/A21-deadline/recognition/gpu-results",
+    "--device",
+    "cuda",
+    "--threads",
+    "2"
+  ],
+  "model": {
+    "name": "objects",
+    "repo": "google/owlv2-base-patch16-ensemble",
+    "revision": "cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "license": "apache-2.0",
+    "source_url": "https://huggingface.co/google/owlv2-base-patch16-ensemble/tree/cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 4838,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 67,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "size": 414,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "size": 524619,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "size": 619918824,
+        "sha256": "e1e130b9e404cf91a75ad45644c1da9d7fa5284085eecc864266a6923efb99e7"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 425,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 121,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 1100,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "size": 1059962,
+        "sha256": null
+      }
+    ]
+  },
+  "manifest_sha256": "470d45ca426fba75f6f57b1eab4f3aab3f4c8253a1a94d500f096ff08daa63e2",
+  "label_source_sha256": "b1e2a56a015141bf25ce13a331f93d608ddf0ac91286b14f8f9f86992fefdef6",
+  "config_sha256": "b607d974b5bbd1605c33dbf29bedef8ced280dd485afd094c77f7750345f35f2",
+  "probe_sha256": "ddb937f2f2c4d8167d270b82c9a2c7654e150eafaaeb48654d97b6263a9ceaae",
+  "perception_sha256": "04785e9a33eed33c02fa0b6907287dd9036018d2a59a7c2f32574238c5aa1681",
+  "labels": {
+    "cash": 11,
+    "id_card": 2,
+    "bag": 5,
+    "coat_bag": 3,
+    "food_cup": 4
+  },
+  "object_prompts": {
+    "cash": [
+      "banknotes",
+      "a stack of banknotes"
+    ],
+    "bundle": [
+      "a bundle of banknotes"
+    ],
+    "bag": [
+      "a green fabric cash collection bag",
+      "a green cloth bag"
+    ],
+    "id_card": [
+      "an identity card"
+    ],
+    "document": [
+      "a paper document"
+    ],
+    "tablet": [
+      "a tablet computer"
+    ],
+    "cup": [
+      "a cup",
+      "a drinking bottle"
+    ],
+    "food": [
+      "food",
+      "a sandwich"
+    ],
+    "coat": [
+      "a coat lying on a desk"
+    ],
+    "handbag": [
+      "a handbag"
+    ],
+    "phone": [
+      "a mobile phone"
+    ]
+  },
+  "object_score": 0.12,
+  "owl_image_size": 640,
+  "device": "cuda",
+  "precision": "cuda autocast float16",
+  "tile_size": 640,
+  "tile_overlap": 0.25,
+  "limitations": [
+    "Frame-presence gold only: no box accuracy or per-crop labels.",
+    "Cash means cash/bundle detected anywhere; no desk position or owner is inferred.",
+    "Negative ID frames cannot establish interval-level non-presentation.",
+    "No rule decisions or organizer reason/timing validation.",
+    "safe_open and screen are state labels and excluded from object scoring.",
+    "Full/desk detections are reused across variants; times are summed component costs.",
+    "First forward includes warmup; calibration time reported separately."
+  ],
+  "load_sec": 8.015862517000642,
+  "torch_version": "2.10.0+cu128",
+  "transformers_version": "4.57.3",
+  "processor_size": {
+    "height": 960,
+    "width": 960
+  },
+  "processor_do_pad": true,
+  "wall_sec": 36.16428647700013,
+  "cases": 20
+}

@@ -105,10 +105,24 @@ replaced by a fabricated `no_violation` (architecture.md §2, "Job management").
 
 ## 4. Running it yourself
 
+### Current A21 review service
+
+The validated service is on datathon2: checker 8003 and gateway 8103 on the same VM.
+Open `/evaluation` for verdict and observation audits, `/annotate` for whole-clip
+comments or detailed timelines, and `/compare` for preserved runs. The previous 8102
+preview is stopped. See [the canonical startup and tunnel instructions](../realtime/README.md#current-one-vm-review-service).
+
+This is `DETECTOR=f1` with local `F1_VISUAL_CHECKS=1`, not the alternative
+`DETECTOR=vlm` server. Only safe-state checks are enabled; the helper supplies no
+cash/ID detections. It uses local model weights and an explicitly selected Python
+worker environment. [Measured results and limits](../attempts/A21-deadline/RESULTS.md).
+
+
 ### With Docker Compose (production-like)
 
 ```bash
-cp .env.example .env   # TODO(team): add an .env.example once API_KEY/DETECTOR/VLM_* are finalised by WP1
+cp deploy/.env.example .env
+chmod 600 .env
 # edit .env: set API_KEY; DETECTOR=f1 is the default and the deployed detector (DETECTOR=vlm + VLM_MODEL is the alternative)
 # RULE_SCOPE=jury (default) reports only rules with human-verified citations and refuses to start
 # while there are none; RULE_SCOPE=detector reports every enabled rule, citations marked pending.
@@ -119,6 +133,24 @@ docker compose -f compose.yaml [-f compose.gpu.yaml] up --build
 See `backend/config.py` (`Settings`) for the full list of environment
 variables and their defaults, and `archive/research1/architecture.md` §5 and §8 for
 the resource budget and deployment/locality plan.
+
+### Experimental desk object history (A18)
+
+`desk_objects` in `config/perception.yaml` defaults to `false`. For an isolated
+comparison through the F1 API, set it to `true` in that file or in the file
+selected by `PERCEPTION_CONFIG`. This switches the leave rules to objects
+tracked by desk changes and named from their history. It reuses the decoded
+2 fps frames and the same job deadline. Per-job traces include
+`desk_objects_enabled` and each desk object's observations, origin, counting
+clue, detector kind and final identity. An unreadable frame or a frame count
+mismatch fails the job explicitly.
+
+A18 failed its accuracy target: 22/40 correct, 6 clean false alarms and
+12 missed violations, versus A17's 25/40, 5 and 10 on the same replay. Keep
+it disabled for deployed runs; see
+[`attempts/A18-desk-object-history/README.md`](../attempts/A18-desk-object-history/README.md).
+The replay script's `run --videos-dir /path/to/videos` remains an independent,
+explicit opt-in for offline history comparisons.
 
 ### Frontend only, for UI development
 

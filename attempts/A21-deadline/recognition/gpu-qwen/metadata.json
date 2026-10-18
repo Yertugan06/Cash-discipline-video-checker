@@ -1,0 +1,28 @@
+{
+  "status": "complete",
+  "manifest_sha256": "155187801d83e4ee8247512732bdf525ef50abb60d21bccf9c362cd20128913c",
+  "probe_sha256": "04f50c2cc95ab6939e4e3ded84fb67ee9f0e28082b44cca48966e427e9c0bc05",
+  "model_repo": "Qwen/Qwen3-VL-4B-Instruct",
+  "model_revision": "not recorded in local checkpoint; record config hash and weight-file inventory",
+  "config_sha256": "edac7703329133edfc53e46ac0081835144c99d7eebf28b71c732694d435224d",
+  "weight_files": [
+    {
+      "name": "model-00001-of-00002.safetensors",
+      "bytes": 4967229296
+    },
+    {
+      "name": "model-00002-of-00002.safetensors",
+      "bytes": 3908490048
+    }
+  ],
+  "prompt": "Answer only JSON: {\"cash\":\"yes|no|unknown\",\"id_card\":\"yes|no|unknown\"}. Cash means recognizable banknotes, not a phone, card, ordinary document or surface texture. ID means a recognizable identity document/card, not any small rectangle. Say yes only when identifiable in the target image; no only when clearly absent; otherwise unknown. No explanations.",
+  "precision": "bfloat16",
+  "device": "cuda",
+  "limit_sec": 600.0,
+  "load_sec": 10.474541597999632,
+  "torch_version": "2.11.0+cu128",
+  "transformers_version": "5.20.1",
+  "inference_sec": 125.85242394799934,
+  "planned_calls": 156,
+  "completed_calls": 156
+}

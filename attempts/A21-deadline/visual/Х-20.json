@@ -1,0 +1,2363 @@
+{
+  "video": "Х-20.mov",
+  "status": "checked",
+  "video_sha256": "7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a",
+  "perception_cache": "/home/ubuntu/datathon26-annotation-preview/runtime/perception_cache/7e585e33517f7258bd2d1ed3e139556609bc997bb07b78355555060ef193b77a/0c07391eb9e4d3411e003f39b0b16530e22b687136fcd26fa6f41f3a9fa77943.json",
+  "duration": 11.5,
+  "requests": [
+    {
+      "family": "safe",
+      "t": 0.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "scene_start",
+      "trigger_t": 0.0,
+      "observed_entry": false,
+      "actor_id": "",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 0.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "scene_start",
+      "trigger_t": 0.0,
+      "observed_entry": false,
+      "actor_id": "",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 1.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 1.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 2.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 5.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 6.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 6.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 9.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 9.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 9.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 9.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 10.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 9.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 10.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_departure",
+      "trigger_t": 10.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    },
+    {
+      "family": "safe",
+      "t": 11.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_departure",
+      "trigger_t": 10.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": ""
+    }
+  ],
+  "visual_checks": [
+    {
+      "family": "safe",
+      "t": 10.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_departure",
+      "trigger_t": 10.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": "",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 28.6584,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 28.6589,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "194d7b077b12bc4746b6e23760286e1f7d810431c993c324bfe99e62cbbdc806",
+      "sample_t": 10.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 10.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 10.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 10.0,
+      "window_end": 11.0,
+      "parent_trigger": "safe_departure",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.5192,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 29.1793,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "afe85461ee082684562a84d1ea17b4751cca3bd0a5bf050af93e97c7816c2424",
+      "sample_t": 10.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 11.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 10.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 10.0,
+      "window_end": 11.0,
+      "parent_trigger": "safe_departure",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4973,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 29.6767,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "08a01d05d9e6e1186f26c512a6f63733b0653a91a2e570099a74f4c3e87a21aa",
+      "sample_t": 11.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 1.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": "",
+      "answer": "closed",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4951,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 30.1718,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "461eaf40b7bcaf1d6007b2d03e9a9e543d30bd1a3f4eceb26f20660f72811518",
+      "sample_t": 1.0,
+      "raw": "{\"answer\":\"closed\"}"
+    },
+    {
+      "family": "safe",
+      "t": 1.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": "",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4912,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 30.6631,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "6b1b0b8632d4159de2b77f89048fc7041d9ea555ff9a076cdbc3e3c286d95372",
+      "sample_t": 1.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 0.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "closed",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4948,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 31.1581,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "73647f1d62f79507fa278ed9e88c6affe28822702c262e4eb55461f38ebe3d37",
+      "sample_t": 0.5,
+      "raw": "{\"answer\":\"closed\"}"
+    },
+    {
+      "family": "safe",
+      "t": 2.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4985,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 31.6567,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "a91bedd4338f6baad1ed8915a3f7b5261fa4c727276cc7688825c567013ea838",
+      "sample_t": 2.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 2.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4961,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 32.1529,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "70b430678dbd4da4d9337a4c1b5a873a7d5d2b607792a3701866be77d8c0b096",
+      "sample_t": 2.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 3.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.5,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 32.653,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "3ba11334095f7a063b82a74ca0bdf28aa43c9272e4234de6b235a6ef948f367e",
+      "sample_t": 3.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 3.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4949,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 33.1479,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "5b9060c188d8a2448fb303e28847c0ee712dad0e6adc61e6191123dd6b6fd0c9",
+      "sample_t": 3.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 4.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4955,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 33.6435,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "b2fc24a8aeb45ab22aaf355212aafc11a7e86c389fa5ce5d115fd4d359a2e424",
+      "sample_t": 4.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 4.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "closed",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4935,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 34.1371,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "0036c139e56e09bbe250f1c66649d3754536bf52ac1f99c99d2a9caa1626a5c7",
+      "sample_t": 4.5,
+      "raw": "{\"answer\":\"closed\"}"
+    },
+    {
+      "family": "safe",
+      "t": 5.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "closed",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4972,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 34.6343,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "b9cf0302da3e8ff70103e863f851d5709296416a65e923a731e5d62e38883964",
+      "sample_t": 5.0,
+      "raw": "{\"answer\":\"closed\"}"
+    },
+    {
+      "family": "safe",
+      "t": 5.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 1.0,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 0.5,
+      "window_end": 5.5,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4927,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 35.1271,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "f62c15c105d6cf818f89c44113c03b6d3a384c42719a5937ef40799625a2aabe",
+      "sample_t": 5.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 6.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "workstation_away_start",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": "",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4946,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 35.6218,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "0efc7c4a354607c4e157c9144a7e201b3660f06624945a3e87f882898cb24b48",
+      "sample_t": 6.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 6.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.5443,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 36.1662,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "9b7d68c17b4475b7ae9af996d104b55431bb55d6e6fd5ad0c22ce60fe4e6e28e",
+      "sample_t": 6.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 7.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.5021,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 36.6684,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "38c9510ad3f7b89cf9cf3de4620c259e117673d644adaa86d83cbb851e7ee1ac",
+      "sample_t": 7.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 7.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4903,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 37.1587,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "0f516847e7162e6ce66aeb178e53d1fdd97097267cf650415c5f865577401e5b",
+      "sample_t": 7.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 8.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4948,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 37.6537,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "a9730b8a66ce51b826c47cb9eacafed7588da20c89126a8db83a01d59d6af5b4",
+      "sample_t": 8.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 8.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4939,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 38.1476,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "1a4bc18460fe6548f5a2e80bc420facb47f712a803b686638b9ce8d4329ac44a",
+      "sample_t": 8.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 9.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4912,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 38.639,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "6c1550c2ed5122ac6d4619ef8e4f0348d5b1fcc90a756246b202e5aa3fa243b9",
+      "sample_t": 9.0,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 9.5,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "safe_open_window",
+      "trigger_t": 5.5,
+      "observed_entry": false,
+      "actor_id": "person:1",
+      "window_start": 5.0,
+      "window_end": 10.0,
+      "parent_trigger": "workstation_away_start",
+      "answer": "open",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.4936,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 39.1326,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "2e2a00174728575421c022bae7e98e5b3167e61e3e68ba6fb9f6dd1feb94a74a",
+      "sample_t": 9.5,
+      "raw": "{\"answer\":\"open\"}"
+    },
+    {
+      "family": "safe",
+      "t": 0.0,
+      "box": [
+        0.3941271551724138,
+        0.28493514150943394,
+        0.5905172413793104,
+        0.4363207547169811
+      ],
+      "question_id": "a21.safe.v1",
+      "trigger": "scene_start",
+      "trigger_t": 0.0,
+      "observed_entry": false,
+      "actor_id": "",
+      "window_start": null,
+      "window_end": null,
+      "parent_trigger": "",
+      "answer": "closed",
+      "ok": true,
+      "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+      "inference_requested": true,
+      "inference_ran": true,
+      "cache_hit": false,
+      "latency_s": 0.5183,
+      "applied": true,
+      "diagnostic_only": false,
+      "elapsed_video_s": 39.6509,
+      "prompt_sha256": "47068d239fa33f1b21a70ae8344483ed0b5cfab5445af3db3322166f04fd9407",
+      "model": {
+        "backend": "local_qwen3_vl",
+        "path": "/home/ubuntu/dt26-validation/models/Qwen3-VL-4B-Instruct",
+        "files_sha256": "58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "worker_python": "/home/ubuntu/dt26-validation/.venv/bin/python",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.20.1",
+        "accelerate": "1.15.0",
+        "implementation_sha256": "d652952f07a04733ff11f1b90d6282c248d20778fd6d82957446f5ef12dbe8cb"
+      },
+      "cache_key": "55adbd857c1bd755ffa425d0c08b4398161d7567580415ee15998b32c0812b5c",
+      "sample_t": 0.0,
+      "raw": "{\"answer\":\"closed\"}"
+    }
+  ],
+  "events_before": [
+    {
+      "timestamp_sec": 0.0,
+      "type": "ROLE",
+      "facts": {
+        "actor_id": "person:1",
+        "role": "outsider",
+        "box": [
+          0.22252008318901062,
+          0.19577649235725403,
+          0.4138166308403015,
+          0.4350925385951996
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "ENTER",
+      "facts": {
+        "actor_id": "person:1",
+        "role": "cashier",
+        "observed_entry": true,
+        "box": [
+          0.22847521305084229,
+          0.19769524037837982,
+          0.4256564974784851,
+          0.4354848265647888
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "SAFE_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "DOOR_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "SCREEN",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.47737068965517243,
+          0.3561320754716981,
+          0.6686422413793104,
+          0.4525353773584906
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 1.0,
+      "type": "ROLE",
+      "facts": {
+        "actor_id": "person:1",
+        "role": "cashier",
+        "box": [
+          0.22847521305084229,
+          0.19769524037837982,
+          0.4256564974784851,
+          0.4354848265647888
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 1.0,
+      "type": "WORKSTATION_AWAY_START",
+      "facts": {
+        "condition_id": "workstation_away",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 1.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 1.5,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 3.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 3.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 4.0,
+      "type": "WORKSTATION_AWAY_END",
+      "facts": {
+        "condition_id": "workstation_away",
+        "duration_sec": 3.0,
+        "end_reason": "observed",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 4.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 4.5,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 5.5,
+      "type": "WORKSTATION_AWAY_START",
+      "facts": {
+        "condition_id": "workstation_away",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "WORKSTATION_AWAY_END",
+      "facts": {
+        "condition_id": "workstation_away",
+        "duration_sec": 0.5,
+        "end_reason": "observed",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 7.0,
+      "type": "COUNT_START",
+      "facts": {
+        "session_id": "",
+        "cash_ids": []
+      }
+    },
+    {
+      "timestamp_sec": 7.0,
+      "type": "DOOR_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 7.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 7.5,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "WORKSTATION_AWAY_START",
+      "facts": {
+        "condition_id": "workstation_away",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 10.0,
+      "type": "COUNT_END",
+      "facts": {
+        "session_id": "",
+        "cash_ids": []
+      }
+    },
+    {
+      "timestamp_sec": 10.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 11.0,
+      "type": "DOOR_UNKNOWN",
+      "facts": {
+        "state": "unknown",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 11.5,
+      "type": "WORKSTATION_AWAY_END",
+      "facts": {
+        "condition_id": "workstation_away",
+        "duration_sec": 2.5,
+        "end_reason": "clip_end",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    }
+  ],
+  "events_after": [
+    {
+      "timestamp_sec": 0.0,
+      "type": "ROLE",
+      "facts": {
+        "actor_id": "person:1",
+        "role": "outsider",
+        "box": [
+          0.22252008318901062,
+          0.19577649235725403,
+          0.4138166308403015,
+          0.4350925385951996
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "ENTER",
+      "facts": {
+        "actor_id": "person:1",
+        "role": "cashier",
+        "observed_entry": true,
+        "box": [
+          0.22847521305084229,
+          0.19769524037837982,
+          0.4256564974784851,
+          0.4354848265647888
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "DOOR_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "SCREEN",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.47737068965517243,
+          0.3561320754716981,
+          0.6686422413793104,
+          0.4525353773584906
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 0.0,
+      "type": "SAFE_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 0.5,
+      "type": "SAFE_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 1.0,
+      "type": "ROLE",
+      "facts": {
+        "actor_id": "person:1",
+        "role": "cashier",
+        "box": [
+          0.22847521305084229,
+          0.19769524037837982,
+          0.4256564974784851,
+          0.4354848265647888
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 1.0,
+      "type": "WORKSTATION_AWAY_START",
+      "facts": {
+        "condition_id": "workstation_away",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 1.0,
+      "type": "SAFE_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 1.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 1.5,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 1.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 2.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 2.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 3.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 3.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 3.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 3.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 4.0,
+      "type": "WORKSTATION_AWAY_END",
+      "facts": {
+        "condition_id": "workstation_away",
+        "duration_sec": 3.0,
+        "end_reason": "observed",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 4.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 4.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 4.5,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 4.5,
+      "type": "SAFE_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 5.0,
+      "type": "SAFE_CLOSED",
+      "facts": {
+        "state": "closed",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 5.5,
+      "type": "WORKSTATION_AWAY_START",
+      "facts": {
+        "condition_id": "workstation_away",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 5.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "WORKSTATION_AWAY_END",
+      "facts": {
+        "condition_id": "workstation_away",
+        "duration_sec": 0.5,
+        "end_reason": "observed",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 6.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 6.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 7.0,
+      "type": "COUNT_START",
+      "facts": {
+        "session_id": "",
+        "cash_ids": []
+      }
+    },
+    {
+      "timestamp_sec": 7.0,
+      "type": "DOOR_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 7.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 7.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 7.5,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 7.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 8.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 8.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "WORKSTATION_AWAY_START",
+      "facts": {
+        "condition_id": "workstation_away",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "HAND_ON_SAFE",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 9.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 9.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 10.0,
+      "type": "COUNT_END",
+      "facts": {
+        "session_id": "",
+        "cash_ids": []
+      }
+    },
+    {
+      "timestamp_sec": 10.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 10.5,
+      "type": "SAFE_UNATTENDED_START",
+      "facts": {
+        "condition_id": "safe_unattended",
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 10.5,
+      "type": "HAND_ON_DOOR",
+      "facts": {
+        "actor_id": "person:1",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 10.5,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 11.0,
+      "type": "DOOR_UNKNOWN",
+      "facts": {
+        "state": "unknown",
+        "box": [
+          0.003904145339439655,
+          0.0,
+          0.5457974137931034,
+          0.4074292452830189
+        ]
+      }
+    },
+    {
+      "timestamp_sec": 11.0,
+      "type": "SAFE_OPEN",
+      "facts": {
+        "state": "open",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ],
+        "visual_verified": true,
+        "source": "local_qwen3_vl:58d92787e5bc44a80d62ecc2930a37c089dadf7c0693fce8d84e8f4e778bbb82",
+        "question_id": "a21.safe.v1"
+      }
+    },
+    {
+      "timestamp_sec": 11.5,
+      "type": "WORKSTATION_AWAY_END",
+      "facts": {
+        "condition_id": "workstation_away",
+        "duration_sec": 2.5,
+        "end_reason": "clip_end",
+        "actor_id": "person:1",
+        "role": "cashier"
+      }
+    },
+    {
+      "timestamp_sec": 11.5,
+      "type": "SAFE_UNATTENDED_END",
+      "facts": {
+        "condition_id": "safe_unattended",
+        "duration_sec": 1.0,
+        "end_reason": "clip_end",
+        "actor_id": "person:1",
+        "box": [
+          0.3941271551724138,
+          0.28493514150943394,
+          0.5905172413793104,
+          0.4363207547169811
+        ]
+      }
+    }
+  ],
+  "known": 23,
+  "unknown": 0,
+  "inference_calls": 23,
+  "attempted_calls": 23,
+  "elapsed_s": 40.323
+}
