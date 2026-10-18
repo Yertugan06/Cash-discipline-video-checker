@@ -1,9 +1,11 @@
 """Run every clip in a folder through a checker API and print one replay-style JSON line each.
 
-    python api_run.py http://127.0.0.1:8001 <api key file> /videos > api.jsonl
+    python api_run.py http://127.0.0.1:8001 <api key file> /videos [<dump dir>] > api.jsonl
 
 The lines carry sha256 + findings ({rule_id, t}) so `scripts/replay_f1.py score` can score
-them like a replay, plus runtime, evidence-frame count and status.
+them like a replay, plus runtime, evidence-frame count and status. With a dump dir, every API
+result is also saved as `<clip>.json` plus `<clip>.meta.json` ({"wall_s"}), the layout
+`eval/check_outputs.py` reads.
 """
 
 import hashlib
@@ -15,6 +17,7 @@ import uuid
 from pathlib import Path
 
 base, key_file, folder = sys.argv[1], sys.argv[2], Path(sys.argv[3])
+dump = Path(sys.argv[4]) if len(sys.argv) > 4 else None
 key = Path(key_file).read_text().strip()
 
 
@@ -46,11 +49,16 @@ for video in sorted(folder.iterdir()):
         if result["status"] != "processing":
             break
         time.sleep(1)
+    wall = round(time.monotonic() - started, 1)
+    if dump:
+        dump.mkdir(parents=True, exist_ok=True)
+        (dump / f"{video.stem}.json").write_text(json.dumps(result, ensure_ascii=False))
+        (dump / f"{video.stem}.meta.json").write_text(json.dumps({"wall_s": wall}))
     row = {
         "sha256": hashlib.sha256(data).hexdigest(),
         "name": video.name,
         "status": result["status"],
-        "runtime_s": round(time.monotonic() - started, 1),
+        "runtime_s": wall,
     }
     if result["status"] == "done":
         row["verdict"] = result["verdict"]
