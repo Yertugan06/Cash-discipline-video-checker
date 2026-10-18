@@ -41,6 +41,11 @@ See `synthetic-results/summary.jsonl`, `mirror-results/summary.jsonl`,
 `mirrors/manifest.json`, `mirrors/scoring-truth.json` and publication reports.
 Human observations and expected labels never enter the uploaded model input.
 
+The API runner defaults to requiring fresh perception. `--allow-perception-cache`
+permits regression checks while still requiring the exact input SHA and nonempty
+trace frames; source pins and per-job records disclose reuse. The checker launcher
+also accepts `--visual-request-timeout 90`; its historical default remains45s.
+
 Per-frame numeric traces remain local and are excluded from Git. Summaries,
 source pins, manifests, scorer code and decisions are retained in the repository.
 The teammate's later before/moment/after evidence change (`d0d7f0a`) was merged

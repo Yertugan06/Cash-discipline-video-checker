@@ -99,6 +99,16 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+def valid_perception_trace(trace, expected, allow_cached=False):
+    frames = trace.get("frames")
+    return (
+        trace.get("video_sha256") == expected
+        and isinstance(frames, list) and bool(frames)
+        and (trace.get("perception_cache_hit") is False
+             or allow_cached and trace.get("perception_cache_hit") is True)
+    )
+
+
 def self_check():
     dirty = {"name": "t1.mp4", "job_id": "a" * 32, "image_base64": "FORBIDDEN_MEDIA", "frames": [
         {"t": 1.5, "jpeg": "FORBIDDEN_MEDIA", "facts": {"actor_id": "person:1", "image_base64": "FORBIDDEN_MEDIA"}}],
@@ -113,6 +123,11 @@ def self_check():
     assert cleaned["violations"][0]["description"] == "Readable explanation"
     assert cleaned["violations"][0]["source_quote"] == "[omitted]"
     assert safe_export({"description": "/9j/" + "a" * 200}) == {"description": "[omitted]"}
+    cached = {"video_sha256": "a" * 64, "perception_cache_hit": True, "frames": [{"t": 0.0}]}
+    assert not valid_perception_trace(cached, "a" * 64)
+    assert valid_perception_trace(cached, "a" * 64, allow_cached=True)
+    assert not valid_perception_trace(cached, "b" * 64, allow_cached=True)
+    assert not valid_perception_trace({**cached, "perception_cache_hit": None}, "a" * 64, True)
     print("export assertions passed: recursive media/key removal, text retained")
 
 
@@ -136,7 +151,7 @@ def run(args):
         if not source.is_file():
             raise ClientError("source_pin_file_missing")
         pins["files"].append({"path": relative, "sha256": sha_file(source)})
-    write_json(args.out / "source-pins.json", safe_export({"source_pins": pins, "input_count": len(inputs), "fresh_perception_required": True}, key))
+    write_json(args.out / "source-pins.json", safe_export({"source_pins": pins, "input_count": len(inputs), "fresh_perception_required": not args.allow_perception_cache}, key))
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
 
     def call(method, path, timeout, body=None, content_type=None):
@@ -214,8 +229,8 @@ def run(args):
                 trace = json.loads(trace_data)
                 write_json(args.out / f"{position:02d}-numeric-trace.json", safe_export(trace, key))
                 row["cache_provenance"] = {"video_sha256": trace.get("video_sha256"), "perception_cache_hit": trace.get("perception_cache_hit"), "visual_checks_count": len(trace.get("visual_checks", [])), "visual_cache_hits": sum(c.get("cache_hit") is True for c in trace.get("visual_checks", []))}
-                if status == "done" and (trace.get("video_sha256") != expected or trace.get("perception_cache_hit") is not False or not trace.get("frames")):
-                    raise ClientError("trace_missing_fresh_matching_perception")
+                if status == "done" and not valid_perception_trace(trace, expected, args.allow_perception_cache):
+                    raise ClientError("trace_missing_matching_perception_or_cache_policy")
                 row["trace_status"] = "available"
             row["trace_s"] = time.monotonic() - trace_started
         except Exception as exc:
@@ -249,6 +264,8 @@ def main():
     parser.add_argument("--job-timeout", type=float, default=360)
     parser.add_argument("--upload-timeout", type=float, default=120)
     parser.add_argument("--self-check", action="store_true")
+    parser.add_argument("--allow-perception-cache", action="store_true",
+                        help="Allow cached detections; require matching video SHA and nonempty frames")
     args = parser.parse_args()
     if args.self_check:
         self_check()

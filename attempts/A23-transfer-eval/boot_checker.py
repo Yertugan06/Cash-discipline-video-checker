@@ -13,7 +13,10 @@ def main():
     parser = argparse.ArgumentParser()
     for name in ("root", "python", "model-python", "weights", "model"):
         parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--visual-request-timeout", type=float, default=45)
     args = parser.parse_args()
+    if not 0 < args.visual_request_timeout <= 120:
+        parser.error("--visual-request-timeout must be within (0,120] seconds")
     root = args.root.resolve()
     runtime = root / "runtime"
     runtime.mkdir(parents=True, exist_ok=True)
@@ -34,7 +37,7 @@ def main():
         "F1_VISUAL_MODEL_PATH": str(args.model),
         "F1_VISUAL_WORKER_PYTHON": str(args.model_python),
         "F1_VISUAL_CACHE_DIR": str(runtime / "visual_answer_cache"),
-        "F1_VISUAL_BUDGET_S": "90", "F1_VISUAL_REQUEST_TIMEOUT_S": "45",
+        "F1_VISUAL_BUDGET_S": "90", "F1_VISUAL_REQUEST_TIMEOUT_S": str(args.visual_request_timeout),
     }
     with (runtime / "a23-checker.log").open("ab") as log:
         process = subprocess.Popen(
