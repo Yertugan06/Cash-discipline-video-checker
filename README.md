@@ -18,7 +18,8 @@ extraction and serving all run on the team's own GPU host from pre-downloaded, p
 ![Forte Vision: cash-discipline video review, home screen (dark theme)](docs/screenshots/01-home-dark.png)
 
 Latest recorded public deployment: [Open Web UI](https://forte-checker-wwi4jcrss.gobrev.dev/)
-(A20 on `datathon`, last recorded 2026-10-18; see [deployment notes](deploy/README.md)).
+(A28 on `datathon` -- A21's F1 ruleset with the optional Qwen3-VL-4B safe-check add-on left off --
+last recorded 2026-10-18; see [deployment notes](deploy/README.md)).
 The corresponding API base is `https://forte-checker-wwi4jcrss.gobrev.dev/api/v1`.
 The jury received its API key out of band; it is not stored in this repository.
 
@@ -123,28 +124,34 @@ organizer labels: 21 violation videos, 19 clean ones.
 | Always answer «violation» (floor) | 21 | 19 | 0 |
 | A01, first CV checker | 20 | 13 | 7 |
 | A17, deployed before the final round | 25 | 5 | 10 |
-| **A20, last recorded public deployment** | **32** | **0** | **8** |
+| A20, offline-replay peak (superseded; two of its explanations were later found unsupported) | 32 | 0 | 8 |
+| **A28, current public deployment (A21's rules, VLM add-on off)** | **30** | **0** | **10** |
 
-A21's later private review run scored **30/40** (11/21 violations caught, 0/19 clean videos
-flagged). Its validation evidence and caveats are in [A21 results](attempts/A21-deadline/RESULTS.md).
+A28 reruns A21's F1 ruleset through the real deployed API with the optional Qwen3-VL-4B
+safe-check add-on left off; the confusion matrix (TP 11, TN 19, FP 0, FN 10) matches A21's
+exactly, since that add-on contributed no additional correct detections. Validation evidence:
+[A21 results](attempts/A21-deadline/RESULTS.md), [A28 validation log](attempts/A28-current-main/README.md).
 
-- **Recall 13/21, no false alarms on clean videos.** The offline replay and a run of all 42 files
-  through the real API give the same verdicts; no job failed (wall time median 20 s, worst 89 s,
-  with the perception cache warm; a cold run is slower, e.g. 50.8 s for one clip in A12).
-- **Localization:** of the 13 caught violations, the finding is within ±1 / ±2 / ±3 / ±5 s of the
-  organizer's second for 7 / 9 / 11 / 13; mean offset 1.54 s.
-- **Robustness probes** (the same clips replayed as a nearer/farther camera, a mirrored camera, or
-  a weaker detector): zoom 0.7-1.3 and mirror give exactly 32/0/8; dropping 20% of object
-  detections gives 31-32 / 0 / 8-9.
+- **Recall 11/21, no false alarms on clean videos.** A run of the deployed API over all 40 known
+  videos (perception cache warm) gives this confusion matrix; wall time median 2.1 s, max 6.3 s
+  with the cache warm (a cold run is slower, e.g. 50.8 s for one clip in A12).
+- **Localization and robustness probes below predate A21/A28's rule changes** (measured on A20,
+  which caught 13 violations instead of A28's 11) **and have not been re-measured on the current
+  deployment:**
+  - of A20's 13 caught violations, the finding was within ±1 / ±2 / ±3 / ±5 s of the organizer's
+    second for 7 / 9 / 11 / 13; mean offset 1.54 s.
+  - robustness probes (the same clips replayed as a nearer/farther camera, a mirrored camera, or
+    a weaker detector): zoom 0.7-1.3 and mirror gave exactly 32/0/8; dropping 20% of object
+    detections gave 31-32 / 0 / 8-9.
 - **Contract check** (`eval/check_outputs.py`, 24 dev clips): every response valid against the
   jury schema, none over 300 s.
 
-**Conditions to keep in mind.** All 40 videos were used while building A20, so this is an
-in-sample result: expect less on new videos. Robustness was checked only by geometric replay, not
-on a real video from a new room or angle. The 8 misses are perception limits (states CLIP can't
-read and small objects nobody detects) and are listed one by one in
-[`docs/LIMITATIONS.md`](docs/LIMITATIONS.md). Every experiment, including the failed ones (A00-A22),
-is in [`attempts/README.md`](attempts/README.md).
+**Conditions to keep in mind.** All 40 videos were used while building this ruleset, so this is an
+in-sample result: expect less on new videos. Robustness was checked only by geometric replay on
+A20, not re-run on A28, and not on a real video from a new room or angle. The 10 misses are
+perception limits (states CLIP can't read and small objects nobody detects) and are listed one by
+one in [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md). Every experiment, including the failed ones
+(A00-A27), is in [`attempts/README.md`](attempts/README.md).
 
 ## Legal grounding
 
@@ -278,8 +285,9 @@ What is current and what is history: [`STATUS.md`](STATUS.md). Engineering rules
 
 The full list of known error cases is [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md). Main limits:
 
-- **In-sample evaluation:** A21 matched organizer verdicts on 30/40 unique clips; all 40 clips
-  influenced development, so this is not a held-out accuracy estimate.
+- **In-sample evaluation:** A28, the deployed build, matched organizer verdicts on 30/40 unique
+  clips (A21's ruleset, VLM add-on off); all 40 clips influenced development, so this is not a
+  held-out accuracy estimate.
 - **Perception gaps:** brief or occluded events and small objects can be missed; a detected state
   can also be attributed to the wrong event.
 - **Generalization is untested:** performance on a new room, camera angle or setup is unknown.
