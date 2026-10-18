@@ -23,7 +23,7 @@ cp deploy/.env.example .env && chmod 600 .env   # edit API_KEY, DETECTOR, ...
 docker compose -f compose.yaml build
 docker compose -f compose.yaml up -d
 curl -sf http://127.0.0.1:8000/healthz
-ss -ltnp | grep ':8000 '   # must show 127.0.0.1:8000 only, never 0.0.0.0 / *
+ss -ltnp | grep ':8000 '   # 127.0.0.1:8000, or 0.0.0.0:8000 with API_HOST=0.0.0.0 behind Brev's proxy
 sudo cp deploy/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy
 sudo cp deploy/forte-checker.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now forte-checker.service
@@ -41,7 +41,24 @@ docker compose -f compose.yaml -f compose.gpu.yaml up -d --build
 
 ## Public URL (architecture.md §8)
 
-In order of preference, to be confirmed on the actual VM (`datathon2`):
+**Current (2026-10-18):** Brev's port exposure on `datathon`,
+`https://forte-checker-wwi4jcrss.gobrev.dev` -> port 8000:
+
+```sh
+brev ports open datathon 8000 --protocol http --public --hostname forte-checker
+# in ~/datathon26/.env:  API_HOST=0.0.0.0   (then: docker compose ... up -d)
+```
+
+Brev's proxy connects from outside the host, not over loopback: with the app on
+`127.0.0.1:8000` every request except the proxy's own `/healthz` (body `OK`) is a
+Cloudflare 503. `API_HOST=0.0.0.0` fixes it. The VM's public IP filters every port
+(22, 80, 443, 8000, 8888 checked from outside), so the app is reachable only
+through the proxy, and `/api/v1` still needs `X-API-Key`. `--public` only turns
+off the Brev login in front of the URL. Fallback if the proxy fails: a Cloudflare
+Quick Tunnel from the VM to `127.0.0.1:8000` (`cloudflared tunnel --url ...`; its
+URL changes on every restart).
+
+The options, in order of preference:
 
 1. **Brev's own port exposure** (if the VM is a Brev instance) -- the
    platform can publish a port directly; no reverse proxy to run yourself.

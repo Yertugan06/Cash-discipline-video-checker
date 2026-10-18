@@ -14,8 +14,8 @@ GPU host.
 
 | Item | Value |
 | --- | --- |
-| UI URL | TODO(team): public HTTPS URL from WP1's deployment |
-| API base URL | TODO(team): same host, `/api/v1` |
+| UI URL | https://forte-checker-wwi4jcrss.gobrev.dev/ (A20, `5d8f0bf`, `RULE_SCOPE=detector`; `deploy/README.md`) |
+| API base URL | https://forte-checker-wwi4jcrss.gobrev.dev/api/v1 |
 | API key | TODO(team): handed to the jury out of band (not in this repo) |
 | Jury `curl` | See `docs/USAGE.md` |
 
