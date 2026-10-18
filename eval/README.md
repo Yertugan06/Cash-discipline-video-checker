@@ -32,6 +32,11 @@ videos) and `team/` (human annotations, the cases workbook, `reviews.json`). The
 - `split.json` is frozen. The builder re-derives it with the original algorithm and fails if it
   no longer matches; nothing writes it.
 - Clip IDs are parsed only by `backend/clip_id.py` (`X-<n>`, Latin X).
+- `coverage.py`: per violation video, whether and why the rulebook explains its annotated clause.
+- `check_outputs.py <dir>`: checks saved API job results against the jury contract and each
+  clip's own organizer label (verdict, timing, JPEG evidence, filled templates, citation,
+  wall time). Prints structured facts only, never descriptions or frames; skips lockbox clips
+  unless `--allow-lockbox`.
 - `tests/test_dataset_real.py` checks the real data root and skips where it is absent.
 
 - `kit_states_adapter.py` -- `load_kit_states(path) -> StateTimeline`: reads one of the kit's
