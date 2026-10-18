@@ -3,11 +3,12 @@ import re
 
 
 def code_key(s):
-    """'п. 20 ч. 2' / '231-20-2' / '14-16-1' -> '20-2' / '20-2' / '16-1' for loose norm matching."""
+    """'п. 20 ч. 2' / '231-20-2' / '14-16-1' / '53-71-9' -> '20-2' / '20-2' / '16-1' / '71-9' for
+    loose norm matching (the act number is dropped)."""
     if not s:
         return None
     n = re.findall(r'\d+', str(s))
-    if str(s).startswith(('231', '14-', '48-')) and len(n) > 1:
+    if str(s).startswith(('231', '14-', '48-', '53-')) and len(n) > 1:
         n = n[1:]
     return '-'.join(n[:2]) if n else None
 
