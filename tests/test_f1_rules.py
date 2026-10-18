@@ -120,7 +120,18 @@ CASES = [
                 session_id="new",
             ),
         ],
-        {"new": {"client_id": "person:2", "start": 5, "end": 10}},
+        # Every key the event builder gives a session (backend/f1/events.py), so other rules that
+        # evaluate_rules() runs alongside can read them.
+        {
+            "new": {
+                "client_id": "person:2",
+                "start": 5,
+                "end": 10,
+                "observed_entry": True,
+                "cash_ids": [],
+                "counted_cash_ids": [],
+            }
+        },
     ),
     (
         "A-DOOR-LOCK",

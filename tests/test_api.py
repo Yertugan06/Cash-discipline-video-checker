@@ -26,7 +26,10 @@ API_KEY = "test-only-key"
 
 @pytest.fixture
 def settings(tmp_path):
-    return Settings(api_key=API_KEY, work_dir=tmp_path / "runtime", detector="f1")
+    # Empty weights dir: readiness must not depend on whether this machine has weights downloaded.
+    return Settings(
+        api_key=API_KEY, work_dir=tmp_path / "runtime", detector="f1", weights_dir=tmp_path / "w"
+    )
 
 
 def done_job(job_id: str = "will-be-overwritten", *, violations=None) -> DoneJob:

@@ -42,7 +42,7 @@ def test_collect_draws_boxes_on_the_anchor_frame_only(tmp_path):
     grounded = GroundedFinding(
         finding=finding, rule=make_rule(), norms=[make_norm()], citation_status="verified"
     )
-    frames = collect(video, [grounded])[0]
+    frames = collect(video, [grounded], last_frame_sec=0.9)[0]
     assert [f.timestamp_sec for f in frames] == [0.2, 0.6]
     bottom_edges = []
     for frame in frames:
@@ -50,3 +50,15 @@ def test_collect_draws_boxes_on_the_anchor_frame_only(tmp_path):
             bottom_edges.append(image.convert("RGB").getpixel((600, 598)))  # y2 = 600
     assert _is_box_color(bottom_edges[0])
     assert not _is_box_color(bottom_edges[1])
+
+
+@requires_ffmpeg
+def test_a_finding_at_the_very_end_still_gets_the_last_frame(tmp_path):
+    # F1 accepts findings up to t == duration; ffmpeg has no frame there. The job must not fail.
+    video = make_video(tmp_path / "end.mov", duration=1.0)
+    finding = make_finding(t_anchor=1.0)
+    grounded = GroundedFinding(
+        finding=finding, rule=make_rule(), norms=[make_norm()], citation_status="verified"
+    )
+    frames = collect(video, [grounded], last_frame_sec=0.9)[0]
+    assert [f.timestamp_sec for f in frames] == [0.9]

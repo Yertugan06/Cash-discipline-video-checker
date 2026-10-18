@@ -55,7 +55,7 @@ class Pipeline:
         ranked = self.rank(result.findings, self.knowledge.enabled_rules(), self.rank_cap)
         logger.info("job %s rank: %s", job_id, [(f.rule_id, round(f.t_anchor, 1)) for f in ranked])
         grounded = self.knowledge.ground(ranked)
-        frames = evidence.collect(video, grounded)
+        frames = evidence.collect(video, grounded, max(0.0, info.duration_sec - 1.0 / info.fps))
         done = serialize.to_done_job(job_id, grounded, result, frames, self.knowledge.describe)
         logger.info("job %s verdict: %s", job_id, done.verdict)
         return done
