@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluation</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #fff; --text: #16181d; --muted: #646b78; --line: #e2e5ea;
+    --run: #2b63d9; --viol: #c62f2f; --viol-bg: #fdecec; --warn: #a86a00; --warn-bg: #fdf3e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111317; --card: #1a1d23; --text: #e8eaee; --muted: #9aa1ad; --line: #2b3038;
+      --run: #7ba4ff; --viol: #ff7b7b; --viol-bg: #3a1d1f; --warn: #f0b75a; --warn-bg: #3a2c14;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+  h1 { font-size: 20px; margin: 0; }
+  h2 { font-size: 16px; margin: 20px 0 6px; }
+  a { color: var(--run); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 12px 0; }
+  .stat, .scroll, .caveats { background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+  .stat { padding: 10px 12px; }
+  .value { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; margin-top: 16px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  td:nth-child(5), td:nth-child(6) { min-width: 240px; }
+  .chip { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 12px; background: var(--bg); }
+  .supported { color: var(--run); }
+  .contradicted { color: var(--viol); background: var(--viol-bg); }
+  .unknown { color: var(--warn); background: var(--warn-bg); }
+  .finding + .finding { border-top: 1px solid var(--line); padding-top: 8px; }
+  p { margin: 6px 0 10px; }
+  summary { cursor: pointer; }
+  li { margin-bottom: 6px; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .caveats { margin-top: 16px; padding: 12px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Evaluation</h1>
+    <nav aria-label="Realtime pages"><a href="/">Live verdicts</a> · <a href="/compare">Compare runs</a> · <a href="/annotate">Annotate</a></nav>
+  </header>
+  <p id="status" role="status">Loading published evaluation…</p>
+  <section id="report" hidden>
+    <h2>Organizer verdict agreement</h2>
+    <p class="muted">Counts by unique video SHA. Organizer labels and timestamps do not verify the reason.</p>
+    <p id="samples" class="muted"></p>
+    <div id="verdicts" class="stats"></div>
+    <h2>Observation support for reported findings</h2>
+    <p class="muted">Compatibility with supplied human prose, including qualified proxies. These are finding counts, not verified reasons for every video or legal validation.</p>
+    <div id="reasons" class="stats"></div>
+    <details class="caveats">
+      <summary>Source, scope and report caveats</summary>
+      <p id="provenance"></p>
+      <ul id="caveats"></ul>
+    </details>
+    <div class="scroll">
+      <table>
+        <thead><tr><th scope="col">Clip(s)</th><th scope="col">Detector verdict</th><th scope="col">Organizer verdict / markers</th><th scope="col">Agreement</th><th scope="col">Findings / observation support</th><th scope="col">Human observations / caveats</th></tr></thead>
+        <tbody id="clips"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const list = (value) => Array.isArray(value) ? value : [];
+const text = (value) => typeof value === "string" ? value : "not reported";
+const count = (value) => Number.isInteger(value) && value >= 0 ? String(value) : "not reported";
+const time = (value) => Number.isFinite(value) && value >= 0 ? `${value} s` : "time unknown";
+
+function node(tag, content, className) {
+  const element = document.createElement(tag);
+  if (content !== undefined) element.textContent = String(content);
+  if (className) element.className = className;
+  return element;
+}
+
+function badge(value) {
+  const style = ["supported", "contradicted", "unknown"].includes(value) ? value : "";
+  return node("span", text(value), `chip ${style}`);
+}
+
+function metric(parent, label, value) {
+  const card = node("div", undefined, "stat");
+  card.append(node("div", count(value), "value"), node("div", label, "muted"));
+  parent.append(card);
+}
+
+function observations(clip) {
+  const details = node("details");
+  const human = clip.human_observation;
+  details.append(node("summary", `Human observations · ${text(human?.review_status ?? clip.human_annotation_coverage)}`));
+  if (!human || typeof human !== "object") {
+    details.append(node("p", "No human observation supplied; this does not establish compliance."));
+    return details;
+  }
+  if (human.review_note) details.append(node("p", text(human.review_note)));
+  if (human.cause_unresolved) details.append(node("p", "Cause unresolved; no reason score.", "unknown"));
+  if (human.recording_cutoff) details.append(node("p", "Recording cutoff: later custody or abandonment is unknown.", "muted"));
+  const events = node("ul");
+  for (const event of list(human.events)) {
+    const interval = list(event?.interval_sec);
+    const when = interval.length === 2 ? `${time(interval[0])} – ${time(interval[1])}` : "human time unknown";
+    events.append(node("li", `${text(event?.description)} (${when})`));
+  }
+  details.append(events);
+  const checks = node("ul");
+  for (const check of list(human.reason_checks)) {
+    checks.append(node("li", `${list(check?.rule_ids).map(text).join(", ")}: ${text(check?.status)}. ${text(check?.explanation)}`));
+  }
+  details.append(checks, node("p", `Observation source: ${text(human.provenance_id)}. Legal/policy: ${text(clip.legal_policy_status)}.`, "muted"));
+  return details;
+}
+
+function render(data) {
+  if (data?.schema_version !== 1 || !data.summary || !Array.isArray(data.clips) ||
+      !data.clips.every((clip) => clip && typeof clip === "object" && !Array.isArray(clip))) {
+    throw new Error("Unsupported or invalid evaluation audit schema.");
+  }
+  const summary = data.summary;
+  $("samples").textContent = `${count(summary.unique_sha_groups)} unique videos · ${count(summary.organizer_samples)} organizer files · ${count(summary.duplicate_samples)} duplicate samples`;
+  for (const [key, label] of [["TP", "True positives"], ["TN", "True negatives"], ["FP", "False positives"], ["FN", "False negatives"], ["missing", "Missing predictions"], ["invalid", "Invalid predictions"], ["failed", "Failed predictions"], ["label_conflict", "Label conflicts"]]) {
+    metric($("verdicts"), label, summary.unique_verdict_confusion?.[key]);
+  }
+  for (const key of ["supported", "contradicted", "unknown"]) {
+    metric($("reasons"), key, summary.finding_reason_counts?.[key]);
+  }
+  $("provenance").textContent = [data.scope, data.assertion_provenance?.source, data.assertion_provenance?.authority, data.assertion_provenance?.support_definition].filter((s) => typeof s === "string").join(" ");
+  for (const caveat of list(data.limitations)) $("caveats").append(node("li", text(caveat)));
+  for (const clip of data.clips) {
+    const row = node("tr");
+    const names = node("td");
+    for (const id of list(clip.clip_ids)) {
+      if (names.childNodes.length) names.append(document.createTextNode(", "));
+      const link = node("a", text(id));
+      link.href = `/annotate?clip=${encodeURIComponent(text(id))}`;
+      names.append(link);
+    }
+    if (!names.childNodes.length) names.textContent = "Unspecified group";
+    row.append(names);
+    const predicted = node("td");
+    predicted.append(badge(clip.predicted_verdict), node("p", `State: ${text(clip.prediction_state)}`, "muted"));
+    const organizer = node("td");
+    if (!Array.isArray(clip.organizer_files) || !clip.organizer_files.length) organizer.append(node("p", "not reported"));
+    for (const file of list(clip.organizer_files)) {
+      const markers = Array.isArray(file?.timestamps_sec) ? file.timestamps_sec.map(time).join(", ") || "no marker supplied" : "markers not reported";
+      organizer.append(node("p", `${text(file?.clip_id)}: ${text(file?.verdict)} · ${markers}`));
+    }
+    row.append(predicted, organizer, node("td", text(clip.unique_outcome)));
+    const findings = node("td");
+    if (!Array.isArray(clip.findings)) findings.append(node("p", "Findings not reported."));
+    else if (!clip.findings.length) findings.append(node("p", "No findings reported.", "muted"));
+    for (const finding of list(clip.findings)) {
+      const block = node("div", undefined, "finding");
+      block.append(node("p", `${text(finding?.rule_id)} @ ${time(finding?.t)}`), badge(finding?.reason_status), node("p", text(finding?.explanation), "muted"));
+      findings.append(block);
+    }
+    const human = node("td");
+    human.append(observations(clip));
+    row.append(findings, human);
+    $("clips").append(row);
+  }
+  $("status").textContent = "Published evaluation snapshot. Reload to check for a newer report.";
+  $("report").hidden = false;
+}
+
+async function load() {
+  try {
+    const response = await fetch("/api/evaluation", { cache: "no-store" });
+    if (response.status === 404) throw new Error("Evaluation not ready: report has not been published.");
+    if (!response.ok) throw new Error(`Evaluation unavailable (HTTP ${response.status}).`);
+    let data;
+    try { data = await response.json(); }
+    catch { throw new Error("Evaluation unavailable: report is not valid JSON."); }
+    render(data);
+  } catch (error) {
+    $("report").hidden = true;
+    $("status").textContent = error.message || "Evaluation could not be loaded. Reload to retry.";
+  }
+}
+load();
+</script>
+</body>
+</html>

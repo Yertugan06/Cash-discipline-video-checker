@@ -67,9 +67,25 @@
   .seek { border: 0; padding: 0; background: none; color: var(--run); cursor: pointer; font: inherit; text-decoration: underline; }
   .pulse { animation: pulse 1.2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .45; } }
+  .run-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+             background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin: 16px 0 8px; }
+  .run-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .run-nav select { border: 1px solid var(--line); background: var(--bg); color: var(--text);
+                    padding: 6px 10px; border-radius: 8px; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; max-width: 380px; }
+  .run-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .run-badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+  .run-badge.live { background: var(--ok-bg); color: var(--ok); }
+  .run-badge.archive { background: var(--run-bg); color: var(--run); }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .run-feedback { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+  .error { color: var(--viol); }
+  .empty { padding: 24px 12px; color: var(--muted); text-align: center; }
   @media (max-width: 700px) {
     .row { grid-template-columns: 1fr auto; }
     .row .top, .row .time { grid-column: 1 / -1; }
+    .run-bar { flex-direction: column; align-items: stretch; }
+    .run-nav { min-width: 0; }
+    .run-nav select { width: 100%; max-width: 100%; min-width: 0; order: -1; }
   }
 </style>
 </head>
@@ -85,14 +101,36 @@
       <button id="folder" disabled>Run server folder</button>
       <a class="btn" href="/compare" style="text-decoration:none">Compare runs</a>
       <a class="btn" href="/annotate" style="text-decoration:none">Annotate</a>
+      <a class="btn" href="/evaluation" style="text-decoration:none">Evaluation</a>
     </div>
   </header>
+  <div class="run-bar">
+    <div class="run-nav">
+      <label class="muted" for="runSelect" style="font-weight:600;">Run / Attempt:</label>
+      <button id="prevRun" title="Older run (← Arrow)" class="btn btn-sm" disabled>← Previous</button>
+      <select id="runSelect" aria-label="Run / Attempt"><option value="live">Live Stream</option></select>
+      <button id="nextRun" title="Newer run (→ Arrow)" class="btn btn-sm" disabled>Next →</button>
+      <span id="runPosition" class="muted"></span>
+      <button id="refreshRuns" class="btn btn-sm">Refresh runs</button>
+    </div>
+    <div class="run-info">
+      <span id="runBadge" class="run-badge live">● Live Stream</span>
+      <span id="runDesc" class="muted">Active WebSocket evaluation</span>
+      <button id="jumpLive" class="btn btn-sm" hidden>Back to Live</button>
+    </div>
+  </div>
+  <div class="run-feedback">
+    <span id="runStatus" class="muted" role="status"></span>
+    <span id="runError" class="error" role="alert" hidden></span>
+    <button id="retryRun" class="btn btn-sm" hidden>Retry</button>
+  </div>
   <section class="stats" id="stats"></section>
   <div class="muted" id="hint"></div>
   <section class="list" id="list"></section>
 </main>
 <script>
 const items = new Map();
+const liveItems = new Map();
 let openId = null; // only one result is expanded at a time
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -100,6 +138,7 @@ const VERDICT = { violation: "нарушение", no_violation: "без нар�
 
 function secs(it) {
   if (!it.started_at) return "";
+  if (!it.finished_at && currentRun !== "live") return "unfinished";
   const end = it.finished_at ?? Date.now() / 1000;
   return `${(end - it.started_at).toFixed(1)} s`;
 }
@@ -131,18 +170,20 @@ function detail(it) {
   const r = it.result;
   const warn = (r.warnings ?? []).map((w) => `<div class="muted">! ${esc(w)}</div>`).join("");
   const cov = r.coverage ? `<div class="muted">coverage: ${r.coverage.mode}, ${r.coverage.done}/${r.coverage.planned} frames${r.coverage.deadline_hit ? ", deadline hit" : ""}</div>` : "";
-  const viols = r.violations.map((v) => `
+  const viols = (r.violations ?? []).map((v) => `
     <div class="viol">
       <h3>${esc(v.type)} <span class="muted">@ <button class="seek" data-seek="${v.timecode_sec}">${v.timecode_sec.toFixed(1)} s</button> · ${esc(v.rule_id ?? "")}</span></h3>
       <div>${esc(v.description)}</div>
       ${v.source ? `<div class="muted">${esc(v.source)}${v.citation_status ? " · " + esc(v.citation_status) : ""}</div>` : ""}
-      <div class="frames">${v.evidence_frames.map((f) => `<figure><img loading="lazy" src="data:image/jpeg;base64,${f.image_base64}" alt="frame at ${f.timestamp_sec} s"><figcaption>${f.timestamp_sec.toFixed(1)} s</figcaption></figure>`).join("")}</div>
+      <div class="frames">${(v.evidence_frames ?? []).map((f) => `<figure><img loading="lazy" src="data:image/jpeg;base64,${f.image_base64}" alt="frame at ${f.timestamp_sec} s"><figcaption>${f.timestamp_sec.toFixed(1)} s</figcaption></figure>`).join("")}</div>
     </div>`).join("");
-  return `<div class="muted">job ${esc(it.job_id)}</div>${cov}${warn}<div class="replay-slot" data-id="${it.id}"></div><div style="margin-top:10px">${viols || "No violations reported."}</div>`;
+  return `<div class="muted">${it.job_id ? "job " + esc(it.job_id) : "Offline replay · no checker trace recorded"}</div>${cov}${warn}<div class="replay-slot" data-id="${esc(it.id)}"></div><div style="margin-top:10px">${viols || "No violations reported."}</div>`;
 }
 
 // ---- replay: the source video with the trace's per-frame boxes drawn over it ----
-const traces = new Map(); // item id -> trace JSON, or null when the checker has none
+const traces = new Map(); // [run, item id] -> trace JSON, or null when none was recorded
+const replayKey = (run, id) => JSON.stringify([run, id]);
+const itemUrl = (run, id, kind) => `/api/items/${encodeURIComponent(id)}/${kind}?run=${encodeURIComponent(run)}`;
 const ROLE_COLOR = { cashier: "#1fbf5f", client: "#2b8cff", outsider: "#ff3b3b", collector: "#b05cff", visitor: "#f0a020", glass: "#9aa1ad" };
 let showObjects = true;
 try { showObjects = localStorage.getItem("replay.objects") !== "off"; } catch {}
@@ -151,7 +192,10 @@ function mountReplay(id) {
   const box = document.createElement("div");
   box.className = "replay";
   box.dataset.id = id;
-  box.innerHTML = `<div class="player"><video controls playsinline preload="metadata" src="/api/items/${id}/video"></video><canvas></canvas></div>
+  box.dataset.run = currentRun;
+  const key = replayKey(currentRun, id);
+  box.innerHTML = `<div class="player"><video controls playsinline preload="metadata" src="${esc(itemUrl(currentRun, id, "video"))}"></video><canvas></canvas></div>
+    <div class="muted video-note" role="status"></div>
     <div class="replay-bar"><label><input type="checkbox" class="objects" ${showObjects ? "checked" : ""}> Objects</label><span class="muted note">loading trace...</span></div>
     <div class="evline"></div>`;
   const video = box.querySelector("video");
@@ -159,15 +203,22 @@ function mountReplay(id) {
   const loop = () => { redraw(); if (!video.paused && !video.ended) requestAnimationFrame(loop); };
   video.addEventListener("play", loop);
   ["loadedmetadata", "seeked", "timeupdate"].forEach((e) => video.addEventListener(e, redraw));
-  video.addEventListener("error", () => { box.querySelector(".note").textContent = "video file not available"; });
+  video.addEventListener("error", () => { box.querySelector(".video-note").textContent = "Source video is no longer available."; });
   box.querySelector(".objects").addEventListener("change", (e) => {
     showObjects = e.target.checked;
     try { localStorage.setItem("replay.objects", showObjects ? "on" : "off"); } catch {}
     redraw();
   });
-  if (!traces.has(id)) {
-    fetch(`/api/items/${id}/trace`).then((r) => (r.ok ? r.json() : null)).catch(() => null)
-      .then((t) => { traces.set(id, t); redraw(); });
+  if (!traces.has(key)) {
+    if (!items.get(id)?.job_id) traces.set(key, null);
+    else fetch(itemUrl(currentRun, id, "trace")).then((r) => {
+      if (r.status === 404) return null;
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    }).then((t) => { traces.set(key, t); redraw(); }).catch((err) => {
+      box.dataset.traceError = `Trace unavailable: ${err.message}`;
+      redraw();
+    });
   }
   redraw();
   return box;
@@ -176,9 +227,11 @@ function mountReplay(id) {
 function drawReplay(box) {
   const video = box.querySelector("video");
   const canvas = box.querySelector("canvas");
-  const trace = traces.get(box.dataset.id);
+  const key = replayKey(box.dataset.run, box.dataset.id);
+  const trace = traces.get(key);
   const note = box.querySelector(".note");
-  if (traces.has(box.dataset.id)) note.textContent = trace ? `${trace.frames.length} frames @ ${trace.fps} fps` : "no trace for this job";
+  if (box.dataset.traceError) note.textContent = box.dataset.traceError;
+  else if (traces.has(key)) note.textContent = trace ? `${trace.frames.length} frames @ ${trace.fps} fps` : "No checker trace recorded for this result.";
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.round(canvas.clientWidth * dpr);
   canvas.height = Math.round(canvas.clientHeight * dpr);
@@ -186,7 +239,7 @@ function drawReplay(box) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (!trace) return;
   const t = video.currentTime;
-  box.querySelector(".evline").textContent = trace.events.filter((e) => e.timestamp_sec <= t).slice(-3)
+  box.querySelector(".evline").textContent = (trace.events ?? []).filter((e) => e.timestamp_sec <= t).slice(-3)
     .map((e) => `${e.timestamp_sec.toFixed(1)}s ${e.type} ${e.facts.actor_id ?? e.facts.track_id ?? ""} ${e.facts.role ?? e.facts.state ?? e.facts.location ?? ""}`).join("\n");
   if (!showObjects || !trace.frames.length) return;
   const frame = trace.frames[Math.min(trace.frames.length - 1, Math.round(t * trace.fps))];
@@ -211,7 +264,8 @@ function drawReplay(box) {
 function render() {
   // Keep the open player across re-renders: re-inserting it in the same task keeps it playing.
   const player = document.querySelector(".replay");
-  const list = [...items.values()].sort((a, b) => a.queued_at - b.queued_at);
+  const list = [...items.values()].sort((a, b) => (a.queued_at ?? 0) - (b.queued_at ?? 0));
+  $("runStatus").textContent = loadingRun ? "Loading results…" : `${list.length} clips · ${currentRun === "live" ? "live feed" : "saved snapshot"}`;
   $("list").innerHTML = list.map((it) => {
     const state = it.status === "done" ? it.verdict : it.status;
     const label = state in VERDICT ? VERDICT[state] : it.status;
@@ -219,10 +273,10 @@ function render() {
     const match = it.status === "done" && it.label
       ? `<span class="match ${it.label === it.verdict ? "yes" : "no"}">${it.label === it.verdict ? "= label" : "≠ label"}</span>`
       : `<span></span>`;
-    return `<div class="item ${openId === it.id ? "open" : ""}" data-id="${it.id}">
+    return `<div class="item ${openId === it.id ? "open" : ""}" data-id="${esc(it.id)}">
       <div class="row">
         <div class="name">${esc(it.name)}</div>
-        <span class="chip ${state} ${it.status === "processing" ? "pulse" : ""}">${label}</span>
+        <span class="chip ${esc(state)} ${it.status === "processing" && currentRun === "live" ? "pulse" : ""}">${esc(label)}</span>
         <span class="muted">${it.label ? "label: " + VERDICT[it.label] : ""}</span>
         ${match}
         <div class="top">${top ? esc(top.type) + " @ " + top.timecode_sec.toFixed(1) + " s" : ""}</div>
@@ -230,9 +284,11 @@ function render() {
       </div>
       <div class="detail">${openId === it.id ? detail(it) : ""}</div>
     </div>`;
-  }).join("");
+  }).join("") || `<div class="empty">${loadingRun ? "Loading results…" : currentRun === "live" ? "No videos queued yet. Upload clips or run the server folder to start." : "No results saved in this run."}</div>`;
   const slot = document.querySelector(".replay-slot");
-  if (slot) slot.replaceWith(player?.dataset.id === slot.dataset.id ? player : mountReplay(slot.dataset.id));
+  const keepPlayer = slot && player?.dataset.id === slot.dataset.id && player.dataset.run === currentRun;
+  if (player && !keepPlayer) player.querySelector("video").pause();
+  if (slot) slot.replaceWith(keepPlayer ? player : mountReplay(slot.dataset.id));
   stats();
 }
 
@@ -249,15 +305,163 @@ $("list").addEventListener("click", (e) => {
   document.querySelector(`.item[data-id="${el.dataset.id}"]`)?.scrollIntoView({ block: "nearest" });
 });
 
-function applySnapshot(snapshot) {
+const RUN_LABELS = {
+  "live": "Live Stream (Current Feed)",
+  "run4-leavefix": "A17: Leave Fixes (Live Run 4)",
+  "run3-nearfar": "A14: Near/Far Split (Live Run 3)",
+  "run2-sideways": "A14: Sideways Split (Live Run 2)",
+  "before-glass-fix": "A12: Baseline (Before Glass Fix)",
+  "replay-leavefix": "A17: Leave Fixes (Offline Replay)",
+  "replay-alone": "A16: Lone Person Cashier (Offline Replay)",
+  "replay-nearfar": "A14: Near/Far Split (Offline Replay)",
+  "replay-learned": "A14: Learned Split (Offline Replay)"
+};
+
+const runFromUrl = () => new URLSearchParams(location.search).get("run") || "live";
+let currentRun = runFromUrl();
+let availableRuns = ["live"];
+let loadingRun = false;
+let runRequest = 0;
+let stateRequest = 0;
+let liveRevision = 0;
+
+function clearError() {
+  $("runError").textContent = "";
+  $("runError").hidden = true;
+  $("retryRun").hidden = true;
+}
+
+function showError(message, retry) {
+  $("runError").textContent = message;
+  $("runError").hidden = false;
+  $("retryRun").hidden = !retry;
+  $("retryRun").onclick = retry;
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+  return response.json();
+}
+
+function showItems(rows) {
   items.clear();
-  snapshot.items.forEach((i) => items.set(i.id, i));
+  rows.forEach((item) => items.set(item.id, item));
   render();
+}
+
+function updateNavButtons() {
+  const idx = availableRuns.indexOf(currentRun);
+  $("prevRun").disabled = idx <= 0;
+  $("nextRun").disabled = idx < 0 || idx >= availableRuns.length - 1;
+  $("runPosition").textContent = idx < 0 ? "Unavailable" : `${idx + 1} / ${availableRuns.length}`;
+  const options = availableRuns.includes(currentRun) ? availableRuns : [...availableRuns, currentRun];
+  $("runSelect").innerHTML = options.map((run) => `<option value="${esc(run)}">${esc(RUN_LABELS[run] ? `${RUN_LABELS[run]} [${run}]` : run)}</option>`).join("");
+  $("runSelect").value = currentRun;
+}
+
+async function loadRuns() {
+  try {
+    $("refreshRuns").disabled = true;
+    const data = await fetchJson("/api/runs");
+    // Saved files are ordered oldest first; Previous from live opens the latest snapshot.
+    availableRuns = [...data.runs.filter((name) => name !== "live"), "live"];
+    updateNavButtons();
+  } catch (err) {
+    showError(`Could not list runs: ${err.message}`, loadRuns);
+  } finally {
+    $("refreshRuns").disabled = false;
+  }
+}
+
+async function selectRun(name, updateHistory = true) {
+  const request = ++runRequest;
+  currentRun = name;
+  updateNavButtons();
+  openId = null;
+  clearError();
+  loadingRun = name !== "live" || !liveItems.size;
+  showItems(name === "live" ? [...liveItems.values()] : []);
+  if (updateHistory) {
+    const url = new URL(location.href);
+    if (name === "live") url.searchParams.delete("run");
+    else url.searchParams.set("run", name);
+    if (url.href !== location.href) history.pushState(null, "", url);
+  }
+
+  if (name === "live") {
+    $("runBadge").className = "run-badge live";
+    $("runBadge").textContent = "● Live Stream";
+    $("runDesc").textContent = "Active WebSocket evaluation";
+    $("jumpLive").hidden = true;
+    await loadState();
+  } else {
+    $("runBadge").className = "run-badge archive";
+    $("runBadge").textContent = "Snapshot: " + name;
+    $("runDesc").textContent = `${RUN_LABELS[name] || name} (Read-only archive)`;
+    $("jumpLive").hidden = false;
+    try {
+      const data = await fetchJson(`/api/runs/${encodeURIComponent(name)}?full=true`);
+      if (request !== runRequest) return;
+      loadingRun = false;
+      showItems(data.items);
+    } catch (err) {
+      if (request !== runRequest) return;
+      loadingRun = false;
+      render();
+      showError(`Could not load run ${name}: ${err.message}`, () => selectRun(name, false));
+    }
+  }
+}
+
+function moveRun(direction) {
+  const idx = availableRuns.indexOf(currentRun);
+  if (idx >= 0 && availableRuns[idx + direction]) selectRun(availableRuns[idx + direction]);
+}
+
+$("prevRun").addEventListener("click", () => moveRun(-1));
+$("nextRun").addEventListener("click", () => moveRun(1));
+$("runSelect").addEventListener("change", (e) => selectRun(e.target.value));
+$("jumpLive").addEventListener("click", () => selectRun("live"));
+$("refreshRuns").addEventListener("click", loadRuns);
+window.addEventListener("popstate", () => selectRun(runFromUrl(), false));
+
+document.addEventListener("keydown", (e) => {
+  if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if (document.activeElement?.isContentEditable || ["INPUT", "SELECT", "TEXTAREA", "VIDEO", "AUDIO"].includes(document.activeElement?.tagName)) return;
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  e.preventDefault();
+  moveRun(e.key === "ArrowLeft" ? -1 : 1);
+});
+
+function applySnapshot(snapshot) {
+  liveRevision++;
+  liveItems.clear();
+  snapshot.items.forEach((item) => liveItems.set(item.id, item));
+  if (currentRun === "live") {
+    loadingRun = false;
+    showItems(snapshot.items);
+  }
 }
 
 // Past results come over plain HTTP first, so they show even before (or without) the socket.
 let polling = null;
-const loadState = () => fetch("/api/state").then((r) => r.json()).then(applySnapshot).catch(() => {});
+async function loadState() {
+  if (currentRun !== "live") return;
+  const request = ++stateRequest;
+  const revision = liveRevision;
+  try {
+    const snapshot = await fetchJson("/api/state");
+    if (currentRun !== "live" || request !== stateRequest || revision !== liveRevision) return;
+    clearError();
+    applySnapshot(snapshot);
+  } catch (err) {
+    if (currentRun !== "live" || request !== stateRequest || revision !== liveRevision) return;
+    loadingRun = false;
+    render();
+    showError(`Could not load live results: ${err.message}`, loadState);
+  }
+}
 
 function connect() {
   const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
@@ -274,11 +478,18 @@ function connect() {
   ws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.type === "snapshot") return applySnapshot(msg);
-    if (msg.type === "item") items.set(msg.item.id, msg.item);
-    render();
+    if (msg.type !== "item") return;
+    liveRevision++;
+    liveItems.set(msg.item.id, msg.item);
+    if (currentRun === "live") {
+      loadingRun = false;
+      items.set(msg.item.id, msg.item);
+      render();
+    }
   };
 }
-loadState();
+loadRuns();
+selectRun(currentRun, false);
 
 async function post(url, body) {
   const res = await fetch(url, { method: "POST", body });
@@ -286,19 +497,24 @@ async function post(url, body) {
 }
 
 $("files").addEventListener("change", async (e) => {
+  if (currentRun !== "live") await selectRun("live");
   const form = new FormData();
   [...e.target.files].forEach((f) => form.append("files", f));
   e.target.value = "";
   await post("/api/upload", form);
 });
-$("folder").addEventListener("click", () => post("/api/run-folder"));
+$("folder").addEventListener("click", async () => {
+  if (currentRun !== "live") await selectRun("live");
+  post("/api/run-folder");
+});
 
-fetch("/api/config").then((r) => r.json()).then((c) => {
+fetchJson("/api/config").then((c) => {
   $("folder").disabled = !c.folder;
   $("folder").title = c.folder ?? "VIDEO_DIR not set";
-  $("hint").textContent = `${c.folder ? "Server folder: " + c.folder + ". " : ""}${c.labels ? c.labels + " organizer labels loaded for comparison." : "No labels loaded."} Videos run one at a time; click a row for evidence and the replay.`;
-});
+  $("hint").textContent = `${c.folder ? "Server folder: " + c.folder + ". " : ""}${c.labels ? c.labels + " organizer labels loaded for comparison." : "No labels loaded."} Videos run one at a time; click a row for evidence and the replay. Use the Run navigator above or arrow keys to switch between attempts.`;
+}).catch((err) => showError(`Could not load gateway configuration: ${err.message}`));
 setInterval(() => {
+  if (currentRun !== "live") return;
   for (const it of items.values()) {
     if (it.status !== "processing" && it.status !== "submitting") continue;
     const el = document.querySelector(`.item[data-id="${it.id}"] .time`);

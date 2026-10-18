@@ -11,7 +11,8 @@ from __future__ import annotations
 import json
 import time
 from pathlib import Path
-from typing import Literal
+from threading import Lock
+from typing import Literal, get_args
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -70,6 +71,7 @@ EVENT_ACTION = {
 }
 DETECTABLE = {*EVENT_ACTION.values(), "enter", "lock_screen"}
 INITIAL_STATE_SEC = 2.0
+_WRITE_LOCK = Lock()  # Every request creates a store; version checks must share the same lock.
 
 
 def reported_action(event: dict) -> str | None:
@@ -98,7 +100,7 @@ def reported_actions(events: list[dict]) -> list[str | None]:
 
 
 class Row(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     t_start: float = Field(ge=0, le=10_000)
     t_end: float | None = Field(default=None, ge=0, le=10_000)
     actor: Actor
@@ -107,6 +109,9 @@ class Row(BaseModel):
     item: Item = "none"
     place: Place = "none"
     note: str = Field(default="", max_length=500)
+    uncertain: bool = False
+    source: Literal["manual", "suggestion"] = "manual"
+    suggestion_id: str | None = Field(default=None, max_length=256)
 
     @model_validator(mode="after")
     def end_after_start(self) -> Row:
@@ -115,14 +120,45 @@ class Row(BaseModel):
         return self
 
 
+class Review(BaseModel):
+    """A person's decision about a prediction; object sightings are not invented actions."""
+
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+    suggestion_id: str = Field(min_length=1, max_length=256)
+    run: str = Field(min_length=1, max_length=120)
+    kind: Literal["event", "object"]
+    t_start: float = Field(ge=0, le=10_000)
+    label: str = Field(min_length=1, max_length=120)
+    box: tuple[float, float, float, float] | None = None
+    decision: Literal["accepted", "corrected", "rejected"]
+    correction: str = Field(default="", max_length=120)
+    comment: str = Field(default="", max_length=500)
+
+    @model_validator(mode="after")
+    def valid_box(self) -> Review:
+        if self.kind == "object" and self.box is None:
+            raise ValueError("an object review must include its original box")
+        if self.decision == "corrected" and not self.correction.strip():
+            raise ValueError("a corrected suggestion must describe the correction")
+        if self.box is not None:
+            x1, y1, x2, y2 = self.box
+            if not (0 <= x1 < x2 <= 1 and 0 <= y1 < y2 <= 1):
+                raise ValueError("box must be an ordered rectangle in normalized coordinates")
+        return self
+
+
 class Annotation(BaseModel):
     model_config = ConfigDict(extra="forbid")
     layout: Layout = "unset"
     people_max: int = Field(default=0, ge=0, le=20)
-    summary: str = Field(default="", max_length=2000)
+    summary: str = Field(default="", max_length=6000)
+    description_source: Literal["manual", "existing_notes", "ai_draft"] = "manual"
+    description_model: str = Field(default="", max_length=120)
     annotator: str = Field(default="", max_length=60)
     status: Literal["draft", "done"] = "draft"
     rows: list[Row] = Field(default_factory=list, max_length=500)
+    assisted: bool = False
+    reviews: list[Review] = Field(default_factory=list, max_length=5000)
 
 
 class Stored(Annotation):
@@ -163,15 +199,28 @@ class AnnotationStore:
         return Stored.model_validate_json(path.read_text(encoding="utf-8"))
 
     def save(self, key: str, annotation: Annotation, base_version: float) -> Stored:
-        current = self.load(key)
-        if current.version != base_version:
-            raise VersionConflict(f"{key} was saved by {current.annotator or 'someone'} meanwhile")
-        stored = Stored(clip=key, version=time.time(), **annotation.model_dump())
-        self.directory.mkdir(parents=True, exist_ok=True)
-        partial = self.path(key).with_suffix(".partial")
-        partial.write_text(stored.model_dump_json(indent=1), encoding="utf-8")
-        partial.replace(self.path(key))
-        return stored
+        with _WRITE_LOCK:
+            current = self.load(key)
+            if current.version != base_version:
+                raise VersionConflict(
+                    f"{key} was saved by {current.annotator or 'someone'} meanwhile"
+                )
+            data = annotation.model_dump()
+            # Once predictions have been revealed, later edits cannot turn the clip blind again.
+            data["assisted"] = (
+                current.assisted
+                or annotation.assisted
+                or annotation.description_source == "ai_draft"
+                or bool(annotation.description_model)
+                or bool(annotation.reviews)
+                or any(row.source == "suggestion" for row in annotation.rows)
+            )
+            stored = Stored(clip=key, version=time.time(), **data)
+            self.directory.mkdir(parents=True, exist_ok=True)
+            partial = self.path(key).with_suffix(".partial")
+            partial.write_text(stored.model_dump_json(indent=1), encoding="utf-8")
+            partial.replace(self.path(key))
+            return stored
 
     def all(self) -> list[Stored]:
         if not self.directory.is_dir():
@@ -186,7 +235,7 @@ def score_clip(annotation: Stored, events: list[dict], tolerance: float = 2.0) -
     actions = reported_actions(events)
     used: set[int] = set()
     rows = []
-    for row in sorted(annotation.rows, key=lambda r: r.t_start):
+    for row in sorted((r for r in annotation.rows if not r.uncertain), key=lambda r: r.t_start):
         candidates = [
             (abs(e["timestamp_sec"] - row.t_start), i)
             for i, e in enumerate(events)
@@ -218,7 +267,13 @@ def score_clip(annotation: Stored, events: list[dict], tolerance: float = 2.0) -
         for i, e in enumerate(events)
         if actions[i] and i not in used
     ]
-    return {"clip": annotation.clip, "rows": rows, "unmatched_events": extra}
+    return {
+        "clip": annotation.clip,
+        "assisted": annotation.assisted,
+        "uncertain_notes": sum(row.uncertain for row in annotation.rows),
+        "rows": rows,
+        "unmatched_events": extra,
+    }
 
 
 def summarize(clips: list[dict]) -> dict:
@@ -238,7 +293,57 @@ def summarize(clips: list[dict]) -> dict:
             stats["extra"] += 1
     for action, stats in per_action.items():
         stats["detectable"] = action in DETECTABLE
-    return {"clips": len(clips), "per_action": per_action, "roles": roles}
+    return {
+        "clips": len(clips),
+        "assisted_clips": sum(c.get("assisted", False) for c in clips),
+        "per_action": per_action,
+        "roles": roles,
+    }
+
+
+def build_suggestions(trace: dict, job_id: str) -> dict:
+    """Adapt saved perception for review, using the same event mapping as the scorer."""
+    events = sorted(trace.get("events", []), key=lambda e: e["timestamp_sec"])
+    suggestions = []
+    for index, (event, action) in enumerate(zip(events, reported_actions(events), strict=True)):
+        if action is None:
+            continue
+        facts = event.get("facts", {})
+        role = facts.get("role", facts.get("from_role", "unknown"))
+        item = facts.get("object", "none")
+        suggestion_id = f"{job_id}:event:{index}"
+        row = Row(
+            t_start=event["timestamp_sec"],
+            actor=role if role in get_args(Actor) else "unknown",
+            action=action,
+            item=item if item in get_args(Item) else "none",
+            source="suggestion",
+            suggestion_id=suggestion_id,
+        )
+        suggestions.append({"id": suggestion_id, "label": event["type"], "row": row.model_dump()})
+    frames = [
+        {
+            "t": frame["t"],
+            "objects": [
+                {
+                    "id": f"{job_id}:object:{fi}:{di}",
+                    "label": det[0],
+                    "track": det[1],
+                    "role": det[2],
+                    "box": det[3:7],
+                    "score": det[7],
+                }
+                for di, det in enumerate(frame["dets"])
+            ],
+        }
+        for fi, frame in enumerate(trace.get("frames", []))
+    ]
+    return {
+        "job_id": job_id,
+        "duration_sec": trace.get("duration_sec"),
+        "events": suggestions,
+        "frames": frames,
+    }
 
 
 def trace_events(raw: bytes) -> list[dict]:

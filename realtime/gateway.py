@@ -40,11 +40,13 @@ from realtime.annotations import (
     AnnotationStore,
     Stored,
     VersionConflict,
+    build_suggestions,
     score_clip,
     summarize,
     trace_events,
     vocabulary,
 )
+from realtime.descriptions import DescriptionDraft
 
 logger = logging.getLogger(__name__)
 
@@ -303,28 +305,61 @@ def create_app(
     def compare_page() -> FileResponse:
         return FileResponse(STATIC / "compare.html")
 
+    @app.get("/evaluation")
+    def evaluation_page() -> FileResponse:
+        return FileResponse(STATIC / "evaluation.html")
+
+    @app.get("/api/evaluation")
+    def evaluation() -> FileResponse:
+        path = config.state_file.parent / "evaluation.json" if config.state_file else None
+        if path is None or not path.is_file():
+            raise HTTPException(
+                status_code=404, detail="Evaluation not ready: report not published"
+            )
+        return FileResponse(
+            path, media_type="application/json", headers={"Cache-Control": "no-store"}
+        )
+
     def saved_runs() -> dict[str, Path]:
         """Earlier runs are state files kept next to the live one: `state.<run name>.json`."""
         if config.state_file is None or not config.state_file.parent.is_dir():
             return {}
         files = sorted(
-            config.state_file.parent.glob("state.*.json"), key=lambda p: p.stat().st_mtime
+            (
+                p
+                for p in config.state_file.parent.glob("state.*.json")
+                if p != config.state_file and p.name != "state.live.json"
+            ),
+            key=lambda p: (p.stat().st_mtime, p.name),
         )
         return {p.name[len("state.") : -len(".json")]: p for p in files}
+
+    def run_rows(name: str) -> list[dict]:
+        if name == "live":
+            return [i.model_dump() for i in hub.items.values()]
+        path = saved_runs().get(name)  # only listed files, so no path traversal
+        if path is None:
+            raise HTTPException(status_code=404, detail="Unknown run")
+        try:
+            rows = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+                raise ValueError("Expected a list of items")
+        except (OSError, ValueError) as exc:
+            logger.exception("Could not read saved run %s", name)
+            raise HTTPException(
+                status_code=500, detail=f"Could not read saved run: {name}"
+            ) from exc
+        return rows
 
     @app.get("/api/runs")
     def runs() -> dict:
         return {"runs": ["live", *saved_runs()]}
 
     @app.get("/api/runs/{name}")
-    def run(name: str) -> dict:
-        if name == "live":
-            rows = [i.model_dump() for i in hub.items.values()]
-        else:
-            path = saved_runs().get(name)  # only listed files, so no path traversal
-            if path is None:
-                raise HTTPException(status_code=404, detail="Unknown run")
-            rows = json.loads(path.read_text(encoding="utf-8"))
+    def run(name: str, full: bool = False) -> dict:
+        rows = run_rows(name)
+        if full:
+            return {"name": name, "items": rows}
         return {"name": name, "items": [compact(row) for row in rows]}
 
     @app.get("/api/config")
@@ -375,26 +410,36 @@ def create_app(
     def uploaded_path(item: Item) -> Path:
         return upload_dir / f"{item.id}{video_suffix(item.name)}"
 
-    def known_item(item_id: str) -> Item:
-        item = hub.items.get(item_id)
-        if item is None:
-            raise HTTPException(status_code=404, detail="Unknown item")
-        return item
+    def known_item(item_id: str, run: str) -> Item:
+        if run == "live":
+            item = hub.items.get(item_id)
+            if item is not None:
+                return item
+        else:
+            for row in run_rows(run):
+                if row.get("id") == item_id:
+                    return Item.model_validate(row)
+        raise HTTPException(status_code=404, detail="Unknown item")
 
     @app.get("/api/items/{item_id}/video")
-    def item_video(item_id: str) -> FileResponse:
-        item = known_item(item_id)
+    def item_video(item_id: str, run: str = "live") -> FileResponse:
+        item = known_item(item_id, run)
         if item.source == "folder" and config.video_dir is not None:
             path = config.video_dir / Path(item.name).name
         else:
             path = uploaded_path(item)
+        if not path.is_file() and config.video_dir is not None:
+            key = clip_key(item.name)
+            fallback = folder_clips().get(key) if key else None
+            if fallback is not None:
+                path = fallback
         if not path.is_file():
             raise HTTPException(status_code=404, detail="Video file is no longer available")
         return FileResponse(path, media_type=MEDIA_TYPES[path.suffix.lower()])
 
     @app.get("/api/items/{item_id}/trace")
-    async def item_trace(item_id: str) -> Response:
-        item = known_item(item_id)
+    async def item_trace(item_id: str, run: str = "live") -> Response:
+        item = known_item(item_id, run)
         if item.job_id is None:
             raise HTTPException(status_code=404, detail="Item has no checker job")
         response = await app.state.runner.client.get(f"/api/v1/jobs/{item.job_id}/trace")
@@ -430,6 +475,10 @@ def create_app(
     def annotate_page() -> FileResponse:
         return FileResponse(STATIC / "annotate.html")
 
+    @app.get("/annotate/assets/{name}")
+    def annotate_asset(name: Literal["annotate.js", "annotate.css"]) -> FileResponse:
+        return FileResponse(STATIC / name)
+
     @app.get("/api/annotation-vocabulary")
     def annotation_vocabulary() -> dict:
         return vocabulary()
@@ -461,6 +510,24 @@ def create_app(
         known_clip(key)
         return annotation_store().load(key)
 
+    @app.get("/api/annotation-description/{key}")
+    def annotation_description(key: str) -> DescriptionDraft:
+        known_clip(key)
+        directory = annotation_store().directory.parent / "descriptions"
+        path = directory / f"{key}.json"
+        if not path.is_file():
+            return DescriptionDraft(clip=key, status="unavailable")
+        try:
+            draft = DescriptionDraft.model_validate_json(path.read_text(encoding="utf-8"))
+            if draft.clip != key:
+                raise ValueError("description belongs to another clip")
+            return draft
+        except ValueError as exc:
+            logger.exception("Invalid description draft for %s", key)
+            raise HTTPException(
+                status_code=500, detail="The saved description draft is invalid"
+            ) from exc
+
     @app.put("/api/annotations/{key}")
     def put_annotation(key: str, base_version: float, annotation: Annotation) -> Stored:
         known_clip(key)
@@ -469,29 +536,63 @@ def create_app(
         except VersionConflict as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
 
+    @app.post("/api/clips/{key}/analyze", status_code=202)
+    async def analyze_clip(key: str) -> dict:
+        path = known_clip(key)
+        for item in reversed(list(hub.items.values())):
+            if clip_key(item.name) == key and item.status in {"queued", "submitting", "processing"}:
+                return {"item_id": item.id}
+        item = new_item(path.name, "folder")
+        await app.state.runner.enqueue(item, path, delete_after=False)
+        return {"item_id": item.id}
+
     def run_jobs(run: str) -> dict[str, str]:
         """Clip key -> checker job id for the run's finished items (latest wins)."""
-        if run == "live":
-            rows = [i.model_dump() for i in hub.items.values()]
-        else:
-            path = saved_runs().get(run)
-            if path is None:
-                raise HTTPException(status_code=404, detail="Unknown run")
-            rows = json.loads(path.read_text(encoding="utf-8"))
+        rows = run_rows(run)
         return {
             key: row["job_id"]
             for row in sorted(rows, key=lambda r: r.get("finished_at") or 0)
             if row.get("status") == "done" and row.get("job_id") and (key := clip_key(row["name"]))
         }
 
+    @app.get("/api/annotation-suggestions/{key}")
+    async def annotation_suggestions(key: str, run: str = "live") -> dict:
+        known_clip(key)
+        job_id = run_jobs(run).get(key)
+        if job_id is None:
+            raise HTTPException(
+                status_code=404, detail="No detector result for this clip in that run"
+            )
+        try:
+            response = await app.state.runner.client.get(f"/api/v1/jobs/{job_id}/trace")
+        except httpx.HTTPError as exc:
+            raise HTTPException(
+                status_code=502, detail="Could not reach the local detector"
+            ) from exc
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=404 if response.status_code == 404 else 502,
+                detail="Saved detections are unavailable; run the detector for this clip again",
+            )
+        try:
+            data = build_suggestions(response.json(), job_id)
+        except (ValueError, KeyError, TypeError, IndexError) as exc:
+            logger.exception("Invalid detector trace for %s", key)
+            raise HTTPException(
+                status_code=502, detail="The detector returned an invalid trace"
+            ) from exc
+        return {"clip": key, "run": run, **data}
+
     @app.get("/api/annotations-score")
     async def annotations_score(run: str = "live", clip: str | None = None) -> dict:
         jobs = run_jobs(run)
-        wanted = [
+        annotations = [
             a
             for a in annotation_store().all()
             if (a.clip == clip if clip else a.status == "done") and a.clip in jobs
         ]
+        description_only = [a.clip for a in annotations if a.summary.strip() and not a.rows]
+        wanted = [a for a in annotations if a.clip not in description_only]
         scored, missing = [], []
         for annotation in wanted:
             response = await app.state.runner.client.get(
@@ -506,6 +607,7 @@ def create_app(
             "summary": summarize(scored),
             "clips": scored,
             "missing_traces": missing,
+            "description_only": description_only,
         }
 
     @app.websocket("/ws")

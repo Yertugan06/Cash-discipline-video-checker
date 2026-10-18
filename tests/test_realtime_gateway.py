@@ -315,6 +315,8 @@ def test_compare_lists_saved_runs_and_serves_them_without_evidence(tmp_path):
         live = client.get("/api/runs/live").json()
         unknown = client.get("/api/runs/..%2F..%2Fetc").status_code
         page = client.get("/compare")
+        run_full = client.get("/api/runs/before-fix?full=true").json()
+        assert run_full == {"name": "before-fix", "items": saved}
     assert names == ["live", "before-fix"]
     assert run["items"] == [
         {
@@ -332,3 +334,76 @@ def test_compare_lists_saved_runs_and_serves_them_without_evidence(tmp_path):
     assert live == {"name": "live", "items": []}
     assert unknown == 404
     assert page.status_code == 200 and "Compare runs" in page.text
+
+
+def test_saved_replay_uses_the_selected_run_when_item_ids_are_reused(tmp_path):
+    videos = tmp_path / "videos"
+    videos.mkdir()
+    fake = FakeChecker()
+    for name, clip, contents in (
+        ("old", "X-1.mov", b"old-video"),
+        ("new", "X-2.mov", b"new-video"),
+    ):
+        (videos / clip).write_bytes(contents)
+        row = {
+            "id": "shared",
+            "name": clip,
+            "source": "folder",
+            "status": "done",
+            "job_id": name,
+            "result": DONE,
+        }
+        (tmp_path / f"state.{name}.json").write_text(json.dumps([row]))
+        fake.traces[name] = {"frames": [], "events": [], "fps": 2, "run": name}
+    with make_client(
+        tmp_path, fake, video_dir=videos, state_file=tmp_path / "state.json"
+    ) as client:
+        for name, contents in (("old", b"old-video"), ("new", b"new-video")):
+            video = client.get(
+                f"/api/items/shared/video?run={name}", headers={"Range": "bytes=0-2"}
+            )
+            assert video.status_code == 206 and video.content == contents[:3]
+            trace = client.get(f"/api/items/shared/trace?run={name}")
+            assert trace.status_code == 200 and trace.json() == fake.traces[name]
+        assert client.get("/api/items/shared/video").status_code == 404
+        assert client.get("/api/items/shared/video?run=missing").status_code == 404
+
+
+def test_offline_replay_serves_normalised_clip_names_and_reports_absent_trace(tmp_path):
+    videos = tmp_path / "videos"
+    videos.mkdir()
+    (videos / "Х-3.mov").write_bytes(b"clip")
+    row = {
+        "id": "offline",
+        "name": "X-003.mov",
+        "source": "folder",
+        "status": "done",
+        "result": {"violations": [{"type": "rule", "timecode_sec": 1.0}]},
+    }
+    (tmp_path / "state.offline.json").write_text(json.dumps([row]))
+    with make_client(
+        tmp_path, FakeChecker(), video_dir=videos, state_file=tmp_path / "state.json"
+    ) as client:
+        assert client.get("/api/runs/offline?full=true").json()["items"] == [row]
+        video = client.get("/api/items/offline/video?run=offline")
+        assert video.status_code == 200 and video.content == b"clip"
+        trace = client.get("/api/items/offline/trace?run=offline")
+        assert trace.status_code == 404 and trace.json()["detail"] == "Item has no checker job"
+
+
+def test_saved_runs_exclude_the_active_state_and_reserved_live_name(tmp_path):
+    state = tmp_path / "state.current.json"
+    state.write_text("[]")
+    (tmp_path / "state.live.json").write_text("[]")
+    (tmp_path / "state.saved.json").write_text("[]")
+    with make_client(tmp_path, FakeChecker(), state_file=state) as client:
+        assert client.get("/api/runs").json() == {"runs": ["live", "saved"]}
+
+
+def test_corrupt_saved_run_returns_an_explicit_error(tmp_path):
+    (tmp_path / "state.broken.json").write_text("not json")
+    with make_client(tmp_path, FakeChecker(), state_file=tmp_path / "state.json") as client:
+        for url in ("/api/runs/broken", "/api/items/shared/video?run=broken"):
+            response = client.get(url)
+            assert response.status_code == 500
+            assert response.json()["detail"] == "Could not read saved run: broken"

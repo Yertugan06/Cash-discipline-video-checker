@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
+
 import pytest
 from pydantic import ValidationError
 
 from realtime.annotations import (
     Annotation,
     AnnotationStore,
+    Review,
     Row,
     Stored,
     VersionConflict,
+    build_suggestions,
     score_clip,
     summarize,
 )
@@ -157,3 +162,152 @@ def test_the_starting_door_and_safe_state_is_not_an_action():
     scored = score_clip(truth, events)
     assert scored["rows"][0]["matched_t"] == 12.5
     assert [(e["t"], e["action"]) for e in scored["unmatched_events"]] == [(14.0, "open_door")]
+
+
+def test_existing_annotations_load_with_review_defaults(tmp_path):
+    store = AnnotationStore(tmp_path)
+    store.path("X-3").write_text(
+        '{"clip":"X-3","rows":[{"t_start":2,"actor":"client","action":"enter"}]}'
+    )
+    old = store.load("X-3")
+    assert old.rows[0].source == "manual" and not old.rows[0].uncertain
+    assert not old.assisted and old.reviews == []
+
+
+def test_simultaneous_reviewers_cannot_overwrite_the_same_version(tmp_path):
+    barrier = Barrier(2)
+
+    def write(name):
+        barrier.wait(timeout=5)
+        try:
+            AnnotationStore(tmp_path).save("X-3", Annotation(summary=name), base_version=0)
+        except VersionConflict:
+            return "conflict"
+        return "saved"
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(write, ["first reviewer", "second reviewer"]))
+    assert sorted(results) == ["conflict", "saved"]
+    assert AnnotationStore(tmp_path).load("X-3").summary in {"first reviewer", "second reviewer"}
+
+
+def test_object_reviews_round_trip_without_inventing_actions_and_keep_provenance(tmp_path):
+    store = AnnotationStore(tmp_path)
+    review = Review(
+        suggestion_id="job:object:0:0",
+        run="live",
+        kind="object",
+        t_start=2,
+        label="cash",
+        box=(0.1, 0.2, 0.3, 0.4),
+        decision="corrected",
+        correction="document",
+        comment="Cash was missed beside it",
+    )
+    saved = store.save("X-3", Annotation(reviews=[review]), base_version=0)
+    assert saved.assisted and saved.rows == []
+    assert store.load("X-3").reviews == [review]
+    cleared = store.save("X-3", Annotation(), base_version=saved.version)
+    assert cleared.assisted  # revealing predictions cannot later be called blind annotation
+
+
+def test_review_inputs_reject_invalid_coordinates_and_nonfinite_times():
+    with pytest.raises(ValidationError):
+        Review(
+            suggestion_id="j",
+            run="live",
+            kind="object",
+            t_start=1,
+            label="cash",
+            box=(0.7, 0.1, 0.2, 0.9),
+            decision="accepted",
+        )
+    with pytest.raises(ValidationError):
+        Row(t_start=float("nan"), actor="unknown", action="other")
+
+
+def test_suggestions_share_the_scorers_event_mapping_and_preserve_object_boxes():
+    trace = {
+        "duration_sec": 20,
+        "events": [
+            ev(0, "ENTER", role="cashier", observed_entry=False),
+            ev(0, "DOOR_OPEN"),
+            ev(3, "ENTER", role="client", observed_entry=True),
+            ev(6, "HANDOVER", from_role="client", object="cash"),
+        ],
+        "frames": [{"t": 3, "dets": [["cash", "cash:1", "unknown", 0.1, 0.2, 0.3, 0.4, 0.8]]}],
+    }
+    result = build_suggestions(trace, "job42")
+    assert [s["row"]["action"] for s in result["events"]] == ["enter", "hand_over"]
+    handover = result["events"][1]["row"]
+    assert handover["actor"] == "client" and handover["item"] == "cash"
+    assert handover["source"] == "suggestion"
+    assert result["frames"][0]["objects"][0]["box"] == [0.1, 0.2, 0.3, 0.4]
+    assert result == build_suggestions(trace, "job42")
+    assert result["events"][0]["id"] != build_suggestions(trace, "different")["events"][0]["id"]
+
+
+def test_uncertain_notes_are_saved_but_not_scored_as_confirmed_truth():
+    truth = timeline({"t_start": 3, "actor": "client", "action": "enter", "uncertain": True})
+    scored = score_clip(truth, [])
+    assert scored["rows"] == [] and scored["uncertain_notes"] == 1
+
+
+def test_suggestion_endpoint_uses_selected_run_and_reports_missing_data(tmp_path):
+    import json
+
+    videos = tmp_path / "videos"
+    videos.mkdir()
+    (videos / "X-3.mov").write_bytes(b"clip")
+    fake = FakeChecker()
+    for name in ("old", "new"):
+        (tmp_path / f"state.{name}.json").write_text(
+            json.dumps(
+                [
+                    {
+                        "id": name,
+                        "name": "X-3.mov",
+                        "source": "folder",
+                        "status": "done",
+                        "job_id": name,
+                    }
+                ]
+            )
+        )
+        fake.traces[name] = {"events": [ev(3, "EXIT", role="client")]}
+    with make_client(
+        tmp_path, fake, video_dir=videos, state_file=tmp_path / "state.json"
+    ) as client:
+        old = client.get("/api/annotation-suggestions/X-3?run=old").json()
+        new = client.get("/api/annotation-suggestions/X-3?run=new").json()
+        assert old["job_id"] == "old" and new["job_id"] == "new"
+        assert old["events"][0]["id"] != new["events"][0]["id"]
+        assert client.get("/api/annotation-suggestions/X-99?run=old").status_code == 404
+        assert client.get("/api/annotation-suggestions/X-3?run=missing").status_code == 404
+        assert client.get("/api/annotation-suggestions/X-3").status_code == 404
+        del fake.traces["old"]
+        assert client.get("/api/annotation-suggestions/X-3?run=old").status_code == 404
+        fake.traces["new"] = {"frames": [{"t": 0, "dets": [["broken"]]}]}
+        assert client.get("/api/annotation-suggestions/X-3?run=new").status_code == 502
+        assert client.get("/annotate/assets/annotate.js").status_code == 200
+        assert client.get("/annotate/assets/annotate.css").status_code == 200
+        assert client.get("/annotate/assets/gateway.py").status_code == 422
+
+
+def test_detect_one_clip_does_not_enqueue_the_whole_folder(tmp_path):
+    videos = tmp_path / "videos"
+    videos.mkdir()
+    (videos / "X-1.mov").write_bytes(b"one")
+    (videos / "X-2.mov").write_bytes(b"two")
+    fake = FakeChecker()
+    with (
+        make_client(tmp_path, fake, video_dir=videos, state_file=tmp_path / "state.json") as client,
+        client.websocket_connect("/ws") as ws,
+    ):
+        ws.receive_json()
+        response = client.post("/api/clips/X-2/analyze")
+        assert response.status_code == 202
+        finished = receive_until_finished(ws, 1)
+        assert list(finished) == ["X-2.mov"]
+        assert client.post("/api/clips/X-99/analyze").status_code == 404
+    assert len(fake.uploads) == 1
