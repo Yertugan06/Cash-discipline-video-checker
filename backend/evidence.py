@@ -1,11 +1,15 @@
 """Evidence frames: 1-3 JPEGs cut directly from the source video.
 
-Frames are always re-extracted from the original upload at `t_anchor` and
-the nearest `support_t` via `backend.media.extract_jpeg` -- never from the
-detector's own (possibly downscaled) sampling frames. When the detector
-reports `Finding.boxes`, they are drawn on the anchor frame only: the boxes
-describe the scene at `t_anchor`, and the object may have moved by the
-support frame.
+Each finding gets a before / moment / after triple: `t_anchor - CONTEXT_S`,
+`t_anchor` and `t_anchor + CONTEXT_S`, clamped to the video, so a reviewer
+sees what led up to the moment and what followed it. Times that clamp onto
+the same frame (a finding near the start or end) are shown once.
+
+Frames are always re-extracted from the original upload via
+`backend.media.extract_jpeg` -- never from the detector's own (possibly
+downscaled) sampling frames. When the detector reports `Finding.boxes`, they
+are drawn on the anchor frame only: the boxes describe the scene at
+`t_anchor`, and the object may have moved by the context frames.
 """
 
 from __future__ import annotations
@@ -20,6 +24,7 @@ from backend.contracts import EvidenceBox, EvidenceFrame, GroundedFinding
 from backend.media import MediaError, extract_jpeg
 
 MAX_FRAMES = 3
+CONTEXT_S = 2.0  # offset of the before / after frames from t_anchor
 BOX_COLOR = (255, 32, 32)
 
 
@@ -38,13 +43,10 @@ def collect(
 def _frames_for(video: Path, g: GroundedFinding, last_frame_sec: float) -> list[EvidenceFrame]:
     finding = g.finding
     anchor = finding.t_anchor
-    times = [anchor]
-    nearest = _nearest_support(finding.support_t, anchor)
-    if nearest is not None and abs(nearest - anchor) > 1e-6:
-        times.append(nearest)
+    times = [anchor - CONTEXT_S, anchor, anchor + CONTEXT_S]
     frames: list[EvidenceFrame] = []
     for t in times[:MAX_FRAMES]:
-        shown = min(t, last_frame_sec)
+        shown = min(max(t, 0.0), last_frame_sec)
         if any(abs(f.timestamp_sec - shown) < 1e-6 for f in frames):
             continue
         try:
@@ -83,9 +85,3 @@ def draw_boxes(jpeg: bytes, boxes: list[EvidenceBox]) -> bytes:
     output = io.BytesIO()
     image.save(output, format="JPEG", quality=90)
     return output.getvalue()
-
-
-def _nearest_support(support_t: list[float], anchor: float) -> float | None:
-    if not support_t:
-        return None
-    return min(support_t, key=lambda t: abs(t - anchor))
