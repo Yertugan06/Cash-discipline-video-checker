@@ -256,9 +256,10 @@ main { width: min(1240px, calc(100% - 40px)); margin: 0 auto; }
 .timecode small { color: var(--muted); font-weight: 400; }
 .violation-card h4 { margin: 7px 0 0; font-size: 15px; line-height: 1.4; }
 .violation-description { margin: 16px 0; color: var(--muted-strong); font-size: 12px; line-height: 1.65; }
-.evidence { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; }
+.evidence { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); align-items: start; gap: 9px; }
 .evidence figure { margin: 0; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
-.evidence img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #171b1a; }
+/* Evidence frames keep the video's own aspect ratio (portrait phone video stays portrait): never cropped. */
+.evidence img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; background: #171b1a; }
 .evidence figcaption { display: flex; align-items: center; gap: 5px; padding: 8px 10px; color: var(--muted); font: 9px ui-monospace, monospace; }
 .evidence figcaption svg { color: var(--accent); }
 .norm-block { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 10px; }
@@ -346,7 +347,7 @@ footer p { color: var(--muted); font-size: 10px; }
   .processing-steps { gap: 8px; }
   .processing-steps span { flex-direction: column; }
   .violation-card { padding: 16px; }
-  .evidence { grid-template-columns: 1fr; }
+  .evidence { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .feature-card { padding: 24px; }
   .feature-detail { right: 24px; left: 24px; }
 }
